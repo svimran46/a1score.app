@@ -8,7 +8,8 @@ import type { SquadPlayer, TeamProfile } from "@/lib/schemas";
 import { ok, type Result } from "@/types/result";
 import { apiGet } from "./client";
 import { mapSquad, mapTeamProfile } from "./mappers";
-import type { RawCoach, RawInjury, RawSquadPlayer, RawTeamProfile } from "./raw";
+import type { RawCoach, RawInjury, RawSquad, RawTeamProfile } from "./raw";
+import { planSafeSeason } from "./season";
 
 /**
  * Fetch a team profile by id.
@@ -48,7 +49,7 @@ export async function searchTeams(term: string): Promise<Result<TeamProfile[]>> 
  * Teams belonging to a league+season (used by league "Teams" lists).
  */
 export async function getTeamsByLeague(leagueId: number, season: number): Promise<Result<TeamProfile[]>> {
-  const res = await apiGet<RawTeamProfile>("teams", { league: leagueId, season }, "teamProfile", [`league:${leagueId}`]);
+  const res = await apiGet<RawTeamProfile>("teams", { league: leagueId, season: planSafeSeason(season) }, "teamProfile", [`league:${leagueId}`]);
   if (!res.ok) return res;
   const out: TeamProfile[] = [];
   const issues: string[] = [];
@@ -70,12 +71,7 @@ export async function getTeamsByLeague(leagueId: number, season: number): Promis
  * Full squad for a team (players/squads endpoint).
  */
 export async function getTeamSquad(teamId: number): Promise<Result<SquadPlayer[]>> {
-  const res = await apiGet<{ team: { id: number; name: string }; players: RawSquadPlayer[] }>(
-    "players/squads",
-    { team: teamId },
-    "teamProfile",
-    [`team:${teamId}`],
- );
+  const res = await apiGet<RawSquad>("players/squads", { team: teamId }, "teamProfile", [`team:${teamId}`]);
   if (!res.ok) return res;
   const players = res.data.response[0]?.players ?? [];
   return mapSquad(players);
@@ -101,7 +97,7 @@ export async function getTeamCoach(teamId: number): Promise<Result<{ id: number;
  * Injuries for a team (Team page availability note).
  */
 export async function getTeamInjuries(teamId: number, season: number): Promise<Result<RawInjury[]>> {
-  const res = await apiGet<RawInjury>("injuries", { team: teamId, season }, "injuries", [`team:${teamId}`]);
+  const res = await apiGet<RawInjury>("injuries", { team: teamId, season: planSafeSeason(season) }, "injuries", [`team:${teamId}`]);
   if (!res.ok) return res;
   return ok(res.data.response);
 }

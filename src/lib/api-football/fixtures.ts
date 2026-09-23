@@ -11,6 +11,7 @@ import { ok, type Result } from "@/types/result";
 import { apiGet } from "./client";
 import { mapFixtures } from "./mappers";
 import type { RawFixture } from "./raw";
+import { planSafeSeason } from "./season";
 
 /** Status shorts that mean the match is in play right now. */
 const LIVE_STATUSES = new Set(["1H", "2H", "HT", "ET", "BT", "P", "LIVE", "INT"]);
@@ -96,7 +97,7 @@ export async function getLeagueFixtures(
   const window: Parameters<typeof apiGet>[2] = scope === "last" ? "finishedFixtures" : "dateFixtures";
   const res = await apiGet<RawFixture>(
     "fixtures",
-    { league: leagueId, season, [scope]: count },
+    { league: leagueId, season: planSafeSeason(season), [scope]: count },
     window,
     [`league:${leagueId}`],
   );
@@ -116,7 +117,7 @@ export async function getTeamFixtures(
   const window: Parameters<typeof apiGet>[2] = scope === "last" ? "finishedFixtures" : "dateFixtures";
   const res = await apiGet<RawFixture>(
     "fixtures",
-    { team: teamId, season, [scope]: count },
+    { team: teamId, season: planSafeSeason(season), [scope]: count },
     window,
     [`team:${teamId}`],
   );
@@ -145,7 +146,7 @@ export async function getHeadToHead(teamA: number, teamB: number, last = 10): Pr
 export async function getTeamRecentResults(teamId: number, season: number, last = 5): Promise<Result<Fixture[]>> {
   const res = await apiGet<RawFixture>(
     "fixtures",
-    { team: teamId, season, last },
+    { team: teamId, season: planSafeSeason(season), last },
     "finishedFixtures",
     [`team:${teamId}`],
   );

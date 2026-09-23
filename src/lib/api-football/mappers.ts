@@ -1,7 +1,8 @@
 /**
- * Mappers: API-Football's raw nested JSON → the flat shapes defined by the
- * Zod schemas in lib/schemas. Each mapper parses through Zod so a malformed
- * payload becomes a typed `validation` error, never a crash (Sections 7, 11).
+ * Mappers: API-Football v3's raw nested JSON → the flat shapes defined by
+ * the Zod schemas in lib/schemas. Each mapper parses through Zod so a
+ * malformed payload becomes a typed `validation` error, never a crash
+ * (Sections 7, 11).
  */
 
 import type { ZodType } from "zod";
@@ -30,6 +31,7 @@ import {
 } from "@/lib/schemas";
 import type { Result } from "@/types/result";
 import { err, ok } from "@/types/result";
+import { rewriteMediaUrl as media } from "./cdn";
 import type {
   RawEvent,
   RawFixture,
@@ -87,27 +89,27 @@ function parseAll<O>(schema: ZodType<O>, rows: unknown[]): Result<O[]> {
 
 function mapFixture(raw: RawFixture): unknown {
   return {
-    id: raw.id,
-    referee: text(raw.referee),
-    date: typeof raw.date === "string" ? raw.date : new Date(0).toISOString(),
-    timestamp: num(raw.timestamp) ?? 0,
-    venueName: text(raw.venue?.name),
-    venueCity: text(raw.venue?.city),
-    statusShort: text(raw.status?.short) ?? "NS",
-    statusLong: text(raw.status?.long) ?? "Not Started",
-    elapsed: num(raw.status?.elapsed),
+    id: raw.fixture?.id,
+    referee: text(raw.fixture?.referee),
+    date: typeof raw.fixture?.date === "string" ? raw.fixture.date : new Date(0).toISOString(),
+    timestamp: num(raw.fixture?.timestamp) ?? 0,
+    venueName: text(raw.fixture?.venue?.name),
+    venueCity: text(raw.fixture?.venue?.city),
+    statusShort: text(raw.fixture?.status?.short) ?? "NS",
+    statusLong: text(raw.fixture?.status?.long) ?? "Not Started",
+    elapsed: num(raw.fixture?.status?.elapsed),
     leagueId: num(raw.league?.id) ?? 0,
     leagueName: text(raw.league?.name) ?? "Unknown league",
     leagueCountry: text(raw.league?.country),
-    leagueLogoUrl: text(raw.league?.logo),
+    leagueLogoUrl: media(text(raw.league?.logo)),
     season: num(raw.league?.season) ?? 0,
     round: text(raw.league?.round),
     homeTeamId: num(raw.teams?.home?.id) ?? 0,
     homeTeamName: text(raw.teams?.home?.name) ?? "Home",
-    homeTeamLogoUrl: text(raw.teams?.home?.logo),
+    homeTeamLogoUrl: media(text(raw.teams?.home?.logo)),
     awayTeamId: num(raw.teams?.away?.id) ?? 0,
     awayTeamName: text(raw.teams?.away?.name) ?? "Away",
-    awayTeamLogoUrl: text(raw.teams?.away?.logo),
+    awayTeamLogoUrl: media(text(raw.teams?.away?.logo)),
     goalsHome: num(raw.goals?.home),
     goalsAway: num(raw.goals?.away),
     winnerHome: raw.teams?.home?.winner === true ? true : raw.teams?.home?.winner === false ? false : null,
@@ -129,7 +131,7 @@ function mapStandingRow(raw: RawStandingRow): unknown {
     rank: num(raw.rank) ?? 0,
     teamId: num(raw.team?.id) ?? 0,
     teamName: text(raw.team?.name) ?? "Unknown",
-    teamLogoUrl: text(raw.team?.logo),
+    teamLogoUrl: media(text(raw.team?.logo)),
     points: num(raw.points) ?? 0,
     goalsDiff: num(raw.goalsDiff) ?? 0,
     played: num(raw.all?.played) ?? 0,
@@ -146,14 +148,14 @@ function mapStandingRow(raw: RawStandingRow): unknown {
 /**
  * Map the /standings response. API-Football returns one entry per league
  * with a `standings` matrix (one inner array per group/conference); we
- * flatten all groups. Returns null-valued error when empty.
+ * flatten all groups. Returns a validation error when empty.
  */
 export function mapStanding(entries: RawStandingResponse[]): Result<Standing> {
   const first = entries[0];
   if (!first) {
     return err({ kind: "validation", issues: ["No standings table available."] });
   }
-  const rowsRaw = first.standings?.flat() ?? [];
+  const rowsRaw = first.league?.standings?.flat() ?? [];
   const rows = parseAll<StandingRow>(StandingRowSchema, rowsRaw.map(mapStandingRow));
   if (!rows.ok) return rows;
   return ok({
@@ -184,7 +186,7 @@ export function mapEvents(rows: RawEvent[]): Result<MatchEvent[]> {
   return parseAll(MatchEventSchema, rows.map(mapEvent));
 }
 
-function mapLineupPlayer(p: RawLineupPlayer): unknown {
+function mapLineupPlayer(p: RawLineupPlayer | null | undefined): unknown {
   return {
     playerId: num(p?.id) ?? 0,
     name: text(p?.name) ?? "Unknown",
@@ -193,13 +195,13 @@ function mapLineupPlayer(p: RawLineupPlayer): unknown {
   };
 }
 
-/** Map a single team's lineup; `null` rows mean "not published yet". */
+/** Map a single team's lineup; `undefined` rows mean "not published yet". */
 export function mapLineup(raw: RawLineup | undefined): Result<Lineup> {
   if (!raw) {
     return err({ kind: "validation", issues: ["Lineup not published yet."] });
   }
-  const startXI = (raw.startXI ?? []).map((entry) => mapLineupPlayer(entry.player));
-  const subs = (raw.substitutes ?? []).map((entry) => mapLineupPlayer(entry.player));
+  const startXI = (raw.startXI ?? []).map((entry) => mapLineupPlayer(entry?.player));
+  const subs = (raw.substitutes ?? []).map((entry) => mapLineupPlayer(entry?.player));
   const parsed = LineupSchema.safeParse({
     teamId: num(raw.team?.id) ?? 0,
     coachName: text(raw.coach?.name),
@@ -271,16 +273,16 @@ export function mapMatchStatistics(rows: RawMatchStatistics[]): Result<MatchStat
 /* Teams                                                               */
 /* ------------------------------------------------------------------ */
 
-/** Map /teams?id= into a team profile. */
+/** Map /teams?id= rows into a team profile. */
 export function mapTeamProfile(rows: RawTeamProfile[]): Result<TeamProfile> {
   const first = rows[0];
   if (!first) return err({ kind: "validation", issues: ["Team not found."] });
   const parsed = TeamProfileSchema.safeParse({
-    id: num(first.id) ?? 0,
-    name: text(first.name) ?? "Unknown",
-    logoUrl: text(first.logo),
-    country: text(first.country),
-    founded: num(first.founded),
+    id: num(first.team?.id) ?? 0,
+    name: text(first.team?.name) ?? "Unknown",
+    logoUrl: media(text(first.team?.logo)),
+    country: text(first.team?.country),
+    founded: num(first.team?.founded),
     venueName: text(first.venue?.name),
   });
   if (!parsed.success) {
@@ -292,8 +294,9 @@ export function mapTeamProfile(rows: RawTeamProfile[]): Result<TeamProfile> {
   return ok(parsed.data);
 }
 
-/** Map /players/squads rows into validated squad players. */
-export function mapSquad(rows: RawSquadPlayer[]): Result<SquadPlayer[]> {
+/** Map /players/squads player entries into validated squad players. */
+export function mapSquad(players: (RawSquadPlayer | null | undefined)[] | null | undefined): Result<SquadPlayer[]> {
+  const rows = players ?? [];
   return parseAll<SquadPlayer>(
     SquadPlayerSchema,
     rows.map((p) => ({
@@ -302,7 +305,7 @@ export function mapSquad(rows: RawSquadPlayer[]): Result<SquadPlayer[]> {
       age: num(p?.age),
       number: num(p?.number),
       position: text(p?.position),
-      photoUrl: text(p?.photo),
+      photoUrl: media(text(p?.photo)),
     })),
   );
 }
@@ -320,7 +323,7 @@ function ratingNumber(value: string | number | null): number | null {
   return null;
 }
 
-function pickBestStatistics(stats: RawPlayerStatistics[] | null): RawPlayerStatistics | null {
+function pickBestStatistics(stats: RawPlayerStatistics[] | null | undefined): RawPlayerStatistics | null {
   if (!stats || stats.length === 0) return null;
   // Prefer the entry with the most appearances as "the" season summary.
   return [...stats].sort(
@@ -336,7 +339,7 @@ export function mapPlayerProfile(rows: RawPlayer[]): Result<PlayerProfile> {
   const parsed = PlayerProfileSchema.safeParse({
     id: num(first.player?.id) ?? 0,
     name: text(first.player?.name) ?? "Unknown",
-    photoUrl: text(first.player?.photo),
+    photoUrl: media(text(first.player?.photo)),
     age: num(first.player?.age),
     nationality: text(first.player?.nationality),
     position: text(best?.games?.position),
@@ -362,18 +365,18 @@ export function mapPlayerProfile(rows: RawPlayer[]): Result<PlayerProfile> {
 function mapLeagueSeason(raw: RawLeagueSeason): unknown {
   const currentSeason = raw.seasons?.find((s) => s.current === true) ?? raw.seasons?.[0];
   return {
-    id: num(raw.id) ?? 0,
-    name: text(raw.name) ?? "Unknown league",
-    type: text(raw.type) ?? "League",
-    logoUrl: text(raw.logo),
+    id: num(raw.league?.id) ?? 0,
+    name: text(raw.league?.name) ?? "Unknown league",
+    type: text(raw.league?.type) ?? "League",
+    logoUrl: media(text(raw.league?.logo)),
     countryName: text(raw.country?.name),
     countryCode: text(raw.country?.code),
-    countryFlagUrl: text(raw.country?.flag),
+    countryFlagUrl: media(text(raw.country?.flag)),
     season: num(currentSeason?.year),
   };
 }
 
-/** Map /leagues (and /countries-fed searches) into league summaries. */
+/** Map /leagues rows into league summaries. */
 export function mapLeagues(rows: RawLeagueSeason[]): Result<LeagueSummary[]> {
   return parseAll<LeagueSummary>(LeagueSummarySchema, rows.map(mapLeagueSeason));
 }
@@ -384,15 +387,14 @@ export function mapLeagues(rows: RawLeagueSeason[]): Result<LeagueSummary[]> {
 
 function mapTopEntry(raw: RawPlayer): unknown {
   const best = pickBestStatistics(raw.statistics);
-  const value = best?.goals?.total ?? null;
   return {
     playerId: num(raw.player?.id) ?? 0,
     playerName: text(raw.player?.name) ?? "Unknown",
-    photoUrl: text(raw.player?.photo),
+    photoUrl: media(text(raw.player?.photo)),
     teamId: num(best?.team?.id) ?? 0,
     teamName: text(best?.team?.name) ?? "Unknown",
-    teamLogoUrl: text(best?.team?.logo),
-    value: value ?? 0,
+    teamLogoUrl: media(text(best?.team?.logo)),
+    value: num(best?.goals?.total) ?? 0,
     appearances: num(best?.games?.appearences),
     rating: ratingNumber(best?.games?.rating ?? null),
   };

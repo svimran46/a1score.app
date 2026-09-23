@@ -10,8 +10,8 @@ import "server-only";
  */
 
 import { describeError, err, ok, type Result } from "@/types/result";
-
-const BASE_URL = "https://v3.football.api-sports.io/";
+import { isCdnMode, resolveBaseUrl, upstreamHeaders } from "./cdn";
+import { env } from "./env-config";
 
 /**
  * Revalidate windows in seconds (Section 2, table).
@@ -52,6 +52,9 @@ interface UsageState {
   lastCallAt: string | null;
   trackedErrors: number;
   upstreamOk: boolean;
+  /** Edge-cache outcomes since process start (CDN mode only). */
+  cdnHits: number;
+  cdnMisses: number;
 }
 
 const usage: UsageState = {
@@ -60,6 +63,8 @@ const usage: UsageState = {
   lastCallAt: null,
   trackedErrors: 0,
   upstreamOk: true,
+  cdnHits: 0,
+  cdnMisses: 0,
 };
 
 function currentDay(): string {
@@ -76,6 +81,16 @@ function recordCall(upstreamOk: boolean): void {
   usage.lastCallAt = new Date().toISOString();
   usage.upstreamOk = upstreamOk;
   if (!upstreamOk) usage.trackedErrors += 1;
+}
+
+/**
+ * Track BunnyCDN edge-cache outcomes via the `Cdn-Cache` response header
+ * (guide: "HIT" = served from edge, "Expired"/"MISS" = origin was called).
+ */
+function trackEdgeCache(cdnCache: string | null): void {
+  if (cdnCache === null) return;
+  if (cdnCache.toUpperCase().startsWith("HIT")) usage.cdnHits += 1;
+  else usage.cdnMisses += 1;
 }
 
 /** Snapshot of upstream usage for /api/status. */
@@ -127,16 +142,17 @@ export async function apiGet<T>(
   revalidateKey: RevalidateKey,
   extraTags: string[] = [],
 ): Promise<Result<ApiEnvelope<T>>> {
-  const key = process.env.API_FOOTBALL_KEY;
-  if (!key || key.length === 0) {
+  if (!isCdnMode() && !env.apiKey) {
     recordCall(false);
     return err({
       kind: "api_error",
-      messages: ["Server is missing API_FOOTBALL_KEY configuration."],
+      messages: [
+        "Server is missing API configuration — set API_FOOTBALL_KEY (direct mode) or API_FOOTBALL_CDN_URL (CDN mode).",
+      ],
     });
   }
 
-  const url = new URL(path, BASE_URL);
+  const url = new URL(path, resolveBaseUrl());
   for (const [k, v] of Object.entries(params)) {
     url.searchParams.set(k, String(v));
   }
@@ -147,13 +163,15 @@ export async function apiGet<T>(
   try {
     const res = await fetch(url.toString(), {
       method: "GET",
-      headers: { "x-apisports-key": key },
+      headers: upstreamHeaders(),
       signal: controller.signal,
       next: {
         revalidate: REVALIDATE[revalidateKey],
         tags: tagsFor(revalidateKey, extraTags),
       },
     });
+
+    trackEdgeCache(res.headers.get("Cdn-Cache"));
 
     if (res.status === 429) {
       recordCall(false);

@@ -14,6 +14,8 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      // The real package throws outside RSC; stub it for tests.
+      "server-only": path.resolve(__dirname, "./vitest.server-only-stub.ts"),
     },
   },
 });

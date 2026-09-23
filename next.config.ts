@@ -1,15 +1,34 @@
 import type { NextConfig } from "next";
 
 /**
- * Only API-Football's media CDN may be used as a remote image source.
- * Do not widen this allow-list without review.
+ * Media hosts allowed as remote image sources: API-Football's default
+ * media CDN plus any BunnyCDN-style custom media hostname configured via
+ * API_FOOTBALL_CDN_MEDIA_URL (build-time env), so logos/photos can flow
+ * through the user's own CDN per API-Football's BunnyCDN guide.
  */
-const IMAGE_HOSTS = ["media.api-sports.io"] as const;
+function imageHosts(): string[] {
+  const hosts = new Set<string>(["media.api-sports.io"]);
+  const custom = process.env.API_FOOTBALL_CDN_MEDIA_URL;
+  if (custom) {
+    try {
+      const u = new URL(/^https?:\/\//i.test(custom) ? custom : `https://${custom}`);
+      if (u.protocol === "https:" && u.hostname) {
+        // BunnyCDN zone hostnames share the b-cdn.net suffix; a wildcard
+        // keeps the media CDN working without a rebuild per zone change.
+        if (u.hostname.endsWith(".b-cdn.net")) hosts.add("**.b-cdn.net");
+        else hosts.add(u.hostname);
+      }
+    } catch {
+      // ignore malformed values; the allow-list just stays minimal
+    }
+  }
+  return [...hosts];
+}
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   images: {
-    remotePatterns: IMAGE_HOSTS.map((hostname) => ({
+    remotePatterns: imageHosts().map((hostname) => ({
       protocol: "https",
       hostname,
     })),
