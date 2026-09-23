@@ -29,8 +29,14 @@ sudo git clone https://github.com/svimran46/a1score.app.git /opt/livescore
 sudo chown -R livescore:livescore /opt/livescore
 cd /opt/livescore
 
-npm ci
+# This repo is locked with Bun (bun.lock), so install with Bun — not npm ci
+# (npm ci fails: there is no package-lock.json by design).
+sudo npm install -g bun
+bun install
 ```
+
+> If `/opt/livescore` already exists from an earlier attempt, `git clone` fails
+> with "destination path already exists" — just `cd /opt/livescore && git pull`.
 
 ## 2. Server-only environment
 
@@ -59,15 +65,20 @@ self-contained server in `.next/standalone` — a bare Node binary can run it
 without `node_modules`:
 
 ```bash
-npm run build
+bun run build
+
+# IMPORTANT: the standalone output does not include client assets by design —
+# copy them in or the site will render unstyled:
+cp -r .next/static .next/standalone/.next/
+# If the repo ever gains a public/ directory, also:
+# cp -r public .next/standalone/
 ```
 
 Layout after build:
 
 ```
 .next/standalone/server.js      ← the server (only this runs in production)
-.next/static/                   ← client assets
-public/                         ← static files (if you add any)
+.next/standalone/.next/static/  ← client assets (copied above)
 ```
 
 ## 4. Keep it running — pm2 (Option A) or systemd (Option B)
@@ -155,8 +166,9 @@ shows **no request to api-sports.io** from the browser (only your domain).
 ```bash
 cd /opt/livescore
 sudo -u livescore git pull
-sudo -u livescore npm ci
-sudo -u livescore npm run build
+sudo -u livescore bun install
+sudo -u livescore bun run build
+sudo -u livescore cp -r .next/static .next/standalone/.next/
 # pm2:    pm2 restart livescore
 # systemd: sudo systemctl restart livescore
 ```
