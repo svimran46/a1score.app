@@ -113,11 +113,27 @@ Caddy obtains and renews the Let's Encrypt certificate automatically. Open
 
 ### Testing without a domain (temporary)
 
-Skip Caddy and open `http://VPS_IP:3000` for a smoke test:
+The app binds to loopback by default, so `http://VPS_IP:3000` times out from
+the outside until you do **all three** of these:
 
 ```bash
+# 1. Listen publicly instead of loopback
+#    systemd:  sudo systemctl edit livescore  →  add under [Service]:
+#                  Environment=HOSTNAME=0.0.0.0
+#              then: sudo systemctl restart livescore
+#    pm2:      set env.HOSTNAME = "0.0.0.0" in deploy/ecosystem.config.js,
+#              then: pm2 restart livescore
+
+# 2. Open the OS firewall
 sudo ufw allow 3000/tcp
+
+# 3. Open the PROVIDER firewall too (very common gotcha) — Hetzner/DO/Vultr/
+#    AWS have a Cloud Firewall / Security Group in their web panel; allow
+#    TCP 3000 there as well
 ```
+
+Then open `http://VPS_IP:3000`. This is unencrypted — close it again once
+Caddy is up (`sudo ufw delete allow 3000/tcp` and revert HOSTNAME).
 
 This is unencrypted and fine only for checking that the server runs. Do not
 leave `:3000` open publicly; remove the rule once Caddy is up
