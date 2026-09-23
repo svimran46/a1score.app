@@ -68,6 +68,13 @@ Every page has Loading (skeleton), Empty, Error (retry), and Success states from
 shared component set. Match rows animate score changes; live badges pulse (static under
 `prefers-reduced-motion`).
 
+## Deploying
+
+Self-hosting on a VPS is documented in **[DEPLOYMENT.md](DEPLOYMENT.md)**: the build
+uses `output: "standalone"` (self-contained server in `.next/standalone`), and the repo
+ships ready-made configs — `deploy/Caddyfile` (automatic-HTTPS reverse proxy),
+`deploy/ecosystem.config.js` (pm2) and `deploy/livescore.service` (systemd, pick one).
+
 ## Commands
 
 ```bash
