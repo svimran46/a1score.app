@@ -180,6 +180,7 @@ sudo -u livescore cp -r .next/static .next/standalone/.next/
 
 | Symptom | Fix |
 |---|---|
+| `fatal: detected dubious ownership` during git ops | You are running git as a different user than the repo owner. As root: `git config --global --add safe.directory /opt/livescore` (or run git as the repo's owner, e.g. `sudo -u livescore git pull`) |
 | Caddy can't get a certificate | DNS A record must point at this VPS *and* ports 80/443 reachable from the internet |
 | `ERR_TOO_MANY_REDIRECTS` | Two redirects fighting — make sure no old nginx certbot config is also active |
 | 502 from Caddy | `systemctl status livescore` (or `pm2 logs livescore`) — app not listening on 127.0.0.1:3000 |
