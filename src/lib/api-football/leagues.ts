@@ -9,6 +9,7 @@ import { ok, type Result } from "@/types/result";
 import { apiGet } from "./client";
 import { mapLeagues, mapStanding } from "./mappers";
 import type { RawLeagueSeason, RawStandingResponse } from "./raw";
+import { planSafeSeason } from "./season";
 
 /** League ids treated as "Popular" across the app (Section 8.2). */
 export const POPULAR_LEAGUE_IDS = [39, 140, 135, 78, 2, 3] as const;
@@ -61,7 +62,7 @@ export async function getStandings(leagueId: number, season: number): Promise<Re
   const isGameweekWindow = day >= 5 || day <= 1; // Fri..Mon window
   const res = await apiGet<RawStandingResponse>(
     "standings",
-    { league: leagueId, season },
+    { league: leagueId, season: planSafeSeason(season) },
     isGameweekWindow ? "standingsGameweek" : "standingsIdle",
     [`league:${leagueId}`],
   );

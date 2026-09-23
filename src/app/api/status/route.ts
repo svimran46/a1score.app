@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getUsageSnapshot, REVALIDATE } from "@/lib/api-football/client";
+import { isCdnMode, resolveBaseUrl, resolveMediaBase } from "@/lib/api-football/cdn";
 
 /**
  * GET /api/status — internal quota/usage introspection (Section 2, point 5).
@@ -14,5 +15,12 @@ export async function GET(): Promise<NextResponse> {
     upstreamOk: usage.upstreamOk,
     trackedErrors: usage.trackedErrors,
     revalidateWindows: REVALIDATE,
+    cdn: {
+      enabled: isCdnMode(),
+      dataBaseUrl: resolveBaseUrl(),
+      mediaBaseUrl: resolveMediaBase(),
+      edgeCacheHits: usage.cdnHits,
+      edgeCacheMisses: usage.cdnMisses,
+    },
   });
 }

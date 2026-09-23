@@ -20,13 +20,23 @@ Browser (Client Components)
    — TanStack Query polls OUR routes only, never api-sports.io
         ↓
 Route Handlers  (src/app/api/**/route.ts)
-   — the ONLY code that touches API_FOOTBALL_KEY
+   — the ONLY code that touches API configuration
         ↓
 lib/api-football/*  (server-only fetchers)
    — fetch() with next.revalidate — this IS the shared cache
         ↓
+BunnyCDN pull zone (optional — see docs/CDN_SETUP.md)
+   — edge rule injects x-apisports-key; per-endpoint edge caching
+        ↓
 API-Football (v3.football.api-sports.io)
 ```
+
+**CDN mode** (per API-Football's "Optimizing Sports Websites with BunnyCDN" guide): set
+`API_FOOTBALL_CDN_URL` to your pull-zone URL and all server→API traffic flows through it;
+the CDN edge rule injects the API key (the app stops sending it) and edge-caches
+responses per endpoint. Optionally set `API_FOOTBALL_CDN_MEDIA_URL` and every
+logo/photo URL is rewritten through your media zone (the image allow-list extends
+automatically). See **docs/CDN_SETUP.md** for the full setup and verification steps.
 
 - `API_FOOTBALL_KEY` is server-only. It is read exactly once, in
   `src/lib/api-football/client.ts`, and never prefixed `NEXT_PUBLIC_`. The `server-only`
