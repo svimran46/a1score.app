@@ -27,6 +27,17 @@ function imageHosts(): string[] {
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+
+  /**
+   * Emit a self-contained server bundle in `.next/standalone` for VPS /
+   * container deployments. The output runs with a bare Node runtime:
+   * `node .next/standalone/server.js` — no node_modules needed next to it.
+   * Local dev, `next build` CI checks, and Freebuff preview commands are
+   * unaffected (`next start` still works because the regular build
+   * artifacts remain in `.next`).
+   */
+  output: "standalone",
+
   images: {
     remotePatterns: imageHosts().map((hostname) => ({
       protocol: "https",
