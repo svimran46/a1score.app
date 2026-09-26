@@ -1,0 +1,33 @@
+name: Weekly Dataset Sync
+
+on:
+  schedule:
+    # Runs every Sunday at 03:00 UTC
+    - cron: '0 3 * * 0'
+  workflow_dispatch: # Allows manual trigger from GitHub UI
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Run Data Pipeline Sync
+        run: npm run sync:dataset
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}

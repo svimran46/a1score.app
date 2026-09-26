@@ -1,0 +1,114 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Player {
+  id              String               @id @default(cuid())
+  fullName        String
+  commonName      String?
+  dateOfBirth     DateTime?
+  nationality     String[]
+  position        String
+  subPosition     String?
+  preferredFoot   String?
+  heightCm        Int?
+  photoUrl        String?
+  apiFootballId   Int?                 @unique
+  transfermarktId String?              @unique
+  currentClubId   String?
+  currentClub     Club?                @relation(fields: [currentClubId], references: [id])
+  marketValues    MarketValueHistory[]
+  seasonStats     SeasonStats[]
+  transfers       Transfer[]
+  injuries        Injury[]
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+
+  @@index([fullName])
+  @@index([position])
+  @@index([currentClubId])
+}
+
+model Club {
+  id              String   @id @default(cuid())
+  name            String
+  code            String?
+  logoUrl         String?
+  country         String?
+  transfermarktId String?  @unique
+  leagueId        String?
+  league          League?  @relation(fields: [leagueId], references: [id])
+  players         Player[]
+
+  @@index([leagueId])
+  @@index([name])
+}
+
+model League {
+  id              String   @id @default(cuid())
+  name            String
+  country         String
+  tier            Int?
+  logoUrl         String?
+  transfermarktId String?  @unique
+  clubs           Club[]
+}
+
+model MarketValueHistory {
+  id        String   @id @default(cuid())
+  playerId  String
+  player    Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  date      DateTime
+  valueEur  BigInt
+  clubName  String?
+
+  @@index([playerId, date])
+}
+
+model Transfer {
+  id           String   @id @default(cuid())
+  playerId     String
+  player       Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  fromClubName String?
+  toClubName   String?
+  date         DateTime
+  feeEur       BigInt?
+  transferType String?  // "permanent" | "loan" | "free"
+
+  @@index([playerId])
+  @@index([date])
+}
+
+model SeasonStats {
+  id            String  @id @default(cuid())
+  playerId      String
+  player        Player  @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  season        String  // e.g. "2024/2025"
+  competition   String
+  clubName      String
+  appearances   Int?
+  goals         Int?
+  assists       Int?
+  minutesPlayed Int?
+  yellowCards   Int?
+  redCards      Int?
+
+  @@index([playerId, season])
+}
+
+model Injury {
+  id        String    @id @default(cuid())
+  playerId  String
+  player    Player    @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  type      String
+  startDate DateTime
+  endDate   DateTime?
+  status    String    // "active" | "recovered"
+
+  @@index([playerId])
+}
