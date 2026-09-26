@@ -10,6 +10,7 @@ import { calculateAge, formatCompactEur, formatEur, formatDate } from "@/lib/uti
 import { User, Shield, Calendar, Globe, Ruler, Footprints, TrendingUp } from "lucide-react";
 
 export const revalidate = 3600; // ISR revalidation every hour
+export const runtime = "edge";
 
 interface PlayerPageProps {
   params: {

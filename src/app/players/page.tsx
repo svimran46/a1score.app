@@ -3,6 +3,7 @@ import { PlayerCard } from "@/components/PlayerCard";
 import { Users } from "lucide-react";
 
 export const revalidate = 3600;
+export const runtime = "edge";
 
 export default async function PlayersPage() {
   const players = await getMostValuablePlayers(40);

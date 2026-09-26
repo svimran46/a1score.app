@@ -5,6 +5,7 @@ import { formatCompactEur } from "@/lib/utils";
 import { Shield } from "lucide-react";
 
 export const revalidate = 3600;
+export const runtime = "edge";
 
 export default async function ClubsPage() {
   const clubs = await getTopClubs(24);

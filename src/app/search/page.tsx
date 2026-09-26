@@ -1,6 +1,7 @@
 import { searchPlayers } from "@/lib/data/players";
 import { PlayerCard } from "@/components/PlayerCard";
 import { Search, Filter } from "lucide-react";
+export const runtime = "edge";
 
 interface SearchPageProps {
   searchParams: {

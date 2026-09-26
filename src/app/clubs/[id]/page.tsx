@@ -6,6 +6,7 @@ import { formatCompactEur, formatEur } from "@/lib/utils";
 import { Shield, Users, Trophy, Globe, User } from "lucide-react";
 
 export const revalidate = 3600;
+export const runtime = "edge";
 
 interface ClubPageProps {
   params: {
@@ -103,7 +104,7 @@ export default async function ClubPage({ params }: ClubPageProps) {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800/50">
-              {club.players.map((p) => {
+              {club.players.map((p: any) => {
                 const slug = `${p.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${
                   p.transfermarktId || p.id
                 }`;

@@ -1,32 +1,48 @@
-import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 
 export async function getMostValuablePlayers(limit = 10) {
   try {
-    const players = await prisma.player.findMany({
-      take: limit,
-      include: {
-        currentClub: {
-          select: { id: true, name: true, logoUrl: true, league: { select: { name: true } } },
-        },
-        marketValues: {
-          orderBy: { date: "desc" },
-          take: 1,
-        },
-      },
-      orderBy: {
-        marketValues: {
-          _count: "desc",
-        },
-      },
-    });
+    const { data: players, error } = await supabase
+      .from("Player")
+      .select(`
+        id,
+        fullName,
+        commonName,
+        position,
+        subPosition,
+        photoUrl,
+        transfermarktId,
+        currentClub:Club (
+          id,
+          name,
+          logoUrl,
+          league:League ( name )
+        ),
+        marketValues:MarketValueHistory (
+          valueEur,
+          date
+        )
+      `)
+      .limit(50);
 
-    // Sort by latest market value
+    if (error || !players) {
+      console.error("Error fetching most valuable players:", error);
+      return [];
+    }
+
     return players
-      .map((p) => ({
-        ...p,
-        latestMarketValue: p.marketValues[0]?.valueEur ? Number(p.marketValues[0].valueEur) : 0,
-      }))
-      .sort((a, b) => b.latestMarketValue - a.latestMarketValue);
+      .map((p: any) => {
+        const sorted = [...(p.marketValues || [])].sort(
+          (a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime()
+        );
+        const latestMarketValue = sorted[0]?.valueEur ? Number(sorted[0].valueEur) : 0;
+        return {
+          ...p,
+          latestMarketValue,
+        };
+      })
+      .sort((a: any, b: any) => b.latestMarketValue - a.latestMarketValue)
+      .slice(0, limit);
   } catch (error) {
     console.error("Error fetching most valuable players:", error);
     return [];
@@ -35,52 +51,65 @@ export async function getMostValuablePlayers(limit = 10) {
 
 export async function getPlayerBySlugOrId(slugOrId: string) {
   try {
-    // Slugs are formatted as [name]-[transfermarktId] e.g. erling-haaland-418560
     const parts = slugOrId.split("-");
     const possibleTmId = parts[parts.length - 1];
 
-    let player = await prisma.player.findFirst({
-      where: {
-        OR: [
-          { id: slugOrId },
-          { transfermarktId: possibleTmId },
-          { transfermarktId: slugOrId },
-        ],
-      },
-      include: {
-        currentClub: {
-          include: {
-            league: true,
-          },
-        },
-        marketValues: {
-          orderBy: { date: "asc" },
-        },
-        seasonStats: {
-          orderBy: { season: "desc" },
-        },
-        transfers: {
-          orderBy: { date: "desc" },
-        },
-        injuries: {
-          orderBy: { startDate: "desc" },
-        },
-      },
-    });
+    const { data: player, error } = await supabase
+      .from("Player")
+      .select(`
+        *,
+        currentClub:Club (
+          *,
+          league:League ( * )
+        ),
+        marketValues:MarketValueHistory (
+          *
+        ),
+        seasonStats:SeasonStats (
+          *
+        ),
+        transfers:Transfer (
+          *
+        ),
+        injuries:Injury (
+          *
+        )
+      `)
+      .or(`id.eq.${slugOrId},transfermarktId.eq.${possibleTmId},transfermarktId.eq.${slugOrId}`)
+      .maybeSingle();
 
-    if (!player) return null;
+    if (error || !player) {
+      console.error(`Error fetching player ${slugOrId}:`, error);
+      return null;
+    }
 
-    // Convert BigInt to Number for serialization
-    return {
-      ...player,
-      marketValues: player.marketValues.map((mv) => ({
+    // Sort market values chronologically (asc) for charts
+    const sortedMarketValues = (player.marketValues || [])
+      .map((mv: any) => ({
         ...mv,
         valueEur: Number(mv.valueEur),
-      })),
-      transfers: player.transfers.map((t) => ({
+      }))
+      .sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+    // Sort transfers chronologically (desc)
+    const sortedTransfers = (player.transfers || [])
+      .map((t: any) => ({
         ...t,
         feeEur: t.feeEur ? Number(t.feeEur) : null,
-      })),
+      }))
+      .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+    // Sort stats by season (desc)
+    const sortedSeasonStats = (player.seasonStats || []).sort(
+      (a: any, b: any) => b.season?.localeCompare?.(a.season ?? "") ?? 0
+    );
+
+    return {
+      ...player,
+      marketValues: sortedMarketValues,
+      transfers: sortedTransfers,
+      seasonStats: sortedSeasonStats,
+      injuries: player.injuries || [],
     };
   } catch (error) {
     console.error(`Error fetching player ${slugOrId}:`, error);
@@ -88,40 +117,64 @@ export async function getPlayerBySlugOrId(slugOrId: string) {
   }
 }
 
-export async function searchPlayers(query: string, options: { position?: string; clubId?: string; limit?: number } = {}) {
+export async function searchPlayers(
+  query: string,
+  options: { position?: string; clubId?: string; limit?: number } = {}
+) {
   const { position, clubId, limit = 20 } = options;
   try {
-    const players = await prisma.player.findMany({
-      where: {
-        AND: [
-          query
-            ? {
-                OR: [
-                  { fullName: { contains: query, mode: "insensitive" } },
-                  { commonName: { contains: query, mode: "insensitive" } },
-                ],
-              }
-            : {},
-          position ? { position: { equals: position, mode: "insensitive" } } : {},
-          clubId ? { currentClubId: clubId } : {},
-        ],
-      },
-      take: limit,
-      include: {
-        currentClub: {
-          include: { league: true },
-        },
-        marketValues: {
-          orderBy: { date: "desc" },
-          take: 1,
-        },
-      },
-    });
+    let builder = supabase
+      .from("Player")
+      .select(`
+        id,
+        fullName,
+        commonName,
+        position,
+        subPosition,
+        photoUrl,
+        transfermarktId,
+        currentClub:Club (
+          id,
+          name,
+          logoUrl,
+          league:League ( id, name )
+        ),
+        marketValues:MarketValueHistory (
+          valueEur,
+          date
+        )
+      `)
+      .limit(limit);
 
-    return players.map((p) => ({
-      ...p,
-      latestMarketValue: p.marketValues[0]?.valueEur ? Number(p.marketValues[0].valueEur) : 0,
-    }));
+    if (query) {
+      builder = builder.or(`fullName.ilike.%${query}%,commonName.ilike.%${query}%`);
+    }
+
+    if (position) {
+      builder = builder.ilike("position", position);
+    }
+
+    if (clubId) {
+      builder = builder.eq("currentClubId", clubId);
+    }
+
+    const { data: players, error } = await builder;
+
+    if (error || !players) {
+      console.error("Error searching players:", error);
+      return [];
+    }
+
+    return players.map((p: any) => {
+      const sorted = [...(p.marketValues || [])].sort(
+        (a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      );
+      const latestMarketValue = sorted[0]?.valueEur ? Number(sorted[0].valueEur) : 0;
+      return {
+        ...p,
+        latestMarketValue,
+      };
+    });
   } catch (error) {
     console.error("Error searching players:", error);
     return [];

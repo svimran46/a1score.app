@@ -6,6 +6,7 @@ import { formatCompactEur } from "@/lib/utils";
 import { Trophy, Shield, Users, ArrowRight } from "lucide-react";
 
 export const revalidate = 3600;
+export const runtime = "edge";
 
 interface LeaguePageProps {
   params: {

@@ -1,40 +1,55 @@
-import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 
 export async function getClubById(id: string) {
   try {
-    const club = await prisma.club.findFirst({
-      where: {
-        OR: [{ id }, { transfermarktId: id }],
-      },
-      include: {
-        league: true,
-        players: {
-          include: {
-            marketValues: {
-              orderBy: { date: "desc" },
-              take: 1,
-            },
-          },
-        },
-      },
-    });
+    const { data: club, error } = await supabase
+      .from("Club")
+      .select(`
+        *,
+        league:League ( * ),
+        players:Player (
+          id,
+          fullName,
+          commonName,
+          position,
+          subPosition,
+          photoUrl,
+          transfermarktId,
+          nationality,
+          dateOfBirth,
+          marketValues:MarketValueHistory (
+            valueEur,
+            date
+          )
+        )
+      `)
+      .or(`id.eq.${id},transfermarktId.eq.${id}`)
+      .maybeSingle();
 
-    if (!club) return null;
+    if (error || !club) {
+      console.error(`Error fetching club ${id}:`, error);
+      return null;
+    }
 
-    // Calculate total squad market value
-    const squadWithValues = club.players.map((p) => {
-      const latestVal = p.marketValues[0]?.valueEur ? Number(p.marketValues[0].valueEur) : 0;
+    const squadWithValues = (club.players || []).map((p: any) => {
+      const sortedValues = [...(p.marketValues || [])].sort(
+        (a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      );
+      const latestVal = sortedValues[0]?.valueEur ? Number(sortedValues[0].valueEur) : 0;
       return {
         ...p,
         latestMarketValue: latestVal,
       };
     });
 
-    const totalSquadValue = squadWithValues.reduce((acc, curr) => acc + curr.latestMarketValue, 0);
+    const totalSquadValue = squadWithValues.reduce(
+      (acc: number, curr: any) => acc + curr.latestMarketValue,
+      0
+    );
 
     return {
       ...club,
-      players: squadWithValues.sort((a, b) => b.latestMarketValue - a.latestMarketValue),
+      players: squadWithValues.sort((a: any, b: any) => b.latestMarketValue - a.latestMarketValue),
       totalSquadValue,
     };
   } catch (error) {
@@ -45,25 +60,30 @@ export async function getClubById(id: string) {
 
 export async function getTopClubs(limit = 12) {
   try {
-    const clubs = await prisma.club.findMany({
-      take: limit,
-      include: {
-        league: true,
-        players: {
-          include: {
-            marketValues: {
-              orderBy: { date: "desc" },
-              take: 1,
-            },
-          },
-        },
-      },
-    });
+    const { data: clubs, error } = await supabase
+      .from("Club")
+      .select(`
+        id,
+        name,
+        logoUrl,
+        country,
+        league:League ( name ),
+        players:Player (
+          id,
+          marketValues:MarketValueHistory ( valueEur, date )
+        )
+      `)
+      .limit(limit);
+
+    if (error || !clubs) {
+      console.error("Error fetching top clubs:", error);
+      return [];
+    }
 
     return clubs
-      .map((club) => {
-        const squadValue = club.players.reduce((sum, p) => {
-          const val = p.marketValues[0]?.valueEur ? Number(p.marketValues[0].valueEur) : 0;
+      .map((club: any) => {
+        const squadValue = (club.players || []).reduce((sum: number, p: any) => {
+          const val = p.marketValues?.[0]?.valueEur ? Number(p.marketValues[0].valueEur) : 0;
           return sum + val;
         }, 0);
         return {
@@ -72,11 +92,11 @@ export async function getTopClubs(limit = 12) {
           logoUrl: club.logoUrl,
           country: club.country,
           leagueName: club.league?.name ?? null,
-          playerCount: club.players.length,
+          playerCount: club.players?.length ?? 0,
           totalSquadValue: squadValue,
         };
       })
-      .sort((a, b) => b.totalSquadValue - a.totalSquadValue);
+      .sort((a: any, b: any) => b.totalSquadValue - a.totalSquadValue);
   } catch (error) {
     console.error("Error fetching top clubs:", error);
     return [];

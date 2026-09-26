@@ -4,6 +4,7 @@ import { formatCompactEur } from "@/lib/utils";
 import { Trophy, Globe } from "lucide-react";
 
 export const revalidate = 3600;
+export const runtime = "edge";
 
 export default async function LeaguesPage() {
   const leagues = await getLeagues();

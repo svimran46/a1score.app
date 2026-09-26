@@ -5,6 +5,7 @@ import { PlayerCard } from "@/components/PlayerCard";
 import { Search, TrendingUp, Trophy, ArrowRight, Shield, Zap } from "lucide-react";
 
 export const revalidate = 3600; // ISR revalidation every hour
+export const runtime = "edge";
 
 export default async function HomePage() {
   const [valuablePlayers, leagues] = await Promise.all([
