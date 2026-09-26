@@ -1,9 +1,9 @@
 /**
  * scripts/sync-dataset.ts
  *
- * Primary Tier 1 Data Pipeline for a1score.app
+ * High-Performance Tier 1 Data Pipeline for a1score.app
  * Downloads and syncs CC0 curated data from transfermarkt-datasets (dcaribou)
- * hosted on Cloudflare R2 into PostgreSQL via Prisma.
+ * using batching, in-memory lookups, and createMany for fast ingestion.
  */
 
 import fs from "fs";
@@ -30,6 +30,23 @@ const TRACKED_COMPETITIONS = new Set([
   "CL",  // UEFA Champions League
 ]);
 
+// Helper for concurrency
+async function pMap<T>(items: T[], fn: (item: T) => Promise<any>, concurrency = 25) {
+  const results: any[] = [];
+  let index = 0;
+
+  async function worker() {
+    while (index < items.length) {
+      const i = index++;
+      results[i] = await fn(items[i]);
+    }
+  }
+
+  const workers = Array.from({ length: Math.min(concurrency, items.length) }, () => worker());
+  await Promise.all(workers);
+  return results;
+}
+
 async function downloadFile(fileName: string): Promise<string> {
   if (!fs.existsSync(DATA_DIR)) {
     fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -37,7 +54,7 @@ async function downloadFile(fileName: string): Promise<string> {
 
   const destPath = path.join(DATA_DIR, fileName);
   if (fs.existsSync(destPath)) {
-    console.log(`[Cache Hit] ${fileName} already exists locally.`);
+    console.log(`[Cache Hit] ${fileName} already exists.`);
     return destPath;
   }
 
@@ -115,86 +132,85 @@ async function syncClubs(filePath: string) {
   const records = await parseCsv(filePath);
   const tracked = records.filter((r) => TRACKED_COMPETITIONS.has(r.domestic_competition_id));
 
-  for (const r of tracked) {
-    const league = await prisma.league.findUnique({
-      where: { transfermarktId: r.domestic_competition_id },
-    });
+  // In-memory league lookup
+  const leagues = await prisma.league.findMany();
+  const leagueMap = new Map(leagues.map((l) => [l.transfermarktId, l.id]));
 
-    await prisma.club.upsert({
-      where: { transfermarktId: String(r.club_id) },
-      update: {
-        name: r.name,
-        code: r.club_code || null,
-        leagueId: league?.id ?? null,
-      },
-      create: {
-        transfermarktId: String(r.club_id),
-        name: r.name,
-        code: r.club_code || null,
-        leagueId: league?.id ?? null,
-      },
-    });
-  }
+  console.log(`Upserting ${tracked.length} clubs in parallel...`);
+  await pMap(
+    tracked,
+    async (r) => {
+      const leagueId = leagueMap.get(r.domestic_competition_id) ?? null;
+      await prisma.club.upsert({
+        where: { transfermarktId: String(r.club_id) },
+        update: {
+          name: r.name,
+          code: r.club_code || null,
+          leagueId,
+        },
+        create: {
+          transfermarktId: String(r.club_id),
+          name: r.name,
+          code: r.club_code || null,
+          leagueId,
+        },
+      });
+    },
+    20
+  );
+
   console.log(`Synced ${tracked.length} clubs.`);
 }
 
 async function syncPlayers(filePath: string) {
   console.log("\n--- Syncing Players ---");
   const records = await parseCsv(filePath);
-  // Filter players whose current club's competition is in tracked leagues
   const tracked = records.filter((r) =>
     TRACKED_COMPETITIONS.has(r.current_club_domestic_competition_id)
   );
 
-  console.log(`Found ${tracked.length} tracked players. Ingesting...`);
-  const trackedClubIds = new Set<string>();
+  console.log(`Found ${tracked.length} tracked players.`);
   const clubs = await prisma.club.findMany({ select: { id: true, transfermarktId: true } });
   const clubMap = new Map(clubs.map((c) => [c.transfermarktId, c.id]));
 
-  let count = 0;
+  const playerRows: any[] = [];
   for (const r of tracked) {
     const clubId = clubMap.get(String(r.current_club_id)) ?? null;
     const dob = r.date_of_birth ? new Date(r.date_of_birth) : null;
     const height = r.height_in_cm ? parseInt(r.height_in_cm, 10) : null;
     const nationalities = r.country_of_citizenship ? [r.country_of_citizenship] : [];
 
-    await prisma.player.upsert({
-      where: { transfermarktId: String(r.player_id) },
-      update: {
-        fullName: r.name,
-        position: r.position || "Unknown",
-        subPosition: r.sub_position || null,
-        dateOfBirth: dob && !isNaN(dob.getTime()) ? dob : null,
-        nationality: nationalities,
-        heightCm: height && !isNaN(height) ? height : null,
-        photoUrl: r.image_url || null,
-        currentClubId: clubId,
-      },
-      create: {
-        transfermarktId: String(r.player_id),
-        fullName: r.name,
-        position: r.position || "Unknown",
-        subPosition: r.sub_position || null,
-        dateOfBirth: dob && !isNaN(dob.getTime()) ? dob : null,
-        nationality: nationalities,
-        heightCm: height && !isNaN(height) ? height : null,
-        photoUrl: r.image_url || null,
-        currentClubId: clubId,
-      },
+    playerRows.push({
+      transfermarktId: String(r.player_id),
+      fullName: r.name,
+      position: r.position || "Unknown",
+      subPosition: r.sub_position || null,
+      dateOfBirth: dob && !isNaN(dob.getTime()) ? dob : null,
+      nationality: nationalities,
+      heightCm: height && !isNaN(height) ? height : null,
+      photoUrl: r.image_url || null,
+      currentClubId: clubId,
     });
-    count++;
-    if (count % 500 === 0) {
-      console.log(`Ingested ${count}/${tracked.length} players...`);
-    }
   }
-  console.log(`Finished syncing ${count} players.`);
+
+  // Insert in chunks of 1000
+  const chunkSize = 1000;
+  for (let i = 0; i < playerRows.length; i += chunkSize) {
+    const chunk = playerRows.slice(i, i + chunkSize);
+    await prisma.player.createMany({
+      data: chunk,
+      skipDuplicates: true,
+    });
+    console.log(`Ingested ${Math.min(i + chunkSize, playerRows.length)}/${playerRows.length} players...`);
+  }
+
+  console.log(`Finished syncing ${playerRows.length} players.`);
 }
 
 async function syncValuations(filePath: string) {
   console.log("\n--- Syncing Market Value History ---");
   const records = await parseCsv(filePath);
-  
-  // Find all known player transfermarktIds
+
   const players = await prisma.player.findMany({
     select: { id: true, transfermarktId: true },
   });
@@ -204,31 +220,37 @@ async function syncValuations(filePath: string) {
     (r) => playerMap.has(String(r.player_id)) && r.market_value_in_eur
   );
 
-  console.log(`Ingesting ${relevant.length} valuation entries...`);
-  let count = 0;
+  console.log(`Preparing ${relevant.length} valuation entries...`);
+  
+  // Clear old valuations to keep clean state
+  await prisma.marketValueHistory.deleteMany();
+
+  const dataRows: any[] = [];
   for (const r of relevant) {
     const pId = playerMap.get(String(r.player_id));
     if (!pId) continue;
-
     const date = new Date(r.date);
     if (isNaN(date.getTime())) continue;
 
-    const val = BigInt(Math.round(parseFloat(r.market_value_in_eur)));
-
-    await prisma.marketValueHistory.create({
-      data: {
-        playerId: pId,
-        date,
-        valueEur: val,
-        clubName: r.current_club_name || null,
-      },
+    dataRows.push({
+      playerId: pId,
+      date,
+      valueEur: BigInt(Math.round(parseFloat(r.market_value_in_eur))),
+      clubName: r.current_club_name || null,
     });
-    count++;
-    if (count % 2000 === 0) {
-      console.log(`Ingested ${count}/${relevant.length} valuations...`);
+  }
+
+  // Batch insert with createMany (chunks of 1000)
+  const chunkSize = 1000;
+  for (let i = 0; i < dataRows.length; i += chunkSize) {
+    const chunk = dataRows.slice(i, i + chunkSize);
+    await prisma.marketValueHistory.createMany({ data: chunk });
+    if ((i + chunkSize) % 5000 === 0 || i + chunkSize >= dataRows.length) {
+      console.log(`Inserted ${Math.min(i + chunkSize, dataRows.length)}/${dataRows.length} valuations...`);
     }
   }
-  console.log(`Finished syncing ${count} valuations.`);
+
+  console.log(`Finished syncing ${dataRows.length} valuations.`);
 }
 
 async function syncTransfers(filePath: string) {
@@ -240,37 +262,43 @@ async function syncTransfers(filePath: string) {
   const playerMap = new Map(players.map((p) => [p.transfermarktId, p.id]));
 
   const relevant = records.filter((r) => playerMap.has(String(r.player_id)));
-  console.log(`Ingesting ${relevant.length} transfer records...`);
+  console.log(`Preparing ${relevant.length} transfer records...`);
 
-  let count = 0;
+  await prisma.transfer.deleteMany();
+
+  const dataRows: any[] = [];
   for (const r of relevant) {
     const pId = playerMap.get(String(r.player_id));
     if (!pId) continue;
-
     const date = new Date(r.transfer_date);
     if (isNaN(date.getTime())) continue;
 
     const fee = r.transfer_fee ? BigInt(Math.round(parseFloat(r.transfer_fee))) : null;
 
-    await prisma.transfer.create({
-      data: {
-        playerId: pId,
-        date,
-        fromClubName: r.from_club_name || null,
-        toClubName: r.to_club_name || null,
-        feeEur: fee,
-      },
+    dataRows.push({
+      playerId: pId,
+      date,
+      fromClubName: r.from_club_name || null,
+      toClubName: r.to_club_name || null,
+      feeEur: fee,
     });
-    count++;
-    if (count % 1000 === 0) {
-      console.log(`Ingested ${count}/${relevant.length} transfers...`);
+  }
+
+  // Batch insert with createMany (chunks of 1000)
+  const chunkSize = 1000;
+  for (let i = 0; i < dataRows.length; i += chunkSize) {
+    const chunk = dataRows.slice(i, i + chunkSize);
+    await prisma.transfer.createMany({ data: chunk });
+    if ((i + chunkSize) % 5000 === 0 || i + chunkSize >= dataRows.length) {
+      console.log(`Inserted ${Math.min(i + chunkSize, dataRows.length)}/${dataRows.length} transfers...`);
     }
   }
-  console.log(`Finished syncing ${count} transfers.`);
+
+  console.log(`Finished syncing ${dataRows.length} transfers.`);
 }
 
 async function main() {
-  console.log("=== a1score.app Data Pipeline Sync ===");
+  console.log("=== a1score.app High-Performance Data Pipeline Sync ===");
   try {
     const compFile = await downloadFile("competitions.csv");
     const clubsFile = await downloadFile("clubs.csv");
@@ -284,7 +312,7 @@ async function main() {
     await syncValuations(valFile);
     await syncTransfers(transfersFile);
 
-    console.log("\n[Pipeline Complete] a1score.app database is fully populated!");
+    console.log("\n✅ [Pipeline Complete] a1score.app database is fully populated with real data!");
   } catch (error) {
     console.error("Pipeline failed with error:", error);
     process.exit(1);
