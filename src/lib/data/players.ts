@@ -1,6 +1,10 @@
 import { supabase } from "@/lib/supabase";
 
 export async function getMostValuablePlayers(limit = 10) {
+  // Fetch a pool large enough to produce a true world ranking after
+  // in-memory sort by latest market value. Supabase cannot sort by
+  // joined MarketValueHistory at DB level, so we over-fetch.
+  const poolSize = Math.min(Math.max(limit * 4, 50), 250);
   try {
     const { data: players, error } = await supabase
       .from("Player")
@@ -12,6 +16,8 @@ export async function getMostValuablePlayers(limit = 10) {
         subPosition,
         photoUrl,
         transfermarktId,
+        nationality,
+        dateOfBirth,
         currentClub:Club (
           id,
           name,
@@ -23,7 +29,7 @@ export async function getMostValuablePlayers(limit = 10) {
           date
         )
       `)
-      .limit(50);
+      .limit(poolSize);
 
     if (error || !players) {
       console.error("Error fetching most valuable players:", error);
