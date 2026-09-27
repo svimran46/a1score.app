@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
   const buffer = position ? Math.min(needed * 2, 200) : needed;
   const effectiveFetch = Math.min(Math.max(buffer, 50), 200);
 
-  let players = await getMostValuablePlayers(effectiveFetch);
+  let players = await getMostValuablePlayers(effectiveFetch, position);
 
   // Optional position filter (case-insensitive substring)
   if (position) {

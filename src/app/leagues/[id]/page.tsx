@@ -18,7 +18,7 @@ export default async function LeaguePage({ params }: LeaguePageProps) {
   const league = await getLeagueById(params.id);
 
   if (!league) {
-    notFound();
+    return notFound();
   }
 
   const totalLeagueValue = league.clubs.reduce((acc, c) => acc + c.totalSquadValue, 0);

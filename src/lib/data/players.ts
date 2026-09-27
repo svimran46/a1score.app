@@ -1,9 +1,22 @@
 import { supabase } from "@/lib/supabase";
+import {
+  tmGetMostValuablePlayers,
+  tmGetPlayer,
+  tmSearchPlayers,
+} from "@/lib/transfermarkt/client";
 
-export async function getMostValuablePlayers(limit = 10) {
-  // Fetch a pool large enough to produce a true world ranking after
-  // in-memory sort by latest market value. Supabase cannot sort by
-  // joined MarketValueHistory at DB level, so we over-fetch.
+export async function getMostValuablePlayers(limit = 10, positionFilter?: string) {
+  // 1. First, attempt to fetch live worldwide rankings directly via Transfermarkt proxy
+  try {
+    const liveRanking = await tmGetMostValuablePlayers(limit, positionFilter);
+    if (liveRanking && liveRanking.length > 0) {
+      return liveRanking.slice(0, limit);
+    }
+  } catch (proxyErr) {
+    console.warn("[Data Layer] TM Live Proxy unavailable, falling back to DB:", proxyErr);
+  }
+
+  // 2. Fallback to Supabase Database
   const poolSize = Math.min(Math.max(limit * 4, 50), 250);
   try {
     const { data: players, error } = await supabase
@@ -32,7 +45,7 @@ export async function getMostValuablePlayers(limit = 10) {
       .limit(poolSize);
 
     if (error || !players) {
-      console.error("Error fetching most valuable players:", error);
+      console.error("Error fetching most valuable players from DB:", error);
       return [];
     }
 
@@ -47,6 +60,14 @@ export async function getMostValuablePlayers(limit = 10) {
           latestMarketValue,
         };
       })
+      .filter((p: any) => {
+        if (!positionFilter) return true;
+        const needle = positionFilter.toLowerCase();
+        return (
+          p.position?.toLowerCase().includes(needle) ||
+          p.subPosition?.toLowerCase().includes(needle)
+        );
+      })
       .sort((a: any, b: any) => b.latestMarketValue - a.latestMarketValue)
       .slice(0, limit);
   } catch (error) {
@@ -56,6 +77,17 @@ export async function getMostValuablePlayers(limit = 10) {
 }
 
 export async function getPlayerBySlugOrId(slugOrId: string) {
+  // 1. First, attempt to fetch live profile + valuation graph + transfers via TM proxy
+  try {
+    const livePlayer = await tmGetPlayer(slugOrId);
+    if (livePlayer) {
+      return livePlayer;
+    }
+  } catch (proxyErr) {
+    console.warn(`[Data Layer] TM Live Proxy failed for ${slugOrId}, falling back to DB:`, proxyErr);
+  }
+
+  // 2. Fallback to Supabase Database
   try {
     const parts = slugOrId.split("-");
     const possibleTmId = parts[parts.length - 1];
@@ -85,7 +117,7 @@ export async function getPlayerBySlugOrId(slugOrId: string) {
       .maybeSingle();
 
     if (error || !player) {
-      console.error(`Error fetching player ${slugOrId}:`, error);
+      console.error(`Error fetching player ${slugOrId} from DB:`, error);
       return null;
     }
 
@@ -128,6 +160,20 @@ export async function searchPlayers(
   options: { position?: string; clubId?: string; limit?: number } = {}
 ) {
   const { position, clubId, limit = 20 } = options;
+
+  // 1. Live search via Transfermarkt proxy when searching by name
+  if (query && !clubId) {
+    try {
+      const liveResults = await tmSearchPlayers(query, { position, limit });
+      if (liveResults && liveResults.length > 0) {
+        return liveResults;
+      }
+    } catch (proxyErr) {
+      console.warn("[Data Layer] TM Live Search failed, falling back to DB:", proxyErr);
+    }
+  }
+
+  // 2. Fallback to Supabase Database
   try {
     let builder = supabase
       .from("Player")
@@ -167,7 +213,7 @@ export async function searchPlayers(
     const { data: players, error } = await builder;
 
     if (error || !players) {
-      console.error("Error searching players:", error);
+      console.error("Error searching players in DB:", error);
       return [];
     }
 
@@ -186,3 +232,4 @@ export async function searchPlayers(
     return [];
   }
 }
+

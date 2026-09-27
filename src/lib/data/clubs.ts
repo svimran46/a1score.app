@@ -1,6 +1,18 @@
 import { supabase } from "@/lib/supabase";
+import { tmGetClub } from "@/lib/transfermarkt/client";
 
 export async function getClubById(id: string) {
+  // 1. Try Transfermarkt live proxy for up-to-date squads and valuations
+  try {
+    const liveClub = await tmGetClub(id);
+    if (liveClub && liveClub.players && liveClub.players.length > 0) {
+      return liveClub;
+    }
+  } catch (proxyErr) {
+    console.warn(`[Data Layer] TM Live Club fetch failed for ${id}, falling back to DB:`, proxyErr);
+  }
+
+  // 2. Fallback to Supabase Database
   try {
     const { data: club, error } = await supabase
       .from("Club")
