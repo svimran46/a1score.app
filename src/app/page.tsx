@@ -1,18 +1,26 @@
 import Link from "next/link";
 import { getMostValuablePlayers } from "@/lib/data/players";
 import { getLeagues } from "@/lib/data/leagues";
+import { getMatchesByDate } from "@/lib/fotmob/client";
 import { PlayerCard } from "@/components/PlayerCard";
+import { MatchCard } from "@/components/MatchCard";
 import { formatCompactEur } from "@/lib/utils";
-import { Search, TrendingUp, Trophy, ArrowRight, Shield, Zap } from "lucide-react";
+import { Search, TrendingUp, Trophy, ArrowRight, Shield, Zap, Radio } from "lucide-react";
 
-export const revalidate = 3600; // ISR revalidation every hour
+export const revalidate = 60; // Fresh intelligence and scores
 export const runtime = "edge";
 
 export default async function HomePage() {
-  const [valuablePlayers, leagues] = await Promise.all([
+  const [valuablePlayers, leagues, matchesData] = await Promise.all([
     getMostValuablePlayers(8),
     getLeagues(),
+    getMatchesByDate().catch(() => null),
   ]);
+
+  // Extract up to 3 highlighted matches (prioritizing live, then upcoming/recent)
+  const allMatches = (matchesData?.leagues || []).flatMap((l) => l.matches);
+  const liveMatches = allMatches.filter((m) => m.isLive);
+  const featuredMatches = (liveMatches.length > 0 ? liveMatches : allMatches).slice(0, 3);
 
   return (
     <div className="space-y-12">
@@ -53,6 +61,37 @@ export default async function HomePage() {
           </form>
         </div>
       </section>
+
+      {/* Featured Matches Ticker */}
+      {featuredMatches.length > 0 && (
+        <section className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Radio className="w-5 h-5 text-rose-500 animate-pulse" />
+              <h2 className="text-xl font-bold text-white tracking-tight">
+                {liveMatches.length > 0 ? "Live Matches in Progress" : "Today's Featured Fixtures"}
+              </h2>
+              {matchesData?.liveMatchesCount && matchesData.liveMatchesCount > 0 ? (
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                  {matchesData.liveMatchesCount} Live
+                </span>
+              ) : null}
+            </div>
+            <Link
+              href="/matches"
+              className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 flex items-center gap-1 transition-colors"
+            >
+              All Matches ({matchesData?.totalMatches || 0}) <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            {featuredMatches.map((match) => (
+              <MatchCard key={match.id} match={match} />
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Top Leagues Row */}
       <section className="space-y-4">

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Search, Trophy, Users, Shield, TrendingUp, Menu, X } from "lucide-react";
+import { Search, Trophy, Users, Shield, TrendingUp, Menu, X, Radio } from "lucide-react";
 
 export function Navbar() {
   const router = useRouter();
@@ -40,6 +40,16 @@ export function Navbar() {
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-1 text-sm font-medium text-slate-300">
+              <Link
+                href="/matches"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:text-white hover:bg-slate-800/60 transition-colors"
+              >
+                <div className="relative flex items-center justify-center">
+                  <Radio className="w-4 h-4 text-rose-400" />
+                  <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-rose-500 rounded-full animate-pulse" />
+                </div>
+                Live Matches
+              </Link>
               <Link
                 href="/players"
                 className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:text-white hover:bg-slate-800/60 transition-colors"
@@ -112,6 +122,14 @@ export function Navbar() {
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
           </form>
           <div className="flex flex-col space-y-1">
+            <Link
+              href="/matches"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-2 px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-900 rounded-lg"
+            >
+              <Radio className="w-4 h-4 text-rose-400" />
+              Live Matches
+            </Link>
             <Link
               href="/players"
               onClick={() => setMobileMenuOpen(false)}
