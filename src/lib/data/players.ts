@@ -16,10 +16,9 @@ export async function getMostValuablePlayers(limit = 10, positionFilter?: string
     console.warn("[Data Layer] TM Live Proxy unavailable, falling back to DB:", proxyErr);
   }
 
-  // 2. Fallback to Supabase Database
-  const poolSize = Math.min(Math.max(limit * 4, 50), 250);
+  // 2. Fallback to Supabase Database (sorted by indexed latestMarketValue)
   try {
-    const { data: players, error } = await supabase
+    let builder = supabase
       .from("Player")
       .select(`
         id,
@@ -31,45 +30,32 @@ export async function getMostValuablePlayers(limit = 10, positionFilter?: string
         transfermarktId,
         nationality,
         dateOfBirth,
+        latestMarketValue,
         currentClub:Club (
           id,
           name,
           logoUrl,
           league:League ( name )
-        ),
-        marketValues:MarketValueHistory (
-          valueEur,
-          date
         )
       `)
-      .limit(poolSize);
+      .order("latestMarketValue", { ascending: false, nullsFirst: false })
+      .limit(limit);
+
+    if (positionFilter) {
+      builder = builder.or(`position.ilike.%${positionFilter}%,subPosition.ilike.%${positionFilter}%`);
+    }
+
+    const { data: players, error } = await builder;
 
     if (error || !players) {
       console.error("Error fetching most valuable players from DB:", error);
       return [];
     }
 
-    return players
-      .map((p: any) => {
-        const sorted = [...(p.marketValues || [])].sort(
-          (a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime()
-        );
-        const latestMarketValue = sorted[0]?.valueEur ? Number(sorted[0].valueEur) : 0;
-        return {
-          ...p,
-          latestMarketValue,
-        };
-      })
-      .filter((p: any) => {
-        if (!positionFilter) return true;
-        const needle = positionFilter.toLowerCase();
-        return (
-          p.position?.toLowerCase().includes(needle) ||
-          p.subPosition?.toLowerCase().includes(needle)
-        );
-      })
-      .sort((a: any, b: any) => b.latestMarketValue - a.latestMarketValue)
-      .slice(0, limit);
+    return players.map((p: any) => ({
+      ...p,
+      latestMarketValue: p.latestMarketValue ? Number(p.latestMarketValue) : 0,
+    }));
   } catch (error) {
     console.error("Error fetching most valuable players:", error);
     return [];
@@ -144,6 +130,9 @@ export async function getPlayerBySlugOrId(slugOrId: string) {
 
     return {
       ...player,
+      latestMarketValue: player.latestMarketValue
+        ? Number(player.latestMarketValue)
+        : sortedMarketValues[sortedMarketValues.length - 1]?.valueEur || 0,
       marketValues: sortedMarketValues,
       transfers: sortedTransfers,
       seasonStats: sortedSeasonStats,
@@ -185,17 +174,15 @@ export async function searchPlayers(
         subPosition,
         photoUrl,
         transfermarktId,
+        latestMarketValue,
         currentClub:Club (
           id,
           name,
           logoUrl,
           league:League ( id, name )
-        ),
-        marketValues:MarketValueHistory (
-          valueEur,
-          date
         )
       `)
+      .order("latestMarketValue", { ascending: false, nullsFirst: false })
       .limit(limit);
 
     if (query) {
@@ -217,19 +204,12 @@ export async function searchPlayers(
       return [];
     }
 
-    return players.map((p: any) => {
-      const sorted = [...(p.marketValues || [])].sort(
-        (a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime()
-      );
-      const latestMarketValue = sorted[0]?.valueEur ? Number(sorted[0].valueEur) : 0;
-      return {
-        ...p,
-        latestMarketValue,
-      };
-    });
+    return players.map((p: any) => ({
+      ...p,
+      latestMarketValue: p.latestMarketValue ? Number(p.latestMarketValue) : 0,
+    }));
   } catch (error) {
     console.error("Error searching players:", error);
     return [];
   }
 }
-

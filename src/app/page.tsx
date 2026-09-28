@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getMostValuablePlayers } from "@/lib/data/players";
 import { getLeagues } from "@/lib/data/leagues";
 import { PlayerCard } from "@/components/PlayerCard";
+import { formatCompactEur } from "@/lib/utils";
 import { Search, TrendingUp, Trophy, ArrowRight, Shield, Zap } from "lucide-react";
 
 export const revalidate = 3600; // ISR revalidation every hour
@@ -86,7 +87,7 @@ export default async function HomePage() {
                 </div>
                 <div className="mt-4 pt-3 border-t border-slate-800/60 flex items-center justify-between text-xs text-slate-400">
                   <span>{league.clubCount} Clubs</span>
-                  <span className="text-emerald-400 font-semibold">Tier {league.tier || 1}</span>
+                  <span className="text-emerald-400 font-semibold">{formatCompactEur(league.totalMarketValue)}</span>
                 </div>
               </Link>
             ))

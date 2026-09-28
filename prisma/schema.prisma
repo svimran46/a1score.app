@@ -22,6 +22,8 @@ model Player {
   photoUrl        String?
   apiFootballId   Int?                 @unique
   transfermarktId String?              @unique
+  latestMarketValue BigInt?
+  lastSeason      Int?
   currentClubId   String?
   currentClub     Club?                @relation(fields: [currentClubId], references: [id])
   marketValues    MarketValueHistory[]
@@ -34,6 +36,7 @@ model Player {
   @@index([fullName])
   @@index([position])
   @@index([currentClubId])
+  @@index([latestMarketValue])
 }
 
 model Club {
@@ -43,22 +46,28 @@ model Club {
   logoUrl         String?
   country         String?
   transfermarktId String?  @unique
+  totalMarketValue BigInt? @default(0)
+  squadSize       Int?     @default(0)
   leagueId        String?
   league          League?  @relation(fields: [leagueId], references: [id])
   players         Player[]
 
   @@index([leagueId])
   @@index([name])
+  @@index([totalMarketValue])
 }
 
 model League {
-  id              String   @id @default(cuid())
-  name            String
-  country         String
-  tier            Int?
-  logoUrl         String?
-  transfermarktId String?  @unique
-  clubs           Club[]
+  id               String   @id @default(cuid())
+  name             String
+  country          String
+  tier             Int?
+  logoUrl          String?
+  transfermarktId  String?  @unique
+  totalMarketValue BigInt?  @default(0)
+  totalPlayers     Int?     @default(0)
+  clubCount        Int?     @default(0)
+  clubs            Club[]
 }
 
 model MarketValueHistory {

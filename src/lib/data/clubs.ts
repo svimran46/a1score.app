@@ -29,10 +29,7 @@ export async function getClubById(id: string) {
           transfermarktId,
           nationality,
           dateOfBirth,
-          marketValues:MarketValueHistory (
-            valueEur,
-            date
-          )
+          latestMarketValue
         )
       `)
       .or(`id.eq.${id},transfermarktId.eq.${id}`)
@@ -43,16 +40,10 @@ export async function getClubById(id: string) {
       return null;
     }
 
-    const squadWithValues = (club.players || []).map((p: any) => {
-      const sortedValues = [...(p.marketValues || [])].sort(
-        (a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime()
-      );
-      const latestVal = sortedValues[0]?.valueEur ? Number(sortedValues[0].valueEur) : 0;
-      return {
-        ...p,
-        latestMarketValue: latestVal,
-      };
-    });
+    const squadWithValues = (club.players || []).map((p: any) => ({
+      ...p,
+      latestMarketValue: p.latestMarketValue ? Number(p.latestMarketValue) : 0,
+    }));
 
     const totalSquadValue = squadWithValues.reduce(
       (acc: number, curr: any) => acc + curr.latestMarketValue,
@@ -62,7 +53,7 @@ export async function getClubById(id: string) {
     return {
       ...club,
       players: squadWithValues.sort((a: any, b: any) => b.latestMarketValue - a.latestMarketValue),
-      totalSquadValue,
+      totalSquadValue: club.totalMarketValue ? Number(club.totalMarketValue) : totalSquadValue,
     };
   } catch (error) {
     console.error(`Error fetching club ${id}:`, error);
@@ -79,12 +70,11 @@ export async function getTopClubs(limit = 12) {
         name,
         logoUrl,
         country,
-        league:League ( name ),
-        players:Player (
-          id,
-          marketValues:MarketValueHistory ( valueEur, date )
-        )
+        squadSize,
+        totalMarketValue,
+        league:League ( name )
       `)
+      .order("totalMarketValue", { ascending: false, nullsFirst: false })
       .limit(limit);
 
     if (error || !clubs) {
@@ -92,23 +82,15 @@ export async function getTopClubs(limit = 12) {
       return [];
     }
 
-    return clubs
-      .map((club: any) => {
-        const squadValue = (club.players || []).reduce((sum: number, p: any) => {
-          const val = p.marketValues?.[0]?.valueEur ? Number(p.marketValues[0].valueEur) : 0;
-          return sum + val;
-        }, 0);
-        return {
-          id: club.id,
-          name: club.name,
-          logoUrl: club.logoUrl,
-          country: club.country,
-          leagueName: club.league?.name ?? null,
-          playerCount: club.players?.length ?? 0,
-          totalSquadValue: squadValue,
-        };
-      })
-      .sort((a: any, b: any) => b.totalSquadValue - a.totalSquadValue);
+    return clubs.map((club: any) => ({
+      id: club.id,
+      name: club.name,
+      logoUrl: club.logoUrl,
+      country: club.country,
+      leagueName: club.league?.name ?? null,
+      playerCount: club.squadSize ?? 0,
+      totalSquadValue: club.totalMarketValue ? Number(club.totalMarketValue) : 0,
+    }));
   } catch (error) {
     console.error("Error fetching top clubs:", error);
     return [];

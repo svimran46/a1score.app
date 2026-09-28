@@ -103,24 +103,40 @@ async function parseCsv(filePath: string): Promise<any[]> {
   });
 }
 
+const LEAGUE_NAMES: Record<string, { name: string; country: string; tier: number }> = {
+  GB1: { name: "Premier League", country: "England", tier: 1 },
+  ES1: { name: "LaLiga", country: "Spain", tier: 1 },
+  IT1: { name: "Serie A", country: "Italy", tier: 1 },
+  L1: { name: "Bundesliga", country: "Germany", tier: 1 },
+  FR1: { name: "Ligue 1", country: "France", tier: 1 },
+  NL1: { name: "Eredivisie", country: "Netherlands", tier: 1 },
+  PO1: { name: "Liga Portugal", country: "Portugal", tier: 1 },
+  CL: { name: "UEFA Champions League", country: "Europe", tier: 1 },
+};
+
 async function syncCompetitions(filePath: string) {
   console.log("\n--- Syncing Competitions / Leagues ---");
   const records = await parseCsv(filePath);
   const tracked = records.filter((r) => TRACKED_COMPETITIONS.has(r.competition_id));
 
   for (const r of tracked) {
+    const meta = LEAGUE_NAMES[r.competition_id];
+    const name = meta?.name || r.name;
+    const country = meta?.country || r.country_name || "Unknown";
+    const tier = meta?.tier || (r.sub_type?.includes("first_tier") ? 1 : 2);
+
     await prisma.league.upsert({
       where: { transfermarktId: r.competition_id },
       update: {
-        name: r.name,
-        country: r.country_name || "Unknown",
-        tier: r.sub_type?.includes("first_tier") ? 1 : 2,
+        name,
+        country,
+        tier,
       },
       create: {
         transfermarktId: r.competition_id,
-        name: r.name,
-        country: r.country_name || "Unknown",
-        tier: r.sub_type?.includes("first_tier") ? 1 : 2,
+        name,
+        country,
+        tier,
       },
     });
   }
@@ -180,6 +196,9 @@ async function syncPlayers(filePath: string) {
     const height = r.height_in_cm ? parseInt(r.height_in_cm, 10) : null;
     const nationalities = r.country_of_citizenship ? [r.country_of_citizenship] : [];
 
+    const val = r.market_value_in_eur ? BigInt(Math.round(parseFloat(r.market_value_in_eur))) : null;
+    const season = r.last_season ? parseInt(r.last_season, 10) : null;
+
     playerRows.push({
       transfermarktId: String(r.player_id),
       fullName: r.name,
@@ -190,6 +209,8 @@ async function syncPlayers(filePath: string) {
       heightCm: height && !isNaN(height) ? height : null,
       photoUrl: r.image_url || null,
       currentClubId: clubId,
+      latestMarketValue: val,
+      lastSeason: season,
     });
   }
 

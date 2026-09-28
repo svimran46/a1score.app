@@ -11,25 +11,29 @@ export async function getLeagues() {
         tier,
         logoUrl,
         transfermarktId,
-        clubs:Club ( id, name, logoUrl )
+        clubCount,
+        totalPlayers,
+        totalMarketValue
       `)
-      .order("tier", { ascending: true });
+      .order("totalMarketValue", { ascending: false });
 
     if (error || !leagues) {
       console.error("Error fetching leagues:", error);
       return [];
     }
 
-    return leagues.map((league) => ({
-      id: league.id,
-      name: league.name,
-      country: league.country,
-      tier: league.tier,
-      logoUrl: league.logoUrl,
-      clubCount: league.clubs?.length ?? 0,
-      totalPlayers: (league.clubs?.length ?? 0) * 25,
-      totalMarketValue: (league.clubs?.length ?? 0) * 50_000_000,
-    }));
+    return leagues
+      .filter((l) => l.transfermarktId !== "CL" || Number(l.totalMarketValue) > 0)
+      .map((league) => ({
+        id: league.id,
+        name: league.name,
+        country: league.country,
+        tier: league.tier || 1,
+        logoUrl: league.logoUrl,
+        clubCount: league.clubCount ?? 0,
+        totalPlayers: league.totalPlayers ?? 0,
+        totalMarketValue: league.totalMarketValue ? Number(league.totalMarketValue) : 0,
+      }));
   } catch (error) {
     console.error("Error fetching leagues:", error);
     return [];
@@ -47,15 +51,16 @@ export async function getLeagueById(id: string) {
         tier,
         logoUrl,
         transfermarktId,
+        totalMarketValue,
+        totalPlayers,
+        clubCount,
         clubs:Club (
           id,
           name,
           logoUrl,
           country,
-          players:Player (
-            id,
-            marketValues:MarketValueHistory ( valueEur )
-          )
+          squadSize,
+          totalMarketValue
         )
       `)
       .or(`id.eq.${id},transfermarktId.eq.${id}`)
@@ -67,20 +72,14 @@ export async function getLeagueById(id: string) {
     }
 
     const rankedClubs = (league.clubs || [])
-      .map((club: any) => {
-        const squadVal = (club.players || []).reduce((sum: number, p: any) => {
-          const val = p.marketValues?.[0]?.valueEur ? Number(p.marketValues[0].valueEur) : 0;
-          return sum + val;
-        }, 0);
-        return {
-          id: club.id,
-          name: club.name,
-          logoUrl: club.logoUrl,
-          country: club.country,
-          squadSize: club.players?.length ?? 0,
-          totalSquadValue: squadVal,
-        };
-      })
+      .map((club: any) => ({
+        id: club.id,
+        name: club.name,
+        logoUrl: club.logoUrl,
+        country: club.country,
+        squadSize: club.squadSize ?? 0,
+        totalSquadValue: club.totalMarketValue ? Number(club.totalMarketValue) : 0,
+      }))
       .sort((a: any, b: any) => b.totalSquadValue - a.totalSquadValue);
 
     return {
@@ -90,6 +89,9 @@ export async function getLeagueById(id: string) {
       tier: league.tier,
       logoUrl: league.logoUrl,
       transfermarktId: league.transfermarktId,
+      totalMarketValue: league.totalMarketValue ? Number(league.totalMarketValue) : 0,
+      totalPlayers: league.totalPlayers ?? 0,
+      clubCount: league.clubCount ?? 0,
       clubs: rankedClubs,
     };
   } catch (error) {
