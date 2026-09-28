@@ -30,16 +30,17 @@ export default async function MatchDetailsPage({ params }: MatchPageProps) {
     notFound();
   }
 
-  const { general, teams, events, lineup, stats } = match;
-  const homeTeam = teams.home;
-  const awayTeam = teams.away;
+  const { general = {} as any, teams = {} as any, events = [], lineup = {} as any, stats = [] } = match || {};
+  const homeTeam = teams?.home || {};
+  const awayTeam = teams?.away || {};
 
-  const isLive = general.started && !general.finished;
-  const isFinished = general.finished;
+  const isLive = general?.started && !general?.finished;
+  const isFinished = general?.finished;
+  const isUpcoming = !general?.started && !general?.finished;
 
   // Extract top stats
-  const topStatsGroup = stats.find((s: any) => s.key === "top_stats" || s.title?.toLowerCase().includes("top"));
-  const matchStatsList = topStatsGroup?.stats || stats[0]?.stats || [];
+  const topStatsGroup = (stats || []).find((s: any) => s?.key === "top_stats" || s?.title?.toLowerCase().includes("top"));
+  const matchStatsList = topStatsGroup?.stats || stats?.[0]?.stats || [];
 
   const homeStarters = lineup?.homeTeam?.starters || [];
   const awayStarters = lineup?.awayTeam?.starters || [];
