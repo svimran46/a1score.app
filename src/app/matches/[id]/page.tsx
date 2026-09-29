@@ -86,6 +86,13 @@ export default async function MatchDetailsPage({ params }: MatchPageProps) {
   const homeUnavailable = lineup?.homeTeam?.unavailable || [];
   const awayUnavailable = lineup?.awayTeam?.unavailable || [];
 
+  const homeValuedCount = homeStarters.filter(
+    (p: any) => typeof p.marketValue === "number" && p.marketValue > 0
+  ).length;
+  const awayValuedCount = awayStarters.filter(
+    (p: any) => typeof p.marketValue === "number" && p.marketValue > 0
+  ).length;
+
   const homeStarterTotalVal =
     lineup?.homeTeam?.totalStarterMarketValue ||
     homeStarters.reduce((acc: number, p: any) => acc + (p.marketValue || 0), 0);
@@ -265,6 +272,8 @@ export default async function MatchDetailsPage({ params }: MatchPageProps) {
           awayScore={awayTeam?.score}
           homeValue={homeStarterTotalVal}
           awayValue={awayStarterTotalVal}
+          homeCoverage={{ valuedCount: homeValuedCount, totalStarters: homeStarters.length || 11 }}
+          awayCoverage={{ valuedCount: awayValuedCount, totalStarters: awayStarters.length || 11 }}
           isLive={isLive}
           isFinished={isFinished}
           isUpcoming={isUpcoming}

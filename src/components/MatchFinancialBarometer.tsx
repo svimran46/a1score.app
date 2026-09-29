@@ -2,7 +2,12 @@
 
 import { useMemo } from "react";
 import { formatCompactEur } from "@/lib/utils";
-import { Scale, Zap, TrendingUp, AlertTriangle, ShieldCheck } from "lucide-react";
+import { Scale, AlertTriangle, ShieldCheck, Info } from "lucide-react";
+
+export interface TeamLineupCoverage {
+  valuedCount: number;
+  totalStarters: number;
+}
 
 interface MatchFinancialBarometerProps {
   homeName: string;
@@ -11,6 +16,8 @@ interface MatchFinancialBarometerProps {
   awayScore?: number | null;
   homeValue?: number | null;
   awayValue?: number | null;
+  homeCoverage?: TeamLineupCoverage;
+  awayCoverage?: TeamLineupCoverage;
   isLive: boolean;
   isFinished: boolean;
   isUpcoming: boolean;
@@ -23,6 +30,8 @@ export function MatchFinancialBarometer({
   awayScore = 0,
   homeValue = 0,
   awayValue = 0,
+  homeCoverage,
+  awayCoverage,
   isLive,
   isFinished,
   isUpcoming,
@@ -45,14 +54,25 @@ export function MatchFinancialBarometer({
     const ratio = minVal > 0 ? (maxVal / minVal).toFixed(1) : "1.0";
     const gapEur = maxVal - minVal;
 
+    const homeValued = homeCoverage?.valuedCount ?? 11;
+    const homeTotalCount = homeCoverage?.totalStarters ?? 11;
+    const awayValued = awayCoverage?.valuedCount ?? 11;
+    const awayTotalCount = awayCoverage?.totalStarters ?? 11;
+
+    // Minimum coverage threshold: at least 8/11 valued on both sides (approx 72%)
+    const isCoverageSufficient = homeValued >= 8 && awayValued >= 8;
+
     // Value vs Result logic
     let verdict = "Financial Parity Preview";
     let isUpset = false;
+    let isProvisional = !isCoverageSufficient;
 
     const hScore = homeScore ?? 0;
     const aScore = awayScore ?? 0;
 
-    if (!isUpcoming) {
+    if (!isCoverageSufficient) {
+      verdict = `Provisional Lineup Coverage (${homeValued}/${homeTotalCount} vs ${awayValued}/${awayTotalCount} valued): Disparity multiplier qualified until verified valuations are confirmed for full starting XIs.`;
+    } else if (!isUpcoming) {
       if (hScore === aScore) {
         verdict =
           gapEur > 50000000
@@ -83,8 +103,13 @@ export function MatchFinancialBarometer({
       gapEur,
       verdict,
       isUpset,
+      isProvisional,
+      homeValued,
+      homeTotalCount,
+      awayValued,
+      awayTotalCount,
     };
-  }, [hVal, aVal, total, homeName, awayName, homeScore, awayScore, isUpcoming]);
+  }, [hVal, aVal, total, homeName, awayName, homeScore, awayScore, isUpcoming, homeCoverage, awayCoverage]);
 
   if (!analysis || total === 0) return null;
 
@@ -108,9 +133,16 @@ export function MatchFinancialBarometer({
         <div className="flex items-center justify-between text-xs">
           <div className="space-y-0.5">
             <span className="font-semibold text-slate-300 block">{homeName}</span>
-            <span className="text-amber-400 font-black text-sm tabular-nums">
-              {formatCompactEur(hVal)}
-            </span>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-amber-400 font-black text-sm tabular-nums">
+                {formatCompactEur(hVal)}
+              </span>
+              {homeCoverage && (
+                <span className="text-[10px] text-slate-400 font-semibold tabular-nums">
+                  ({analysis.homeValued}/{analysis.homeTotalCount} valued)
+                </span>
+              )}
+            </div>
           </div>
 
           <div className="text-center">
@@ -118,15 +150,22 @@ export function MatchFinancialBarometer({
               Disparity Ratio
             </span>
             <span className="text-xs font-black text-white px-2 py-0.5 rounded-md bg-slate-800 border border-slate-700 tabular-nums">
-              {analysis.ratio}x
+              {analysis.isProvisional ? "~" : ""}{analysis.ratio}x
             </span>
           </div>
 
           <div className="space-y-0.5 text-right">
             <span className="font-semibold text-slate-300 block">{awayName}</span>
-            <span className="text-amber-400 font-black text-sm tabular-nums">
-              {formatCompactEur(aVal)}
-            </span>
+            <div className="flex items-baseline justify-end gap-1.5">
+              {awayCoverage && (
+                <span className="text-[10px] text-slate-400 font-semibold tabular-nums">
+                  ({analysis.awayValued}/{analysis.awayTotalCount} valued)
+                </span>
+              )}
+              <span className="text-amber-400 font-black text-sm tabular-nums">
+                {formatCompactEur(aVal)}
+              </span>
+            </div>
           </div>
         </div>
 
@@ -146,12 +185,16 @@ export function MatchFinancialBarometer({
       {/* Narrative Synthesis */}
       <div
         className={`p-3 rounded-2xl border text-xs flex items-center gap-2.5 ${
-          analysis.isUpset
+          analysis.isProvisional
+            ? "bg-slate-900/90 border-amber-500/30 text-amber-300/90"
+            : analysis.isUpset
             ? "bg-amber-500/10 border-amber-500/30 text-amber-300"
             : "bg-slate-900/80 border-slate-800/80 text-slate-300"
         }`}
       >
-        {analysis.isUpset ? (
+        {analysis.isProvisional ? (
+          <Info className="w-4 h-4 text-amber-400 flex-shrink-0" />
+        ) : analysis.isUpset ? (
           <AlertTriangle className="w-4 h-4 text-amber-400 flex-shrink-0" />
         ) : (
           <ShieldCheck className="w-4 h-4 text-emerald-400 flex-shrink-0" />

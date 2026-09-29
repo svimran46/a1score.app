@@ -61,7 +61,7 @@ export function PitchLineup({
     );
   }
 
-  // Calculate total market values if not given
+  // Calculate total market values and coverage
   const homeTotalVal =
     homeTeam.totalStarterMarketValue ||
     homeStarters.reduce((acc, p) => acc + (p.marketValue || 0), 0);
@@ -69,6 +69,12 @@ export function PitchLineup({
   const awayTotalVal =
     awayTeam.totalStarterMarketValue ||
     awayStarters.reduce((acc, p) => acc + (p.marketValue || 0), 0);
+
+  const homeValuedCount = homeStarters.filter((p) => typeof p.marketValue === "number" && p.marketValue > 0).length;
+  const awayValuedCount = awayStarters.filter((p) => typeof p.marketValue === "number" && p.marketValue > 0).length;
+
+  const activeValuedCount = activeTeamTab === "home" ? homeValuedCount : awayValuedCount;
+  const activeStarterCount = (activeTeamTab === "home" ? homeStarters.length : awayStarters.length) || 11;
 
   return (
     <div className="rounded-3xl glass-panel p-6 sm:p-8 border border-slate-800 space-y-6">
@@ -161,12 +167,23 @@ export function PitchLineup({
               </button>
             </div>
 
-            {/* Team Starter Valuation Summary */}
+            {/* Team Starter Valuation Summary & Coverage */}
             <div className="flex items-center gap-4 text-xs">
               <div className="flex flex-col items-end">
-                <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-                  Starting XI Value
-                </span>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                    Starting XI Value
+                  </span>
+                  <span
+                    className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                      activeValuedCount >= activeStarterCount && activeStarterCount > 0
+                        ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
+                        : "bg-amber-500/15 text-amber-400 border border-amber-500/30"
+                    }`}
+                  >
+                    {activeValuedCount}/{activeStarterCount} valued
+                  </span>
+                </div>
                 <span className="text-base font-black text-amber-400 tabular-nums">
                   {formatCompactEur(activeTeamTab === "home" ? homeTotalVal : awayTotalVal)}
                 </span>
@@ -292,7 +309,11 @@ export function PitchLineup({
                       <span className="mt-0.5 px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-amber-500/20 text-amber-400 border border-amber-500/30 tabular-nums">
                         {formatCompactEur(starter.marketValue)}
                       </span>
-                    ) : null}
+                    ) : (
+                      <span className="mt-0.5 px-1.5 py-0.5 rounded text-[9px] font-semibold bg-slate-900/80 text-slate-500 border border-slate-800">
+                        Unvalued
+                      </span>
+                    )}
                   </div>
                 );
               })}
@@ -314,6 +335,15 @@ export function PitchLineup({
                     {homeTeam.formation}
                   </span>
                 )}
+                <span
+                  className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                    homeValuedCount >= homeStarters.length && homeStarters.length > 0
+                      ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
+                      : "bg-amber-500/15 text-amber-400 border border-amber-500/30"
+                  }`}
+                >
+                  {homeValuedCount}/{homeStarters.length} valued
+                </span>
               </div>
               {homeTotalVal > 0 && (
                 <span className="text-amber-400 font-extrabold tabular-nums">
@@ -340,7 +370,11 @@ export function PitchLineup({
                     <span className="text-[11px] font-bold text-amber-400 tabular-nums">
                       {formatCompactEur(player.marketValue)}
                     </span>
-                  ) : null}
+                  ) : (
+                    <span className="text-[11px] font-medium text-slate-500">
+                      Unvalued
+                    </span>
+                  )}
                 </div>
               ))}
             </div>
@@ -356,6 +390,15 @@ export function PitchLineup({
                     {awayTeam.formation}
                   </span>
                 )}
+                <span
+                  className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                    awayValuedCount >= awayStarters.length && awayStarters.length > 0
+                      ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
+                      : "bg-amber-500/15 text-amber-400 border border-amber-500/30"
+                  }`}
+                >
+                  {awayValuedCount}/{awayStarters.length} valued
+                </span>
               </div>
               {awayTotalVal > 0 && (
                 <span className="text-amber-400 font-extrabold tabular-nums">
@@ -382,7 +425,11 @@ export function PitchLineup({
                     <span className="text-[11px] font-bold text-amber-400 tabular-nums">
                       {formatCompactEur(player.marketValue)}
                     </span>
-                  ) : null}
+                  ) : (
+                    <span className="text-[11px] font-medium text-slate-500">
+                      Unvalued
+                    </span>
+                  )}
                 </div>
               ))}
             </div>
