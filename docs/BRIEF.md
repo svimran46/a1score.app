@@ -6,12 +6,12 @@ A football intelligence site: player profiles, market-value history, transfer an
 POSITIONING (this drives every decision)
 "Money meets the pitch." Most sites do either live scores or player valuations. We combine them: squad market values inside the match center, value-vs-results analytics, value movers, and value history charts. Every feature should reinforce that identity.
 
-STACK (verify by reading the repo; correct me if wrong)
-- Next.js (App Router) deployed on Cloudflare Pages
+STACK (verified from repo)
+- Next.js (App Router) deployed on Cloudflare Pages (Edge Runtime)
 - Code on GitHub
-- API-Football for live matches, fixtures, events, lineups, stats, standings
-- Market values from Transfermarkt data (already decided; do not revisit)
-- Database and ORM: detect from the repo and state what you find
+- FotMob API for live matches, fixtures, match events, confirmed lineups, match stats, player season stats, and league standings (zero-cost, edge-compatible anti-bot signature protocol)
+- Transfermarkt for market values, valuation history, player profiles, transfer history, and club squad values (curated open dataset + direct edge live proxy)
+- Database & ORM: Supabase PostgreSQL with Prisma ORM (for schema & ingestion scripts) and @supabase/supabase-js (for Cloudflare Edge runtime HTTP queries)
 
 DESIGN DIRECTION
 Ink black and amber. Premium, calm, editorial. Dark by default, with a light theme. Details are in Phase 2.

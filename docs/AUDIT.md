@@ -118,8 +118,10 @@ Managed via **Prisma 5.22.0** on **Supabase PostgreSQL** (`aws-0-ap-northeast-1.
 3. **Live Club & Player Proxy:**
    * **Source:** Transfermarkt direct web scraping proxy (`src/lib/transfermarkt/client.ts`).
    * **Usage:** On-demand fetching for club squad sheets (`/verein/kader/verein/[id]`) and player search when requested.
-4. **API-Football Usage Audit:**
-   * **Current State:** **NOT CONNECTED.** There is no `API_FOOTBALL_KEY` or `RAPIDAPI_KEY` in `.env`, `.env.example`, or application code. The only references to API-Football are the unused `apiFootballId` column in Prisma and marketing text in `Footer.tsx`.
+4. **Data Provider Architecture Decision (No API-Football):**
+   * **Decision:** Replace API-Football entirely with **FotMob API** + **Transfermarkt**.
+   * **Rationale:** Eliminates API-Football's restrictive 100 req/day paywall and missing credentials. FotMob API provides fixtures, live scores, confirmed match lineups with formations, team stats, live events, league tables, and player ratings at zero cost with edge authentication. Transfermarkt provides player valuation histories, transfer records, career bios, and club rosters.
+   * **Action Items:** Season stats, league standings, and live matches will use FotMob API edge endpoints; market values and career transfers will use Transfermarkt data.
 
 ---
 
