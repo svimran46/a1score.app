@@ -277,11 +277,11 @@ Managed via **Prisma 5.22.0** on **Supabase PostgreSQL** (`aws-0-ap-northeast-1.
 
 ## 10. Architectural Risks & Blockers
 
-1. **API-Football Key & Quota Constraints:**
-   * Phase 1A/1D/1E and Phase 4 require API-Football for season stats, live match events, and lineups. An API-Football key is currently **missing** from `.env`. Free/starter tier quotas (100 req/day) can be exhausted in minutes if unthrottled or polled directly from clients.
+1. **FotMob API & Cloudflare Edge Ingestion:**
+   * FotMob API endpoints require valid `x-mas` anti-bot signature headers and proper caching to avoid Cloudflare/Akamai rate-limiting or 403 blocks. Direct client requests must be routed via edge API routes with edge caching (`s-maxage`).
 2. **Cloudflare Pages Edge Runtime Limitations:**
    * Edge Workers enforce strict CPU execution limits (50ms on free tier, 30s wall time) and do not support native Node.js TCP sockets. Direct PostgreSQL connections via `pg` fail in Cloudflare Pages; all database queries on edge must route through the Supabase REST/PostgREST HTTP API (`@supabase/supabase-js`).
 3. **Image Hotlink Vulnerability:**
-   * Hotlinking 16,649 player portraits from `img.a.transfermarkt.technology` creates a single point of failure (rate limiting, referer blocking, or broken URLs). An image mirroring pipeline to Cloudflare R2 is required.
+   * Hotlinking 16,649 player portraits from `img.a.transfermarkt.technology` creates a single point of failure (rate limiting, referer blocking, or broken URLs). An image mirroring pipeline or resilient proxy/fallback strategy is required.
 4. **Data Deduplication & Foreign Key Constraints:**
    * Merging duplicate clubs or introducing a season-scoped `LeagueSeasonClub` table requires careful data migration to avoid foreign key violation cascades in `Player.currentClubId`.
