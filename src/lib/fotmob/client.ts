@@ -651,6 +651,69 @@ export async function getMatchDetails(matchId: string | number) {
   const onPitchYellowCards = events.filter((e: any) => e.type === "Card" && e.card === "Yellow").length;
   const onPitchRedCards = events.filter((e: any) => e.type === "Card" && (e.card === "Red" || e.card === "YellowRed")).length;
 
+  // Extract goal scorers for home and away
+  const goalEvents = events.filter((e: any) => e.type === "Goal");
+  const homeGoalsMap = new Map<string, string[]>();
+  const awayGoalsMap = new Map<string, string[]>();
+
+  for (const g of goalEvents) {
+    const pName = g.player?.name || g.name || g.nameStr || "Goal";
+    let minuteStr = `${g.time ?? ""}'`;
+    if (g.overloadTime) {
+      minuteStr = `${g.time}+${g.overloadTime}'`;
+    }
+    if (g.ownGoal || g.isOwnGoal || g.shotType === "OwnGoal") {
+      minuteStr += " (OG)";
+    } else if (g.isPenalty || g.shotType === "Penalty") {
+      minuteStr += " (P)";
+    }
+
+    if (g.isHome) {
+      if (!homeGoalsMap.has(pName)) homeGoalsMap.set(pName, []);
+      homeGoalsMap.get(pName)!.push(minuteStr);
+    } else {
+      if (!awayGoalsMap.has(pName)) awayGoalsMap.set(pName, []);
+      awayGoalsMap.get(pName)!.push(minuteStr);
+    }
+  }
+
+  const homeScorers = Array.from(homeGoalsMap.entries()).map(([player, minutes]) => ({
+    player,
+    minutes: minutes.join(", "),
+  }));
+
+  const awayScorers = Array.from(awayGoalsMap.entries()).map(([player, minutes]) => ({
+    player,
+    minutes: minutes.join(", "),
+  }));
+
+  const isStarted = !!general.started || !!header.status?.started;
+  const isFinished = !!general.finished || !!header.status?.finished;
+  const isCancelled = !!general.cancelled || !!header.status?.cancelled;
+  const liveTimeShort = header.status?.liveTime?.short || "";
+  const isHT =
+    liveTimeShort.includes("HT") ||
+    header.status?.reason?.short === "HT" ||
+    (header.status?.halfs?.firstHalfEnded && !header.status?.halfs?.secondHalfStarted);
+
+  let standings: FotmobStandingsRow[] = [];
+  const targetLeagueId =
+    general.parentLeagueId ||
+    general.leagueId ||
+    content.table?.parentLeagueId ||
+    content.table?.leagueId;
+
+  if (targetLeagueId) {
+    try {
+      const standingsData = await getLeagueStandings(targetLeagueId);
+      if (standingsData && standingsData.standings) {
+        standings = standingsData.standings;
+      }
+    } catch {
+      // ignore
+    }
+  }
+
   return {
     id: matchId,
     general: {
@@ -660,32 +723,84 @@ export async function getMatchDetails(matchId: string | number) {
       leagueName: general.leagueName,
       matchRound: general.matchRound,
       countryCode: general.countryCode,
-      started: !!general.started,
-      finished: !!general.finished,
+      started: isStarted,
+      finished: isFinished,
+      cancelled: isCancelled,
       matchTimeUTC: general.matchTimeUTC,
+      matchTimeUTCDate: general.matchTimeUTCDate || header.status?.utcTime,
       teamColors: general.teamColors,
+    },
+    status: {
+      started: isStarted,
+      finished: isFinished,
+      cancelled: isCancelled,
+      isLive: isStarted && !isFinished && !isCancelled,
+      isHT: !!isHT,
+      isUpcoming: !isStarted && !isFinished && !isCancelled,
+      scoreStr:
+        header.status?.scoreStr ||
+        (isStarted ? `${header.teams?.[0]?.score ?? 0} - ${header.teams?.[1]?.score ?? 0}` : "vs"),
+      liveTime: header.status?.liveTime || null,
+      reason: header.status?.reason || null,
     },
     teams: {
       home: header.teams?.[0]
         ? {
             id: header.teams[0].id,
             name: header.teams[0].name,
-            score: header.teams[0].score,
+            score: header.teams[0].score ?? 0,
             imageUrl: sanitizeImageUrl(header.teams[0].imageUrl),
+            fifaRank: header.teams[0].fifaRank || null,
+            totalStarterMarketValue: content.lineup?.homeTeam?.totalStarterMarketValue || null,
           }
         : null,
       away: header.teams?.[1]
         ? {
             id: header.teams[1].id,
             name: header.teams[1].name,
-            score: header.teams[1].score,
+            score: header.teams[1].score ?? 0,
             imageUrl: sanitizeImageUrl(header.teams[1].imageUrl),
+            fifaRank: header.teams[1].fifaRank || null,
+            totalStarterMarketValue: content.lineup?.awayTeam?.totalStarterMarketValue || null,
           }
         : null,
+    },
+    scorers: {
+      home: homeScorers,
+      away: awayScorers,
+      totalCount: homeScorers.length + awayScorers.length,
     },
     events,
     lineup: content.lineup ? sanitizeObjectImages(content.lineup) : null,
     stats,
+    infoBox: content.matchFacts?.infoBox
+      ? {
+          tournament: content.matchFacts.infoBox.Tournament || null,
+          stadium: content.matchFacts.infoBox.Stadium || null,
+          referee: content.matchFacts.infoBox.Referee || null,
+          attendance: content.matchFacts.infoBox.Attendance || null,
+          matchDate: content.matchFacts.infoBox["Match Date"] || null,
+        }
+      : null,
+    h2h: content.h2h
+      ? {
+          summary: content.h2h.summary || [0, 0, 0],
+          matches: content.h2h.matches || [],
+        }
+      : null,
+    teamForm: content.matchFacts?.teamForm || null,
+    table: {
+      leagueName: general.leagueName,
+      standings,
+      hasTable: standings.length > 0,
+    },
+    shotmap: content.shotmap
+      ? {
+          shots: content.shotmap.shots || [],
+          periods: content.shotmap.Periods || null,
+        }
+      : null,
+    hasCommentary: false,
     cardReconciliation: {
       onPitchYellowCards,
       onPitchRedCards,

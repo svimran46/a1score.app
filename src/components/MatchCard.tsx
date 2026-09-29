@@ -2,6 +2,7 @@ import Link from "next/link";
 import { EntityImage } from "./EntityImage";
 import { FotmobMatch } from "@/lib/fotmob/client";
 import { formatCompactEur } from "@/lib/utils";
+import { LiveMinute } from "./LiveMinute";
 
 interface MatchCardProps {
   match: FotmobMatch;
@@ -42,23 +43,27 @@ export function MatchCard({
           {match.leagueName || "League Match"}
         </span>
         <div className="flex items-center gap-1.5">
-          {isLive && (
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500" />
+          {isLive ? (
+            <div className="font-bold px-2 py-0.5 rounded-md text-[11px] tabular-nums bg-rose-500/15 border border-rose-500/30 flex items-center">
+              <LiveMinute
+                shortTime={match.status.liveTime?.short}
+                longTime={match.status.liveTime?.long}
+                isLive={true}
+                showPulsingDot={true}
+                className="text-[11px] text-rose-400"
+              />
+            </div>
+          ) : (
+            <span
+              className={`font-bold px-2 py-0.5 rounded-md text-[11px] tabular-nums ${
+                isFinished
+                  ? "bg-slate-800 text-slate-400"
+                  : "bg-slate-800/60 text-slate-300"
+              }`}
+            >
+              {statusText}
             </span>
           )}
-          <span
-            className={`font-bold px-2 py-0.5 rounded-md text-[11px] tabular-nums ${
-              isLive
-                ? "bg-rose-500/15 text-rose-400 border border-rose-500/30"
-                : isFinished
-                ? "bg-slate-800 text-slate-400"
-                : "bg-slate-800/60 text-slate-300"
-            }`}
-          >
-            {statusText}
-          </span>
         </div>
       </div>
 
