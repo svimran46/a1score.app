@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getMatchesByDate } from "@/lib/fotmob/client";
 import { MatchCard } from "@/components/MatchCard";
 import { LiveAutoRefresher } from "@/components/LiveAutoRefresher";
+import { DateStripCarousel } from "@/components/DateStripCarousel";
 import { Radio, Calendar, Trophy, ChevronLeft, ChevronRight } from "lucide-react";
 
 import type { Metadata } from "next";
@@ -132,6 +133,9 @@ export default async function MatchesPage({ searchParams }: MatchesPageProps) {
           </div>
         </div>
       </div>
+
+      {/* 7-Day Quick-Jump Date Carousel */}
+      <DateStripCarousel activeDate={activeDate} activeFilter={activeFilter} />
 
       {/* Filter Tabs */}
       <div className="flex items-center gap-2 overflow-x-auto pb-1 border-b border-slate-800/80 text-xs">

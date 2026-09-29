@@ -4,6 +4,9 @@ import { notFound } from "next/navigation";
 import { getMatchDetails } from "@/lib/fotmob/client";
 import { formatCompactEur } from "@/lib/utils";
 import { LiveAutoRefresher } from "@/components/LiveAutoRefresher";
+import { MatchFinancialBarometer } from "@/components/MatchFinancialBarometer";
+import { PitchLineup } from "@/components/PitchLineup";
+import { MatchTimeline } from "@/components/MatchTimeline";
 import {
   ArrowLeft,
   Shield,
@@ -78,6 +81,14 @@ export default async function MatchDetailsPage({ params }: MatchPageProps) {
   const awayStarters = lineup?.awayTeam?.starters || [];
   const homeUnavailable = lineup?.homeTeam?.unavailable || [];
   const awayUnavailable = lineup?.awayTeam?.unavailable || [];
+
+  const homeStarterTotalVal =
+    lineup?.homeTeam?.totalStarterMarketValue ||
+    homeStarters.reduce((acc: number, p: any) => acc + (p.marketValue || 0), 0);
+
+  const awayStarterTotalVal =
+    lineup?.awayTeam?.totalStarterMarketValue ||
+    awayStarters.reduce((acc: number, p: any) => acc + (p.marketValue || 0), 0);
 
   return (
     <div className="space-y-8 max-w-5xl mx-auto">
@@ -218,144 +229,84 @@ export default async function MatchDetailsPage({ params }: MatchPageProps) {
         </div>
       </div>
 
+      {/* Financial Disparity & Value-to-Pitch Index */}
+      {(homeStarterTotalVal > 0 || awayStarterTotalVal > 0) && (
+        <MatchFinancialBarometer
+          homeName={homeTeam?.name || "Home"}
+          awayName={awayTeam?.name || "Away"}
+          homeScore={homeTeam?.score}
+          awayScore={awayTeam?.score}
+          homeValue={homeStarterTotalVal}
+          awayValue={awayStarterTotalVal}
+          isLive={isLive}
+          isFinished={isFinished}
+          isUpcoming={isUpcoming}
+        />
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column: Lineups */}
+        {/* Left Column: Tactical Pitch Lineups & Unavailable */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="rounded-2xl glass-panel p-6 border border-slate-800 space-y-6">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-              <div className="flex items-center gap-2">
-                <Users className="w-5 h-5 text-emerald-400" />
-                <h3 className="text-base font-bold text-white tracking-tight">
-                  Confirmed Lineups
-                </h3>
+          <PitchLineup
+            homeTeam={{
+              name: homeTeam?.name,
+              formation: lineup?.homeTeam?.formation,
+              starters: homeStarters,
+              totalStarterMarketValue: homeStarterTotalVal,
+            }}
+            awayTeam={{
+              name: awayTeam?.name,
+              formation: lineup?.awayTeam?.formation,
+              starters: awayStarters,
+              totalStarterMarketValue: awayStarterTotalVal,
+            }}
+            homeName={homeTeam?.name || "Home Team"}
+            awayName={awayTeam?.name || "Away Team"}
+          />
+
+          {/* Injuries / Unavailable */}
+          {(homeUnavailable.length > 0 || awayUnavailable.length > 0) && (
+            <div className="rounded-3xl glass-panel p-6 border border-slate-800 space-y-3">
+              <div className="flex items-center gap-2 text-xs font-bold text-amber-400">
+                <AlertCircle className="w-4 h-4" />
+                <span>Injured &amp; Unavailable Players</span>
               </div>
-              <span className="text-xs text-slate-500">Starting XI</span>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                {homeUnavailable.length > 0 && (
+                  <div className="space-y-1.5">
+                    <span className="text-slate-400 font-semibold">{homeTeam?.name}</span>
+                    {homeUnavailable.map((p: any) => (
+                      <div
+                        key={p.id}
+                        className="flex items-center justify-between p-2 rounded-lg bg-red-500/5 border border-red-500/20 text-slate-300"
+                      >
+                        <span className="truncate">{p.name}</span>
+                        <span className="text-[10px] text-red-400">
+                          {p.unavailability?.expectedReturn || "Injured"}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {awayUnavailable.length > 0 && (
+                  <div className="space-y-1.5">
+                    <span className="text-slate-400 font-semibold">{awayTeam?.name}</span>
+                    {awayUnavailable.map((p: any) => (
+                      <div
+                        key={p.id}
+                        className="flex items-center justify-between p-2 rounded-lg bg-red-500/5 border border-red-500/20 text-slate-300"
+                      >
+                        <span className="truncate">{p.name}</span>
+                        <span className="text-[10px] text-red-400">
+                          {p.unavailability?.expectedReturn || "Injured"}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
-
-            {homeStarters.length > 0 || awayStarters.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Home Starters */}
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between text-xs font-bold text-slate-300 pb-2 border-b border-slate-800/60">
-                    <span>{homeTeam?.name} Starting XI</span>
-                    {lineup?.homeTeam?.totalStarterMarketValue && (
-                      <span className="text-amber-400 font-extrabold tabular-nums">
-                        {formatCompactEur(lineup.homeTeam.totalStarterMarketValue)}
-                      </span>
-                    )}
-                  </div>
-                  <div className="space-y-2">
-                    {homeStarters.map((player: any) => (
-                      <div
-                        key={player.id}
-                        className="flex items-center justify-between p-2 rounded-xl bg-slate-900/60 hover:bg-slate-900 border border-slate-800/40 text-xs transition-colors"
-                      >
-                        <div className="flex items-center gap-2.5 min-w-0">
-                          <span className="w-5 text-center font-bold text-slate-500 tabular-nums">
-                            {player.shirtNumber || "-"}
-                          </span>
-                          <span className="font-semibold text-white truncate">
-                            {player.name}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2 flex-shrink-0">
-                          {player.marketValue ? (
-                            <span className="text-[11px] font-bold text-amber-400 tabular-nums">
-                              {formatCompactEur(player.marketValue)}
-                            </span>
-                          ) : null}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Away Starters */}
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between text-xs font-bold text-slate-300 pb-2 border-b border-slate-800/60">
-                    <span>{awayTeam?.name} Starting XI</span>
-                    {lineup?.awayTeam?.totalStarterMarketValue && (
-                      <span className="text-amber-400 font-extrabold tabular-nums">
-                        {formatCompactEur(lineup.awayTeam.totalStarterMarketValue)}
-                      </span>
-                    )}
-                  </div>
-                  <div className="space-y-2">
-                    {awayStarters.map((player: any) => (
-                      <div
-                        key={player.id}
-                        className="flex items-center justify-between p-2 rounded-xl bg-slate-900/60 hover:bg-slate-900 border border-slate-800/40 text-xs transition-colors"
-                      >
-                        <div className="flex items-center gap-2.5 min-w-0">
-                          <span className="w-5 text-center font-bold text-slate-500 tabular-nums">
-                            {player.shirtNumber || "-"}
-                          </span>
-                          <span className="font-semibold text-white truncate">
-                            {player.name}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2 flex-shrink-0">
-                          {player.marketValue ? (
-                            <span className="text-[11px] font-bold text-amber-400 tabular-nums">
-                              {formatCompactEur(player.marketValue)}
-                            </span>
-                          ) : null}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="text-center py-8 text-slate-500 text-xs">
-                Lineups not yet confirmed for this match. Check back closer to kickoff.
-              </div>
-            )}
-
-            {/* Injuries / Unavailable */}
-            {(homeUnavailable.length > 0 || awayUnavailable.length > 0) && (
-              <div className="pt-6 border-t border-slate-800 space-y-3">
-                <div className="flex items-center gap-2 text-xs font-bold text-amber-400">
-                  <AlertCircle className="w-4 h-4" />
-                  <span>Injured & Unavailable Players</span>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                  {homeUnavailable.length > 0 && (
-                    <div className="space-y-1.5">
-                      <span className="text-slate-400 font-semibold">{homeTeam?.name}</span>
-                      {homeUnavailable.map((p: any) => (
-                        <div
-                          key={p.id}
-                          className="flex items-center justify-between p-2 rounded-lg bg-red-500/5 border border-red-500/20 text-slate-300"
-                        >
-                          <span className="truncate">{p.name}</span>
-                          <span className="text-[10px] text-red-400">
-                            {p.unavailability?.expectedReturn || "Injured"}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                  {awayUnavailable.length > 0 && (
-                    <div className="space-y-1.5">
-                      <span className="text-slate-400 font-semibold">{awayTeam?.name}</span>
-                      {awayUnavailable.map((p: any) => (
-                        <div
-                          key={p.id}
-                          className="flex items-center justify-between p-2 rounded-lg bg-red-500/5 border border-red-500/20 text-slate-300"
-                        >
-                          <span className="truncate">{p.name}</span>
-                          <span className="text-[10px] text-red-400">
-                            {p.unavailability?.expectedReturn || "Injured"}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
+          )}
         </div>
 
         {/* Right Column: Match Stats & Timeline */}
@@ -416,40 +367,14 @@ export default async function MatchDetailsPage({ params }: MatchPageProps) {
             )}
           </div>
 
-          {/* Match Events */}
-          {events.length > 0 && (
-            <div className="rounded-2xl glass-panel p-6 border border-slate-800 space-y-4">
-              <div className="flex items-center gap-2 pb-3 border-b border-slate-800">
-                <Activity className="w-5 h-5 text-purple-400" />
-                <h3 className="text-base font-bold text-white tracking-tight">
-                  Timeline Events
-                </h3>
-              </div>
-
-              <div className="space-y-2.5">
-                {events.map((ev: any, idx: number) => (
-                  <div
-                    key={idx}
-                    className="flex items-center gap-3 p-2 rounded-xl bg-slate-900/60 border border-slate-800/40 text-xs"
-                  >
-                    <span className="font-bold text-emerald-400 w-8 text-center flex-shrink-0">
-                      {ev.time}&apos;
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <span className="font-semibold text-white truncate block">
-                        {ev.player?.name || ev.type || "Match Event"}
-                      </span>
-                      {ev.homeScore !== undefined && ev.awayScore !== undefined && (
-                        <span className="text-[10px] text-slate-400">
-                          Score: {ev.homeScore} - {ev.awayScore}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+          {/* Match Timeline Events */}
+          <MatchTimeline
+            events={events}
+            homeName={homeTeam?.name || "Home"}
+            awayName={awayTeam?.name || "Away"}
+            onPitchYellowCards={match.cardReconciliation?.onPitchYellowCards}
+            onPitchRedCards={match.cardReconciliation?.onPitchRedCards}
+          />
         </div>
       </div>
     </div>
