@@ -1,31 +1,43 @@
-PROJECT BRIEF: a1score.app
+# PROJECT BRIEF: a1score.app
 
-WHAT IT IS
-A football intelligence site: player profiles, market-value history, transfer analytics, club/league pages, and a live match center. Live at https://a1score.pages.dev/.
+## 1. What It Is
+A football intelligence platform synthesizing real-time match events with transfer market valuations, squad expenditure analytics, and player valuation histories.  
+Live deployment: `https://a1score.pages.dev/`
 
-POSITIONING (this drives every decision)
-"Money meets the pitch." Most sites do either live scores or player valuations. We combine them: squad market values inside the match center, value-vs-results analytics, value movers, and value history charts. Every feature should reinforce that identity.
+## 2. Positioning ("Money Meets the Pitch")
+Most football platforms either track live scores without financial context, or track player valuations without real-time pitch intelligence. `a1score.app` bridges this gap:
+- Starting XI market values and live disparity barometers inside the match center.
+- Value vs. Results analytics (tracking underdogs vs. market heavyweights).
+- 254k+ historical valuation trajectory curves with career peaks.
+- Market movers (biggest risers and fallers).
+- Club squad valuation pyramids and commercial transfer ledgers.
+- League financial parity and "Points-per-€10M" valuation efficiency metrics.
 
-STACK (verified from repo)
-- Next.js (App Router) deployed on Cloudflare Pages (Edge Runtime)
-- Code on GitHub
-- FotMob API for live matches, fixtures, match events, confirmed lineups, match stats, player season stats, and league standings (zero-cost, edge-compatible anti-bot signature protocol)
-- Transfermarkt for market values, valuation history, player profiles, transfer history, and club squad values (curated open dataset + direct edge live proxy)
-- Database & ORM: Supabase PostgreSQL with Prisma ORM (for schema & ingestion scripts) and @supabase/supabase-js (for Cloudflare Edge runtime HTTP queries)
+Every feature must directly reinforce this identity.
 
-DESIGN DIRECTION
-Ink black and amber. Premium, calm, editorial. Dark by default, with a light theme. Details are in Phase 2.
+## 3. Technology Stack & Runtime Contracts
+- **Framework:** Next.js 14 App Router deployed to **Cloudflare Pages Edge Runtime** via `@cloudflare/next-on-pages`.
+- **Database & Storage:** Supabase PostgreSQL with Prisma 5 (CLI migrations and ingestion scripts) and `@supabase/supabase-js` (PostgREST HTTP REST API on the Edge). Direct TCP connections (`pg`/`PrismaClient`) are prohibited on edge routes.
+- **Edge Deployment Target:** Every dynamic route must declare `export const runtime = "edge"`.
+- **Data Providers:**
+  1. **FotMob API:** Exclusively supplies fixtures, live match events, confirmed starting lineups, pitch coordinates, official match stats, and league standings. Authenticated via pure-JS MD5 anti-bot signature generator (`x-mas` protocol) with zero Node crypto dependencies.
+  2. **Transfermarkt:** Exclusively supplies player market valuations, historical valuation snapshots, career player profiles, and commercial transfer fees (open Kaggle dataset mirror in Supabase + live edge scraper proxy `src/lib/transfermarkt/client.ts`).
+  3. **Strict Ban on API-Football:** Completely prohibited. No code, keys, or fallbacks may rely on API-Football.
 
-ENGINEERING RULES (apply to every task)
-1. Read before writing. Inspect the repo, then propose a plan and WAIT for approval before editing.
-2. Never break existing routes or URLs. If a URL must change, add a redirect.
-3. TypeScript strict. No `any` unless commented with a reason.
-4. Small, reviewable commits with clear messages. Work on a feature branch, never on main.
-5. No new dependency without a one-line justification and a bundle-size note. Prefer what's already installed.
-6. Never commit secrets. All keys go through env vars; update `.env.example`.
-7. Never invent data. If a field isn't in a real source, hide the UI for it rather than fabricating.
-8. Accessibility: semantic HTML, visible focus states, keyboard support, WCAG AA contrast, respect prefers-reduced-motion.
-9. Performance budget: LCP < 2.0s on mobile 4G for home/player/club pages, CLS < 0.05, keep client JS lean (server components by default; client components only where interaction requires).
-10. Cloudflare compatibility: check every API/route/library against the Cloudflare Pages runtime (edge vs node) before using it.
-11. Destructive database changes (drops, dedupes, migrations that lose data) need a dry run report and my explicit approval first.
-12. Every phase ends with: a summary of what changed, files touched, how to test manually, and any follow-ups or risks.
+## 4. Design System & Visual Guidelines
+- **Palette:** Ink black (`#09090b` / `slate-950`) base with warm amber accents (`#f59e0b` dark, `#9A5B00` on light theme for WCAG AA contrast).
+- **Live Status:** Pure Red (`#EF4444` / `rose-500`) reserved exclusively for live matches, active stoppage clocks, and red cards. No green for live status.
+- **Theme:** Dark by default with zero-FOUC light mode toggle (inline anti-flash script in `src/app/layout.tsx`).
+- **Typography & Numeral Stability:** Tabular numerals (`font-variant-numeric: tabular-nums`) must be applied across all currency amounts, scoreboard timers, and statistics to eliminate jitter during 5-second live polling.
+
+## 5. Engineering & Data Integrity Rules
+1. **Never Invent Data:** If a metric, event, or valuation is missing, hide the component or render an honest fallback. Never guess or fabricate explanations in user-facing UI.
+2. **Lineup Valuation Coverage Guard:** When calculating Starting XI valuations or disparity ratios from FotMob lineups, always compute and display the coverage ratio (e.g. `"8/11 valued"`). If coverage is incomplete, qualify or suppress the disparity banner to prevent false narratives.
+3. **Shared Edge Caching & Polling Guards:**
+   - Edge endpoints must declare `Cache-Control: public, s-maxage=5, stale-while-revalidate=10` with ETags.
+   - Client polling (`LiveAutoRefresher`) must employ an overlap guard (`inFlightRef`), exponential backoff on error/429, and automatic suspension when `document.visibilityState === "hidden"`.
+4. **Data Deduplication & Season Scoping:** League membership must be season-scoped to prevent historical club counts from polluting active competition tables. Validation script (`npm run data:validate`) must support `--dry-run` and `--json`.
+5. **Image Delivery on Cloudflare Pages:** Standard Next.js `/_next/image` requires an edge-friendly loader or unoptimized configuration. All `<Image>` tags must provide restrictive `sizes` props and fallback to resilient SVG icons (`Shield`, `User`, `Trophy`) on load error.
+6. **SEO Completeness:** Every public entity route must provide dynamic metadata with canonical URLs, OpenGraph/Twitter card images, and JSON-LD structured data. Internal search and utility pages must specify `noindex`.
+7. **TypeScript Strictness:** Strict mode is enforced. No untyped `any` leaks.
+8. **Small Reviewable PRs:** 1 feature/fix = 1 branch = 1 PR with small, clean commits and verified test runs. Never push directly to `main`.
