@@ -76,70 +76,130 @@ export function TransfersTable({ transfers }: TransfersTableProps) {
         )}
       </div>
 
-      <div className="mt-4 overflow-x-auto">
+      <div className="mt-4">
         {displayedTransfers.length === 0 ? (
           <div className="py-8 text-center text-slate-500 text-xs">
             No senior transfers recorded. (All moves were internal academy promotions)
           </div>
         ) : (
-          <table className="w-full text-left text-xs">
-            <thead>
-              <tr className="text-slate-400 uppercase tracking-wider border-b border-slate-800/80">
-                <th className="pb-3 font-semibold">Date</th>
-                <th className="pb-3 font-semibold">From Club</th>
-                <th className="pb-3 text-center"></th>
-                <th className="pb-3 font-semibold">To Club</th>
-                <th className="pb-3 font-semibold text-right">Fee</th>
-                <th className="pb-3 font-semibold text-right">Type</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-800/50">
+          <>
+            {/* Mobile Stacked Cards (<md) */}
+            <div className="md:hidden space-y-3">
               {displayedTransfers.map((t) => {
                 const feeInfo = formatTransferFee(t.feeEur, t.transferType);
                 const isYouth = isYouthMove(t.fromClubName, t.toClubName, t.transferType);
 
                 return (
-                  <tr key={t.id} className="hover:bg-slate-800/30 transition-colors">
-                    <td className="py-3 text-slate-300 font-medium whitespace-nowrap">
-                      {formatDate(t.date)}
-                    </td>
-                    <td className="py-3 text-slate-300 font-medium truncate max-w-[140px]">
-                      {t.fromClubName || "Unknown"}
-                    </td>
-                    <td className="py-3 text-center text-slate-500 px-2">
-                      <ArrowRight className="w-3.5 h-3.5 mx-auto" />
-                    </td>
-                    <td className="py-3 text-white font-semibold truncate max-w-[140px]">
-                      <div className="flex items-center gap-1.5">
-                        <span>{t.toClubName || "Unknown"}</span>
+                  <div
+                    key={t.id}
+                    className="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800/80 space-y-2 text-xs"
+                  >
+                    <div className="flex items-center justify-between text-slate-400">
+                      <span className="font-semibold text-slate-300">
+                        {formatDate(t.date)}
+                      </span>
+                      <span className="px-2 py-0.5 rounded bg-slate-800 text-[10px] font-semibold text-slate-300 border border-slate-700/50">
+                        {isYouth ? "Promotion" : t.transferType || "Transfer"}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between gap-2 text-slate-200">
+                      <div className="flex items-center gap-1.5 min-w-0 flex-1">
+                        <span className="truncate text-slate-400 font-medium">
+                          {t.fromClubName || "Unknown"}
+                        </span>
+                        <ArrowRight className="w-3 h-3 text-slate-500 shrink-0" />
+                        <span className="truncate text-white font-bold">
+                          {t.toClubName || "Unknown"}
+                        </span>
                         {isYouth && (
                           <span
                             title="Academy / Youth Move"
-                            className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                            className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-[9px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20 shrink-0"
                           >
                             <GraduationCap className="w-2.5 h-2.5" />
                             Youth
                           </span>
                         )}
                       </div>
-                    </td>
-                    <td
-                      className={`py-3 text-right font-bold whitespace-nowrap tabular-nums ${
-                        feeInfo.isAmount ? "text-amber-400" : "text-slate-400 font-normal"
-                      }`}
-                    >
-                      {feeInfo.label}
-                    </td>
-                    <td className="py-3 text-right text-slate-400 capitalize whitespace-nowrap">
-                      <span className="px-2 py-0.5 rounded bg-slate-800/80 text-[11px] text-slate-300 border border-slate-700/50">
-                        {isYouth ? "Promotion" : t.transferType || "Transfer"}
-                      </span>
-                    </td>
-                  </tr>
+
+                      <div className="shrink-0 text-right">
+                        <span
+                          className={`font-black tabular-nums whitespace-nowrap ${
+                            feeInfo.isAmount ? "text-amber-400 text-sm" : "text-slate-400 text-xs font-normal"
+                          }`}
+                        >
+                          {feeInfo.label}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                 );
               })}
-            </tbody>
-          </table>
+            </div>
+
+            {/* Desktop & Tablet Full Table (md+) with Sticky First Column */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead>
+                  <tr className="text-slate-400 uppercase tracking-wider border-b border-slate-800/80">
+                    <th className="pb-3 font-semibold sticky left-0 bg-slate-900/95 z-10 pr-4">Date</th>
+                    <th className="pb-3 font-semibold">From Club</th>
+                    <th className="pb-3 text-center"></th>
+                    <th className="pb-3 font-semibold">To Club</th>
+                    <th className="pb-3 font-semibold text-right">Fee</th>
+                    <th className="pb-3 font-semibold text-right">Type</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800/50">
+                  {displayedTransfers.map((t) => {
+                    const feeInfo = formatTransferFee(t.feeEur, t.transferType);
+                    const isYouth = isYouthMove(t.fromClubName, t.toClubName, t.transferType);
+
+                    return (
+                      <tr key={t.id} className="hover:bg-slate-800/30 transition-colors">
+                        <td className="py-3 text-slate-300 font-medium whitespace-nowrap sticky left-0 bg-slate-900/95 z-10 pr-4">
+                          {formatDate(t.date)}
+                        </td>
+                        <td className="py-3 text-slate-300 font-medium truncate max-w-[140px]">
+                          {t.fromClubName || "Unknown"}
+                        </td>
+                        <td className="py-3 text-center text-slate-500 px-2">
+                          <ArrowRight className="w-3.5 h-3.5 mx-auto" />
+                        </td>
+                        <td className="py-3 text-white font-semibold truncate max-w-[140px]">
+                          <div className="flex items-center gap-1.5">
+                            <span>{t.toClubName || "Unknown"}</span>
+                            {isYouth && (
+                              <span
+                                title="Academy / Youth Move"
+                                className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                              >
+                                <GraduationCap className="w-2.5 h-2.5" />
+                                Youth
+                              </span>
+                            )}
+                          </div>
+                        </td>
+                        <td
+                          className={`py-3 text-right font-bold whitespace-nowrap tabular-nums ${
+                            feeInfo.isAmount ? "text-amber-400" : "text-slate-400 font-normal"
+                          }`}
+                        >
+                          {feeInfo.label}
+                        </td>
+                        <td className="py-3 text-right text-slate-400 capitalize whitespace-nowrap">
+                          <span className="px-2 py-0.5 rounded bg-slate-800/80 text-[11px] text-slate-300 border border-slate-700/50">
+                            {isYouth ? "Promotion" : t.transferType || "Transfer"}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
     </div>

@@ -136,13 +136,87 @@ export function ClubTransferLedger({
         </div>
       </div>
 
-      {/* Transfer Ledger Table */}
-      <div className="overflow-x-auto">
+      {/* Mobile Stacked Cards (<md) */}
+      <div className="md:hidden space-y-3">
+        {activeList.map((t, index) => {
+          const p = t.player;
+          const extId = p ? (p.sourceId || p.externalId || p.id) : null;
+          const slug = p
+            ? p.slug || `${p.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${extId}`
+            : null;
+          const counterparty = activeTab === "arrivals" ? t.fromClubName : t.toClubName;
+          const feeInfo = formatTransferFee(t.feeEur, t.transferType);
+
+          return (
+            <div
+              key={t.id}
+              className="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800/80 space-y-2.5 text-xs"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="w-5 text-center font-bold text-slate-500 tabular-nums">
+                    #{index + 1}
+                  </span>
+                  {p && slug ? (
+                    <Link href={`/players/${slug}`} className="flex items-center gap-2 group">
+                      <div className="relative w-7 h-7 rounded-lg bg-slate-800 overflow-hidden shrink-0 border border-slate-700/60">
+                        <EntityImage
+                          src={p.photoUrl}
+                          alt={p.fullName}
+                          fill
+                          sizes="28px"
+                          entityType="player"
+                          className="object-cover"
+                        />
+                      </div>
+                      <span className="text-white font-bold group-hover:text-amber-400 transition-colors truncate max-w-[150px]">
+                        {p.commonName || p.fullName}
+                      </span>
+                    </Link>
+                  ) : (
+                    <span className="text-slate-300 font-medium">Unknown Player</span>
+                  )}
+                </div>
+
+                <span className="px-2 py-0.5 rounded bg-slate-800 text-[10px] font-semibold text-slate-300 border border-slate-700/60">
+                  {p?.position || "Player"}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between gap-2 pt-1 border-t border-slate-800/60 text-slate-300">
+                <div className="flex items-center gap-1.5 truncate flex-1 min-w-0">
+                  <Building2 className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                  <span className="truncate text-slate-400">
+                    {counterparty || "Direct / Open Market"}
+                  </span>
+                </div>
+
+                <div className="shrink-0 text-right">
+                  <span
+                    className={`font-black tabular-nums whitespace-nowrap text-sm ${
+                      feeInfo.isAmount
+                        ? activeTab === "arrivals"
+                          ? "text-amber-400"
+                          : "text-emerald-400"
+                        : "text-slate-400 text-xs font-semibold"
+                    }`}
+                  >
+                    {feeInfo.label}
+                  </span>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Desktop & Tablet Full Table (md+) with Sticky First Column */}
+      <div className="hidden md:block overflow-x-auto">
         <table className="w-full text-left text-xs">
           <thead>
             <tr className="text-slate-400 uppercase tracking-wider border-b border-slate-800/80">
-              <th className="pb-3 w-8 font-semibold text-center">#</th>
-              <th className="pb-3 font-semibold">Player</th>
+              <th className="pb-3 w-8 font-semibold text-center sticky left-0 bg-slate-900/95 z-10">#</th>
+              <th className="pb-3 font-semibold sticky left-8 bg-slate-900/95 z-10 pr-4">Player</th>
               <th className="pb-3 font-semibold">Position</th>
               <th className="pb-3 font-semibold">
                 {activeTab === "arrivals" ? "Signed From" : "Sold To"}
@@ -167,10 +241,10 @@ export function ClubTransferLedger({
                   key={t.id}
                   className="hover:bg-slate-800/30 transition-colors group"
                 >
-                  <td className="py-3 text-center font-bold text-slate-500 tabular-nums">
+                  <td className="py-3 text-center font-bold text-slate-500 tabular-nums sticky left-0 bg-slate-900/95 z-10">
                     {index + 1}
                   </td>
-                  <td className="py-3 pr-4">
+                  <td className="py-3 pr-4 sticky left-8 bg-slate-900/95 z-10">
                     {p && slug ? (
                       <Link
                         href={`/players/${slug}`}
@@ -186,7 +260,7 @@ export function ClubTransferLedger({
                             className="object-cover"
                           />
                         </div>
-                        <span className="text-white font-semibold group-hover:text-amber-400 transition-colors">
+                        <span className="text-white font-semibold group-hover:text-amber-400 transition-colors whitespace-nowrap">
                           {p.commonName || p.fullName}
                         </span>
                       </Link>
@@ -197,7 +271,7 @@ export function ClubTransferLedger({
                     )}
                   </td>
                   <td className="py-3 text-slate-300">
-                    <span className="px-2 py-0.5 rounded bg-slate-800 text-[11px] font-medium border border-slate-700/60">
+                    <span className="px-2 py-0.5 rounded bg-slate-800 text-[11px] font-medium border border-slate-700/60 whitespace-nowrap">
                       {p?.position || "Player"}
                     </span>
                   </td>

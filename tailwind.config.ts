@@ -8,7 +8,25 @@ const config: Config = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    screens: {
+      xs: "320px",
+      sm: "480px",
+      md: "768px",
+      lg: "1024px",
+      xl: "1280px",
+      "2xl": "1536px",
+      "3xl": "1920px",
+      "4xl": "2560px",
+      "5xl": "3840px",
+    },
     extend: {
+      maxWidth: {
+        "container-xl": "1280px",
+        "container-2xl": "1440px",
+        "container-3xl": "1760px",
+        "container-4xl": "2200px",
+        "container-5xl": "3200px",
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",

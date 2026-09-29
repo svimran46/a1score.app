@@ -32,7 +32,7 @@ export default async function ClubsPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6 gap-3.5 sm:gap-4">
         {clubs.length > 0 ? (
           clubs.map((club) => (
             <Link

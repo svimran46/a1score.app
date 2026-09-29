@@ -190,10 +190,10 @@ export function MarketValueChart({
         </div>
       </div>
 
-      {/* Chart Canvas */}
-      <div className="h-[300px] w-full pt-4">
+      {/* Chart Canvas: fluid height across mobile, tablet, desktop and TV */}
+      <div className="h-[280px] sm:h-[340px] lg:h-[400px] 3xl:h-[480px] w-full pt-4">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={filteredData} margin={{ top: 15, right: 10, left: -20, bottom: 0 }}>
+          <AreaChart data={filteredData} margin={{ top: 15, right: 12, left: -16, bottom: 0 }}>
             <defs>
               <linearGradient id="valGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.35} />
@@ -208,6 +208,7 @@ export function MarketValueChart({
               tickLine={false}
               axisLine={false}
               dy={10}
+              interval="preserveStartEnd"
             />
             <YAxis
               stroke="#64748b"
@@ -217,6 +218,7 @@ export function MarketValueChart({
               tickFormatter={(v) => formatCompactEur(v)}
             />
             <Tooltip
+              wrapperStyle={{ outline: "none", zIndex: 50 }}
               content={({ active, payload }) => {
                 if (active && payload && payload.length) {
                   const d = payload[0].payload;
