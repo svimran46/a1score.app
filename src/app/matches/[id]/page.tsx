@@ -15,12 +15,43 @@ import {
   Trophy,
 } from "lucide-react";
 
+import type { Metadata } from "next";
+
 export const revalidate = 5; // Ultra-fresh match details every 5s
 export const runtime = "edge";
 
 interface MatchPageProps {
   params: {
     id: string;
+  };
+}
+
+export async function generateMetadata({ params }: MatchPageProps): Promise<Metadata> {
+  const match = await getMatchDetails(params.id);
+  if (!match) {
+    return {
+      title: "Match Not Found | a1score.app",
+    };
+  }
+
+  const home = match.teams?.home?.name || "Home Team";
+  const away = match.teams?.away?.name || "Away Team";
+  const scoreStr = match.general?.started
+    ? `${match.teams?.home?.score ?? 0} - ${match.teams?.away?.score ?? 0}`
+    : "vs";
+  const statusStr = match.general?.finished
+    ? "Full Time"
+    : match.general?.started
+    ? "LIVE"
+    : "Upcoming";
+
+  return {
+    title: `${home} ${scoreStr} ${away} — Live Match Center (${statusStr}) | a1score.app`,
+    description: `Live match intelligence for ${home} ${scoreStr} ${away}. Confirmed lineups, tactical formations, live match timeline, stats, and squad market valuations on a1score.app.`,
+    openGraph: {
+      title: `${home} ${scoreStr} ${away} — Live Match Center`,
+      description: `Live score, lineups, and squad valuations for ${home} vs ${away}.`,
+    },
   };
 }
 
@@ -372,6 +403,9 @@ export default async function MatchDetailsPage({ params }: MatchPageProps) {
                     </div>
                   );
                 })}
+                <p className="text-[10px] text-slate-500 pt-2 border-t border-slate-800/60 leading-relaxed">
+                  * Official competition match statistics reconcile on-pitch incidents, bench cautions, and post-whistle disciplinary cards recorded by match officials.
+                </p>
               </div>
             ) : (
               <div className="text-center py-6 text-slate-500 text-xs">

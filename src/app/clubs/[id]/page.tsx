@@ -5,12 +5,37 @@ import { getClubById } from "@/lib/data/clubs";
 import { formatCompactEur, formatEur } from "@/lib/utils";
 import { Shield, Users, Trophy, Globe, User } from "lucide-react";
 
+import type { Metadata } from "next";
+
 export const revalidate = 3600;
 export const runtime = "edge";
 
 interface ClubPageProps {
   params: {
     id: string;
+  };
+}
+
+export async function generateMetadata({ params }: ClubPageProps): Promise<Metadata> {
+  const club = await getClubById(params.id);
+  if (!club) {
+    return {
+      title: "Club Not Found | a1score.app",
+    };
+  }
+
+  const formattedVal = club.totalSquadValue
+    ? formatCompactEur(club.totalSquadValue)
+    : "Valuation pending";
+
+  return {
+    title: `${club.name} — Squad Market Value (${formattedVal}), Roster & Stats | a1score.app`,
+    description: `Official squad sheet, player valuations, and financial analytics for ${club.name}. Total squad valuation: ${formattedVal}. Detailed roster profiles on a1score.app.`,
+    openGraph: {
+      title: `${club.name} — Squad Market Value (${formattedVal})`,
+      description: `Explore ${club.name} squad valuation, player roster, and transfer profiles.`,
+      images: club.logoUrl ? [{ url: club.logoUrl }] : undefined,
+    },
   };
 }
 
@@ -33,6 +58,7 @@ export default async function ClubPage({ params }: ClubPageProps) {
                   src={club.logoUrl}
                   alt={club.name}
                   fill
+                  sizes="96px"
                   className="object-contain p-2"
                 />
               ) : (
@@ -114,7 +140,13 @@ export default async function ClubPage({ params }: ClubPageProps) {
                       <Link href={`/players/${slug}`} className="flex items-center gap-3">
                         <div className="relative w-8 h-8 rounded-lg bg-slate-800 overflow-hidden flex-shrink-0">
                           {p.photoUrl ? (
-                            <Image src={p.photoUrl} alt={p.fullName} fill className="object-cover" />
+                            <Image
+                              src={p.photoUrl}
+                              alt={p.fullName}
+                              fill
+                              sizes="32px"
+                              className="object-cover"
+                            />
                           ) : (
                             <User className="w-4 h-4 m-auto text-slate-500" />
                           )}

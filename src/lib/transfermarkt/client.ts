@@ -429,7 +429,7 @@ export async function tmSearchPlayers(
  */
 export async function tmGetClub(clubId: string) {
   try {
-    const html = await tmFetch(`/verein/kader/verein/${clubId}`, false, 3600);
+    const html = await tmFetch(`/verein/kader/verein/${clubId}/plus/1`, false, 3600);
     if (!html) return null;
 
     // Club Name

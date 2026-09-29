@@ -4,8 +4,16 @@ import { MatchCard } from "@/components/MatchCard";
 import { LiveAutoRefresher } from "@/components/LiveAutoRefresher";
 import { Radio, Calendar, Trophy, ChevronLeft, ChevronRight } from "lucide-react";
 
+import type { Metadata } from "next";
+
 export const revalidate = 5; // Ultra-fresh live scores every 5s
 export const runtime = "edge";
+
+export const metadata: Metadata = {
+  title: "Live Match Center — Real-Time Scores, Lineups & Squad Values | a1score.app",
+  description:
+    "Live football scores, real-time match events, confirmed tactical lineups, and squad market values powered by edge FotMob integration on a1score.app.",
+};
 
 interface MatchesPageProps {
   searchParams: {

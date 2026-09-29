@@ -2,8 +2,16 @@ import { getMostValuablePlayers } from "@/lib/data/players";
 import { PlayerCard } from "@/components/PlayerCard";
 import { Users } from "lucide-react";
 
+import type { Metadata } from "next";
+
 export const revalidate = 3600;
 export const runtime = "edge";
+
+export const metadata: Metadata = {
+  title: "Football Players Directory — Market Valuations & Profiles | a1score.app",
+  description:
+    "Explore global football player directory, market valuations, career profiles, injury reports, and transfer records on a1score.app.",
+};
 
 export default async function PlayersPage() {
   const players = await getMostValuablePlayers(40);

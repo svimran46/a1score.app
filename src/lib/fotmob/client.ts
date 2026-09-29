@@ -354,8 +354,229 @@ export async function getMatchesByDate(dateStr?: string): Promise<{
   };
 }
 
+export const FOTMOB_LEAGUE_MAP: Record<string, number> = {
+  GB1: 47, // Premier League
+  ES1: 87, // LaLiga
+  IT1: 55, // Serie A
+  L1: 54,  // Bundesliga
+  FR1: 53, // Ligue 1
+  NL1: 57, // Eredivisie
+  PO1: 61, // Liga Portugal
+  CL: 42,  // UEFA Champions League
+};
+
+export const OFFICIAL_LEAGUE_CLUB_COUNTS: Record<string, number> = {
+  GB1: 20,
+  ES1: 20,
+  IT1: 20,
+  L1: 18,
+  FR1: 18,
+  NL1: 18,
+  PO1: 18,
+};
+
+export interface FotmobStandingsRow {
+  idx: number;
+  id: number;
+  name: string;
+  shortName?: string;
+  played: number;
+  wins: number;
+  draws: number;
+  losses: number;
+  scoresStr: string;
+  goalConDiff: number;
+  pts: number;
+  qualColor?: string;
+  imageUrl: string;
+}
+
+/**
+ * Fetch official league table & standings
+ */
+export async function getLeagueStandings(leagueIdOrCode: number | string): Promise<{
+  leagueId: number;
+  season?: string;
+  teamsCount: number;
+  standings: FotmobStandingsRow[];
+} | null> {
+  let fotmobId: number | undefined;
+
+  if (typeof leagueIdOrCode === "number") {
+    fotmobId = leagueIdOrCode;
+  } else if (!isNaN(Number(leagueIdOrCode))) {
+    fotmobId = Number(leagueIdOrCode);
+  } else {
+    fotmobId = FOTMOB_LEAGUE_MAP[leagueIdOrCode.toUpperCase()] || FOTMOB_LEAGUE_MAP[leagueIdOrCode];
+  }
+
+  if (!fotmobId) {
+    return null;
+  }
+
+  const path = `/api/data/leagues?id=${fotmobId}`;
+  const data = await fotmobFetch<any>(path, 300); // 5 min cache for league standings
+
+  if (!data) return null;
+
+  const rawTable =
+    data.table?.[0]?.data?.table?.all ||
+    data.table?.[0]?.data?.tables?.[0]?.table?.all ||
+    [];
+
+  const standings: FotmobStandingsRow[] = rawTable.map((row: any) => ({
+    idx: row.idx,
+    id: row.id,
+    name: row.name,
+    shortName: row.shortName || row.name,
+    played: row.played ?? 0,
+    wins: row.wins ?? 0,
+    draws: row.draws ?? 0,
+    losses: row.losses ?? 0,
+    scoresStr: row.scoresStr || "0-0",
+    goalConDiff: row.goalConDiff ?? 0,
+    pts: row.pts ?? 0,
+    qualColor: row.qualColor,
+    imageUrl: `https://images.fotmob.com/image_resources/logo/teamlogo/${row.id}_small.png`,
+  }));
+
+  return {
+    leagueId: fotmobId,
+    season: data.details?.selectedSeason,
+    teamsCount: standings.length,
+    standings,
+  };
+}
+
+/**
+ * Search FotMob for players, teams, or leagues
+ */
+export async function searchFotmob(query: string) {
+  if (!query || query.trim().length === 0) return { players: [], teams: [] };
+
+  const path = `/api/data/search/suggest?term=${encodeURIComponent(query.trim())}`;
+  const data = await fotmobFetch<any>(path, 60);
+
+  if (!Array.isArray(data)) return { players: [], teams: [] };
+
+  const playersSection = data.find((s: any) => s.title?.key === "players") || data[0];
+  const teamsSection = data.find((s: any) => s.title?.key === "teams");
+
+  const players = (playersSection?.suggestions || [])
+    .filter((s: any) => s.type === "player")
+    .map((s: any) => ({
+      id: s.id,
+      name: s.name,
+      teamId: s.teamId,
+      teamName: s.teamName,
+      imageUrl: `https://images.fotmob.com/image_resources/playerimages/${s.id}.png`,
+    }));
+
+  const teams = (teamsSection?.suggestions || [])
+    .filter((s: any) => s.type === "team")
+    .map((s: any) => ({
+      id: s.id,
+      name: s.name,
+      imageUrl: `https://images.fotmob.com/image_resources/logo/teamlogo/${s.id}_small.png`,
+    }));
+
+  return { players, teams };
+}
+
+/**
+ * Fetch player performance intelligence and career tournament breakdown
+ */
+export async function getFotmobPlayerStats(playerNameOrId: string | number) {
+  let fotmobId: string | number | null = null;
+
+  if (typeof playerNameOrId === "number" || !isNaN(Number(playerNameOrId))) {
+    fotmobId = playerNameOrId;
+  } else {
+    const searchRes = await searchFotmob(String(playerNameOrId));
+    if (searchRes.players.length > 0) {
+      fotmobId = searchRes.players[0].id;
+    }
+  }
+
+  if (!fotmobId) return null;
+
+  const path = `/api/data/playerData?id=${fotmobId}`;
+  const data = await fotmobFetch<any>(path, 600); // 10 min cache for player stats
+
+  if (!data) return null;
+
+  const seasonStatsList: Array<{
+    id: string;
+    season: string;
+    competition: string;
+    clubName: string;
+    appearances: number;
+    goals: number;
+    assists: number;
+    minutesPlayed: number | null;
+    yellowCards: number | null;
+    redCards: number | null;
+    rating?: number | null;
+  }> = [];
+
+  const seniorCareer = data.careerHistory?.careerItems?.senior;
+  if (seniorCareer && Array.isArray(seniorCareer.teamEntries)) {
+    for (const teamEntry of seniorCareer.teamEntries) {
+      const teamName = teamEntry.team || "Club";
+      const seasonEntries = teamEntry.seasonEntries || [];
+
+      for (const season of seasonEntries) {
+        const seasonName = season.seasonName || "Current";
+        const tournamentStats = season.tournamentStats || [];
+
+        if (tournamentStats.length > 0) {
+          for (const tour of tournamentStats) {
+            seasonStatsList.push({
+              id: `fotmob-${fotmobId}-${tour.leagueId || tour.tournamentId}-${seasonName}`,
+              season: seasonName,
+              competition: tour.leagueName || "League",
+              clubName: teamName,
+              appearances: Number(tour.appearances) || 0,
+              goals: Number(tour.goals) || 0,
+              assists: Number(tour.assists) || 0,
+              minutesPlayed: null,
+              yellowCards: null,
+              redCards: null,
+              rating: tour.rating?.rating ? Number(tour.rating.rating) : null,
+            });
+          }
+        } else {
+          seasonStatsList.push({
+            id: `fotmob-${fotmobId}-${seasonName}`,
+            season: seasonName,
+            competition: "All Competitions",
+            clubName: teamName,
+            appearances: Number(season.appearances) || 0,
+            goals: Number(season.goals) || 0,
+            assists: Number(season.assists) || 0,
+            minutesPlayed: null,
+            yellowCards: null,
+            redCards: null,
+            rating: season.rating?.rating ? Number(season.rating.rating) : null,
+          });
+        }
+      }
+    }
+  }
+
+  return {
+    id: fotmobId,
+    name: data.name,
+    position: data.positionDescription?.primaryPosition?.label || null,
+    injury: data.injuryInformation || null,
+    seasonStats: seasonStatsList,
+    statsSection: data.statsSection || null,
+  };
+}
+
 /**
  * Fetch detailed match intelligence: lineups, events, and stats
+ * With automated event reconciliation for card count discrepancies.
  */
 export async function getMatchDetails(matchId: string | number) {
   const path = `/api/data/matchDetails?matchId=${matchId}`;
@@ -366,6 +587,13 @@ export async function getMatchDetails(matchId: string | number) {
   const general = data.general || {};
   const header = data.header || {};
   const content = data.content || {};
+
+  const events = content.matchFacts?.events?.events || [];
+  const stats = content.stats?.Periods?.All?.stats || [];
+
+  // Card reconciliation: count on-pitch card events vs stats card aggregate
+  const onPitchYellowCards = events.filter((e: any) => e.type === "Card" && e.card === "Yellow").length;
+  const onPitchRedCards = events.filter((e: any) => e.type === "Card" && (e.card === "Red" || e.card === "YellowRed")).length;
 
   return {
     id: matchId,
@@ -399,8 +627,13 @@ export async function getMatchDetails(matchId: string | number) {
           }
         : null,
     },
-    events: content.matchFacts?.events?.events || [],
+    events,
     lineup: content.lineup || null,
-    stats: content.stats?.Periods?.All?.stats || [],
+    stats,
+    cardReconciliation: {
+      onPitchYellowCards,
+      onPitchRedCards,
+    },
   };
 }
+

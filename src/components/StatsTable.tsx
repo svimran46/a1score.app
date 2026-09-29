@@ -9,6 +9,7 @@ interface SeasonStatItem {
   minutesPlayed?: number | null;
   yellowCards?: number | null;
   redCards?: number | null;
+  rating?: number | null;
 }
 
 interface StatsTableProps {
@@ -24,12 +25,14 @@ export function StatsTable({ stats }: StatsTableProps) {
     );
   }
 
+  const hasRating = stats.some((s) => typeof s.rating === "number" && s.rating > 0);
+
   return (
     <div className="rounded-2xl glass-panel p-6 border border-slate-800">
       <div className="flex items-center justify-between pb-4 border-b border-slate-800">
         <div>
-          <h3 className="text-base font-bold text-white tracking-tight">Career Statistics</h3>
-          <p className="text-xs text-slate-400 mt-0.5">Season-by-season competition breakdowns</p>
+          <h3 className="text-base font-bold text-white tracking-tight">Career & Season Statistics</h3>
+          <p className="text-xs text-slate-400 mt-0.5">Verified competition breakdowns and match performance</p>
         </div>
       </div>
 
@@ -43,8 +46,14 @@ export function StatsTable({ stats }: StatsTableProps) {
               <th className="pb-3 text-center font-semibold">Apps</th>
               <th className="pb-3 text-center font-semibold text-emerald-400">Goals</th>
               <th className="pb-3 text-center font-semibold text-blue-400">Assists</th>
-              <th className="pb-3 text-center font-semibold text-amber-400">YC</th>
-              <th className="pb-3 text-center font-semibold text-red-400">RC</th>
+              {hasRating ? (
+                <th className="pb-3 text-center font-semibold text-amber-400">Rating</th>
+              ) : (
+                <>
+                  <th className="pb-3 text-center font-semibold text-amber-400">YC</th>
+                  <th className="pb-3 text-center font-semibold text-red-400">RC</th>
+                </>
+              )}
               <th className="pb-3 text-right font-semibold">Mins</th>
             </tr>
           </thead>
@@ -52,13 +61,27 @@ export function StatsTable({ stats }: StatsTableProps) {
             {stats.map((s) => (
               <tr key={s.id} className="hover:bg-slate-800/30 transition-colors">
                 <td className="py-2.5 text-white font-medium whitespace-nowrap">{s.season}</td>
-                <td className="py-2.5 text-slate-300 truncate max-w-[130px]">{s.competition}</td>
+                <td className="py-2.5 text-slate-300 truncate max-w-[140px]">{s.competition}</td>
                 <td className="py-2.5 text-slate-300 truncate max-w-[130px]">{s.clubName}</td>
                 <td className="py-2.5 text-center text-slate-200 font-semibold">{s.appearances ?? "-"}</td>
                 <td className="py-2.5 text-center text-emerald-400 font-bold">{s.goals ?? 0}</td>
                 <td className="py-2.5 text-center text-blue-400 font-bold">{s.assists ?? 0}</td>
-                <td className="py-2.5 text-center text-amber-400">{s.yellowCards ?? 0}</td>
-                <td className="py-2.5 text-center text-red-400">{s.redCards ?? 0}</td>
+                {hasRating ? (
+                  <td className="py-2.5 text-center">
+                    {s.rating ? (
+                      <span className="px-2 py-0.5 rounded font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20">
+                        {s.rating.toFixed(2)}
+                      </span>
+                    ) : (
+                      "-"
+                    )}
+                  </td>
+                ) : (
+                  <>
+                    <td className="py-2.5 text-center text-amber-400">{s.yellowCards ?? 0}</td>
+                    <td className="py-2.5 text-center text-red-400">{s.redCards ?? 0}</td>
+                  </>
+                )}
                 <td className="py-2.5 text-right text-slate-400 whitespace-nowrap">
                   {s.minutesPlayed ? `${s.minutesPlayed}'` : "-"}
                 </td>

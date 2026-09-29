@@ -38,10 +38,13 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="text-white font-semibold text-xs uppercase tracking-wider mb-3">Data Pipeline</h4>
-            <p className="text-slate-400 text-xs leading-relaxed">
-              Powered by open dataset ingestion and API-Football verification. High-fidelity valuation metrics and stats updated regularly.
+            <h4 className="text-white font-semibold text-xs uppercase tracking-wider mb-3">Intelligence & Sources</h4>
+            <p className="text-slate-400 text-xs leading-relaxed mb-2">
+              Combining Transfermarkt valuation analytics with FotMob real-time match delivery.
             </p>
+            <Link href="/methodology" className="text-xs text-emerald-400 hover:text-emerald-300 font-semibold underline underline-offset-4">
+              View Data Methodology →
+            </Link>
           </div>
         </div>
 

@@ -3,8 +3,16 @@ import { getLeagues } from "@/lib/data/leagues";
 import { formatCompactEur } from "@/lib/utils";
 import { Trophy, Globe } from "lucide-react";
 
+import type { Metadata } from "next";
+
 export const revalidate = 3600;
 export const runtime = "edge";
+
+export const metadata: Metadata = {
+  title: "Football Leagues & Competitions — Standings & Market Values | a1score.app",
+  description:
+    "Explore Premier League, LaLiga, Serie A, Bundesliga, Ligue 1 and top global competitions with official standings, club counts, and cumulative market values on a1score.app.",
+};
 
 export default async function LeaguesPage() {
   const leagues = await getLeagues();

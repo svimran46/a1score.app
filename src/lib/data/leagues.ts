@@ -1,4 +1,9 @@
 import { supabase } from "@/lib/supabase";
+import {
+  getLeagueStandings,
+  OFFICIAL_LEAGUE_CLUB_COUNTS,
+  FotmobStandingsRow,
+} from "@/lib/fotmob/client";
 
 export async function getLeagues() {
   try {
@@ -30,7 +35,8 @@ export async function getLeagues() {
         country: league.country,
         tier: league.tier || 1,
         logoUrl: league.logoUrl,
-        clubCount: league.clubCount ?? 0,
+        clubCount:
+          OFFICIAL_LEAGUE_CLUB_COUNTS[league.transfermarktId] ?? (league.clubCount ?? 0),
         totalPlayers: league.totalPlayers ?? 0,
         totalMarketValue: league.totalMarketValue ? Number(league.totalMarketValue) : 0,
       }));
@@ -71,6 +77,26 @@ export async function getLeagueById(id: string) {
       return null;
     }
 
+    // Attempt to fetch official live standings from FotMob
+    let fotmobData: {
+      leagueId: number;
+      season?: string;
+      teamsCount: number;
+      standings: FotmobStandingsRow[];
+    } | null = null;
+
+    try {
+      fotmobData = await getLeagueStandings(league.transfermarktId);
+    } catch (e) {
+      console.warn(`[Data Layer] FotMob standings fetch failed for league ${league.name}:`, e);
+    }
+
+    const officialCount =
+      fotmobData?.teamsCount ||
+      OFFICIAL_LEAGUE_CLUB_COUNTS[league.transfermarktId] ||
+      league.clubCount ||
+      0;
+
     const rankedClubs = (league.clubs || [])
       .map((club: any) => ({
         id: club.id,
@@ -82,6 +108,22 @@ export async function getLeagueById(id: string) {
       }))
       .sort((a: any, b: any) => b.totalSquadValue - a.totalSquadValue);
 
+    // Merge standings with database squad values
+    const enrichedStandings = (fotmobData?.standings || []).map((row) => {
+      const matchedClub = rankedClubs.find(
+        (c) =>
+          c.name.toLowerCase() === row.name.toLowerCase() ||
+          c.name.toLowerCase().includes(row.shortName?.toLowerCase() || "") ||
+          row.name.toLowerCase().includes(c.name.toLowerCase())
+      );
+
+      return {
+        ...row,
+        clubId: matchedClub?.id || null,
+        totalSquadValue: matchedClub?.totalSquadValue || 0,
+      };
+    });
+
     return {
       id: league.id,
       name: league.name,
@@ -91,8 +133,10 @@ export async function getLeagueById(id: string) {
       transfermarktId: league.transfermarktId,
       totalMarketValue: league.totalMarketValue ? Number(league.totalMarketValue) : 0,
       totalPlayers: league.totalPlayers ?? 0,
-      clubCount: league.clubCount ?? 0,
+      clubCount: officialCount,
       clubs: rankedClubs,
+      standings: enrichedStandings,
+      season: fotmobData?.season || "2024/2025",
     };
   } catch (error) {
     console.error(`Error fetching league ${id}:`, error);

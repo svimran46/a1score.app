@@ -4,6 +4,7 @@ import {
   tmGetPlayer,
   tmSearchPlayers,
 } from "@/lib/transfermarkt/client";
+import { getFotmobPlayerStats } from "@/lib/fotmob/client";
 
 export async function getMostValuablePlayers(limit = 10, positionFilter?: string) {
   // 1. First, attempt to fetch live worldwide rankings directly via Transfermarkt proxy
@@ -67,6 +68,16 @@ export async function getPlayerBySlugOrId(slugOrId: string) {
   try {
     const livePlayer = await tmGetPlayer(slugOrId);
     if (livePlayer) {
+      if (!livePlayer.seasonStats || livePlayer.seasonStats.length === 0) {
+        try {
+          const fotmobData = await getFotmobPlayerStats(livePlayer.commonName || livePlayer.fullName);
+          if (fotmobData && fotmobData.seasonStats && fotmobData.seasonStats.length > 0) {
+            livePlayer.seasonStats = fotmobData.seasonStats;
+          }
+        } catch (e) {
+          // ignore error
+        }
+      }
       return livePlayer;
     }
   } catch (proxyErr) {
@@ -124,9 +135,33 @@ export async function getPlayerBySlugOrId(slugOrId: string) {
       .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     // Sort stats by season (desc)
-    const sortedSeasonStats = (player.seasonStats || []).sort(
+    let sortedSeasonStats = (player.seasonStats || []).sort(
       (a: any, b: any) => b.season?.localeCompare?.(a.season ?? "") ?? 0
     );
+
+    // If seasonStats is empty, enrich with authentic FotMob tournament statistics
+    let injuries = player.injuries || [];
+    if (sortedSeasonStats.length === 0) {
+      try {
+        const fotmobData = await getFotmobPlayerStats(player.commonName || player.fullName);
+        if (fotmobData && fotmobData.seasonStats && fotmobData.seasonStats.length > 0) {
+          sortedSeasonStats = fotmobData.seasonStats;
+        }
+        if (fotmobData && fotmobData.injury && injuries.length === 0) {
+          injuries = [
+            {
+              id: `fotmob-inj-${fotmobData.id}`,
+              type: fotmobData.injury.injuryType || "Injury",
+              startDate: fotmobData.injury.startDate || new Date().toISOString(),
+              endDate: fotmobData.injury.expectedReturn || null,
+              status: "active",
+            },
+          ];
+        }
+      } catch (err) {
+        console.warn(`[Data Layer] FotMob enrichment failed for ${player.fullName}:`, err);
+      }
+    }
 
     return {
       ...player,
@@ -136,7 +171,7 @@ export async function getPlayerBySlugOrId(slugOrId: string) {
       marketValues: sortedMarketValues,
       transfers: sortedTransfers,
       seasonStats: sortedSeasonStats,
-      injuries: player.injuries || [],
+      injuries,
     };
   } catch (error) {
     console.error(`Error fetching player ${slugOrId}:`, error);

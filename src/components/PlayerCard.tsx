@@ -76,6 +76,7 @@ export function PlayerCard({ player }: PlayerCardProps) {
                       src={player.currentClub.logoUrl}
                       alt={player.currentClub.name}
                       fill
+                      sizes="14px"
                       className="object-contain"
                     />
                   </div>

@@ -9,12 +9,38 @@ import { InjuriesTable } from "@/components/InjuriesTable";
 import { calculateAge, formatCompactEur, formatEur, formatDate } from "@/lib/utils";
 import { User, Shield, Calendar, Globe, Ruler, Footprints, TrendingUp } from "lucide-react";
 
+import type { Metadata } from "next";
+
 export const revalidate = 3600; // ISR revalidation every hour
 export const runtime = "edge";
 
 interface PlayerPageProps {
   params: {
     slug: string;
+  };
+}
+
+export async function generateMetadata({ params }: PlayerPageProps): Promise<Metadata> {
+  const player = await getPlayerBySlugOrId(params.slug);
+  if (!player) {
+    return {
+      title: "Player Not Found | a1score.app",
+    };
+  }
+
+  const formattedVal = player.latestMarketValue
+    ? formatCompactEur(player.latestMarketValue)
+    : "Valuation pending";
+  const clubName = player.currentClub?.name || "Free Agent";
+
+  return {
+    title: `${player.fullName} — Market Value (${formattedVal}), Stats & Transfers | a1score.app`,
+    description: `${player.fullName} (${player.position}) playing for ${clubName}. Current market valuation: ${formattedVal}. Career transfer history, verified season statistics, and valuation evolution chart on a1score.app.`,
+    openGraph: {
+      title: `${player.fullName} — Market Value & Career Stats | a1score.app`,
+      description: `${player.position} at ${clubName} valued at ${formattedVal}. Complete career stats, valuation curve, and transfer ledger.`,
+      images: player.photoUrl ? [{ url: player.photoUrl }] : undefined,
+    },
   };
 }
 
@@ -81,6 +107,7 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
                         src={player.currentClub.logoUrl}
                         alt={player.currentClub.name}
                         fill
+                        sizes="20px"
                         className="object-contain"
                       />
                     </div>

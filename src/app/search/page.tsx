@@ -1,6 +1,7 @@
 import { searchPlayers } from "@/lib/data/players";
 import { PlayerCard } from "@/components/PlayerCard";
-import { Search, Filter } from "lucide-react";
+import type { Metadata } from "next";
+
 export const runtime = "edge";
 
 interface SearchPageProps {
@@ -8,6 +9,14 @@ interface SearchPageProps {
     q?: string;
     position?: string;
     filter?: string;
+  };
+}
+
+export function generateMetadata({ searchParams }: SearchPageProps): Metadata {
+  const query = searchParams.q ? `"${searchParams.q}"` : "Players & Clubs";
+  return {
+    title: `Search ${query} | a1score.app`,
+    description: `Search results for ${query}. Browse player profiles, transfer values, and club squads on a1score.app.`,
   };
 }
 

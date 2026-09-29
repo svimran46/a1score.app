@@ -4,8 +4,16 @@ import { getTopClubs } from "@/lib/data/clubs";
 import { formatCompactEur } from "@/lib/utils";
 import { Shield } from "lucide-react";
 
+import type { Metadata } from "next";
+
 export const revalidate = 3600;
 export const runtime = "edge";
+
+export const metadata: Metadata = {
+  title: "Football Clubs — Squad Market Values & Rosters | a1score.app",
+  description:
+    "Explore top European and world football clubs ranked by cumulative squad market valuations, squad sizes, and active rosters on a1score.app.",
+};
 
 export default async function ClubsPage() {
   const clubs = await getTopClubs(24);
@@ -32,7 +40,13 @@ export default async function ClubsPage() {
               <div className="flex items-center gap-4 min-w-0">
                 <div className="relative w-12 h-12 rounded-xl bg-slate-800 p-2 flex-shrink-0">
                   {club.logoUrl ? (
-                    <Image src={club.logoUrl} alt={club.name} fill className="object-contain p-1" />
+                    <Image
+                      src={club.logoUrl}
+                      alt={club.name}
+                      fill
+                      sizes="48px"
+                      className="object-contain p-1"
+                    />
                   ) : (
                     <Shield className="w-6 h-6 m-auto text-slate-500" />
                   )}
