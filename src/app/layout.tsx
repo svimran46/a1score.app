@@ -6,10 +6,57 @@ import { Footer } from "@/components/Footer";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://a1score.app";
+
 export const metadata: Metadata = {
-  title: "a1score.app — Money meets the pitch",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "a1score.app — Money meets the pitch",
+    template: "%s | a1score.app",
+  },
   description:
     "Football intelligence platform combining real-time match center delivery with player market valuations, career trajectories, and squad analytics on a1score.app.",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: siteUrl,
+    siteName: "a1score.app",
+    title: "a1score.app — Money meets the pitch",
+    description:
+      "Football intelligence: live match centers, player market valuations, career trajectories, and squad analytics.",
+    images: [
+      {
+        url: `${siteUrl}/og-default.png`,
+        width: 1200,
+        height: 630,
+        alt: "a1score.app — Money meets the pitch",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "a1score.app — Money meets the pitch",
+    description:
+      "Football intelligence: live match centers, player market valuations, career trajectories, and squad analytics.",
+    images: [`${siteUrl}/og-default.png`],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  alternates: {
+    canonical: siteUrl,
+  },
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({

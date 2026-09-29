@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getMatchesByDate, pureMd5 } from "@/lib/fotmob/client";
+import { rateLimit, getClientIP, rateLimitHeaders } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 export const runtime = "edge";
@@ -12,6 +13,15 @@ export const runtime = "edge";
  * - filter: 'all' | 'live' | 'finished' | 'upcoming' (optional)
  */
 export async function GET(req: NextRequest) {
+  const ip = getClientIP(req);
+  const rl = rateLimit(`matches:${ip}`, 120, 60_000);
+  if (!rl.success) {
+    return NextResponse.json(
+      { success: false, error: "Too many match requests. Please slow down." },
+      { status: 429, headers: rateLimitHeaders(rl) }
+    );
+  }
+
   const { searchParams } = new URL(req.url);
   const date = searchParams.get("date") || undefined;
   const filter = searchParams.get("filter") || "all";

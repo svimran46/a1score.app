@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getMatchDetails, pureMd5 } from "@/lib/fotmob/client";
+import { rateLimit, getClientIP, rateLimitHeaders } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 export const runtime = "edge";
@@ -15,6 +16,15 @@ interface RouteParams {
  * Returns detailed match intelligence: lineups, events, and stats
  */
 export async function GET(req: NextRequest, { params }: RouteParams) {
+  const ip = getClientIP(req);
+  const rl = rateLimit(`match:${ip}`, 120, 60_000);
+  if (!rl.success) {
+    return NextResponse.json(
+      { success: false, error: "Too many match requests. Please slow down." },
+      { status: 429, headers: rateLimitHeaders(rl) }
+    );
+  }
+
   try {
     const data = await getMatchDetails(params.id);
 
