@@ -124,8 +124,8 @@ export function TransfersTable({ transfers }: TransfersTableProps) {
                       </div>
                     </td>
                     <td
-                      className={`py-3 text-right font-bold whitespace-nowrap ${
-                        feeInfo.isAmount ? "text-emerald-400" : "text-slate-400 font-normal"
+                      className={`py-3 text-right font-bold whitespace-nowrap tabular-nums ${
+                        feeInfo.isAmount ? "text-amber-400" : "text-slate-400 font-normal"
                       }`}
                     >
                       {feeInfo.label}

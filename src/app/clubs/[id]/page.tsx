@@ -99,11 +99,11 @@ export default async function ClubPage({ params }: ClubPageProps) {
             </div>
           </div>
 
-          <div className="w-full sm:w-auto p-4 rounded-2xl bg-slate-950/80 border border-slate-800 flex flex-col sm:items-end justify-center">
+          <div className="w-full sm:w-auto p-4 rounded-2xl bg-slate-950/80 border border-amber-500/20 shadow-lg shadow-amber-500/5 flex flex-col sm:items-end justify-center">
             <span className="text-xs text-slate-400 uppercase tracking-wider font-semibold">
               Total Squad Valuation
             </span>
-            <span className="text-2xl sm:text-3xl font-black text-emerald-400 tracking-tight mt-1">
+            <span className="text-2xl sm:text-3xl font-black text-amber-400 tracking-tight mt-1 tabular-nums">
               {formatCompactEur(club.totalSquadValue)}
             </span>
           </div>
@@ -152,7 +152,7 @@ export default async function ClubPage({ params }: ClubPageProps) {
                           )}
                         </div>
                         <div>
-                          <span className="text-white font-semibold group-hover:text-emerald-400 transition-colors">
+                          <span className="text-white font-semibold group-hover:text-amber-400 transition-colors">
                             {p.commonName || p.fullName}
                           </span>
                         </div>
@@ -164,7 +164,7 @@ export default async function ClubPage({ params }: ClubPageProps) {
                       </span>
                     </td>
                     <td className="py-3 text-slate-300">{p.nationality.join(", ") || "-"}</td>
-                    <td className="py-3 text-right text-emerald-400 font-extrabold whitespace-nowrap text-sm">
+                    <td className="py-3 text-right text-amber-400 font-extrabold whitespace-nowrap text-sm tabular-nums">
                       {p.latestMarketValue ? formatCompactEur(p.latestMarketValue) : "-"}
                     </td>
                   </tr>

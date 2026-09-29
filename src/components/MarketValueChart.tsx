@@ -55,14 +55,14 @@ export function MarketValueChart({ data, playerName }: MarketValueChartProps) {
         <div className="flex items-center gap-6 text-xs">
           <div className="flex flex-col">
             <span className="text-slate-400 uppercase tracking-wider font-semibold">Current Value</span>
-            <span className="text-emerald-400 font-extrabold text-base">
+            <span className="text-amber-400 font-extrabold text-base tabular-nums">
               {formatCompactEur(latest?.value)}
             </span>
           </div>
           <div className="h-8 w-[1px] bg-slate-800" />
           <div className="flex flex-col">
             <span className="text-slate-400 uppercase tracking-wider font-semibold">Career Peak</span>
-            <span className="text-white font-extrabold text-base">
+            <span className="text-white font-extrabold text-base tabular-nums">
               {formatCompactEur(peak?.value)}
             </span>
           </div>
@@ -74,11 +74,11 @@ export function MarketValueChart({ data, playerName }: MarketValueChartProps) {
           <AreaChart data={formattedData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
             <defs>
               <linearGradient id="valGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#10b981" stopOpacity={0.4} />
-                <stop offset="95%" stopColor="#10b981" stopOpacity={0.0} />
+                <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.4} />
+                <stop offset="95%" stopColor="#f59e0b" stopOpacity={0.0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="#182030" vertical={false} />
             <XAxis
               dataKey="dateStr"
               stroke="#64748b"
@@ -99,9 +99,9 @@ export function MarketValueChart({ data, playerName }: MarketValueChartProps) {
                 if (active && payload && payload.length) {
                   const d = payload[0].payload;
                   return (
-                    <div className="rounded-xl glass-panel p-3 shadow-xl border border-slate-700/80 bg-slate-900/95 text-xs space-y-1">
+                    <div className="rounded-xl glass-panel p-3 shadow-xl border border-amber-500/20 bg-slate-900/95 text-xs space-y-1">
                       <p className="font-semibold text-slate-200">{d.dateStr}</p>
-                      <p className="text-emerald-400 font-bold text-sm">
+                      <p className="text-amber-400 font-bold text-sm tabular-nums">
                         {formatCompactEur(d.value)}
                       </p>
                       <p className="text-slate-400">{d.club}</p>
@@ -114,7 +114,7 @@ export function MarketValueChart({ data, playerName }: MarketValueChartProps) {
             <Area
               type="monotone"
               dataKey="value"
-              stroke="#10b981"
+              stroke="#f59e0b"
               strokeWidth={2.5}
               fillOpacity={1}
               fill="url(#valGradient)"

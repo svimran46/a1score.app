@@ -62,7 +62,7 @@ export default async function ClubsPage() {
               </div>
               <div className="text-right flex-shrink-0 pl-3">
                 <span className="text-[10px] text-slate-500 block uppercase font-semibold">Squad Value</span>
-                <span className="text-sm font-black text-emerald-400">
+                <span className="text-sm font-black text-amber-400 tabular-nums">
                   {formatCompactEur(club.totalSquadValue)}
                 </span>
               </div>

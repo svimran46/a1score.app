@@ -162,9 +162,9 @@ export default async function MatchDetailsPage({ params }: MatchPageProps) {
           {/* Central Score */}
           <div className="flex flex-col items-center justify-center text-center">
             {isLive || isFinished ? (
-              <div className="flex items-center gap-3 sm:gap-6">
+              <div className="flex items-center gap-3 sm:gap-6 tabular-nums">
                 <span
-                  className={`text-4xl sm:text-6xl font-black ${
+                  className={`text-4xl sm:text-6xl font-black tabular-nums ${
                     isLive ? "text-emerald-400" : "text-white"
                   }`}
                 >
@@ -172,7 +172,7 @@ export default async function MatchDetailsPage({ params }: MatchPageProps) {
                 </span>
                 <span className="text-2xl sm:text-4xl font-light text-slate-600">-</span>
                 <span
-                  className={`text-4xl sm:text-6xl font-black ${
+                  className={`text-4xl sm:text-6xl font-black tabular-nums ${
                     isLive ? "text-emerald-400" : "text-white"
                   }`}
                 >
@@ -239,7 +239,7 @@ export default async function MatchDetailsPage({ params }: MatchPageProps) {
                   <div className="flex items-center justify-between text-xs font-bold text-slate-300 pb-2 border-b border-slate-800/60">
                     <span>{homeTeam?.name} Starting XI</span>
                     {lineup?.homeTeam?.totalStarterMarketValue && (
-                      <span className="text-emerald-400 font-extrabold">
+                      <span className="text-amber-400 font-extrabold tabular-nums">
                         {formatCompactEur(lineup.homeTeam.totalStarterMarketValue)}
                       </span>
                     )}
@@ -251,7 +251,7 @@ export default async function MatchDetailsPage({ params }: MatchPageProps) {
                         className="flex items-center justify-between p-2 rounded-xl bg-slate-900/60 hover:bg-slate-900 border border-slate-800/40 text-xs transition-colors"
                       >
                         <div className="flex items-center gap-2.5 min-w-0">
-                          <span className="w-5 text-center font-bold text-slate-500">
+                          <span className="w-5 text-center font-bold text-slate-500 tabular-nums">
                             {player.shirtNumber || "-"}
                           </span>
                           <span className="font-semibold text-white truncate">
@@ -260,7 +260,7 @@ export default async function MatchDetailsPage({ params }: MatchPageProps) {
                         </div>
                         <div className="flex items-center gap-2 flex-shrink-0">
                           {player.marketValue ? (
-                            <span className="text-[11px] font-bold text-emerald-400">
+                            <span className="text-[11px] font-bold text-amber-400 tabular-nums">
                               {formatCompactEur(player.marketValue)}
                             </span>
                           ) : null}
@@ -275,7 +275,7 @@ export default async function MatchDetailsPage({ params }: MatchPageProps) {
                   <div className="flex items-center justify-between text-xs font-bold text-slate-300 pb-2 border-b border-slate-800/60">
                     <span>{awayTeam?.name} Starting XI</span>
                     {lineup?.awayTeam?.totalStarterMarketValue && (
-                      <span className="text-emerald-400 font-extrabold">
+                      <span className="text-amber-400 font-extrabold tabular-nums">
                         {formatCompactEur(lineup.awayTeam.totalStarterMarketValue)}
                       </span>
                     )}
@@ -287,7 +287,7 @@ export default async function MatchDetailsPage({ params }: MatchPageProps) {
                         className="flex items-center justify-between p-2 rounded-xl bg-slate-900/60 hover:bg-slate-900 border border-slate-800/40 text-xs transition-colors"
                       >
                         <div className="flex items-center gap-2.5 min-w-0">
-                          <span className="w-5 text-center font-bold text-slate-500">
+                          <span className="w-5 text-center font-bold text-slate-500 tabular-nums">
                             {player.shirtNumber || "-"}
                           </span>
                           <span className="font-semibold text-white truncate">
@@ -296,7 +296,7 @@ export default async function MatchDetailsPage({ params }: MatchPageProps) {
                         </div>
                         <div className="flex items-center gap-2 flex-shrink-0">
                           {player.marketValue ? (
-                            <span className="text-[11px] font-bold text-emerald-400">
+                            <span className="text-[11px] font-bold text-amber-400 tabular-nums">
                               {formatCompactEur(player.marketValue)}
                             </span>
                           ) : null}

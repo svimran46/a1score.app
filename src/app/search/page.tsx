@@ -1,5 +1,6 @@
 import { searchPlayers } from "@/lib/data/players";
 import { PlayerCard } from "@/components/PlayerCard";
+import { Search, Filter } from "lucide-react";
 import type { Metadata } from "next";
 
 export const runtime = "edge";

@@ -261,7 +261,7 @@ export async function tmGetPlayer(slugOrId: string) {
       if (natMatch) {
         const cText = natMatch[1].replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
         if (cText) {
-          nationalities = cText.split(/\s{2,}/).map(s => s.trim()).filter(Boolean);
+          nationalities = cText.split(/\s{2,}/).map((s: string) => s.trim()).filter(Boolean);
         }
       }
 
@@ -347,8 +347,8 @@ export async function tmGetPlayer(slugOrId: string) {
         : null,
       marketValues,
       transfers,
-      seasonStats: [],
-      injuries: [],
+      seasonStats: [] as any[],
+      injuries: [] as any[],
       latestMarketValue: latestValuation,
     };
   } catch (err) {

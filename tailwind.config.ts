@@ -12,18 +12,34 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        ink: {
+          950: "#080A0E", // Deep ink black
+          900: "#0D111A", // Surface layer 1
+          850: "#121724", // Surface layer 2 (panels)
+          800: "#182030", // Hairline borders & subtle hover
+          700: "#222C40",
+          600: "#313E56",
+        },
         surface: {
           50: "#f8fafc",
           100: "#f1f5f9",
-          800: "#1e293b",
-          900: "#0f172a",
-          950: "#020617",
+          800: "#121724",
+          900: "#0D111A",
+          950: "#080A0E",
         },
         brand: {
+          50: "#fffbeb",
+          100: "#fef3c7",
+          400: "#fbbf24",
+          500: "#f59e0b", // Warm amber primary
+          600: "#d97706",
+          700: "#b45309",
+        },
+        pitch: {
           50: "#ecfdf5",
           100: "#d1fae5",
           400: "#34d399",
-          500: "#10b981",
+          500: "#10b981", // Pitch emerald primary
           600: "#059669",
           700: "#047857",
         },
@@ -36,6 +52,7 @@ const config: Config = {
       },
       fontFamily: {
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],
+        editorial: ["Georgia", "Cambria", "Times New Roman", "serif"],
       },
     },
   },

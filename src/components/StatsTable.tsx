@@ -37,7 +37,7 @@ export function StatsTable({ stats }: StatsTableProps) {
       </div>
 
       <div className="mt-4 overflow-x-auto">
-        <table className="w-full text-left text-xs">
+        <table className="w-full text-left text-xs tabular-nums">
           <thead>
             <tr className="text-slate-400 uppercase tracking-wider border-b border-slate-800/80">
               <th className="pb-3 font-semibold">Season</th>

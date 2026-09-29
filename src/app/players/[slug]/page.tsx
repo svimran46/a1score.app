@@ -128,12 +128,12 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
           </div>
 
           {/* Current Market Value Badge */}
-          <div className="w-full md:w-auto p-4 rounded-2xl bg-slate-950/80 border border-slate-800 flex flex-col md:items-end justify-center">
+          <div className="w-full md:w-auto p-4 rounded-2xl bg-slate-950/80 border border-amber-500/20 flex flex-col md:items-end justify-center shadow-lg shadow-amber-500/5">
             <span className="text-xs text-slate-400 uppercase tracking-wider font-semibold flex items-center gap-1.5">
-              <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
+              <TrendingUp className="w-3.5 h-3.5 text-amber-400" />
               Estimated Market Value
             </span>
-            <span className="text-2xl sm:text-3xl font-black text-emerald-400 tracking-tight mt-1">
+            <span className="text-2xl sm:text-3xl font-black text-amber-400 tracking-tight mt-1 tabular-nums">
               {latestValuation ? formatCompactEur(latestValuation.valueEur) : "N/A"}
             </span>
             {latestValuation && (

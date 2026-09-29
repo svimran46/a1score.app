@@ -30,7 +30,7 @@ export function PlayerCard({ player }: PlayerCardProps) {
   return (
     <Link
       href={`/players/${slug}`}
-      className="group block rounded-2xl glass-panel glass-panel-hover p-4 border border-slate-800 transition-all overflow-hidden"
+      className="group block rounded-2xl glass-panel glass-panel-hover p-4 border border-slate-800/80 hover:border-amber-500/30 transition-all overflow-hidden"
     >
       <div className="flex items-start gap-4">
         {/* Photo Container */}
@@ -53,17 +53,17 @@ export function PlayerCard({ player }: PlayerCardProps) {
         {/* Player Details */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2">
-            <span className="text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <span className="text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-400 border border-amber-500/20">
               {player.position}
             </span>
             {player.latestMarketValue ? (
-              <span className="text-sm font-extrabold text-white group-hover:text-emerald-400 transition-colors">
+              <span className="text-sm font-extrabold text-amber-400 tabular-nums">
                 {formatCompactEur(player.latestMarketValue)}
               </span>
             ) : null}
           </div>
 
-          <h3 className="text-base font-bold text-white tracking-tight truncate mt-1 group-hover:text-emerald-300 transition-colors">
+          <h3 className="text-base font-bold text-white tracking-tight truncate mt-1 group-hover:text-amber-300 transition-colors">
             {player.commonName || player.fullName}
           </h3>
 

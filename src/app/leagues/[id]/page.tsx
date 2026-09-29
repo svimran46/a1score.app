@@ -72,7 +72,7 @@ export default async function LeaguePage({ params }: LeaguePageProps) {
             <span className="text-xs text-slate-400 uppercase tracking-wider font-semibold">
               Total Competition Value
             </span>
-            <span className="text-2xl sm:text-3xl font-black text-emerald-400 tracking-tight mt-1">
+            <span className="text-2xl sm:text-3xl font-black text-amber-400 tracking-tight mt-1 tabular-nums">
               {formatCompactEur(totalLeagueValue)}
             </span>
           </div>
@@ -159,10 +159,10 @@ export default async function LeaguePage({ params }: LeaguePageProps) {
                     <td className="py-3 text-center font-medium text-slate-200">
                       {row.goalConDiff > 0 ? `+${row.goalConDiff}` : row.goalConDiff}
                     </td>
-                    <td className="py-3 text-right text-emerald-400 font-semibold whitespace-nowrap">
+                    <td className="py-3 text-right text-amber-400 font-semibold whitespace-nowrap tabular-nums">
                       {row.totalSquadValue > 0 ? formatCompactEur(row.totalSquadValue) : "—"}
                     </td>
-                    <td className="py-3 text-right text-white font-extrabold text-sm pr-2">
+                    <td className="py-3 text-right text-white font-extrabold text-sm pr-2 tabular-nums">
                       {row.pts}
                     </td>
                   </tr>
@@ -216,8 +216,8 @@ export default async function LeaguePage({ params }: LeaguePageProps) {
                       </span>
                     </Link>
                   </td>
-                  <td className="py-3 text-center text-slate-300">{club.squadSize}</td>
-                  <td className="py-3 text-right text-emerald-400 font-extrabold whitespace-nowrap text-sm">
+                  <td className="py-3 text-center text-slate-300 tabular-nums">{club.squadSize}</td>
+                  <td className="py-3 text-right text-amber-400 font-extrabold whitespace-nowrap text-sm tabular-nums">
                     {formatCompactEur(club.totalSquadValue)}
                   </td>
                 </tr>

@@ -55,7 +55,7 @@ export default async function LeaguesPage() {
                 <span className="text-slate-400">
                   {league.clubCount} Clubs • {league.totalPlayers} Players
                 </span>
-                <span className="text-emerald-400 font-extrabold text-sm">
+                <span className="text-amber-400 font-extrabold text-sm tabular-nums">
                   {formatCompactEur(league.totalMarketValue)}
                 </span>
               </div>

@@ -14,6 +14,7 @@ import {
   BookOpen,
 } from "lucide-react";
 import { CommandPalette } from "@/components/CommandPalette";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -103,25 +104,27 @@ export function Navbar() {
               </nav>
             </div>
 
-            {/* Header Search Trigger (Desktop & Tablet) */}
-            <div className="hidden sm:flex items-center flex-1 max-w-sm justify-end">
+            {/* Header Search & Theme Trigger (Desktop & Tablet) */}
+            <div className="hidden sm:flex items-center gap-2 flex-1 max-w-sm justify-end">
               <button
                 type="button"
                 onClick={() => setCommandPaletteOpen(true)}
                 className="w-full flex items-center justify-between px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-slate-700/60 text-slate-400 hover:text-slate-200 hover:border-slate-600 transition-all text-xs shadow-inner group"
               >
                 <div className="flex items-center gap-2">
-                  <Search className="w-3.5 h-3.5 text-slate-400 group-hover:text-emerald-400 transition-colors" />
+                  <Search className="w-3.5 h-3.5 text-slate-400 group-hover:text-amber-400 transition-colors" />
                   <span>Search players, clubs, leagues...</span>
                 </div>
                 <kbd className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-semibold text-slate-400 bg-slate-800 border border-slate-700 rounded">
                   {isMac ? "⌘K" : "Ctrl+K"}
                 </kbd>
               </button>
+              <ThemeToggle />
             </div>
 
             {/* Mobile Actions */}
-            <div className="flex sm:hidden items-center gap-2">
+            <div className="flex sm:hidden items-center gap-1">
+              <ThemeToggle />
               <button
                 type="button"
                 onClick={() => setCommandPaletteOpen(true)}
