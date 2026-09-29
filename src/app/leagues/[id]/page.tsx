@@ -4,6 +4,7 @@ import Link from "next/link";
 import { getLeagueById } from "@/lib/data/leagues";
 import { formatCompactEur } from "@/lib/utils";
 import { Trophy, Shield } from "lucide-react";
+import { LeagueFinancialParity } from "@/components/LeagueFinancialParity";
 import type { Metadata } from "next";
 
 export const revalidate = 3600;
@@ -78,6 +79,14 @@ export default async function LeaguePage({ params }: LeaguePageProps) {
           </div>
         </div>
       </div>
+
+      {/* Financial Parity & Disparity Barometer */}
+      <LeagueFinancialParity
+        clubs={league.clubs}
+        standings={league.standings || []}
+        totalLeagueValue={totalLeagueValue}
+        leagueName={league.name}
+      />
 
       {/* Standings Table (if available from FotMob) */}
       {hasStandings && (

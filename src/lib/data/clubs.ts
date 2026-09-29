@@ -96,3 +96,85 @@ export async function getTopClubs(limit = 12) {
     return [];
   }
 }
+
+export async function getClubTransfers(clubName: string) {
+  if (!clubName) {
+    return { recordArrivals: [], recordDepartures: [] };
+  }
+
+  // Clean common club prefixes/suffixes to match transfer records
+  const cleanName = clubName
+    .replace(/^(FC|CF|AC|AS|SSC|AFC|BSC|RCD|RC)\s+/i, "")
+    .replace(/\s+(FC|CF|AFC|BSC|SAD)$/i, "")
+    .trim();
+
+  try {
+    const [arrivalsRes, departuresRes] = await Promise.all([
+      supabase
+        .from("Transfer")
+        .select(`
+          id,
+          fromClubName,
+          toClubName,
+          date,
+          feeEur,
+          transferType,
+          player:Player (
+            id,
+            fullName,
+            commonName,
+            photoUrl,
+            position,
+            transfermarktId
+          )
+        `)
+        .ilike("toClubName", `%${cleanName}%`)
+        .gt("feeEur", 0)
+        .order("feeEur", { ascending: false })
+        .limit(5),
+
+      supabase
+        .from("Transfer")
+        .select(`
+          id,
+          fromClubName,
+          toClubName,
+          date,
+          feeEur,
+          transferType,
+          player:Player (
+            id,
+            fullName,
+            commonName,
+            photoUrl,
+            position,
+            transfermarktId
+          )
+        `)
+        .ilike("fromClubName", `%${cleanName}%`)
+        .gt("feeEur", 0)
+        .order("feeEur", { ascending: false })
+        .limit(5),
+    ]);
+
+    const formatTransfers = (list: any[]) =>
+      (list || []).map((t) => ({
+        id: t.id,
+        fromClubName: t.fromClubName,
+        toClubName: t.toClubName,
+        date: t.date,
+        feeEur: Number(t.feeEur) || 0,
+        transferType: t.transferType,
+        player: Array.isArray(t.player) ? t.player[0] : t.player,
+      }));
+
+    return {
+      recordArrivals: formatTransfers(arrivalsRes.data || []),
+      recordDepartures: formatTransfers(departuresRes.data || []),
+    };
+  } catch (err) {
+    console.error(`[Data Layer] Error fetching transfers for club ${clubName}:`, err);
+    return { recordArrivals: [], recordDepartures: [] };
+  }
+}
+

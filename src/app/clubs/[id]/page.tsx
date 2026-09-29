@@ -1,9 +1,11 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { getClubById } from "@/lib/data/clubs";
+import { getClubById, getClubTransfers } from "@/lib/data/clubs";
 import { formatCompactEur, formatEur } from "@/lib/utils";
 import { Shield, Users, Trophy, Globe, User } from "lucide-react";
+import { SquadValuationPyramid } from "@/components/SquadValuationPyramid";
+import { ClubTransferLedger } from "@/components/ClubTransferLedger";
 
 import type { Metadata } from "next";
 
@@ -45,6 +47,8 @@ export default async function ClubPage({ params }: ClubPageProps) {
   if (!club) {
     notFound();
   }
+
+  const transfersData = await getClubTransfers(club.name);
 
   return (
     <div className="space-y-8">
@@ -109,6 +113,20 @@ export default async function ClubPage({ params }: ClubPageProps) {
           </div>
         </div>
       </div>
+
+      {/* Squad Valuation Pyramid & Demographic Intelligence */}
+      <SquadValuationPyramid
+        players={club.players}
+        totalSquadValue={club.totalSquadValue}
+        clubName={club.name}
+      />
+
+      {/* Transfer Flow & Commercial Ledger */}
+      <ClubTransferLedger
+        recordArrivals={transfersData.recordArrivals}
+        recordDepartures={transfersData.recordDepartures}
+        clubName={club.name}
+      />
 
       {/* Squad Table */}
       <div className="rounded-2xl glass-panel p-6 border border-slate-800">
