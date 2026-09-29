@@ -180,7 +180,7 @@ export function getXMasHeader(path: string): string {
   return Buffer.from(payload).toString("base64");
 }
 
-export async function fotmobFetch<T = any>(path: string, revalidate = 60): Promise<T | null> {
+export async function fotmobFetch<T = any>(path: string, revalidate = 5): Promise<T | null> {
   const url = `${FOTMOB_BASE}${path}`;
   const xMas = getXMasHeader(path);
 
@@ -274,7 +274,7 @@ export async function getMatchesByDate(dateStr?: string): Promise<{
       .replace(/-/g, "");
 
   const path = `/api/data/matches?date=${dateFormatted}`;
-  const data = await fotmobFetch<any>(path, 30); // 30s cache for live scores
+  const data = await fotmobFetch<any>(path, 5); // 5s cache for ultra-responsive live scores
 
   if (!data || !Array.isArray(data.leagues)) {
     return {
@@ -359,7 +359,7 @@ export async function getMatchesByDate(dateStr?: string): Promise<{
  */
 export async function getMatchDetails(matchId: string | number) {
   const path = `/api/data/matchDetails?matchId=${matchId}`;
-  const data = await fotmobFetch<any>(path, 30);
+  const data = await fotmobFetch<any>(path, 5); // 5s cache for live match details and lineups
 
   if (!data) return null;
 

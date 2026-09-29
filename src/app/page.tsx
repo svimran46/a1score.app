@@ -4,10 +4,11 @@ import { getLeagues } from "@/lib/data/leagues";
 import { getMatchesByDate } from "@/lib/fotmob/client";
 import { PlayerCard } from "@/components/PlayerCard";
 import { MatchCard } from "@/components/MatchCard";
+import { LiveAutoRefresher } from "@/components/LiveAutoRefresher";
 import { formatCompactEur } from "@/lib/utils";
 import { Search, TrendingUp, Trophy, ArrowRight, Shield, Zap, Radio } from "lucide-react";
 
-export const revalidate = 60; // Fresh intelligence and scores
+export const revalidate = 30; // Fresh intelligence and scores
 export const runtime = "edge";
 
 export default async function HomePage() {
@@ -77,12 +78,17 @@ export default async function HomePage() {
                 </span>
               ) : null}
             </div>
-            <Link
-              href="/matches"
-              className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 flex items-center gap-1 transition-colors"
-            >
-              All Matches ({matchesData?.totalMatches || 0}) <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
+            <div className="flex items-center gap-3">
+              {liveMatches.length > 0 && (
+                <LiveAutoRefresher intervalMs={5000} label="Live" />
+              )}
+              <Link
+                href="/matches"
+                className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 flex items-center gap-1 transition-colors"
+              >
+                All Matches ({matchesData?.totalMatches || 0}) <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">

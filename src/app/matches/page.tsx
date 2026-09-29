@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { getMatchesByDate } from "@/lib/fotmob/client";
 import { MatchCard } from "@/components/MatchCard";
+import { LiveAutoRefresher } from "@/components/LiveAutoRefresher";
 import { Radio, Calendar, Trophy, ChevronLeft, ChevronRight } from "lucide-react";
 
-export const revalidate = 30; // Fresh live scores every 30s
+export const revalidate = 5; // Ultra-fresh live scores every 5s
 export const runtime = "edge";
 
 interface MatchesPageProps {
@@ -98,26 +99,29 @@ export default async function MatchesPage({ searchParams }: MatchesPageProps) {
           </p>
         </div>
 
-        {/* Date Selector */}
-        <div className="flex items-center gap-2 bg-slate-900/80 p-1.5 rounded-2xl border border-slate-800">
-          <Link
-            href={`/matches?date=${prevDateStr}&filter=${activeFilter}`}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
-            title="Previous Day"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </Link>
-          <div className="flex items-center gap-2 px-3 py-1 text-xs font-semibold text-white">
-            <Calendar className="w-3.5 h-3.5 text-emerald-400" />
-            <span>{displayDateStr}</span>
+        {/* Controls: Live Refresher & Date Selector */}
+        <div className="flex flex-wrap items-center gap-2.5">
+          <LiveAutoRefresher intervalMs={5000} label="Live Scores" />
+          <div className="flex items-center gap-2 bg-slate-900/80 p-1.5 rounded-2xl border border-slate-800">
+            <Link
+              href={`/matches?date=${prevDateStr}&filter=${activeFilter}`}
+              className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+              title="Previous Day"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </Link>
+            <div className="flex items-center gap-2 px-3 py-1 text-xs font-semibold text-white">
+              <Calendar className="w-3.5 h-3.5 text-emerald-400" />
+              <span>{displayDateStr}</span>
+            </div>
+            <Link
+              href={`/matches?date=${nextDateStr}&filter=${activeFilter}`}
+              className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+              title="Next Day"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </Link>
           </div>
-          <Link
-            href={`/matches?date=${nextDateStr}&filter=${activeFilter}`}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
-            title="Next Day"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </Link>
         </div>
       </div>
 

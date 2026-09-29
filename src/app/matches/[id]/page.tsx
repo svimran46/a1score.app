@@ -3,6 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getMatchDetails } from "@/lib/fotmob/client";
 import { formatCompactEur } from "@/lib/utils";
+import { LiveAutoRefresher } from "@/components/LiveAutoRefresher";
 import {
   ArrowLeft,
   Shield,
@@ -14,7 +15,7 @@ import {
   Trophy,
 } from "lucide-react";
 
-export const revalidate = 30; // Fresh match details every 30s
+export const revalidate = 5; // Ultra-fresh match details every 5s
 export const runtime = "edge";
 
 interface MatchPageProps {
@@ -49,8 +50,8 @@ export default async function MatchDetailsPage({ params }: MatchPageProps) {
 
   return (
     <div className="space-y-8 max-w-5xl mx-auto">
-      {/* Back button */}
-      <div>
+      {/* Top navigation & Live Refresher */}
+      <div className="flex items-center justify-between">
         <Link
           href="/matches"
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-emerald-400 transition-colors"
@@ -58,6 +59,7 @@ export default async function MatchDetailsPage({ params }: MatchPageProps) {
           <ArrowLeft className="w-4 h-4" />
           Back to Live Match Center
         </Link>
+        <LiveAutoRefresher intervalMs={5000} label="Match Sync" defaultEnabled={!isFinished} />
       </div>
 
       {/* Main Scoreboard Banner */}
