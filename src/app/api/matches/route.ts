@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getMatchesByDate } from "@/lib/fotmob/client";
+import { getMatchesByDate, pureMd5 } from "@/lib/fotmob/client";
 
 export const dynamic = "force-dynamic";
 export const runtime = "edge";
@@ -44,20 +44,36 @@ export async function GET(req: NextRequest) {
         .filter((l) => l.matches.length > 0);
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        date: data.date,
-        totalMatches: data.totalMatches,
-        liveMatchesCount: data.liveMatchesCount,
-        leagues,
-      },
-      {
+    const payload = {
+      success: true,
+      date: data.date,
+      totalMatches: data.totalMatches,
+      liveMatchesCount: data.liveMatchesCount,
+      leagues,
+    };
+
+    const payloadStr = JSON.stringify(payload);
+    const etag = `"${pureMd5(payloadStr)}"`;
+
+    const ifNoneMatch = req.headers.get("if-none-match");
+    if (ifNoneMatch && ifNoneMatch === etag) {
+      return new NextResponse(null, {
+        status: 304,
         headers: {
-          "Cache-Control": "public, s-maxage=5, stale-while-revalidate=5",
+          ETag: etag,
+          "Cache-Control": "public, s-maxage=5, stale-while-revalidate=10",
         },
-      }
-    );
+      });
+    }
+
+    return new NextResponse(payloadStr, {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+        ETag: etag,
+        "Cache-Control": "public, s-maxage=5, stale-while-revalidate=10",
+      },
+    });
   } catch (err: any) {
     console.error("Error in /api/matches:", err);
     return NextResponse.json(
@@ -66,3 +82,4 @@ export async function GET(req: NextRequest) {
     );
   }
 }
+

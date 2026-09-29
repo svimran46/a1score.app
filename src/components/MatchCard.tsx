@@ -45,14 +45,14 @@ export function MatchCard({
         <div className="flex items-center gap-1.5">
           {isLive && (
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-pitch-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-pitch-500" />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500" />
             </span>
           )}
           <span
             className={`font-bold px-2 py-0.5 rounded-md text-[11px] tabular-nums ${
               isLive
-                ? "bg-pitch-500/15 text-pitch-400 border border-pitch-500/30"
+                ? "bg-rose-500/15 text-rose-400 border border-rose-500/30"
                 : isFinished
                 ? "bg-slate-800 text-slate-400"
                 : "bg-slate-800/60 text-slate-300"

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getMatchDetails } from "@/lib/fotmob/client";
+import { getMatchDetails, pureMd5 } from "@/lib/fotmob/client";
 
 export const dynamic = "force-dynamic";
 export const runtime = "edge";
@@ -25,17 +25,33 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
       );
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        data,
-      },
-      {
+    const payload = {
+      success: true,
+      data,
+    };
+
+    const payloadStr = JSON.stringify(payload);
+    const etag = `"${pureMd5(payloadStr)}"`;
+
+    const ifNoneMatch = req.headers.get("if-none-match");
+    if (ifNoneMatch && ifNoneMatch === etag) {
+      return new NextResponse(null, {
+        status: 304,
         headers: {
-          "Cache-Control": "public, s-maxage=5, stale-while-revalidate=5",
+          ETag: etag,
+          "Cache-Control": "public, s-maxage=5, stale-while-revalidate=10",
         },
-      }
-    );
+      });
+    }
+
+    return new NextResponse(payloadStr, {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+        ETag: etag,
+        "Cache-Control": "public, s-maxage=5, stale-while-revalidate=10",
+      },
+    });
   } catch (err: any) {
     console.error(`Error in /api/matches/${params.id}:`, err);
     return NextResponse.json(
@@ -44,3 +60,4 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
     );
   }
 }
+

@@ -123,14 +123,14 @@ export default async function MatchDetailsPage({ params }: MatchPageProps) {
           <div className="flex items-center gap-2">
             {isLive && (
               <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
               </span>
             )}
             <span
               className={`font-black px-3 py-1 rounded-full text-xs uppercase tracking-wider ${
                 isLive
-                  ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
+                  ? "bg-rose-500/15 text-rose-400 border border-rose-500/30"
                   : isFinished
                   ? "bg-slate-800 text-slate-300 border border-slate-700"
                   : "bg-purple-500/15 text-purple-400 border border-purple-500/30"
@@ -355,7 +355,7 @@ export default async function MatchDetailsPage({ params }: MatchPageProps) {
                   );
                 })}
                 <p className="text-[10px] text-slate-500 pt-2 border-t border-slate-800/60 leading-relaxed">
-                  * Official competition match statistics reconcile on-pitch incidents, bench cautions, and post-whistle disciplinary cards recorded by match officials.
+                  * Official competition match statistics reflect the formal match report recorded by competition officials.
                 </p>
               </div>
             ) : (
