@@ -23,7 +23,9 @@ interface SearchResultPlayer {
   position: string;
   photoUrl?: string | null;
   latestMarketValue?: number | null;
-  transfermarktId?: string | null;
+  sourceId?: string | null;
+  externalId?: string | null;
+  slug?: string | null;
   currentClub?: {
     id: string;
     name: string;
@@ -238,9 +240,8 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                 Players ({players.length})
               </span>
               {players.map((p) => {
-                const slug = `${p.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${
-                  p.transfermarktId || p.id
-                }`;
+                const extId = p.sourceId || p.externalId || p.id;
+                const slug = p.slug || `${p.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${extId}`;
                 return (
                   <button
                     key={p.id}

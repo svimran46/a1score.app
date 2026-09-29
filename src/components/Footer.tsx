@@ -42,7 +42,7 @@ export function Footer() {
           <div>
             <h4 className="font-semibold text-xs uppercase tracking-wider mb-3 text-foreground">Intelligence & Sources</h4>
             <p className="text-xs leading-relaxed mb-2 text-[var(--muted-foreground)]">
-              Combining Transfermarkt valuation analytics with FotMob real-time match delivery.
+              Independent football intelligence: market values, transfers and live match data.
             </p>
             <Link href="/methodology" className="text-xs text-amber-400 hover:text-amber-300 font-semibold underline underline-offset-4">
               View Data Methodology →

@@ -10,6 +10,7 @@ import { PositionalPeers } from "@/components/PositionalPeers";
 import { PlayerIntelligenceRibbon } from "@/components/PlayerIntelligenceRibbon";
 import { calculateAge, formatCompactEur, formatEur, formatDate } from "@/lib/utils";
 import { User, Shield, Calendar, Globe, Ruler, Footprints, TrendingUp } from "lucide-react";
+import { constructMetadata, SITE_URL } from "@/lib/metadata";
 
 import type { Metadata } from "next";
 
@@ -25,29 +26,24 @@ interface PlayerPageProps {
 export async function generateMetadata({ params }: PlayerPageProps): Promise<Metadata> {
   const player = await getPlayerBySlugOrId(params.slug);
   if (!player) {
-    return {
-      title: "Player Not Found | a1score.app",
-    };
+    return constructMetadata({
+      title: "Player Not Found",
+      description: "The requested football player profile could not be located.",
+      path: `/players/${params.slug}`,
+    });
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://a1score.app";
   const formattedVal = player.latestMarketValue
     ? formatCompactEur(player.latestMarketValue)
     : "Valuation pending";
   const clubName = player.currentClub?.name || "Free Agent";
 
-  return {
-    title: `${player.fullName} — Market Value (${formattedVal}), Stats & Transfers | a1score.app`,
+  return constructMetadata({
+    title: `${player.fullName} — Market Value (${formattedVal}), Stats & Transfers`,
     description: `${player.fullName} (${player.position}) playing for ${clubName}. Current market valuation: ${formattedVal}. Career transfer history, verified season statistics, and valuation evolution chart on a1score.app.`,
-    alternates: {
-      canonical: `${baseUrl}/players/${params.slug}`,
-    },
-    openGraph: {
-      title: `${player.fullName} — Market Value & Career Stats | a1score.app`,
-      description: `${player.position} at ${clubName} valued at ${formattedVal}. Complete career stats, valuation curve, and transfer ledger.`,
-      images: player.photoUrl ? [{ url: player.photoUrl }] : undefined,
-    },
-  };
+    path: `/players/${params.slug}`,
+    image: player.photoUrl || undefined,
+  });
 }
 
 export default async function PlayerPage({ params }: PlayerPageProps) {
@@ -57,7 +53,6 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
     notFound();
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://a1score.app";
   const age = calculateAge(player.dateOfBirth);
   const latestValuation = player.marketValues[player.marketValues.length - 1];
 
@@ -79,10 +74,10 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
       ? {
           "@type": "SportsTeam",
           name: player.currentClub.name,
-          url: `${baseUrl}/clubs/${player.currentClub.id}`,
+          url: `${SITE_URL}/clubs/${player.currentClub.id}`,
         }
       : undefined,
-    url: `${baseUrl}/players/${params.slug}`,
+    url: `${SITE_URL}/players/${params.slug}`,
   };
 
   return (

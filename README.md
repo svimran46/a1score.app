@@ -1,8 +1,8 @@
 # a1score.app — Football Player Database & Market Valuation Platform
 
-**a1score.app** is a football intelligence and player analytics platform providing player career profiles, market value trajectory charts, transfer histories, competition standings, and squad valuations.
+**a1score.app** is an independent football intelligence and player analytics platform providing player career profiles, market value trajectory charts, transfer histories, competition standings, and squad valuations.
 
-Modeled on the robust information architecture of Transfermarkt, with a 100% bespoke, modern dark-themed user interface, responsive charts, and server-rendered SEO-optimized pages using Next.js 14+ App Router and Incremental Static Regeneration (ISR).
+Built with a 100% bespoke, modern dark-themed user interface, responsive charts, and server-rendered SEO-optimized pages using Next.js 14+ App Router on Cloudflare Pages.
 
 ---
 
@@ -77,13 +77,10 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
-## 🔄 Data Pipeline
-
-1. **Tier 1 (Primary - Ingested): `transfermarkt-datasets` (dcaribou)**
-   - Weekly refreshed CC0 dataset published on Cloudflare R2 (`players`, `clubs`, `competitions`, `player_valuations`, `transfers`).
-   - Run manually via `npm run sync:dataset` or automatically every Sunday via GitHub Actions.
-2. **Tier 2 (Freshness - Optional): API-Football v3 REST API**
-   - For daily match events and live injury status.
+## 🔄 Data Architecture
+ 
+1. **Valuation & Profile Engine:** Curated longitudinal dataset capturing player bios, market valuation trajectory, commercial transfers, and club rosters.
+2. **Match Operations Engine:** Real-time live scores, match clocks, confirmed tactical lineups, and event feeds delivered with low-latency edge caching.
 
 ---
 

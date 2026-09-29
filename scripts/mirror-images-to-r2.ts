@@ -2,7 +2,7 @@
  * scripts/mirror-images-to-r2.ts
  *
  * Cloudflare R2 Image Mirroring Pipeline
- * Mirrors club crests and player portrait images from Transfermarkt to a Cloudflare R2 bucket.
+ * Mirrors club crests and player portrait images to a Cloudflare R2 bucket.
  * Prevents hotlinking single point of failure and allows edge delivery without rate limiting.
  *
  * Usage:

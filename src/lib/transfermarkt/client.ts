@@ -6,6 +6,8 @@
  * using Edge-compatible fetch with Next.js revalidation caching.
  */
 
+import { sanitizeImageUrl } from "@/lib/image-sanitize";
+
 const TM_BASE = "https://www.transfermarkt.com";
 
 const TM_HEADERS = {
@@ -124,14 +126,14 @@ export async function tmGetMostValuablePlayers(limit = 25, positionFilter?: stri
 
         players.push({
           id: pId,
-          transfermarktId: pId,
+          sourceId: pId,
           rank,
           fullName: playerLink[3].trim(),
           commonName: playerLink[3].trim(),
           position,
           subPosition: null,
           age,
-          photoUrl: photoMatch ? photoMatch[1].replace("small", "medium") : null,
+          photoUrl: photoMatch ? sanitizeImageUrl(photoMatch[1].replace("small", "medium"), "player", pId) : null,
           nationality: nats,
           dateOfBirth: null,
           latestMarketValue: valEur,
@@ -139,7 +141,7 @@ export async function tmGetMostValuablePlayers(limit = 25, positionFilter?: stri
             id: clubId || "unknown",
             name: clubName,
             logoUrl: clubId
-              ? `https://img.a.transfermarkt.technology/wappen/tiny/${clubId}.png`
+              ? sanitizeImageUrl(`https://img.a.transfermarkt.technology/wappen/tiny/${clubId}.png`, "club", clubId)
               : null,
             league: null,
           },
@@ -324,7 +326,7 @@ export async function tmGetPlayer(slugOrId: string) {
 
     return {
       id: pId,
-      transfermarktId: pId,
+      sourceId: pId,
       fullName,
       commonName: fullName,
       dateOfBirth,
@@ -333,14 +335,14 @@ export async function tmGetPlayer(slugOrId: string) {
       subPosition,
       preferredFoot,
       heightCm,
-      photoUrl,
+      photoUrl: sanitizeImageUrl(photoUrl, "player", pId),
       currentClubId,
       currentClub: currentClubName
         ? {
             id: currentClubId || "unknown",
             name: currentClubName,
             logoUrl: currentClubId
-              ? `https://img.a.transfermarkt.technology/wappen/head/${currentClubId}.png`
+              ? sanitizeImageUrl(`https://img.a.transfermarkt.technology/wappen/head/${currentClubId}.png`, "club", currentClubId)
               : null,
             league: leagueInfo,
           }
@@ -397,17 +399,17 @@ export async function tmSearchPlayers(
 
         results.push({
           id: pId,
-          transfermarktId: pId,
+          sourceId: pId,
           fullName: playerLink[3].trim(),
           commonName: playerLink[3].trim(),
           position: pos,
           subPosition: null,
-          photoUrl: photoMatch ? photoMatch[1].replace("small", "medium") : null,
+          photoUrl: photoMatch ? sanitizeImageUrl(photoMatch[1].replace("small", "medium"), "player") : null,
           currentClub: clubMatch
             ? {
                 id: clubMatch[1],
                 name: clubMatch[2].trim(),
-                logoUrl: `https://img.a.transfermarkt.technology/wappen/tiny/${clubMatch[1]}.png`,
+                logoUrl: sanitizeImageUrl(`https://img.a.transfermarkt.technology/wappen/tiny/${clubMatch[1]}.png`, "club", clubMatch[1]),
               }
             : null,
           latestMarketValue: valEur,
@@ -442,7 +444,7 @@ export async function tmGetClub(clubId: string) {
     const clubName = rawName.replace(/-?\s*Detailed\s*\d+\/\d+/i, "").replace(/-?\s*\d+\/\d+/i, "").trim();
 
     // Club Logo
-    const logoUrl = `https://img.a.transfermarkt.technology/wappen/head/${clubId}.png`;
+    const logoUrl = sanitizeImageUrl(`https://img.a.transfermarkt.technology/wappen/head/${clubId}.png`, "club", clubId);
 
     // Total Market Value
     const totalValMatch = html.match(/class="data-header__market-value-wrapper"[^>]*>([\s\S]*?)<\/div>/i);
@@ -485,7 +487,7 @@ export async function tmGetClub(clubId: string) {
 
         players.push({
           id: playerLink[2],
-          transfermarktId: playerLink[2],
+          sourceId: playerLink[2],
           fullName: playerLink[3].trim(),
           commonName: playerLink[3].trim(),
           number: numMatch ? parseInt(numMatch[1], 10) : null,
@@ -493,7 +495,7 @@ export async function tmGetClub(clubId: string) {
           subPosition: null,
           age: ageMatch ? parseInt(ageMatch[1], 10) : null,
           nationality: nats,
-          photoUrl: photoMatch ? photoMatch[1].replace("small", "medium") : null,
+          photoUrl: photoMatch ? sanitizeImageUrl(photoMatch[1].replace("small", "medium"), "player", playerLink[2]) : null,
           latestMarketValue: valEur,
           marketValues: [
             {
@@ -512,7 +514,7 @@ export async function tmGetClub(clubId: string) {
 
     return {
       id: clubId,
-      transfermarktId: clubId,
+      sourceId: clubId,
       name: clubName,
       logoUrl,
       country: null,

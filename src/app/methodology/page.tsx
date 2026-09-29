@@ -5,9 +5,9 @@ export const revalidate = 86400; // 24h ISR
 export const runtime = "edge";
 
 export const metadata: Metadata = {
-  title: "Data Methodology & Architecture | a1score.app",
+  title: "Data Methodology & Architecture",
   description:
-    "Explore how a1score.app powers 'Money meets the pitch' through our dual data architecture: Transfermarkt market valuation intelligence and FotMob live match feeds.",
+    "Explore how a1score.app powers 'Money meets the pitch' through our unified data architecture: market valuation modelling, squad analytics, and real-time match operations.",
 };
 
 export default function MethodologyPage() {
@@ -29,7 +29,7 @@ export default function MethodologyPage() {
 
       {/* Core Dual Architecture */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Source 1: Transfermarkt */}
+        {/* Layer 1: Valuation Intelligence */}
         <div className="rounded-3xl glass-panel p-6 sm:p-8 border border-slate-800 bg-slate-900/40 space-y-4">
           <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
             <TrendingUp className="w-6 h-6" />
@@ -39,29 +39,29 @@ export default function MethodologyPage() {
               Financial & Valuation Layer
             </span>
             <h2 className="text-xl font-bold text-white tracking-tight mt-1">
-              Transfermarkt Intelligence
+              Valuation Intelligence
             </h2>
           </div>
           <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-            Market values, career valuation trajectories, historical transfers, contract durations, and club squad values are sourced directly from curated Transfermarkt data feeds and real-time edge scrapers.
+            Market values, career valuation trajectories, historical transfers, contract durations, and club squad values are maintained through our automated data ingestion, multi-point verification, and valuation modelling pipeline. Values refresh continuously across major transfer windows and active competitive seasons.
           </p>
           <ul className="space-y-2 text-xs text-slate-400 pt-2 border-t border-slate-800">
             <li className="flex items-start gap-2">
               <span className="text-emerald-400 font-bold">•</span>
-              <span><strong>Valuation Model:</strong> Community consensus, scout evaluations, age curve analysis, contract tenure, and competitive transfer market demand.</span>
+              <span><strong>Valuation Modelling:</strong> Quantitative analysis combining age curve models, position-specific value baselines, contract tenure, and competitive transfer market demand.</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-emerald-400 font-bold">•</span>
-              <span><strong>Career Trajectory:</strong> Historical valuation snapshots tracing a player&apos;s growth from youth academy to peak market value.</span>
+              <span><strong>Career Trajectory:</strong> Longitudinal valuation points charting a player&apos;s development from initial professional registration to career peak.</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-emerald-400 font-bold">•</span>
-              <span><strong>Fee Categorization:</strong> Explicit separation between free transfers, undisclosed fees, and verified multi-million euro transactions.</span>
+              <span><strong>Commercial Ledger:</strong> Verified accounting separating free moves, loan agreements, and multi-million euro transactions without ambiguity.</span>
             </li>
           </ul>
         </div>
 
-        {/* Source 2: FotMob API */}
+        {/* Layer 2: Match Intelligence */}
         <div className="rounded-3xl glass-panel p-6 sm:p-8 border border-slate-800 bg-slate-900/40 space-y-4">
           <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
             <Zap className="w-6 h-6" />
@@ -71,24 +71,24 @@ export default function MethodologyPage() {
               Live Pitch & Match Center Layer
             </span>
             <h2 className="text-xl font-bold text-white tracking-tight mt-1">
-              FotMob Match Intelligence
+              Match Intelligence
             </h2>
           </div>
           <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-            Live fixtures, in-play scores, confirmed tactical lineups with pitch formations, real-time match events, official league tables, and player tournament performance are powered by edge-authenticated FotMob protocols.
+            Live fixtures, in-play scores, confirmed tactical lineups with pitch formations, real-time match events, official league tables, and player tournament performance are processed through our low-latency edge synchronisation layer.
           </p>
           <ul className="space-y-2 text-xs text-slate-400 pt-2 border-t border-slate-800">
             <li className="flex items-start gap-2">
               <span className="text-emerald-400 font-bold">•</span>
-              <span><strong>5-Second Silent Refresh:</strong> Live scores and match clocks synchronize silently in the background, pausing when tabs are hidden to conserve battery and bandwidth.</span>
+              <span><strong>Edge Synchronization:</strong> Live scores and match clocks synchronize efficiently with shared edge caching, preventing redundant upstream calls and conserving bandwidth.</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-emerald-400 font-bold">•</span>
-              <span><strong>Official League Tables:</strong> Standings reflect exact active top-flight member clubs (e.g. 20 Premier League, 20 LaLiga, 18 Bundesliga).</span>
+              <span><strong>Official League Rosters:</strong> Standings and club allocations strictly reflect active season memberships (e.g. 20 Premier League, 20 LaLiga, 18 Bundesliga).</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-emerald-400 font-bold">•</span>
-              <span><strong>No Third-Party Paywall Proxies:</strong> Zero reliance on restrictive quota APIs like API-Football.</span>
+              <span><strong>Disciplinary Reconciliation:</strong> Clear distinction between aggregate match official reports and active on-pitch timeline incidents.</span>
             </li>
           </ul>
         </div>

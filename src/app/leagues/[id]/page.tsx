@@ -5,6 +5,7 @@ import { getLeagueById } from "@/lib/data/leagues";
 import { formatCompactEur } from "@/lib/utils";
 import { Trophy, Shield } from "lucide-react";
 import { LeagueFinancialParity } from "@/components/LeagueFinancialParity";
+import { constructMetadata, SITE_URL } from "@/lib/metadata";
 import type { Metadata } from "next";
 
 export const revalidate = 3600;
@@ -19,24 +20,19 @@ interface LeaguePageProps {
 export async function generateMetadata({ params }: LeaguePageProps): Promise<Metadata> {
   const league = await getLeagueById(params.id);
   if (!league) {
-    return {
-      title: "Competition Not Found | a1score.app",
-    };
+    return constructMetadata({
+      title: "Competition Not Found",
+      description: "The requested football competition could not be located.",
+      path: `/leagues/${params.id}`,
+    });
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://a1score.app";
-
-  return {
-    title: `${league.name} — Standings, Club Valuations & Stats | a1score.app`,
+  return constructMetadata({
+    title: `${league.name} — Standings, Club Valuations & Stats`,
     description: `Official ${league.name} standings (${league.season || "2024/2025"}), live table, ${league.clubCount} participating clubs, and squad market valuation analytics on a1score.app.`,
-    alternates: {
-      canonical: `${baseUrl}/leagues/${params.id}`,
-    },
-    openGraph: {
-      title: `${league.name} — Standings & Market Values`,
-      description: `Explore live table, club rankings, and cumulative squad market values for ${league.name}.`,
-    },
-  };
+    path: `/leagues/${params.id}`,
+    image: league.logoUrl || undefined,
+  });
 }
 
 export default async function LeaguePage({ params }: LeaguePageProps) {
@@ -46,7 +42,6 @@ export default async function LeaguePage({ params }: LeaguePageProps) {
     return notFound();
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://a1score.app";
   const totalLeagueValue = league.clubs.reduce((acc, c) => acc + c.totalSquadValue, 0);
   const hasStandings = league.standings && league.standings.length > 0;
 
@@ -55,11 +50,11 @@ export default async function LeaguePage({ params }: LeaguePageProps) {
     "@type": "SportsOrganization",
     name: league.name,
     sport: "Football",
-    url: `${baseUrl}/leagues/${params.id}`,
+    url: `${SITE_URL}/leagues/${params.id}`,
     subOrganization: league.clubs?.slice(0, 30).map((c) => ({
       "@type": "SportsTeam",
       name: c.name,
-      url: `${baseUrl}/clubs/${c.id}`,
+      url: `${SITE_URL}/clubs/${c.id}`,
     })),
   };
 
@@ -111,7 +106,7 @@ export default async function LeaguePage({ params }: LeaguePageProps) {
         leagueName={league.name}
       />
 
-      {/* Standings Table (if available from FotMob) */}
+      {/* Standings Table (if available from live data) */}
       {hasStandings && (
         <div className="rounded-2xl glass-panel p-6 border border-slate-800">
           <div className="flex items-center justify-between pb-4 border-b border-slate-800">

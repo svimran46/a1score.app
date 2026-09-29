@@ -28,7 +28,9 @@ export interface ClubTransferRecord {
     commonName?: string | null;
     photoUrl?: string | null;
     position?: string | null;
-    transfermarktId?: string | null;
+    sourceId?: string | null;
+    externalId?: string | null;
+    slug?: string | null;
   } | null;
 }
 
@@ -152,10 +154,10 @@ export function ClubTransferLedger({
           <tbody className="divide-y divide-slate-800/50">
             {activeList.map((t, index) => {
               const p = t.player;
+              const extId = p ? (p.sourceId || p.externalId || p.id) : null;
               const slug = p
-                ? `${p.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${
-                    p.transfermarktId || p.id
-                  }`
+                ? p.slug ||
+                  `${p.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${extId}`
                 : null;
               const counterparty =
                 activeTab === "arrivals" ? t.fromClubName : t.toClubName;
@@ -238,7 +240,7 @@ export function ClubTransferLedger({
       <div className="flex items-center justify-between text-[11px] text-slate-500 pt-2 border-t border-slate-800/60">
         <span className="flex items-center gap-1">
           <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
-          Verified Transfermarkt Commercial Ledger
+          Verified Commercial Ledger
         </span>
         <span>Excludes internal youth academy progressions</span>
       </div>

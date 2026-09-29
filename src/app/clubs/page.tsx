@@ -4,16 +4,18 @@ import { getTopClubs } from "@/lib/data/clubs";
 import { formatCompactEur } from "@/lib/utils";
 import { Shield } from "lucide-react";
 
+import { constructMetadata } from "@/lib/metadata";
 import type { Metadata } from "next";
 
 export const revalidate = 3600;
 export const runtime = "edge";
 
-export const metadata: Metadata = {
-  title: "Football Clubs — Squad Market Values & Rosters | a1score.app",
+export const metadata: Metadata = constructMetadata({
+  title: "Football Clubs — Squad Market Values & Rosters",
   description:
     "Explore top European and world football clubs ranked by cumulative squad market valuations, squad sizes, and active rosters on a1score.app.",
-};
+  path: "/clubs",
+});
 
 export default async function ClubsPage() {
   const clubs = await getTopClubs(24);

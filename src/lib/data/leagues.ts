@@ -3,6 +3,7 @@ import {
   getLeagueStandings,
   FotmobStandingsRow,
 } from "@/lib/fotmob/client";
+import { sanitizeImageUrl } from "@/lib/image-sanitize";
 
 export async function getLeagues() {
   try {
@@ -33,7 +34,7 @@ export async function getLeagues() {
         name: league.name,
         country: league.country,
         tier: league.tier || 1,
-        logoUrl: league.logoUrl,
+        logoUrl: sanitizeImageUrl(league.logoUrl, "league", league.id),
         clubCount: league.clubCount ?? 0,
         totalPlayers: league.totalPlayers ?? 0,
         totalMarketValue: league.totalMarketValue ? Number(league.totalMarketValue) : 0,
@@ -105,7 +106,7 @@ export async function getLeagueById(id: string) {
       .map((club: any) => ({
         id: club.id,
         name: club.name,
-        logoUrl: club.logoUrl,
+        logoUrl: sanitizeImageUrl(club.logoUrl, "club", club.id),
         country: club.country,
         squadSize: club.squadSize ?? 0,
         totalSquadValue: club.totalMarketValue ? Number(club.totalMarketValue) : 0,
@@ -124,6 +125,7 @@ export async function getLeagueById(id: string) {
 
       return {
         ...row,
+        imageUrl: sanitizeImageUrl(row.imageUrl, "club"),
         clubId: matchedClub?.id || null,
         totalSquadValue: matchedClub?.totalSquadValue || 0,
       };
@@ -134,7 +136,7 @@ export async function getLeagueById(id: string) {
       name: league.name,
       country: league.country,
       tier: league.tier,
-      logoUrl: league.logoUrl,
+      logoUrl: sanitizeImageUrl(league.logoUrl, "league", league.id),
       transfermarktId: league.transfermarktId,
       totalMarketValue: league.totalMarketValue ? Number(league.totalMarketValue) : 0,
       totalPlayers: league.totalPlayers ?? 0,

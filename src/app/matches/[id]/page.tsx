@@ -18,6 +18,7 @@ import {
   Trophy,
 } from "lucide-react";
 
+import { constructMetadata, SITE_URL } from "@/lib/metadata";
 import type { Metadata } from "next";
 
 export const revalidate = 5; // Ultra-fresh match details every 5s
@@ -32,12 +33,13 @@ interface MatchPageProps {
 export async function generateMetadata({ params }: MatchPageProps): Promise<Metadata> {
   const match = await getMatchDetails(params.id);
   if (!match) {
-    return {
-      title: "Match Not Found | a1score.app",
-    };
+    return constructMetadata({
+      title: "Match Not Found",
+      description: "The requested football match center could not be located.",
+      path: `/matches/${params.id}`,
+    });
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://a1score.app";
   const home = match.teams?.home?.name || "Home Team";
   const away = match.teams?.away?.name || "Away Team";
   const scoreStr = match.general?.started
@@ -49,17 +51,11 @@ export async function generateMetadata({ params }: MatchPageProps): Promise<Meta
     ? "LIVE"
     : "Upcoming";
 
-  return {
-    title: `${home} ${scoreStr} ${away} — Live Match Center (${statusStr}) | a1score.app`,
+  return constructMetadata({
+    title: `${home} ${scoreStr} ${away} — Live Match Center (${statusStr})`,
     description: `Live match intelligence for ${home} ${scoreStr} ${away}. Confirmed lineups, tactical formations, live match timeline, stats, and squad market valuations on a1score.app.`,
-    alternates: {
-      canonical: `${baseUrl}/matches/${params.id}`,
-    },
-    openGraph: {
-      title: `${home} ${scoreStr} ${away} — Live Match Center`,
-      description: `Live score, lineups, and squad valuations for ${home} vs ${away}.`,
-    },
-  };
+    path: `/matches/${params.id}`,
+  });
 }
 
 export default async function MatchDetailsPage({ params }: MatchPageProps) {
@@ -101,13 +97,12 @@ export default async function MatchDetailsPage({ params }: MatchPageProps) {
     lineup?.awayTeam?.totalStarterMarketValue ||
     awayStarters.reduce((acc: number, p: any) => acc + (p.marketValue || 0), 0);
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://a1score.app";
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SportsEvent",
     name: `${homeTeam?.name || "Home"} vs ${awayTeam?.name || "Away"}`,
     sport: "Football",
-    url: `${baseUrl}/matches/${params.id}`,
+    url: `${SITE_URL}/matches/${params.id}`,
     startDate: general?.matchTimeUTC || undefined,
     eventStatus: isFinished
       ? "https://schema.org/EventFinished"

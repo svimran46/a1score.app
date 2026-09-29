@@ -10,7 +10,9 @@ interface PlayerCardProps {
     position: string;
     nationality: string[];
     photoUrl?: string | null;
-    transfermarktId?: string | null;
+    sourceId?: string | null;
+    externalId?: string | null;
+    slug?: string | null;
     latestMarketValue?: number;
     currentClub?: {
       id: string;
@@ -22,9 +24,10 @@ interface PlayerCardProps {
 }
 
 export function PlayerCard({ player }: PlayerCardProps) {
-  const slug = `${player.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${
-    player.transfermarktId || player.id
-  }`;
+  const extId = player.sourceId || player.externalId || player.id;
+  const slug =
+    player.slug ||
+    `${player.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${extId}`;
 
   return (
     <Link

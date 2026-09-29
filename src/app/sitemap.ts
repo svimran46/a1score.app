@@ -1,6 +1,7 @@
 import { MetadataRoute } from "next";
 import { getTopClubs } from "@/lib/data/clubs";
 import { getMostValuablePlayers } from "@/lib/data/players";
+import { SITE_URL } from "@/lib/metadata";
 
 export const runtime = "edge";
 export const revalidate = 86400; // Cache sitemap for 24 hours
@@ -17,43 +18,42 @@ const TRACKED_LEAGUE_IDS = [
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://a1score.app";
   const now = new Date();
 
   // 1. Static Core Pages
   const staticRoutes: MetadataRoute.Sitemap = [
     {
-      url: `${baseUrl}`,
+      url: `${SITE_URL}`,
       lastModified: now,
       changeFrequency: "hourly",
       priority: 1.0,
     },
     {
-      url: `${baseUrl}/matches`,
+      url: `${SITE_URL}/matches`,
       lastModified: now,
       changeFrequency: "always",
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/players`,
+      url: `${SITE_URL}/players`,
       lastModified: now,
       changeFrequency: "daily",
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/clubs`,
+      url: `${SITE_URL}/clubs`,
       lastModified: now,
       changeFrequency: "daily",
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/leagues`,
+      url: `${SITE_URL}/leagues`,
       lastModified: now,
       changeFrequency: "daily",
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/methodology`,
+      url: `${SITE_URL}/methodology`,
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.5,
@@ -62,7 +62,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // 2. League Competitions
   const leagueRoutes: MetadataRoute.Sitemap = TRACKED_LEAGUE_IDS.map((id) => ({
-    url: `${baseUrl}/leagues/${id}`,
+    url: `${SITE_URL}/leagues/${id}`,
     lastModified: now,
     changeFrequency: "daily",
     priority: 0.85,
@@ -73,7 +73,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const clubs = await getTopClubs(60);
     clubRoutes = clubs.map((c) => ({
-      url: `${baseUrl}/clubs/${c.id}`,
+      url: `${SITE_URL}/clubs/${c.id}`,
       lastModified: now,
       changeFrequency: "weekly",
       priority: 0.75,
@@ -87,11 +87,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const players = await getMostValuablePlayers(120);
     playerRoutes = players.map((p) => {
-      const slug = `${p.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${
-        p.transfermarktId || p.id
-      }`;
+      const slug = p.slug || `${p.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${p.sourceId || p.id}`;
       return {
-        url: `${baseUrl}/players/${slug}`,
+        url: `${SITE_URL}/players/${slug}`,
         lastModified: now,
         changeFrequency: "weekly",
         priority: 0.7,

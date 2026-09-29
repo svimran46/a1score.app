@@ -5,6 +5,7 @@ import {
   tmSearchPlayers,
 } from "@/lib/transfermarkt/client";
 import { getFotmobPlayerStats } from "@/lib/fotmob/client";
+import { sanitizeImageUrl } from "@/lib/image-sanitize";
 
 export async function getMostValuablePlayers(limit = 10, positionFilter?: string) {
   // 1. First, attempt to fetch live worldwide rankings directly via Transfermarkt proxy
@@ -53,10 +54,24 @@ export async function getMostValuablePlayers(limit = 10, positionFilter?: string
       return [];
     }
 
-    return players.map((p: any) => ({
-      ...p,
-      latestMarketValue: p.latestMarketValue ? Number(p.latestMarketValue) : 0,
-    }));
+    return players.map((p: any) => {
+      const clubRaw = p.currentClub;
+      const currentClub = Array.isArray(clubRaw) ? clubRaw[0] || null : clubRaw || null;
+      const extId = p.transfermarktId || p.id;
+      return {
+        ...p,
+        sourceId: extId,
+        slug: `${p.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${extId}`,
+        photoUrl: sanitizeImageUrl(p.photoUrl, "player", extId),
+        latestMarketValue: p.latestMarketValue ? Number(p.latestMarketValue) : 0,
+        currentClub: currentClub
+          ? {
+              ...currentClub,
+              logoUrl: sanitizeImageUrl(currentClub.logoUrl, "club", currentClub.id),
+            }
+          : null,
+      };
+    });
   } catch (error) {
     console.error("Error fetching most valuable players:", error);
     return [];
@@ -163,8 +178,21 @@ export async function getPlayerBySlugOrId(slugOrId: string) {
       }
     }
 
+    const extId = player.transfermarktId || player.id;
+    const clubRaw = player.currentClub;
+    const currentClub = Array.isArray(clubRaw) ? clubRaw[0] || null : clubRaw || null;
+
     return {
       ...player,
+      sourceId: extId,
+      slug: `${player.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${extId}`,
+      photoUrl: sanitizeImageUrl(player.photoUrl, "player", extId),
+      currentClub: currentClub
+        ? {
+            ...currentClub,
+            logoUrl: sanitizeImageUrl(currentClub.logoUrl, "club", currentClub.id),
+          }
+        : null,
       latestMarketValue: player.latestMarketValue
         ? Number(player.latestMarketValue)
         : sortedMarketValues[sortedMarketValues.length - 1]?.valueEur || 0,
@@ -239,10 +267,24 @@ export async function searchPlayers(
       return [];
     }
 
-    return players.map((p: any) => ({
-      ...p,
-      latestMarketValue: p.latestMarketValue ? Number(p.latestMarketValue) : 0,
-    }));
+    return players.map((p: any) => {
+      const clubRaw = p.currentClub;
+      const currentClub = Array.isArray(clubRaw) ? clubRaw[0] || null : clubRaw || null;
+      const extId = p.transfermarktId || p.id;
+      return {
+        ...p,
+        sourceId: extId,
+        slug: `${p.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${extId}`,
+        photoUrl: sanitizeImageUrl(p.photoUrl, "player", extId),
+        latestMarketValue: p.latestMarketValue ? Number(p.latestMarketValue) : 0,
+        currentClub: currentClub
+          ? {
+              ...currentClub,
+              logoUrl: sanitizeImageUrl(currentClub.logoUrl, "club", currentClub.id),
+            }
+          : null,
+      };
+    });
   } catch (error) {
     console.error("Error searching players:", error);
     return [];
@@ -329,8 +371,13 @@ export async function getMarketValueMovers(limit = 6): Promise<{ risers: MarketM
           commonName: p.commonName,
           slug,
           position: p.position,
-          photoUrl: p.photoUrl,
-          currentClub,
+          photoUrl: sanitizeImageUrl(p.photoUrl, "player", p.transfermarktId || p.id),
+          currentClub: currentClub
+            ? {
+                ...currentClub,
+                logoUrl: sanitizeImageUrl(currentClub.logoUrl, "club", currentClub.id),
+              }
+            : null,
           latestValue: latestVal,
           prevValue: prevVal,
           diff,
@@ -432,9 +479,14 @@ export async function getPositionalPeers(
         position: p.position,
         subPosition: p.subPosition,
         dateOfBirth: p.dateOfBirth,
-        photoUrl: p.photoUrl,
+        photoUrl: sanitizeImageUrl(p.photoUrl, "player", p.transfermarktId || p.id),
         latestMarketValue: p.latestMarketValue ? Number(p.latestMarketValue) : 0,
-        currentClub,
+        currentClub: currentClub
+          ? {
+              ...currentClub,
+              logoUrl: sanitizeImageUrl(currentClub.logoUrl, "club"),
+            }
+          : null,
         rank: idx + 1,
       };
     });

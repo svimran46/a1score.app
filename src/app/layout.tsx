@@ -3,30 +3,29 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { SITE_URL } from "@/lib/metadata";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://a1score.app";
-
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "a1score.app — Money meets the pitch",
-    template: "%s | a1score.app",
+    template: "%s",
   },
   description:
     "Football intelligence platform combining real-time match center delivery with player market valuations, career trajectories, and squad analytics on a1score.app.",
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: siteUrl,
+    url: SITE_URL,
     siteName: "a1score.app",
     title: "a1score.app — Money meets the pitch",
     description:
       "Football intelligence: live match centers, player market valuations, career trajectories, and squad analytics.",
     images: [
       {
-        url: `${siteUrl}/og-default.png`,
+        url: `${SITE_URL}/og-default.png`,
         width: 1200,
         height: 630,
         alt: "a1score.app — Money meets the pitch",
@@ -38,7 +37,7 @@ export const metadata: Metadata = {
     title: "a1score.app — Money meets the pitch",
     description:
       "Football intelligence: live match centers, player market valuations, career trajectories, and squad analytics.",
-    images: [`${siteUrl}/og-default.png`],
+    images: [`${SITE_URL}/og-default.png`],
   },
   robots: {
     index: true,
@@ -52,7 +51,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: siteUrl,
+    canonical: SITE_URL,
   },
   icons: {
     icon: "/favicon.ico",

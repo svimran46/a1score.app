@@ -13,23 +13,11 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'img.a.transfermarkt.technology',
-      },
-      {
-        protocol: 'https',
-        hostname: 'tmssl.akamaized.net',
-      },
-      {
-        protocol: 'https',
-        hostname: 'images.fotmob.com',
+        hostname: 'media.api-sports.io',
       },
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
-      },
-      {
-        protocol: 'https',
-        hostname: '**',
       },
     ],
   },

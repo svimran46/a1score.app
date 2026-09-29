@@ -1,10 +1,9 @@
 import { MetadataRoute } from "next";
+import { SITE_URL } from "@/lib/metadata";
 
 export const runtime = "edge";
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://a1score.app";
-
   return {
     rules: [
       {
@@ -13,6 +12,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/search", "/api/"],
       },
     ],
-    sitemap: `${baseUrl}/sitemap.xml`,
+    sitemap: `${SITE_URL}/sitemap.xml`,
   };
 }

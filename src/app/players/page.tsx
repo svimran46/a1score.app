@@ -3,16 +3,18 @@ import { PlayerCard } from "@/components/PlayerCard";
 import { MarketMovers } from "@/components/MarketMovers";
 import { Users, TrendingUp } from "lucide-react";
 
+import { constructMetadata } from "@/lib/metadata";
 import type { Metadata } from "next";
 
 export const revalidate = 3600;
 export const runtime = "edge";
 
-export const metadata: Metadata = {
-  title: "Football Players Directory — Market Valuations & Profiles | a1score.app",
+export const metadata: Metadata = constructMetadata({
+  title: "Football Players Directory — Market Valuations & Profiles",
   description:
     "Explore global football player directory, market valuations, career profiles, injury reports, and transfer records on a1score.app.",
-};
+  path: "/players",
+});
 
 export default async function PlayersPage() {
   const [players, movers] = await Promise.all([

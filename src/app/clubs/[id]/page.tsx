@@ -7,6 +7,7 @@ import { Shield, Users, Trophy, Globe, User } from "lucide-react";
 import { SquadValuationPyramid } from "@/components/SquadValuationPyramid";
 import { ClubTransferLedger } from "@/components/ClubTransferLedger";
 
+import { constructMetadata, SITE_URL } from "@/lib/metadata";
 import type { Metadata } from "next";
 
 export const revalidate = 3600;
@@ -21,28 +22,23 @@ interface ClubPageProps {
 export async function generateMetadata({ params }: ClubPageProps): Promise<Metadata> {
   const club = await getClubById(params.id);
   if (!club) {
-    return {
-      title: "Club Not Found | a1score.app",
-    };
+    return constructMetadata({
+      title: "Club Not Found",
+      description: "The requested football club profile could not be located.",
+      path: `/clubs/${params.id}`,
+    });
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://a1score.app";
   const formattedVal = club.totalSquadValue
     ? formatCompactEur(club.totalSquadValue)
     : "Valuation pending";
 
-  return {
-    title: `${club.name} — Squad Market Value (${formattedVal}), Roster & Stats | a1score.app`,
+  return constructMetadata({
+    title: `${club.name} — Squad Market Value (${formattedVal}), Roster & Stats`,
     description: `Official squad sheet, player valuations, and financial analytics for ${club.name}. Total squad valuation: ${formattedVal}. Detailed roster profiles on a1score.app.`,
-    alternates: {
-      canonical: `${baseUrl}/clubs/${params.id}`,
-    },
-    openGraph: {
-      title: `${club.name} — Squad Market Value (${formattedVal})`,
-      description: `Explore ${club.name} squad valuation, player roster, and transfer profiles.`,
-      images: club.logoUrl ? [{ url: club.logoUrl }] : undefined,
-    },
-  };
+    path: `/clubs/${params.id}`,
+    image: club.logoUrl || undefined,
+  });
 }
 
 export default async function ClubPage({ params }: ClubPageProps) {
@@ -52,7 +48,6 @@ export default async function ClubPage({ params }: ClubPageProps) {
     notFound();
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://a1score.app";
   const transfersData = await getClubTransfers(club.name);
 
   const jsonLd = {
@@ -61,12 +56,12 @@ export default async function ClubPage({ params }: ClubPageProps) {
     name: club.name,
     sport: "Football",
     logo: club.logoUrl || undefined,
-    url: `${baseUrl}/clubs/${params.id}`,
+    url: `${SITE_URL}/clubs/${params.id}`,
     memberOf: club.league
       ? {
           "@type": "SportsOrganization",
           name: club.league.name,
-          url: `${baseUrl}/leagues/${club.league.id}`,
+          url: `${SITE_URL}/leagues/${club.league.id}`,
         }
       : undefined,
     member: club.players?.slice(0, 30).map((p: any) => ({
@@ -174,9 +169,8 @@ export default async function ClubPage({ params }: ClubPageProps) {
             </thead>
             <tbody className="divide-y divide-slate-800/50">
               {club.players.map((p: any) => {
-                const slug = `${p.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${
-                  p.transfermarktId || p.id
-                }`;
+                const extId = p.sourceId || p.externalId || p.id;
+                const slug = p.slug || `${p.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${extId}`;
                 return (
                   <tr key={p.id} className="hover:bg-slate-800/30 transition-colors group">
                     <td className="py-3 pr-4">

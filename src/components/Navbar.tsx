@@ -12,6 +12,7 @@ import {
   X,
   Radio,
   BookOpen,
+  ArrowLeftRight,
 } from "lucide-react";
 import { CommandPalette } from "@/components/CommandPalette";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -93,6 +94,13 @@ export function Navbar() {
                 >
                   <Trophy className="w-4 h-4 text-amber-400" />
                   Leagues
+                </Link>
+                <Link
+                  href="/transfers"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:text-white hover:bg-slate-800/60 transition-colors"
+                >
+                  <ArrowLeftRight className="w-4 h-4 text-purple-400" />
+                  Transfers
                 </Link>
                 <Link
                   href="/methodology"
@@ -198,6 +206,14 @@ export function Navbar() {
               >
                 <Trophy className="w-4 h-4 text-amber-400" />
                 Leagues
+              </Link>
+              <Link
+                href="/transfers"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-2 px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-900 rounded-lg text-sm"
+              >
+                <ArrowLeftRight className="w-4 h-4 text-purple-400" />
+                Transfers
               </Link>
               <Link
                 href="/methodology"

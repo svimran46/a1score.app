@@ -1,5 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import { tmGetClub } from "@/lib/transfermarkt/client";
+import { sanitizeImageUrl } from "@/lib/image-sanitize";
 
 export async function getClubById(id: string) {
   // 1. Try Transfermarkt live proxy for up-to-date squads and valuations
@@ -40,10 +41,16 @@ export async function getClubById(id: string) {
       return null;
     }
 
-    const squadWithValues = (club.players || []).map((p: any) => ({
-      ...p,
-      latestMarketValue: p.latestMarketValue ? Number(p.latestMarketValue) : 0,
-    }));
+    const squadWithValues = (club.players || []).map((p: any) => {
+      const extId = p.transfermarktId || p.id;
+      return {
+        ...p,
+        sourceId: extId,
+        slug: `${p.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${extId}`,
+        photoUrl: sanitizeImageUrl(p.photoUrl, "player", extId),
+        latestMarketValue: p.latestMarketValue ? Number(p.latestMarketValue) : 0,
+      };
+    });
 
     const totalSquadValue = squadWithValues.reduce(
       (acc: number, curr: any) => acc + curr.latestMarketValue,
@@ -52,6 +59,7 @@ export async function getClubById(id: string) {
 
     return {
       ...club,
+      logoUrl: sanitizeImageUrl(club.logoUrl, "club", club.id),
       players: squadWithValues.sort((a: any, b: any) => b.latestMarketValue - a.latestMarketValue),
       totalSquadValue: club.totalMarketValue ? Number(club.totalMarketValue) : totalSquadValue,
     };
@@ -85,7 +93,7 @@ export async function getTopClubs(limit = 12) {
     return clubs.map((club: any) => ({
       id: club.id,
       name: club.name,
-      logoUrl: club.logoUrl,
+      logoUrl: sanitizeImageUrl(club.logoUrl, "club", club.id),
       country: club.country,
       leagueName: club.league?.name ?? null,
       playerCount: club.squadSize ?? 0,
@@ -156,15 +164,28 @@ export async function getClubTransfers(clubName: string) {
     ]);
 
     const formatTransfers = (list: any[]) =>
-      (list || []).map((t) => ({
-        id: t.id,
-        fromClubName: t.fromClubName,
-        toClubName: t.toClubName,
-        date: t.date,
-        feeEur: t.feeEur !== null && t.feeEur !== undefined ? Number(t.feeEur) : null,
-        transferType: t.transferType,
-        player: Array.isArray(t.player) ? t.player[0] : t.player,
-      }));
+      (list || []).map((t) => {
+        const rawP = Array.isArray(t.player) ? t.player[0] : t.player;
+        const extId = rawP ? (rawP.transfermarktId || rawP.id) : null;
+        const player = rawP
+          ? {
+              ...rawP,
+              sourceId: extId,
+              slug: `${rawP.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${extId}`,
+              photoUrl: sanitizeImageUrl(rawP.photoUrl, "player", extId),
+            }
+          : null;
+
+        return {
+          id: t.id,
+          fromClubName: t.fromClubName,
+          toClubName: t.toClubName,
+          date: t.date,
+          feeEur: t.feeEur !== null && t.feeEur !== undefined ? Number(t.feeEur) : null,
+          transferType: t.transferType,
+          player,
+        };
+      });
 
     return {
       recordArrivals: formatTransfers(arrivalsRes.data || []),

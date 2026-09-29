@@ -270,7 +270,7 @@ export function PitchLineup({
             {/* Tactical Starters Layout */}
             <div className="relative w-full h-full">
               {activeTeam.starters.map((starter) => {
-                // If FotMob provides verticalLayout coordinates
+                // When tactical verticalLayout coordinates are available
                 // verticalLayout: x: [0..1] (horizontal), y: [0..1] (vertical: 0 top opponent, 1 bottom GK)
                 let leftPct = 50;
                 let topPct = 50;

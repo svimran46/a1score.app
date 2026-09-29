@@ -232,7 +232,7 @@ export default async function HomePage() {
             <TrendingUp className="w-5 h-5 text-amber-400" />
             <div>
               <h2 className="text-xl font-bold text-white tracking-tight">Most Valuable Players</h2>
-              <p className="text-xs text-slate-400">Verified market valuations curated from Transfermarkt intelligence</p>
+              <p className="text-xs text-slate-400">Verified market valuations and squad expenditure analytics</p>
             </div>
           </div>
           <Link
@@ -271,7 +271,7 @@ export default async function HomePage() {
             How Valuation Data &amp; Live Match Delivery Are Grounded
           </h3>
           <p className="text-xs text-slate-400 leading-relaxed">
-            Read our methodology on how Transfermarkt valuations, career curve graphs, and FotMob live match events are processed with zero fabricated numbers.
+            Read our methodology on how market valuations, career trajectory graphs, and real-time match events are verified and processed with zero fabricated numbers.
           </p>
         </div>
 

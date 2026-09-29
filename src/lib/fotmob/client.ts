@@ -180,6 +180,46 @@ export function getXMasHeader(path: string): string {
   return Buffer.from(payload).toString("base64");
 }
 
+import { sanitizeImageUrl } from "@/lib/image-sanitize";
+
+function sanitizeObjectImages<T>(data: T): T {
+  if (!data) return data;
+  if (typeof data === "string") {
+    if (data.startsWith("http://") || data.startsWith("https://")) {
+      if (
+        data.includes("fotmob.com") ||
+        data.includes("transfermarkt.technology") ||
+        data.includes("image_resources") ||
+        data.includes(".png") ||
+        data.includes(".jpg") ||
+        data.includes(".jpeg") ||
+        data.includes(".webp")
+      ) {
+        return sanitizeImageUrl(data) as unknown as T;
+      }
+    }
+    return data;
+  }
+  if (Array.isArray(data)) {
+    return data.map(sanitizeObjectImages) as unknown as T;
+  }
+  if (typeof data === "object") {
+    const res: any = {};
+    for (const [k, v] of Object.entries(data)) {
+      if (
+        (k === "imageUrl" || k === "photoUrl" || k === "logoUrl" || k === "icon") &&
+        typeof v === "string"
+      ) {
+        res[k] = sanitizeImageUrl(v);
+      } else {
+        res[k] = sanitizeObjectImages(v);
+      }
+    }
+    return res as T;
+  }
+  return data;
+}
+
 export async function fotmobFetch<T = any>(path: string, revalidate = 5): Promise<T | null> {
   const url = `${FOTMOB_BASE}${path}`;
   const xMas = getXMasHeader(path);
@@ -199,13 +239,14 @@ export async function fotmobFetch<T = any>(path: string, revalidate = 5): Promis
     } as any);
 
     if (!res.ok) {
-      console.warn(`[FotMob API] ${path} returned status ${res.status}`);
+      console.warn(`[Live Match API] ${path} returned status ${res.status}`);
       return null;
     }
 
-    return (await res.json()) as T;
+    const json = await res.json();
+    return sanitizeObjectImages(json) as T;
   } catch (err: any) {
-    console.error(`[FotMob API Error] Failed fetching ${path}:`, err.message || err);
+    console.error(`[Live Match API Error] Failed fetching ${path}:`, err.message || err);
     return null;
   } finally {
     clearTimeout(timer);
@@ -310,7 +351,7 @@ export async function getMatchesByDate(dateStr?: string): Promise<{
           longName: m.home?.longName || m.home?.name,
           score: m.home?.score ?? 0,
           imageUrl: m.home?.id
-            ? `https://images.fotmob.com/image_resources/logo/teamlogo/${m.home.id}_small.png`
+            ? sanitizeImageUrl(`https://images.fotmob.com/image_resources/logo/teamlogo/${m.home.id}_small.png`)
             : undefined,
         },
         away: {
@@ -319,7 +360,7 @@ export async function getMatchesByDate(dateStr?: string): Promise<{
           longName: m.away?.longName || m.away?.name,
           score: m.away?.score ?? 0,
           imageUrl: m.away?.id
-            ? `https://images.fotmob.com/image_resources/logo/teamlogo/${m.away.id}_small.png`
+            ? sanitizeImageUrl(`https://images.fotmob.com/image_resources/logo/teamlogo/${m.away.id}_small.png`)
             : undefined,
         },
         status: {
@@ -437,7 +478,7 @@ export async function getLeagueStandings(leagueIdOrCode: number | string): Promi
     goalConDiff: row.goalConDiff ?? 0,
     pts: row.pts ?? 0,
     qualColor: row.qualColor,
-    imageUrl: `https://images.fotmob.com/image_resources/logo/teamlogo/${row.id}_small.png`,
+    imageUrl: sanitizeImageUrl(`https://images.fotmob.com/image_resources/logo/teamlogo/${row.id}_small.png`),
   }));
 
   return {
@@ -469,7 +510,7 @@ export async function searchFotmob(query: string) {
       name: s.name,
       teamId: s.teamId,
       teamName: s.teamName,
-      imageUrl: `https://images.fotmob.com/image_resources/playerimages/${s.id}.png`,
+      imageUrl: sanitizeImageUrl(`https://images.fotmob.com/image_resources/playerimages/${s.id}.png`),
     }));
 
   const teams = (teamsSection?.suggestions || [])
@@ -477,7 +518,7 @@ export async function searchFotmob(query: string) {
     .map((s: any) => ({
       id: s.id,
       name: s.name,
-      imageUrl: `https://images.fotmob.com/image_resources/logo/teamlogo/${s.id}_small.png`,
+      imageUrl: sanitizeImageUrl(`https://images.fotmob.com/image_resources/logo/teamlogo/${s.id}_small.png`),
     }));
 
   return { players, teams };
@@ -615,7 +656,7 @@ export async function getMatchDetails(matchId: string | number) {
             id: header.teams[0].id,
             name: header.teams[0].name,
             score: header.teams[0].score,
-            imageUrl: header.teams[0].imageUrl,
+            imageUrl: sanitizeImageUrl(header.teams[0].imageUrl),
           }
         : null,
       away: header.teams?.[1]
@@ -623,12 +664,12 @@ export async function getMatchDetails(matchId: string | number) {
             id: header.teams[1].id,
             name: header.teams[1].name,
             score: header.teams[1].score,
-            imageUrl: header.teams[1].imageUrl,
+            imageUrl: sanitizeImageUrl(header.teams[1].imageUrl),
           }
         : null,
     },
     events,
-    lineup: content.lineup || null,
+    lineup: content.lineup ? sanitizeObjectImages(content.lineup) : null,
     stats,
     cardReconciliation: {
       onPitchYellowCards,

@@ -126,7 +126,7 @@ export function PlayerIntelligenceRibbon({
           </h3>
         </div>
         <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">
-          FotMob x Transfermarkt Synthesis
+          Valuation &amp; form insights
         </span>
       </div>
 

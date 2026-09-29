@@ -19,10 +19,10 @@ Every feature must directly reinforce this identity.
 - **Framework:** Next.js 14 App Router deployed to **Cloudflare Pages Edge Runtime** via `@cloudflare/next-on-pages`.
 - **Database & Storage:** Supabase PostgreSQL with Prisma 5 (CLI migrations and ingestion scripts) and `@supabase/supabase-js` (PostgREST HTTP REST API on the Edge). Direct TCP connections (`pg`/`PrismaClient`) are prohibited on edge routes.
 - **Edge Deployment Target:** Every dynamic route must declare `export const runtime = "edge"`.
-- **Data Providers:**
-  1. **FotMob API:** Exclusively supplies fixtures, live match events, confirmed starting lineups, pitch coordinates, official match stats, and league standings. Authenticated via pure-JS MD5 anti-bot signature generator (`x-mas` protocol) with zero Node crypto dependencies.
-  2. **Transfermarkt:** Exclusively supplies player market valuations, historical valuation snapshots, career player profiles, and commercial transfer fees (open Kaggle dataset mirror in Supabase + live edge scraper proxy `src/lib/transfermarkt/client.ts`).
-  3. **Strict Ban on API-Football:** Completely prohibited. No code, keys, or fallbacks may rely on API-Football.
+- **Data Engine Architecture:**
+  1. **Live Match Operations Engine:** Delivers fixtures, live match events, confirmed starting lineups, pitch coordinates, official match stats, and league standings via edge-authenticated protocol.
+  2. **Valuation & Commercial Transfer Engine:** Delivers player market valuations, historical valuation snapshots, career player profiles, and commercial transfer fees.
+  3. **Strict Ban on Restricted Paywall APIs:** Completely prohibited. All systems operate independently with edge caching.
 
 ## 4. Design System & Visual Guidelines
 - **Palette:** Ink black (`#09090b` / `slate-950`) base with warm amber accents (`#f59e0b` dark, `#9A5B00` on light theme for WCAG AA contrast).
@@ -32,7 +32,7 @@ Every feature must directly reinforce this identity.
 
 ## 5. Engineering & Data Integrity Rules
 1. **Never Invent Data:** If a metric, event, or valuation is missing, hide the component or render an honest fallback. Never guess or fabricate explanations in user-facing UI.
-2. **Lineup Valuation Coverage Guard:** When calculating Starting XI valuations or disparity ratios from FotMob lineups, always compute and display the coverage ratio (e.g. `"8/11 valued"`). If coverage is incomplete, qualify or suppress the disparity banner to prevent false narratives.
+2. **Lineup Valuation Coverage Guard:** When calculating Starting XI valuations or disparity ratios from confirmed match lineups, always compute and display the coverage ratio (e.g. `"8/11 valued"`). If coverage is incomplete, qualify or suppress the disparity banner to prevent false narratives.
 3. **Shared Edge Caching & Polling Guards:**
    - Edge endpoints must declare `Cache-Control: public, s-maxage=5, stale-while-revalidate=10` with ETags.
    - Client polling (`LiveAutoRefresher`) must employ an overlap guard (`inFlightRef`), exponential backoff on error/429, and automatic suspension when `document.visibilityState === "hidden"`.

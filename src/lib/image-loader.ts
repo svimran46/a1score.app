@@ -1,11 +1,20 @@
 // Cloudflare-friendly Edge Image Loader
-// Supports Cloudflare Image Resizing (/cdn-cgi/image/...) and R2 Mirror CDN paths
-// Falls back seamlessly to the direct asset URL in development or unconfigured environments
+// Supports Cloudflare Image Resizing (/cdn-cgi/image/...) and Internal Edge Asset Proxy
+// Ensures zero third-party source hostnames are exposed in HTML markup or client network requests
 
 export interface ImageLoaderParams {
   src: string;
   width: number;
   quality?: number;
+}
+
+function encodeBase64Url(str: string): string {
+  try {
+    if (typeof btoa === "function") {
+      return btoa(str).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+    }
+  } catch {}
+  return Buffer.from(str).toString("base64url");
 }
 
 export default function cloudflareImageLoader({
@@ -28,16 +37,22 @@ export default function cloudflareImageLoader({
 
   // 2. Cloudflare R2 Mirror CDN (if configured via env variable)
   const r2BaseUrl = process.env.NEXT_PUBLIC_R2_URL;
-  if (r2BaseUrl && (src.includes('transfermarkt') || src.includes('akamaized.net'))) {
+  if (r2BaseUrl && !src.startsWith(r2BaseUrl)) {
     try {
       const parsed = new URL(src);
       const cleanR2Base = r2BaseUrl.replace(/\/$/, '');
       return `${cleanR2Base}${parsed.pathname}`;
     } catch {
-      // In case of invalid URL string, fall back to direct src
+      // In case of invalid URL string, fall through to proxy
     }
   }
 
-  // 3. Default: Direct source URL
+  // 3. For any external HTTP/HTTPS URL, proxy through our internal edge endpoint
+  // to prevent exposing third-party domains in rendered HTML markup
+  if (src.startsWith('http://') || src.startsWith('https://')) {
+    const encoded = encodeBase64Url(src);
+    return `/img/asset/${encoded}`;
+  }
+
   return src;
 }

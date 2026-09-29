@@ -27,7 +27,9 @@ export interface SquadPlayer {
   nationality?: string[];
   latestMarketValue?: number | null;
   photoUrl?: string | null;
-  transfermarktId?: string | null;
+  sourceId?: string | null;
+  externalId?: string | null;
+  slug?: string | null;
   number?: number | null;
 }
 
@@ -448,9 +450,10 @@ export function SquadValuationPyramid({
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-56 overflow-y-auto pr-1">
                   {activeTierObj.players.map((p) => {
-                    const slug = `${p.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${
-                      p.transfermarktId || p.id
-                    }`;
+                    const extId = p.sourceId || p.externalId || p.id;
+                    const slug =
+                      p.slug ||
+                      `${p.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${extId}`;
                     return (
                       <Link
                         key={p.id}

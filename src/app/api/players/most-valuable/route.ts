@@ -7,7 +7,6 @@ export const runtime = "edge";
 /**
  * GET /api/players/most-valuable
  * Global ranking of most valuable players by latest market value.
- * Mirrors Transfermarkt "Most valuable players in the world" page.
  *
  * Query params:
  * - limit: number (1-100, default 25)

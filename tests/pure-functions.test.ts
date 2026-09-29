@@ -130,8 +130,8 @@ test("cloudflareImageLoader - respects resizing and CDN mirrors", () => {
     "data:image/png;base64,..."
   );
 
-  // Standard external URL returns direct URL when no custom domain resizing/R2 is configured
-  const extUrl = "https://img.a.transfermarkt.technology/portrait/header/12345.jpg";
+  // Standard external URL returns internal edge proxy URL to avoid exposing upstream domains
+  const extUrl = "https://example.com/portrait/header/12345.jpg";
   const res = cloudflareImageLoader({ src: extUrl, width: 128, quality: 80 });
-  assert.equal(res, extUrl);
+  assert.equal(res.startsWith("/img/asset/"), true);
 });
