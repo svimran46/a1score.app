@@ -4,6 +4,34 @@ import { NEUTRAL_LEAGUE_SVG } from "@/lib/neutral-avatars";
 
 export const runtime = "edge";
 
+const IMAGE_HEADERS = {
+  "User-Agent":
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+  Accept: "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+};
+
+const CACHE_HEADERS = {
+  "Cache-Control":
+    "public, max-age=86400, s-maxage=604800, stale-while-revalidate=86400",
+};
+
+async function tryFetch(url: string): Promise<NextResponse | null> {
+  try {
+    const upstream = await fetch(url, { headers: IMAGE_HEADERS });
+    if (upstream.ok) {
+      const contentType = upstream.headers.get("content-type") || "image/png";
+      const buffer = await upstream.arrayBuffer();
+      if (buffer.byteLength > 0) {
+        return new NextResponse(buffer, {
+          status: 200,
+          headers: { "Content-Type": contentType, ...CACHE_HEADERS },
+        });
+      }
+    }
+  } catch {}
+  return null;
+}
+
 export async function GET(
   req: NextRequest,
   { params }: { params: { id: string } }
@@ -13,48 +41,33 @@ export async function GET(
   try {
     const { data: league } = await supabase
       .from("League")
-      .select("logoUrl")
+      .select("logoUrl,transfermarktId")
       .or(`id.eq.${leagueId},transfermarktId.eq.${leagueId}`)
       .maybeSingle();
 
-    const targetUrl = league?.logoUrl;
+    // 1. Try the database logoUrl first
+    if (league?.logoUrl) {
+      const res = await tryFetch(league.logoUrl);
+      if (res) return res;
+    }
 
-    if (targetUrl && (targetUrl.startsWith("http://") || targetUrl.startsWith("https://"))) {
-      try {
-        const upstream = await fetch(targetUrl, {
-          headers: {
-            "User-Agent":
-              "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-            Accept: "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
-          },
-        });
-
-        if (upstream.ok) {
-          const contentType = upstream.headers.get("content-type") || "image/png";
-          const buffer = await upstream.arrayBuffer();
-
-          return new NextResponse(buffer, {
-            status: 200,
-            headers: {
-              "Content-Type": contentType,
-              "Cache-Control":
-                "public, max-age=86400, s-maxage=604800, stale-while-revalidate=86400",
-            },
-          });
-        }
-      } catch (fetchErr) {
-        console.warn(`[Image Proxy] Upstream fetch failed for league ${leagueId}:`, fetchErr);
-      }
+    // 2. Fallback: construct CDN URL from transfermarktId
+    const tmId = league?.transfermarktId;
+    if (tmId) {
+      const cdnUrl = `https://www.transfermarkt.co.uk/images/logo/header/${tmId.toLowerCase()}.png`;
+      const res = await tryFetch(cdnUrl);
+      if (res) return res;
     }
   } catch (err) {
-    console.error(`[Image Proxy] Error querying league ${leagueId}:`, err);
+    console.error(`[Image Proxy] Error for league ${leagueId}:`, err);
   }
 
+  // 3. Final fallback: neutral SVG
   return new NextResponse(NEUTRAL_LEAGUE_SVG, {
     status: 200,
     headers: {
       "Content-Type": "image/svg+xml; charset=utf-8",
-      "Cache-Control": "public, max-age=86400, s-maxage=604800, stale-while-revalidate=86400",
+      ...CACHE_HEADERS,
     },
   });
 }

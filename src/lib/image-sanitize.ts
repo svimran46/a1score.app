@@ -17,6 +17,12 @@ export function sanitizeImageUrl(
   type: "player" | "club" | "league" | "asset" = "asset",
   id?: string | number | null
 ): string | null {
+  // If entity id is available, always route to entity-specific proxy endpoint
+  // (the proxy handles CDN fallback when the DB logoUrl is null)
+  if (id && (type === "player" || type === "club" || type === "league")) {
+    return `/img/${type}/${id}`;
+  }
+
   if (!url) return null;
   const s = String(url).trim();
   if (!s) return null;
@@ -24,11 +30,6 @@ export function sanitizeImageUrl(
   // Already internal or data URI
   if (s.startsWith("/img/") || s.startsWith("data:") || s.endsWith(".svg")) {
     return s;
-  }
-
-  // If entity id is available, route to entity-specific endpoint
-  if (id && (type === "player" || type === "club" || type === "league")) {
-    return `/img/${type}/${id}`;
   }
 
   // External URL -> encode to asset proxy
