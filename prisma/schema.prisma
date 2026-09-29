@@ -48,6 +48,7 @@ model Club {
   transfermarktId String?  @unique
   totalMarketValue BigInt? @default(0)
   squadSize       Int?     @default(0)
+  lastSeason      Int?
   leagueId        String?
   league          League?  @relation(fields: [leagueId], references: [id])
   players         Player[]
@@ -55,6 +56,7 @@ model Club {
   @@index([leagueId])
   @@index([name])
   @@index([totalMarketValue])
+  @@index([lastSeason])
 }
 
 model League {

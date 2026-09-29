@@ -1,7 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import {
   getLeagueStandings,
-  OFFICIAL_LEAGUE_CLUB_COUNTS,
   FotmobStandingsRow,
 } from "@/lib/fotmob/client";
 
@@ -35,8 +34,7 @@ export async function getLeagues() {
         country: league.country,
         tier: league.tier || 1,
         logoUrl: league.logoUrl,
-        clubCount:
-          OFFICIAL_LEAGUE_CLUB_COUNTS[league.transfermarktId] ?? (league.clubCount ?? 0),
+        clubCount: league.clubCount ?? 0,
         totalPlayers: league.totalPlayers ?? 0,
         totalMarketValue: league.totalMarketValue ? Number(league.totalMarketValue) : 0,
       }));
@@ -66,7 +64,8 @@ export async function getLeagueById(id: string) {
           logoUrl,
           country,
           squadSize,
-          totalMarketValue
+          totalMarketValue,
+          lastSeason
         )
       `)
       .or(`id.eq.${id},transfermarktId.eq.${id}`)
@@ -91,13 +90,18 @@ export async function getLeagueById(id: string) {
       console.warn(`[Data Layer] FotMob standings fetch failed for league ${league.name}:`, e);
     }
 
+    // Season-scoped active clubs: filter by active current season (2025)
+    const rawClubs = league.clubs || [];
+    const seasonScopedClubs = rawClubs.filter((c: any) => c.lastSeason === 2025);
+    const activeClubs = seasonScopedClubs.length > 0 ? seasonScopedClubs : rawClubs;
+
     const officialCount =
       fotmobData?.teamsCount ||
-      OFFICIAL_LEAGUE_CLUB_COUNTS[league.transfermarktId] ||
       league.clubCount ||
+      activeClubs.length ||
       0;
 
-    const rankedClubs = (league.clubs || [])
+    const rankedClubs = activeClubs
       .map((club: any) => ({
         id: club.id,
         name: club.name,
@@ -105,6 +109,7 @@ export async function getLeagueById(id: string) {
         country: club.country,
         squadSize: club.squadSize ?? 0,
         totalSquadValue: club.totalMarketValue ? Number(club.totalMarketValue) : 0,
+        lastSeason: club.lastSeason,
       }))
       .sort((a: any, b: any) => b.totalSquadValue - a.totalSquadValue);
 

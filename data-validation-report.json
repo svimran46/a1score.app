@@ -1,0 +1,134 @@
+{
+  "timestamp": "2026-09-29T13:11:41.703Z",
+  "totalAssertions": 13,
+  "passedAssertions": 13,
+  "failedAssertions": 0,
+  "status": "PASSED",
+  "assertions": [
+    {
+      "id": "league_count_GB1",
+      "name": "Premier League (GB1) Active Club Count",
+      "passed": true,
+      "expected": 20,
+      "actual": {
+        "leagueTable": 20,
+        "activeClubsSeason2025": 20
+      },
+      "details": "Verified exactly 20 active clubs."
+    },
+    {
+      "id": "league_count_ES1",
+      "name": "LaLiga (ES1) Active Club Count",
+      "passed": true,
+      "expected": 20,
+      "actual": {
+        "leagueTable": 20,
+        "activeClubsSeason2025": 20
+      },
+      "details": "Verified exactly 20 active clubs."
+    },
+    {
+      "id": "league_count_IT1",
+      "name": "Serie A (IT1) Active Club Count",
+      "passed": true,
+      "expected": 20,
+      "actual": {
+        "leagueTable": 20,
+        "activeClubsSeason2025": 20
+      },
+      "details": "Verified exactly 20 active clubs."
+    },
+    {
+      "id": "league_count_L1",
+      "name": "Bundesliga (L1) Active Club Count",
+      "passed": true,
+      "expected": 18,
+      "actual": {
+        "leagueTable": 18,
+        "activeClubsSeason2025": 18
+      },
+      "details": "Verified exactly 18 active clubs."
+    },
+    {
+      "id": "league_count_FR1",
+      "name": "Ligue 1 (FR1) Active Club Count",
+      "passed": true,
+      "expected": 18,
+      "actual": {
+        "leagueTable": 18,
+        "activeClubsSeason2025": 18
+      },
+      "details": "Verified exactly 18 active clubs."
+    },
+    {
+      "id": "league_count_PO1",
+      "name": "Liga Portugal (PO1) Active Club Count",
+      "passed": true,
+      "expected": 18,
+      "actual": {
+        "leagueTable": 18,
+        "activeClubsSeason2025": 18
+      },
+      "details": "Verified exactly 18 active clubs."
+    },
+    {
+      "id": "league_count_NL1",
+      "name": "Eredivisie (NL1) Active Club Count",
+      "passed": true,
+      "expected": 18,
+      "actual": {
+        "leagueTable": 18,
+        "activeClubsSeason2025": 18
+      },
+      "details": "Verified exactly 18 active clubs."
+    },
+    {
+      "id": "player_uniqueness",
+      "name": "Zero Duplicate Players (by transfermarktId)",
+      "passed": true,
+      "expected": 0,
+      "actual": 0,
+      "details": "No duplicate transfermarktId found in Player table."
+    },
+    {
+      "id": "player_club_foreign_keys",
+      "name": "Zero Orphan Player-Club Foreign Keys",
+      "passed": true,
+      "expected": 0,
+      "actual": 0,
+      "details": "All assigned players link to valid existing Club records."
+    },
+    {
+      "id": "valuation_non_negative",
+      "name": "Zero Negative Player Market Valuations",
+      "passed": true,
+      "expected": 0,
+      "actual": 0,
+      "details": "All player valuations are non-negative."
+    },
+    {
+      "id": "transfer_fees_non_negative",
+      "name": "Zero Negative Commercial Transfer Fees",
+      "passed": true,
+      "expected": 0,
+      "actual": 0,
+      "details": "All transfer fees are non-negative."
+    },
+    {
+      "id": "transfer_player_foreign_keys",
+      "name": "Zero Orphan Transfer-Player Foreign Keys",
+      "passed": true,
+      "expected": 0,
+      "actual": 0,
+      "details": "All transfers link to existing Player records."
+    },
+    {
+      "id": "club_league_foreign_keys",
+      "name": "Zero Orphan Club-League Foreign Keys",
+      "passed": true,
+      "expected": 0,
+      "actual": 0,
+      "details": "All clubs link to valid League records."
+    }
+  ]
+}
