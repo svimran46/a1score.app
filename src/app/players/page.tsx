@@ -23,13 +23,13 @@ export default async function PlayersPage() {
   ]);
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-6 sm:space-y-10">
       <div>
-        <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-3">
-          <Users className="w-8 h-8 text-amber-400" />
+        <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-2.5 sm:gap-3 [text-wrap:balance]">
+          <Users className="w-7 h-7 sm:w-8 sm:h-8 text-amber-400 shrink-0" />
           Players Directory
         </h1>
-        <p className="text-xs sm:text-sm text-slate-400 mt-1">
+        <p className="text-xs sm:text-sm text-slate-400 mt-1 [text-wrap:balance]">
           Top market valuations, career trajectories, and valuation shifts in global football
         </p>
       </div>

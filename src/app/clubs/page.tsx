@@ -21,26 +21,27 @@ export default async function ClubsPage() {
   const clubs = await getTopClubs(24);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       <div>
-        <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-2.5 sm:gap-3 [text-wrap:balance]">
+          <Shield className="w-7 h-7 sm:w-8 sm:h-8 text-amber-400 shrink-0" />
           Football Clubs
         </h1>
-        <p className="text-xs sm:text-sm text-slate-400 mt-1">
+        <p className="text-xs sm:text-sm text-slate-400 mt-1 [text-wrap:balance]">
           Top clubs ranked by squad valuations across world competitions
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         {clubs.length > 0 ? (
           clubs.map((club) => (
             <Link
               key={club.id}
               href={`/clubs/${club.id}`}
-              className="rounded-2xl glass-panel glass-panel-hover p-5 border border-slate-800 flex items-center justify-between"
+              className="rounded-2xl glass-panel glass-panel-hover p-3.5 sm:p-5 border border-slate-800 flex items-center justify-between gap-3 transition-all"
             >
-              <div className="flex items-center gap-4 min-w-0">
-                <div className="relative w-12 h-12 rounded-xl bg-slate-800 p-2 flex-shrink-0 overflow-hidden">
+              <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
+                <div className="relative w-12 h-12 rounded-xl bg-slate-800 p-2 shrink-0 overflow-hidden border border-slate-700/60">
                   <EntityImage
                     src={club.logoUrl}
                     alt={club.name}
@@ -50,18 +51,18 @@ export default async function ClubsPage() {
                     className="object-contain p-1"
                   />
                 </div>
-                <div className="min-w-0">
+                <div className="min-w-0 flex-1">
                   <h3 className="text-sm font-bold text-white tracking-tight truncate">
                     {club.name}
                   </h3>
                   <div className="text-xs text-slate-400 mt-0.5 truncate">
-                    {club.leagueName || club.country || "Club"} • {club.playerCount} Players
+                    {club.leagueName || club.country || "Club"} • {(club.playerCount || 0).toLocaleString("en-US")} Players
                   </div>
                 </div>
               </div>
-              <div className="text-right flex-shrink-0 pl-3">
+              <div className="text-right shrink-0">
                 <span className="text-[10px] text-slate-500 block uppercase font-semibold">Squad Value</span>
-                <span className="text-sm font-black text-amber-400 tabular-nums">
+                <span className="text-xs sm:text-sm font-black text-amber-400 tabular-nums whitespace-nowrap">
                   {formatCompactEur(club.totalSquadValue)}
                 </span>
               </div>

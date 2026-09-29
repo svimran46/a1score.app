@@ -12,33 +12,33 @@ export const metadata: Metadata = {
 
 export default function MethodologyPage() {
   return (
-    <div className="max-w-4xl mx-auto space-y-12 py-4">
+    <div className="max-w-4xl mx-auto space-y-8 sm:space-y-12 py-2 sm:py-4">
       {/* Header */}
-      <div className="space-y-4 text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">
-          <ShieldCheck className="w-4 h-4" />
-          Editorial Transparency & Integrity
+      <div className="space-y-3 text-left">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold whitespace-nowrap">
+          <ShieldCheck className="w-4 h-4 shrink-0" />
+          Editorial Transparency &amp; Integrity
         </div>
-        <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+        <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight [text-wrap:balance]">
           How A1Score Operates
         </h1>
-        <p className="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto">
+        <p className="text-sm sm:text-base text-slate-400 max-w-2xl [text-wrap:balance]">
           &ldquo;Money meets the pitch.&rdquo; Most football platforms present either live scores or financial valuations in isolation. A1Score synthesizes both into a unified intelligence engine.
         </p>
       </div>
 
       {/* Core Dual Architecture */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
         {/* Layer 1: Valuation Intelligence */}
-        <div className="rounded-3xl glass-panel p-6 sm:p-8 border border-slate-800 bg-slate-900/40 space-y-4">
-          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+        <div className="rounded-3xl glass-panel p-4 sm:p-8 border border-slate-800 bg-slate-900/40 space-y-4">
+          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 shrink-0">
             <TrendingUp className="w-6 h-6" />
           </div>
           <div>
             <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
-              Financial & Valuation Layer
+              Financial &amp; Valuation Layer
             </span>
-            <h2 className="text-xl font-bold text-white tracking-tight mt-1">
+            <h2 className="text-xl font-bold text-white tracking-tight mt-1 [text-wrap:balance]">
               Valuation Intelligence
             </h2>
           </div>
@@ -47,30 +47,30 @@ export default function MethodologyPage() {
           </p>
           <ul className="space-y-2 text-xs text-slate-400 pt-2 border-t border-slate-800">
             <li className="flex items-start gap-2">
-              <span className="text-emerald-400 font-bold">•</span>
+              <span className="text-emerald-400 font-bold shrink-0">•</span>
               <span><strong>Valuation Modelling:</strong> Quantitative analysis combining age curve models, position-specific value baselines, contract tenure, and competitive transfer market demand.</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-emerald-400 font-bold">•</span>
+              <span className="text-emerald-400 font-bold shrink-0">•</span>
               <span><strong>Career Trajectory:</strong> Longitudinal valuation points charting a player&apos;s development from initial professional registration to career peak.</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-emerald-400 font-bold">•</span>
+              <span className="text-emerald-400 font-bold shrink-0">•</span>
               <span><strong>Commercial Ledger:</strong> Verified accounting separating free moves, loan agreements, and multi-million euro transactions without ambiguity.</span>
             </li>
           </ul>
         </div>
 
         {/* Layer 2: Match Intelligence */}
-        <div className="rounded-3xl glass-panel p-6 sm:p-8 border border-slate-800 bg-slate-900/40 space-y-4">
-          <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+        <div className="rounded-3xl glass-panel p-4 sm:p-8 border border-slate-800 bg-slate-900/40 space-y-4">
+          <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
             <Zap className="w-6 h-6" />
           </div>
           <div>
             <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
-              Live Pitch & Match Center Layer
+              Live Pitch &amp; Match Center Layer
             </span>
-            <h2 className="text-xl font-bold text-white tracking-tight mt-1">
+            <h2 className="text-xl font-bold text-white tracking-tight mt-1 [text-wrap:balance]">
               Match Intelligence
             </h2>
           </div>
@@ -79,15 +79,15 @@ export default function MethodologyPage() {
           </p>
           <ul className="space-y-2 text-xs text-slate-400 pt-2 border-t border-slate-800">
             <li className="flex items-start gap-2">
-              <span className="text-emerald-400 font-bold">•</span>
+              <span className="text-emerald-400 font-bold shrink-0">•</span>
               <span><strong>Edge Synchronization:</strong> Live scores and match clocks synchronize efficiently with shared edge caching, preventing redundant upstream calls and conserving bandwidth.</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-emerald-400 font-bold">•</span>
+              <span className="text-emerald-400 font-bold shrink-0">•</span>
               <span><strong>Official League Rosters:</strong> Standings and club allocations strictly reflect active season memberships (e.g. 20 Premier League, 20 LaLiga, 18 Bundesliga).</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-emerald-400 font-bold">•</span>
+              <span className="text-emerald-400 font-bold shrink-0">•</span>
               <span><strong>Disciplinary Reconciliation:</strong> Clear distinction between aggregate match official reports and active on-pitch timeline incidents.</span>
             </li>
           </ul>
@@ -95,23 +95,23 @@ export default function MethodologyPage() {
       </div>
 
       {/* Data Refresh Lifecycle */}
-      <div className="rounded-3xl glass-panel p-6 sm:p-8 border border-slate-800 space-y-6">
+      <div className="rounded-3xl glass-panel p-4 sm:p-8 border border-slate-800 space-y-4 sm:space-y-6">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400">
+          <div className="p-2.5 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 shrink-0">
             <RefreshCw className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-white tracking-tight">
-              Cache Protocols & Refresh Rates
+            <h3 className="text-base sm:text-lg font-bold text-white tracking-tight [text-wrap:balance]">
+              Cache Protocols &amp; Refresh Rates
             </h3>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-400 [text-wrap:balance]">
               How Cloudflare Pages Edge Workers deliver sub-50ms latency across global edge points
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-          <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-1.5">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 text-xs">
+          <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-1.5">
             <span className="text-emerald-400 font-bold text-sm">5 Seconds</span>
             <h4 className="text-white font-semibold">Live Match Intelligence</h4>
             <p className="text-slate-400">
@@ -119,7 +119,7 @@ export default function MethodologyPage() {
             </p>
           </div>
 
-          <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-1.5">
+          <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-1.5">
             <span className="text-amber-400 font-bold text-sm">5 Minutes</span>
             <h4 className="text-white font-semibold">Official League Standings</h4>
             <p className="text-slate-400">
@@ -127,9 +127,9 @@ export default function MethodologyPage() {
             </p>
           </div>
 
-          <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-1.5">
+          <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-1.5">
             <span className="text-blue-400 font-bold text-sm">1 Hour (ISR)</span>
-            <h4 className="text-white font-semibold">Valuations & Player Profiles</h4>
+            <h4 className="text-white font-semibold">Valuations &amp; Player Profiles</h4>
             <p className="text-slate-400">
               Market value curve graphs, transfer ledgers, career statistics, and bio details.
             </p>
@@ -138,9 +138,9 @@ export default function MethodologyPage() {
       </div>
 
       {/* Zero Fabricated Data Statement */}
-      <div className="rounded-3xl glass-panel p-6 sm:p-8 border border-emerald-500/30 bg-emerald-950/10 space-y-3">
-        <h3 className="text-lg font-bold text-white tracking-tight flex items-center gap-2">
-          <ShieldCheck className="w-5 h-5 text-emerald-400" />
+      <div className="rounded-3xl glass-panel p-4 sm:p-8 border border-emerald-500/30 bg-emerald-950/10 space-y-3">
+        <h3 className="text-base sm:text-lg font-bold text-white tracking-tight flex items-center gap-2 [text-wrap:balance]">
+          <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0" />
           The Zero Fabricated Data Commitment
         </h3>
         <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">

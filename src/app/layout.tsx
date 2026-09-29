@@ -84,7 +84,7 @@ export default function RootLayout({
       </head>
       <body className="bg-ink-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-amber-500 selection:text-ink-950 transition-colors duration-200">
         <Navbar />
-        <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-3 pb-8 sm:py-6">
           {children}
         </main>
         <Footer />

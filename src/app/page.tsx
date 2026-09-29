@@ -44,74 +44,76 @@ export default async function HomePage() {
   const totalBig5Valuation = big5Leagues.reduce((acc, l) => acc + l.totalMarketValue, 0);
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-8 sm:space-y-12">
       {/* Editorial Hero: Money Meets the Pitch */}
-      <section className="relative overflow-hidden rounded-3xl glass-panel p-6 sm:p-10 lg:p-12 border border-slate-800/80 bg-gradient-to-b from-slate-900/80 via-slate-950/90 to-ink-950">
+      <section className="relative overflow-hidden rounded-3xl glass-panel p-5 sm:p-10 lg:p-12 border border-slate-800/80 bg-gradient-to-b from-slate-900/80 via-slate-950/90 to-ink-950">
         {/* Glow Gradients */}
         <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-amber-500/10 blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-pitch-500/10 blur-3xl pointer-events-none" />
 
-        <div className="relative max-w-4xl space-y-6">
-          {/* Editorial Badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20 shadow-sm">
-            <Coins className="w-3.5 h-3.5 text-amber-400" />
-            <span className="tracking-wide uppercase text-[11px] font-bold">
+        <div className="relative max-w-4xl space-y-5 sm:space-y-6">
+          {/* Editorial Badge - single line, never wraps on mobile */}
+          <div className="inline-flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20 shadow-sm max-w-full">
+            <Coins className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+            <span className="tracking-wide uppercase text-[10px] sm:text-[11px] font-bold whitespace-nowrap">
               Money Meets the Pitch
             </span>
-            <span className="text-slate-600">•</span>
-            <span className="text-slate-300">Live Valuation &amp; Match Intelligence</span>
+            <span className="text-slate-600 hidden sm:inline">•</span>
+            <span className="text-slate-300 hidden sm:inline whitespace-nowrap">
+              Live Valuation &amp; Match Intelligence
+            </span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight font-sans">
+          <h1 className="text-2xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight font-sans [text-wrap:balance]">
             Where Squad Market Values Meet 90 Minutes on the Pitch.
           </h1>
 
-          <p className="text-slate-300 text-sm sm:text-base lg:text-lg leading-relaxed max-w-2xl">
+          <p className="text-slate-300 text-xs sm:text-base lg:text-lg leading-relaxed max-w-2xl">
             Most platforms do either live scores or player valuations. A1Score unifies both: squad financial parity inside the match center, valuation trajectory curves, and transfer analytics across Europe&apos;s elite competitions.
           </p>
 
-          {/* Key Intelligence Barometer Metrics */}
-          <div className="pt-2 grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div className="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800/80 space-y-1">
+          {/* Key Intelligence Barometer Metrics - 2x2 grid on mobile, equal heights */}
+          <div className="pt-2 grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 items-stretch">
+            <div className="p-3 sm:p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800/80 flex flex-col justify-between space-y-1">
               <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider flex items-center gap-1">
-                <Coins className="w-3 h-3 text-amber-400" /> Top Player Value
+                <Coins className="w-3 h-3 text-amber-400 shrink-0" /> Top Player Value
               </span>
-              <div className="text-lg sm:text-xl font-black text-amber-400 tabular-nums">
+              <div className="text-base sm:text-xl font-black text-amber-400 tabular-nums">
                 {valuablePlayers[0]?.latestMarketValue
                   ? formatCompactEur(valuablePlayers[0].latestMarketValue)
                   : "€200.0M"}
               </div>
               <div className="text-[11px] text-slate-400 truncate">
-                {valuablePlayers[0]?.commonName || valuablePlayers[0]?.fullName || "Erling Haaland"}
+                {valuablePlayers[0]?.commonName || valuablePlayers[0]?.fullName || "Lamine Yamal"}
               </div>
             </div>
 
-            <div className="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800/80 space-y-1">
+            <div className="p-3 sm:p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800/80 flex flex-col justify-between space-y-1">
               <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider flex items-center gap-1">
-                <Scale className="w-3 h-3 text-emerald-400" /> Big 5 Valuation
+                <Scale className="w-3 h-3 text-emerald-400 shrink-0" /> Big 5 Valuation
               </span>
-              <div className="text-lg sm:text-xl font-black text-emerald-400 tabular-nums">
-                {totalBig5Valuation > 0 ? formatCompactEur(totalBig5Valuation) : "€37.9B"}
+              <div className="text-base sm:text-xl font-black text-emerald-400 tabular-nums">
+                {totalBig5Valuation > 0 ? formatCompactEur(totalBig5Valuation) : "€35.7B"}
               </div>
               <div className="text-[11px] text-slate-400">96 Elite Clubs</div>
             </div>
 
-            <div className="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800/80 space-y-1">
+            <div className="p-3 sm:p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800/80 flex flex-col justify-between space-y-1">
               <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider flex items-center gap-1">
-                <Radio className="w-3 h-3 text-rose-400" /> Match Polling
+                <Radio className="w-3 h-3 text-rose-400 shrink-0" /> Live Updates
               </span>
-              <div className="text-lg sm:text-xl font-black text-white tabular-nums">
-                5s Silent
+              <div className="text-base sm:text-xl font-black text-white tabular-nums">
+                Every 5s
               </div>
-              <div className="text-[11px] text-slate-400">Edge-synced live feeds</div>
+              <div className="text-[11px] text-slate-400">Real-time pitch feeds</div>
             </div>
 
-            <div className="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800/80 space-y-1">
+            <div className="p-3 sm:p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800/80 flex flex-col justify-between space-y-1">
               <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider flex items-center gap-1">
-                <BookOpen className="w-3 h-3 text-blue-400" /> Data Pipeline
+                <BookOpen className="w-3 h-3 text-blue-400 shrink-0" /> Data Quality
               </span>
-              <div className="text-lg sm:text-xl font-black text-white">
-                Zero Invented
+              <div className="text-base sm:text-xl font-black text-white">
+                Verified Sources
               </div>
               <Link href="/methodology" className="text-[11px] text-amber-400 hover:underline">
                 View methodology →
@@ -124,27 +126,33 @@ export default async function HomePage() {
       {/* Featured Matches Section with Financial Match Center */}
       {featuredMatches.length > 0 && (
         <section className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Radio className="w-5 h-5 text-rose-500 animate-pulse" />
-              <div>
-                <h2 className="text-xl font-bold text-white tracking-tight">
-                  {liveMatches.length > 0 ? "Live Matches & Financial Parity" : "Featured Fixtures & Squad Valuations"}
-                </h2>
-                <p className="text-xs text-slate-400">
-                  Scores updated every 5s • Comparing squad values on the pitch
-                </p>
-              </div>
+          {/* Restructured 3-Row Mobile Header (Title row, Subtitle row, Compact Control row) */}
+          <div className="space-y-2">
+            {/* Row 1: Full-width Title + Inline Live Badge */}
+            <div className="flex flex-wrap items-center gap-2">
+              <h2 className="text-lg sm:text-xl font-bold text-white tracking-tight [text-wrap:balance]">
+                {liveMatches.length > 0 ? "Live Matches & Financial Parity" : "Featured Fixtures & Squad Valuations"}
+              </h2>
               {matchesData?.liveMatchesCount && matchesData.liveMatchesCount > 0 ? (
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-pitch-500/10 text-pitch-400 border border-pitch-500/30 ml-2">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-pitch-500/10 text-pitch-400 border border-pitch-500/30 shrink-0">
+                  <span className="w-1.5 h-1.5 rounded-full bg-pitch-400 animate-ping" />
                   {matchesData.liveMatchesCount} Live
                 </span>
               ) : null}
             </div>
-            <div className="flex items-center gap-3">
-              {liveMatches.length > 0 && (
-                <LiveAutoRefresher intervalMs={5000} label="Live" />
-              )}
+
+            {/* Row 2: Subtitle */}
+            <p className="text-xs text-slate-400">
+              Scores updated every 5s • Comparing squad values on the pitch
+            </p>
+
+            {/* Row 3: Compact Control Bar */}
+            <div className="flex items-center justify-between gap-3 pt-1">
+              <div>
+                {liveMatches.length > 0 && (
+                  <LiveAutoRefresher intervalMs={5000} label="Live: 5s" />
+                )}
+              </div>
               <Link
                 href="/matches"
                 className="text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1 transition-colors"

@@ -56,12 +56,12 @@ export function DateStripCarousel({
   }, [activeDate]);
 
   return (
-    <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-1 no-scrollbar">
+    <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-1 no-scrollbar snap-x snap-mandatory scroll-smooth">
       {days.map((item) => (
         <Link
           key={item.dateStr}
           href={`/matches?date=${item.dateStr}&filter=${activeFilter}`}
-          className={`flex-shrink-0 flex flex-col items-center justify-center min-w-[76px] px-3 py-2 rounded-2xl border text-xs transition-all ${
+          className={`flex-shrink-0 snap-start flex flex-col items-center justify-center min-w-[76px] px-3 py-2 rounded-2xl border text-xs transition-all ${
             item.isActive
               ? "bg-amber-500/15 border-amber-500/40 text-amber-400 font-bold shadow-md shadow-amber-500/5"
               : "bg-slate-900/70 border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800/80"

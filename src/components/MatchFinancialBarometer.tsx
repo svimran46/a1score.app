@@ -114,11 +114,11 @@ export function MatchFinancialBarometer({
   if (!analysis || total === 0) return null;
 
   return (
-    <div className="rounded-3xl glass-panel p-6 border border-slate-800 bg-gradient-to-r from-slate-900/60 via-slate-950/80 to-slate-900/60 shadow-xl space-y-4">
+    <div className="rounded-3xl glass-panel p-4 sm:p-6 border border-slate-800 bg-gradient-to-r from-slate-900/60 via-slate-950/80 to-slate-900/60 shadow-xl space-y-4">
       {/* Header */}
-      <div className="flex items-center justify-between pb-3 border-b border-slate-800/80">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-3 border-b border-slate-800/80 gap-1 sm:gap-2">
         <div className="flex items-center gap-2">
-          <Scale className="w-4 h-4 text-amber-400" />
+          <Scale className="w-4 h-4 text-amber-400 shrink-0" />
           <h3 className="text-sm font-bold text-white tracking-tight">
             Financial Parity &amp; Value-to-Pitch Index
           </h3>
@@ -130,41 +130,44 @@ export function MatchFinancialBarometer({
 
       {/* Disparity Bar & Numbers */}
       <div className="space-y-2">
-        <div className="flex items-center justify-between text-xs">
-          <div className="space-y-0.5">
-            <span className="font-semibold text-slate-300 block">{homeName}</span>
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-amber-400 font-black text-sm tabular-nums">
+        <div className="grid grid-cols-3 items-center text-xs gap-2">
+          {/* Home */}
+          <div className="space-y-0.5 min-w-0">
+            <span className="font-semibold text-slate-300 block truncate">{homeName}</span>
+            <div className="flex flex-col sm:flex-row sm:items-baseline gap-0.5 sm:gap-1.5">
+              <span className="text-amber-400 font-black text-sm tabular-nums whitespace-nowrap">
                 {formatCompactEur(hVal)}
               </span>
               {homeCoverage && (
-                <span className="text-[10px] text-slate-400 font-semibold tabular-nums">
+                <span className="text-[10px] text-slate-400 font-semibold tabular-nums whitespace-nowrap">
                   ({analysis.homeValued}/{analysis.homeTotalCount} valued)
                 </span>
               )}
             </div>
           </div>
 
-          <div className="text-center">
-            <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider block">
-              Disparity Ratio
+          {/* Ratio */}
+          <div className="text-center min-w-0">
+            <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider block truncate">
+              Disparity
             </span>
-            <span className="text-xs font-black text-white px-2 py-0.5 rounded-md bg-slate-800 border border-slate-700 tabular-nums">
+            <span className="text-xs font-black text-white px-2 py-0.5 rounded-md bg-slate-800 border border-slate-700 tabular-nums inline-block">
               {analysis.isProvisional ? "~" : ""}{analysis.ratio}x
             </span>
           </div>
 
-          <div className="space-y-0.5 text-right">
-            <span className="font-semibold text-slate-300 block">{awayName}</span>
-            <div className="flex items-baseline justify-end gap-1.5">
+          {/* Away */}
+          <div className="space-y-0.5 text-right min-w-0">
+            <span className="font-semibold text-slate-300 block truncate">{awayName}</span>
+            <div className="flex flex-col sm:flex-row sm:items-baseline justify-end gap-0.5 sm:gap-1.5">
+              <span className="text-amber-400 font-black text-sm tabular-nums whitespace-nowrap">
+                {formatCompactEur(aVal)}
+              </span>
               {awayCoverage && (
-                <span className="text-[10px] text-slate-400 font-semibold tabular-nums">
+                <span className="text-[10px] text-slate-400 font-semibold tabular-nums whitespace-nowrap">
                   ({analysis.awayValued}/{analysis.awayTotalCount} valued)
                 </span>
               )}
-              <span className="text-amber-400 font-black text-sm tabular-nums">
-                {formatCompactEur(aVal)}
-              </span>
             </div>
           </div>
         </div>

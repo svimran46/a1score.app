@@ -32,11 +32,11 @@ export function PlayerCard({ player }: PlayerCardProps) {
   return (
     <Link
       href={`/players/${slug}`}
-      className="group block rounded-2xl glass-panel glass-panel-hover p-4 border border-slate-800/80 hover:border-amber-500/30 transition-all overflow-hidden"
+      className="group block rounded-2xl glass-panel glass-panel-hover p-3 sm:p-4 border border-slate-800/80 hover:border-amber-500/30 transition-all overflow-hidden"
     >
-      <div className="flex items-start gap-4">
+      <div className="flex items-center sm:items-start gap-3 sm:gap-4">
         {/* Photo Container */}
-        <div className="relative w-16 h-16 rounded-xl bg-slate-800 flex-shrink-0 overflow-hidden border border-slate-700/60">
+        <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-slate-800 shrink-0 overflow-hidden border border-slate-700/60">
           <EntityImage
             src={player.photoUrl}
             alt={player.fullName}
@@ -50,25 +50,25 @@ export function PlayerCard({ player }: PlayerCardProps) {
         {/* Player Details */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2">
-            <span className="text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-400 border border-amber-500/20">
+            <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-400 border border-amber-500/20 whitespace-nowrap">
               {player.position}
             </span>
             {player.latestMarketValue ? (
-              <span className="text-sm font-extrabold text-amber-400 tabular-nums">
+              <span className="text-xs sm:text-sm font-extrabold text-amber-400 tabular-nums whitespace-nowrap">
                 {formatCompactEur(player.latestMarketValue)}
               </span>
             ) : null}
           </div>
 
-          <h3 className="text-base font-bold text-white tracking-tight truncate mt-1 group-hover:text-amber-300 transition-colors">
+          <h3 className="text-sm sm:text-base font-bold text-white tracking-tight truncate mt-1 group-hover:text-amber-300 transition-colors">
             {player.commonName || player.fullName}
           </h3>
 
-          <div className="flex items-center gap-2 mt-1.5 text-xs text-slate-400">
+          <div className="flex items-center gap-1.5 sm:gap-2 mt-1 text-[11px] sm:text-xs text-slate-400 min-w-0">
             {player.currentClub && (
-              <div className="flex items-center gap-1.5 truncate">
+              <div className="flex items-center gap-1.5 truncate min-w-0">
                 {player.currentClub.logoUrl && (
-                  <div className="relative w-3.5 h-3.5 flex-shrink-0">
+                  <div className="relative w-3.5 h-3.5 shrink-0">
                     <EntityImage
                       src={player.currentClub.logoUrl}
                       alt={player.currentClub.name}
@@ -83,7 +83,7 @@ export function PlayerCard({ player }: PlayerCardProps) {
               </div>
             )}
             {player.nationality && player.nationality.length > 0 && (
-              <span className="text-slate-500">• {player.nationality[0]}</span>
+              <span className="text-slate-500 shrink-0">• {player.nationality[0]}</span>
             )}
           </div>
         </div>

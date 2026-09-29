@@ -140,47 +140,54 @@ export default async function MatchDetailsPage({ params }: MatchPageProps) {
       </div>
 
       {/* Main Scoreboard Banner */}
-      <div className="rounded-3xl glass-panel p-6 sm:p-8 border border-slate-800 bg-gradient-to-b from-slate-900/80 to-slate-950/90 shadow-2xl relative overflow-hidden">
+      <div className="rounded-3xl glass-panel p-4 sm:p-8 border border-slate-800 bg-gradient-to-b from-slate-900/80 to-slate-950/90 shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 rounded-full bg-brand-500/10 blur-3xl pointer-events-none" />
 
         {/* Competition & Status */}
-        <div className="flex items-center justify-between text-xs pb-6 border-b border-slate-800/80">
-          <div className="flex items-center gap-2">
-            <Trophy className="w-4 h-4 text-amber-400" />
-            <span className="font-bold text-white tracking-wide">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between text-xs pb-4 sm:pb-6 border-b border-slate-800/80 gap-2">
+          {/* Row 1 on mobile: Competition name */}
+          <div className="flex items-center gap-2 min-w-0">
+            <Trophy className="w-4 h-4 text-amber-400 shrink-0" />
+            <span className="font-bold text-white tracking-wide truncate">
               {general.leagueName || "Football Match"}
             </span>
             {general.matchRound && (
-              <span className="text-slate-500">• Round {general.matchRound}</span>
+              <span className="text-slate-500 hidden sm:inline shrink-0">• Round {general.matchRound}</span>
             )}
           </div>
 
-          <div className="flex items-center gap-2">
-            {isLive && (
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
-              </span>
+          {/* Row 2 on mobile: Round + Live badge */}
+          <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
+            {general.matchRound && (
+              <span className="text-slate-400 sm:hidden">Round {general.matchRound}</span>
             )}
-            <span
-              className={`font-black px-3 py-1 rounded-full text-xs uppercase tracking-wider ${
-                isLive
-                  ? "bg-rose-500/15 text-rose-400 border border-rose-500/30"
-                  : isFinished
-                  ? "bg-slate-800 text-slate-300 border border-slate-700"
-                  : "bg-purple-500/15 text-purple-400 border border-purple-500/30"
-              }`}
-            >
-              {isLive ? "LIVE NOW" : isFinished ? "FULL TIME" : "UPCOMING"}
-            </span>
+            <div className="flex items-center gap-2 ml-auto sm:ml-0">
+              {isLive && (
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
+                </span>
+              )}
+              <span
+                className={`font-black px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[11px] sm:text-xs uppercase tracking-wider whitespace-nowrap ${
+                  isLive
+                    ? "bg-rose-500/15 text-rose-400 border border-rose-500/30"
+                    : isFinished
+                    ? "bg-slate-800 text-slate-300 border border-slate-700"
+                    : "bg-purple-500/15 text-purple-400 border border-purple-500/30"
+                }`}
+              >
+                {isLive ? "LIVE NOW" : isFinished ? "FULL TIME" : "UPCOMING"}
+              </span>
+            </div>
           </div>
         </div>
 
         {/* Teams and Big Score */}
-        <div className="py-8 grid grid-cols-3 items-center gap-4">
+        <div className="py-4 sm:py-8 grid grid-cols-3 items-center gap-2 sm:gap-4">
           {/* Home Team */}
-          <div className="flex flex-col items-center sm:items-end text-center sm:text-right space-y-3">
-            <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-slate-800/80 p-2.5 shadow-xl flex items-center justify-center border border-slate-700/60 overflow-hidden">
+          <div className="flex flex-col items-center sm:items-end text-center sm:text-right space-y-2 sm:space-y-3 min-w-0">
+            <div className="relative w-14 h-14 sm:w-20 sm:h-20 rounded-2xl bg-slate-800/80 p-2 sm:p-2.5 shadow-xl flex items-center justify-center border border-slate-700/60 overflow-hidden shrink-0">
               <EntityImage
                 src={homeTeam?.imageUrl}
                 alt={homeTeam.name || "Home"}
@@ -190,32 +197,32 @@ export default async function MatchDetailsPage({ params }: MatchPageProps) {
                 className="object-contain"
               />
             </div>
-            <div>
-              <h2 className="text-base sm:text-2xl font-black text-white tracking-tight">
+            <div className="w-full">
+              <h2 className="text-sm sm:text-2xl font-black text-white tracking-tight truncate [text-wrap:balance]">
                 {homeTeam?.name || "Home Team"}
               </h2>
               {lineup?.homeTeam?.formation && (
-                <span className="text-xs text-slate-400 font-medium">
-                  Formation: {lineup.homeTeam.formation}
+                <span className="text-[11px] sm:text-xs text-slate-400 font-medium whitespace-nowrap block mt-0.5">
+                  <span className="hidden sm:inline">Formation: </span>{lineup.homeTeam.formation}
                 </span>
               )}
             </div>
           </div>
 
           {/* Central Score */}
-          <div className="flex flex-col items-center justify-center text-center">
+          <div className="flex flex-col items-center justify-center text-center px-1">
             {isLive || isFinished ? (
-              <div className="flex items-center gap-3 sm:gap-6 tabular-nums">
+              <div className="flex items-center gap-2 sm:gap-6 tabular-nums">
                 <span
-                  className={`text-4xl sm:text-6xl font-black tabular-nums ${
+                  className={`text-3xl sm:text-6xl font-black tabular-nums ${
                     isLive ? "text-emerald-400" : "text-white"
                   }`}
                 >
                   {homeTeam?.score ?? 0}
                 </span>
-                <span className="text-2xl sm:text-4xl font-light text-slate-600">-</span>
+                <span className="text-xl sm:text-4xl font-light text-slate-600">-</span>
                 <span
-                  className={`text-4xl sm:text-6xl font-black tabular-nums ${
+                  className={`text-3xl sm:text-6xl font-black tabular-nums ${
                     isLive ? "text-emerald-400" : "text-white"
                   }`}
                 >
@@ -223,9 +230,9 @@ export default async function MatchDetailsPage({ params }: MatchPageProps) {
                 </span>
               </div>
             ) : (
-              <div className="px-4 py-2 rounded-2xl bg-slate-900/90 border border-slate-800">
-                <span className="text-lg sm:text-xl font-bold text-white block">VS</span>
-                <span className="text-[11px] text-slate-400 mt-1 block">
+              <div className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-2xl bg-slate-900/90 border border-slate-800">
+                <span className="text-base sm:text-xl font-bold text-white block">VS</span>
+                <span className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 sm:mt-1 block whitespace-nowrap">
                   {general.matchTimeUTC?.split(",")?.[2] || "Upcoming"}
                 </span>
               </div>
@@ -233,8 +240,8 @@ export default async function MatchDetailsPage({ params }: MatchPageProps) {
           </div>
 
           {/* Away Team */}
-          <div className="flex flex-col items-center sm:items-start text-center sm:text-left space-y-3">
-            <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-slate-800/80 p-2.5 shadow-xl flex items-center justify-center border border-slate-700/60 overflow-hidden">
+          <div className="flex flex-col items-center sm:items-start text-center sm:text-left space-y-2 sm:space-y-3 min-w-0">
+            <div className="relative w-14 h-14 sm:w-20 sm:h-20 rounded-2xl bg-slate-800/80 p-2 sm:p-2.5 shadow-xl flex items-center justify-center border border-slate-700/60 overflow-hidden shrink-0">
               <EntityImage
                 src={awayTeam?.imageUrl}
                 alt={awayTeam.name || "Away"}
@@ -244,13 +251,13 @@ export default async function MatchDetailsPage({ params }: MatchPageProps) {
                 className="object-contain"
               />
             </div>
-            <div>
-              <h2 className="text-base sm:text-2xl font-black text-white tracking-tight">
+            <div className="w-full">
+              <h2 className="text-sm sm:text-2xl font-black text-white tracking-tight truncate [text-wrap:balance]">
                 {awayTeam?.name || "Away Team"}
               </h2>
               {lineup?.awayTeam?.formation && (
-                <span className="text-xs text-slate-400 font-medium">
-                  Formation: {lineup.awayTeam.formation}
+                <span className="text-[11px] sm:text-xs text-slate-400 font-medium whitespace-nowrap block mt-0.5">
+                  <span className="hidden sm:inline">Formation: </span>{lineup.awayTeam.formation}
                 </span>
               )}
             </div>

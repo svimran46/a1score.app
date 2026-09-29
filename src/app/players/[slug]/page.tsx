@@ -87,11 +87,11 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       {/* Player Header Card */}
-      <div className="relative overflow-hidden rounded-3xl glass-panel p-6 sm:p-8 border border-slate-800 bg-slate-900/40">
-        <div className="flex flex-col md:flex-row items-start md:items-center gap-6 justify-between">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+      <div className="relative overflow-hidden rounded-3xl glass-panel p-4 sm:p-8 border border-slate-800 bg-slate-900/40">
+        <div className="flex flex-col md:flex-row items-stretch md:items-center gap-6 justify-between">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-4 sm:gap-6">
             {/* Player Photo */}
-            <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-2xl bg-slate-800 overflow-hidden border-2 border-slate-700/80 shadow-2xl flex-shrink-0">
+            <div className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-2xl bg-slate-800 overflow-hidden border-2 border-slate-700/80 shadow-2xl shrink-0 mx-auto sm:mx-0">
               <EntityImage
                 src={player.photoUrl}
                 alt={player.fullName}
@@ -104,19 +104,19 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
             </div>
 
             {/* Core Bio Info */}
-            <div className="space-y-2">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <div className="space-y-2 flex-1 min-w-0">
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                <span className="text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 whitespace-nowrap">
                   {player.position}
                 </span>
                 {player.subPosition && (
-                  <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+                  <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700 whitespace-nowrap">
                     {player.subPosition}
                   </span>
                 )}
               </div>
 
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight [text-wrap:balance]">
                 {player.fullName}
               </h1>
 
@@ -124,23 +124,23 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
               {player.currentClub && (
                 <Link
                   href={`/clubs/${player.currentClub.id}`}
-                  className="inline-flex items-center gap-2 text-sm text-slate-300 hover:text-white transition-colors group"
+                  className="inline-flex items-center justify-center sm:justify-start gap-2 text-sm text-slate-300 hover:text-white transition-colors group"
                 >
-                    <div className="relative w-5 h-5 flex-shrink-0">
-                      <EntityImage
-                        src={player.currentClub.logoUrl}
-                        alt={player.currentClub.name}
-                        fill
-                        sizes="20px"
-                        entityType="club"
-                        className="object-contain"
-                      />
-                    </div>
-                  <span className="font-semibold group-hover:underline">
+                  <div className="relative w-5 h-5 shrink-0">
+                    <EntityImage
+                      src={player.currentClub.logoUrl}
+                      alt={player.currentClub.name}
+                      fill
+                      sizes="20px"
+                      entityType="club"
+                      className="object-contain"
+                    />
+                  </div>
+                  <span className="font-semibold group-hover:underline truncate">
                     {player.currentClub.name}
                   </span>
                   {player.currentClub.league && (
-                    <span className="text-slate-500 text-xs">
+                    <span className="text-slate-500 text-xs shrink-0">
                       ({player.currentClub.league.name})
                     </span>
                   )}
@@ -150,62 +150,62 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
           </div>
 
           {/* Current Market Value Badge */}
-          <div className="w-full md:w-auto p-4 rounded-2xl bg-slate-950/80 border border-amber-500/20 flex flex-col md:items-end justify-center shadow-lg shadow-amber-500/5">
-            <span className="text-xs text-slate-400 uppercase tracking-wider font-semibold flex items-center gap-1.5">
+          <div className="w-full md:w-auto p-4 rounded-2xl bg-slate-950/80 border border-amber-500/20 flex flex-col items-center md:items-end justify-center shadow-lg shadow-amber-500/5 text-center md:text-right">
+            <span className="text-xs text-slate-400 uppercase tracking-wider font-semibold flex items-center gap-1.5 whitespace-nowrap">
               <TrendingUp className="w-3.5 h-3.5 text-amber-400" />
               Estimated Market Value
             </span>
-            <span className="text-2xl sm:text-3xl font-black text-amber-400 tracking-tight mt-1 tabular-nums">
+            <span className="text-2xl sm:text-3xl font-black text-amber-400 tracking-tight mt-1 tabular-nums whitespace-nowrap">
               {latestValuation ? formatCompactEur(latestValuation.valueEur) : "N/A"}
             </span>
             {latestValuation && (
-              <span className="text-[11px] text-slate-500 mt-0.5">
+              <span className="text-[11px] text-slate-500 mt-0.5 whitespace-nowrap">
                 Updated {formatDate(latestValuation.date)}
               </span>
             )}
           </div>
         </div>
 
-        {/* Attribute Pills */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-6 border-t border-slate-800/80 text-xs">
-          <div className="flex items-center gap-2.5 text-slate-400">
-            <Calendar className="w-4 h-4 text-slate-500" />
-            <div>
-              <span className="block text-slate-500 text-[10px] uppercase font-semibold">Age / Birth</span>
-              <span className="text-white font-medium">
-                {age ? `${age} yrs` : "-"} ({formatDate(player.dateOfBirth)})
-              </span>
-            </div>
+        {/* Attribute Pills: 2-column on mobile with label above value, no clipping */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 mt-6 pt-6 border-t border-slate-800/80 text-xs">
+          <div className="flex flex-col gap-0.5 min-w-0 bg-slate-900/60 p-2.5 rounded-xl border border-slate-800/60">
+            <span className="text-slate-500 text-[10px] uppercase font-semibold flex items-center gap-1.5 truncate">
+              <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+              Age / Birth
+            </span>
+            <span className="text-white font-medium truncate mt-0.5">
+              {age ? `${age} yrs` : "-"} <span className="text-slate-400 text-[11px]">({formatDate(player.dateOfBirth)})</span>
+            </span>
           </div>
 
-          <div className="flex items-center gap-2.5 text-slate-400">
-            <Globe className="w-4 h-4 text-slate-500" />
-            <div>
-              <span className="block text-slate-500 text-[10px] uppercase font-semibold">Nationality</span>
-              <span className="text-white font-medium">
-                {player.nationality.length > 0 ? player.nationality.join(", ") : "-"}
-              </span>
-            </div>
+          <div className="flex flex-col gap-0.5 min-w-0 bg-slate-900/60 p-2.5 rounded-xl border border-slate-800/60">
+            <span className="text-slate-500 text-[10px] uppercase font-semibold flex items-center gap-1.5 truncate">
+              <Globe className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+              Nationality
+            </span>
+            <span className="text-white font-medium truncate mt-0.5">
+              {player.nationality.length > 0 ? player.nationality.join(", ") : "-"}
+            </span>
           </div>
 
-          <div className="flex items-center gap-2.5 text-slate-400">
-            <Ruler className="w-4 h-4 text-slate-500" />
-            <div>
-              <span className="block text-slate-500 text-[10px] uppercase font-semibold">Height</span>
-              <span className="text-white font-medium">
-                {player.heightCm ? `${player.heightCm} cm` : "-"}
-              </span>
-            </div>
+          <div className="flex flex-col gap-0.5 min-w-0 bg-slate-900/60 p-2.5 rounded-xl border border-slate-800/60">
+            <span className="text-slate-500 text-[10px] uppercase font-semibold flex items-center gap-1.5 truncate">
+              <Ruler className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+              Height
+            </span>
+            <span className="text-white font-medium truncate mt-0.5">
+              {player.heightCm ? `${player.heightCm} cm` : "-"}
+            </span>
           </div>
 
-          <div className="flex items-center gap-2.5 text-slate-400">
-            <Footprints className="w-4 h-4 text-slate-500" />
-            <div>
-              <span className="block text-slate-500 text-[10px] uppercase font-semibold">Preferred Foot</span>
-              <span className="text-white font-medium capitalize">
-                {player.preferredFoot || "-"}
-              </span>
-            </div>
+          <div className="flex flex-col gap-0.5 min-w-0 bg-slate-900/60 p-2.5 rounded-xl border border-slate-800/60">
+            <span className="text-slate-500 text-[10px] uppercase font-semibold flex items-center gap-1.5 truncate">
+              <Footprints className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+              Preferred Foot
+            </span>
+            <span className="text-white font-medium capitalize truncate mt-0.5">
+              {player.preferredFoot || "-"}
+            </span>
           </div>
         </div>
       </div>

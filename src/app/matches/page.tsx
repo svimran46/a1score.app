@@ -85,47 +85,48 @@ export default async function MatchesPage({ searchParams }: MatchesPageProps) {
   const filteredMatchesCount = leagues.reduce((sum, l) => sum + l.matches.length, 0);
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-              Live Match Center
-            </h1>
-            {data.liveMatchesCount > 0 && (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                </span>
-                {data.liveMatchesCount} Live Now
+    <div className="space-y-6 sm:space-y-8">
+      {/* Restructured 3-Row Header */}
+      <div className="space-y-2.5">
+        {/* Row 1: Title + Inline Live Badge */}
+        <div className="flex flex-wrap items-center gap-2.5">
+          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight [text-wrap:balance]">
+            Live Match Center
+          </h1>
+          {data.liveMatchesCount > 0 && (
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 shrink-0">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
               </span>
-            )}
-          </div>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1">
-            Real-time scores, lineups and match stats.
-          </p>
+              {data.liveMatchesCount} Live Now
+            </span>
+          )}
         </div>
 
-        {/* Controls: Live Refresher & Date Selector */}
-        <div className="flex flex-wrap items-center gap-2.5">
+        {/* Row 2: Subtitle with matching left edge */}
+        <p className="text-xs sm:text-sm text-slate-400">
+          Real-time scores, lineups and match stats.
+        </p>
+
+        {/* Row 3: Compact Control Bar */}
+        <div className="flex flex-wrap items-center justify-between gap-2.5 pt-1">
           <LiveAutoRefresher intervalMs={5000} label="Live Scores" />
-          <div className="flex items-center gap-2 bg-slate-900/80 p-1.5 rounded-2xl border border-slate-800">
+          <div className="flex items-center gap-1 sm:gap-2 bg-slate-900/80 p-1 sm:p-1.5 rounded-2xl border border-slate-800">
             <Link
               href={`/matches?date=${prevDateStr}&filter=${activeFilter}`}
-              className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+              className="p-1.5 sm:p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
               title="Previous Day"
             >
               <ChevronLeft className="w-4 h-4" />
             </Link>
-            <div className="flex items-center gap-2 px-3 py-1 text-xs font-semibold text-white">
-              <Calendar className="w-3.5 h-3.5 text-emerald-400" />
+            <div className="flex items-center gap-1.5 px-2 sm:px-3 py-1 text-xs font-semibold text-white whitespace-nowrap">
+              <Calendar className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
               <span>{displayDateStr}</span>
             </div>
             <Link
               href={`/matches?date=${nextDateStr}&filter=${activeFilter}`}
-              className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+              className="p-1.5 sm:p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
               title="Next Day"
             >
               <ChevronRight className="w-4 h-4" />
@@ -137,11 +138,11 @@ export default async function MatchesPage({ searchParams }: MatchesPageProps) {
       {/* 7-Day Quick-Jump Date Carousel */}
       <DateStripCarousel activeDate={activeDate} activeFilter={activeFilter} />
 
-      {/* Filter Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-1 border-b border-slate-800/80 text-xs">
+      {/* Filter Tabs with horizontal snap */}
+      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-1 border-b border-slate-800/80 text-xs">
         <Link
           href={`/matches?date=${activeDate}&filter=all`}
-          className={`px-4 py-2 rounded-xl font-bold whitespace-nowrap transition-all ${
+          className={`snap-start shrink-0 px-4 py-2 rounded-xl font-bold whitespace-nowrap transition-all ${
             activeFilter === "all"
               ? "bg-brand-500/20 text-brand-400 border border-brand-500/30"
               : "text-slate-400 hover:text-white hover:bg-slate-800/50"
@@ -151,7 +152,7 @@ export default async function MatchesPage({ searchParams }: MatchesPageProps) {
         </Link>
         <Link
           href={`/matches?date=${activeDate}&filter=live`}
-          className={`flex items-center gap-1.5 px-4 py-2 rounded-xl font-bold whitespace-nowrap transition-all ${
+          className={`snap-start shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-xl font-bold whitespace-nowrap transition-all ${
             activeFilter === "live"
               ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
               : "text-slate-400 hover:text-emerald-400 hover:bg-slate-800/50"
@@ -162,7 +163,7 @@ export default async function MatchesPage({ searchParams }: MatchesPageProps) {
         </Link>
         <Link
           href={`/matches?date=${activeDate}&filter=finished`}
-          className={`px-4 py-2 rounded-xl font-bold whitespace-nowrap transition-all ${
+          className={`snap-start shrink-0 px-4 py-2 rounded-xl font-bold whitespace-nowrap transition-all ${
             activeFilter === "finished"
               ? "bg-blue-500/20 text-blue-400 border border-blue-500/30"
               : "text-slate-400 hover:text-white hover:bg-slate-800/50"
@@ -172,7 +173,7 @@ export default async function MatchesPage({ searchParams }: MatchesPageProps) {
         </Link>
         <Link
           href={`/matches?date=${activeDate}&filter=upcoming`}
-          className={`px-4 py-2 rounded-xl font-bold whitespace-nowrap transition-all ${
+          className={`snap-start shrink-0 px-4 py-2 rounded-xl font-bold whitespace-nowrap transition-all ${
             activeFilter === "upcoming"
               ? "bg-purple-500/20 text-purple-400 border border-purple-500/30"
               : "text-slate-400 hover:text-white hover:bg-slate-800/50"
