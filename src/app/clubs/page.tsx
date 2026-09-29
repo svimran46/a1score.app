@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import { EntityImage } from "@/components/EntityImage";
 import { getTopClubs } from "@/lib/data/clubs";
 import { formatCompactEur } from "@/lib/utils";
 import { Shield } from "lucide-react";
@@ -38,18 +38,15 @@ export default async function ClubsPage() {
               className="rounded-2xl glass-panel glass-panel-hover p-5 border border-slate-800 flex items-center justify-between"
             >
               <div className="flex items-center gap-4 min-w-0">
-                <div className="relative w-12 h-12 rounded-xl bg-slate-800 p-2 flex-shrink-0">
-                  {club.logoUrl ? (
-                    <Image
-                      src={club.logoUrl}
-                      alt={club.name}
-                      fill
-                      sizes="48px"
-                      className="object-contain p-1"
-                    />
-                  ) : (
-                    <Shield className="w-6 h-6 m-auto text-slate-500" />
-                  )}
+                <div className="relative w-12 h-12 rounded-xl bg-slate-800 p-2 flex-shrink-0 overflow-hidden">
+                  <EntityImage
+                    src={club.logoUrl}
+                    alt={club.name}
+                    fill
+                    sizes="48px"
+                    entityType="club"
+                    className="object-contain p-1"
+                  />
                 </div>
                 <div className="min-w-0">
                   <h3 className="text-sm font-bold text-white tracking-tight truncate">

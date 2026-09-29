@@ -8,6 +8,8 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
+    loader: 'custom',
+    loaderFile: './src/lib/image-loader.ts',
     remotePatterns: [
       {
         protocol: 'https',
@@ -19,7 +21,7 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'media.api-sports.io',
+        hostname: 'images.fotmob.com',
       },
       {
         protocol: 'https',

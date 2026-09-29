@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { formatCompactEur } from "@/lib/utils";
 import { Users, LayoutGrid, Shield, Sparkles } from "lucide-react";
 

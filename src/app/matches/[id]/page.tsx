@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import { EntityImage } from "@/components/EntityImage";
 import { notFound } from "next/navigation";
 import { getMatchDetails } from "@/lib/fotmob/client";
 import { formatCompactEur } from "@/lib/utils";
@@ -145,18 +145,15 @@ export default async function MatchDetailsPage({ params }: MatchPageProps) {
         <div className="py-8 grid grid-cols-3 items-center gap-4">
           {/* Home Team */}
           <div className="flex flex-col items-center sm:items-end text-center sm:text-right space-y-3">
-            <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-slate-800/80 p-2.5 shadow-xl flex items-center justify-center border border-slate-700/60">
-              {homeTeam?.imageUrl ? (
-                <Image
-                  src={homeTeam.imageUrl}
-                  alt={homeTeam.name || "Home"}
-                  width={64}
-                  height={64}
-                  className="object-contain"
-                />
-              ) : (
-                <Shield className="w-10 h-10 text-slate-500" />
-              )}
+            <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-slate-800/80 p-2.5 shadow-xl flex items-center justify-center border border-slate-700/60 overflow-hidden">
+              <EntityImage
+                src={homeTeam?.imageUrl}
+                alt={homeTeam.name || "Home"}
+                width={64}
+                height={64}
+                entityType="club"
+                className="object-contain"
+              />
             </div>
             <div>
               <h2 className="text-base sm:text-2xl font-black text-white tracking-tight">
@@ -202,18 +199,15 @@ export default async function MatchDetailsPage({ params }: MatchPageProps) {
 
           {/* Away Team */}
           <div className="flex flex-col items-center sm:items-start text-center sm:text-left space-y-3">
-            <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-slate-800/80 p-2.5 shadow-xl flex items-center justify-center border border-slate-700/60">
-              {awayTeam?.imageUrl ? (
-                <Image
-                  src={awayTeam.imageUrl}
-                  alt={awayTeam.name || "Away"}
-                  width={64}
-                  height={64}
-                  className="object-contain"
-                />
-              ) : (
-                <Shield className="w-10 h-10 text-slate-500" />
-              )}
+            <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-slate-800/80 p-2.5 shadow-xl flex items-center justify-center border border-slate-700/60 overflow-hidden">
+              <EntityImage
+                src={awayTeam?.imageUrl}
+                alt={awayTeam.name || "Away"}
+                width={64}
+                height={64}
+                entityType="club"
+                className="object-contain"
+              />
             </div>
             <div>
               <h2 className="text-base sm:text-2xl font-black text-white tracking-tight">

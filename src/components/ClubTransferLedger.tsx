@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import { EntityImage } from "./EntityImage";
 import Link from "next/link";
 import { formatCompactEur } from "@/lib/utils";
 import {
@@ -174,17 +174,14 @@ export function ClubTransferLedger({
                         className="flex items-center gap-3"
                       >
                         <div className="relative w-8 h-8 rounded-lg bg-slate-800 overflow-hidden flex-shrink-0 border border-slate-700/60">
-                          {p.photoUrl ? (
-                            <Image
-                              src={p.photoUrl}
-                              alt={p.fullName}
-                              fill
-                              sizes="32px"
-                              className="object-cover"
-                            />
-                          ) : (
-                            <User className="w-4 h-4 m-auto text-slate-500" />
-                          )}
+                          <EntityImage
+                            src={p.photoUrl}
+                            alt={p.fullName}
+                            fill
+                            sizes="32px"
+                            entityType="player"
+                            className="object-cover"
+                          />
                         </div>
                         <span className="text-white font-semibold group-hover:text-amber-400 transition-colors">
                           {p.commonName || p.fullName}

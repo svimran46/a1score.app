@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import { EntityImage } from "./EntityImage";
 import { formatCompactEur, calculateAge } from "@/lib/utils";
 import type { PositionalPeer } from "@/lib/data/players";
 import { Users, User, Shield, ArrowUpRight, ArrowDownRight, Award } from "lucide-react";
@@ -70,17 +70,14 @@ export function PositionalPeers({
                 </span>
 
                 <div className="relative w-12 h-12 rounded-xl bg-slate-800 flex-shrink-0 overflow-hidden border border-slate-700/60">
-                  {peer.photoUrl ? (
-                    <Image
-                      src={peer.photoUrl}
-                      alt={peer.fullName}
-                      fill
-                      sizes="48px"
-                      className="object-cover group-hover:scale-105 transition-transform"
-                    />
-                  ) : (
-                    <User className="w-6 h-6 m-auto text-slate-500" />
-                  )}
+                  <EntityImage
+                    src={peer.photoUrl}
+                    alt={peer.fullName}
+                    fill
+                    sizes="48px"
+                    entityType="player"
+                    className="object-cover group-hover:scale-105 transition-transform"
+                  />
                 </div>
 
                 <div className="min-w-0 flex-1">

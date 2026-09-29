@@ -1,7 +1,6 @@
 import Link from "next/link";
-import Image from "next/image";
+import { EntityImage } from "./EntityImage";
 import { formatCompactEur } from "@/lib/utils";
-import { User } from "lucide-react";
 
 interface PlayerCardProps {
   player: {
@@ -35,19 +34,14 @@ export function PlayerCard({ player }: PlayerCardProps) {
       <div className="flex items-start gap-4">
         {/* Photo Container */}
         <div className="relative w-16 h-16 rounded-xl bg-slate-800 flex-shrink-0 overflow-hidden border border-slate-700/60">
-          {player.photoUrl ? (
-            <Image
-              src={player.photoUrl}
-              alt={player.fullName}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
-              sizes="64px"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-slate-500">
-              <User className="w-8 h-8" />
-            </div>
-          )}
+          <EntityImage
+            src={player.photoUrl}
+            alt={player.fullName}
+            fill
+            entityType="player"
+            className="object-cover group-hover:scale-105 transition-transform duration-300"
+            sizes="64px"
+          />
         </div>
 
         {/* Player Details */}
@@ -72,11 +66,12 @@ export function PlayerCard({ player }: PlayerCardProps) {
               <div className="flex items-center gap-1.5 truncate">
                 {player.currentClub.logoUrl && (
                   <div className="relative w-3.5 h-3.5 flex-shrink-0">
-                    <Image
+                    <EntityImage
                       src={player.currentClub.logoUrl}
                       alt={player.currentClub.name}
                       fill
                       sizes="14px"
+                      entityType="club"
                       className="object-contain"
                     />
                   </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Image from "next/image";
+import { EntityImage } from "./EntityImage";
 import Link from "next/link";
 import { formatCompactEur } from "@/lib/utils";
 import {
@@ -255,18 +255,15 @@ export function LeagueFinancialParity({
                         href={`/clubs/${club.id}`}
                         className="flex items-center gap-2.5 min-w-0 group"
                       >
-                        <div className="relative w-7 h-7 rounded-lg bg-slate-800 p-1 flex-shrink-0 border border-slate-700/60">
-                          {club.logoUrl ? (
-                            <Image
-                              src={club.logoUrl}
-                              alt={club.name}
-                              fill
-                              sizes="28px"
-                              className="object-contain"
-                            />
-                          ) : (
-                            <Shield className="w-4 h-4 text-slate-500 m-auto" />
-                          )}
+                        <div className="relative w-7 h-7 rounded-lg bg-slate-800 p-1 flex-shrink-0 border border-slate-700/60 overflow-hidden">
+                          <EntityImage
+                            src={club.logoUrl}
+                            alt={club.name}
+                            fill
+                            sizes="28px"
+                            entityType="club"
+                            className="object-contain"
+                          />
                         </div>
                         <span className="text-xs font-bold text-white group-hover:text-amber-400 transition-colors truncate">
                           {club.name}

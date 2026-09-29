@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import { EntityImage } from "./EntityImage";
 import { formatCompactEur } from "@/lib/utils";
 import {
   Search,
@@ -245,17 +245,14 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                   >
                     <div className="flex items-center gap-3 min-w-0">
                       <div className="relative w-8 h-8 rounded-lg bg-slate-800 overflow-hidden flex-shrink-0 flex items-center justify-center">
-                        {p.photoUrl ? (
-                          <Image
-                            src={p.photoUrl}
-                            alt={p.fullName}
-                            fill
-                            sizes="32px"
-                            className="object-cover"
-                          />
-                        ) : (
-                          <User className="w-4 h-4 text-slate-500" />
-                        )}
+                        <EntityImage
+                          src={p.photoUrl}
+                          alt={p.fullName}
+                          fill
+                          sizes="32px"
+                          entityType="player"
+                          className="object-cover"
+                        />
                       </div>
                       <div className="min-w-0">
                         <div className="font-semibold text-white text-xs truncate group-hover:text-emerald-400 transition-colors">

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Image from "next/image";
+import { EntityImage } from "./EntityImage";
 import Link from "next/link";
 import { formatCompactEur, formatEur } from "@/lib/utils";
 import {
@@ -459,17 +459,14 @@ export function SquadValuationPyramid({
                       >
                         <div className="flex items-center gap-2 min-w-0">
                           <div className="relative w-6 h-6 rounded-md bg-slate-800 overflow-hidden flex-shrink-0">
-                            {p.photoUrl ? (
-                              <Image
-                                src={p.photoUrl}
-                                alt={p.fullName}
-                                fill
-                                sizes="24px"
-                                className="object-cover"
-                              />
-                            ) : (
-                              <div className="w-full h-full bg-slate-700" />
-                            )}
+                            <EntityImage
+                              src={p.photoUrl}
+                              alt={p.fullName}
+                              fill
+                              sizes="24px"
+                              entityType="player"
+                              className="object-cover"
+                            />
                           </div>
                           <span className="text-xs font-semibold text-slate-200 group-hover:text-amber-400 truncate">
                             {p.commonName || p.fullName}

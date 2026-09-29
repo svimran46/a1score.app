@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import Image from "next/image";
+import { EntityImage } from "@/components/EntityImage";
 import Link from "next/link";
 import { getPlayerBySlugOrId, getPositionalPeers } from "@/lib/data/players";
 import { MarketValueChart } from "@/components/MarketValueChart";
@@ -67,20 +67,15 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
             {/* Player Photo */}
             <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-2xl bg-slate-800 overflow-hidden border-2 border-slate-700/80 shadow-2xl flex-shrink-0">
-              {player.photoUrl ? (
-                <Image
-                  src={player.photoUrl}
-                  alt={player.fullName}
-                  fill
-                  className="object-cover"
-                  sizes="128px"
-                  priority
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-slate-500">
-                  <User className="w-16 h-16" />
-                </div>
-              )}
+              <EntityImage
+                src={player.photoUrl}
+                alt={player.fullName}
+                fill
+                className="object-cover"
+                sizes="128px"
+                entityType="player"
+                priority
+              />
             </div>
 
             {/* Core Bio Info */}
@@ -106,19 +101,16 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
                   href={`/clubs/${player.currentClub.id}`}
                   className="inline-flex items-center gap-2 text-sm text-slate-300 hover:text-white transition-colors group"
                 >
-                  {player.currentClub.logoUrl ? (
-                    <div className="relative w-5 h-5">
-                      <Image
+                    <div className="relative w-5 h-5 flex-shrink-0">
+                      <EntityImage
                         src={player.currentClub.logoUrl}
                         alt={player.currentClub.name}
                         fill
                         sizes="20px"
+                        entityType="club"
                         className="object-contain"
                       />
                     </div>
-                  ) : (
-                    <Shield className="w-4 h-4 text-blue-400" />
-                  )}
                   <span className="font-semibold group-hover:underline">
                     {player.currentClub.name}
                   </span>

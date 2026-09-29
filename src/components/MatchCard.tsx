@@ -1,8 +1,7 @@
 import Link from "next/link";
-import Image from "next/image";
+import { EntityImage } from "./EntityImage";
 import { FotmobMatch } from "@/lib/fotmob/client";
 import { formatCompactEur } from "@/lib/utils";
-import { Shield } from "lucide-react";
 
 interface MatchCardProps {
   match: FotmobMatch;
@@ -68,18 +67,15 @@ export function MatchCard({
         {/* Home Team */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5 min-w-0 pr-2">
-            <div className="relative w-6 h-6 rounded-md bg-slate-800/80 p-0.5 flex-shrink-0 flex items-center justify-center">
-              {match.home.imageUrl ? (
-                <Image
-                  src={match.home.imageUrl}
-                  alt={match.home.name}
-                  width={20}
-                  height={20}
-                  className="object-contain"
-                />
-              ) : (
-                <Shield className="w-3.5 h-3.5 text-slate-500" />
-              )}
+            <div className="relative w-6 h-6 rounded-md bg-slate-800/80 p-0.5 flex-shrink-0 flex items-center justify-center overflow-hidden">
+              <EntityImage
+                src={match.home.imageUrl}
+                alt={match.home.name}
+                width={20}
+                height={20}
+                entityType="club"
+                className="object-contain"
+              />
             </div>
             <span
               className={`text-sm truncate font-medium ${
@@ -113,18 +109,15 @@ export function MatchCard({
         {/* Away Team */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5 min-w-0 pr-2">
-            <div className="relative w-6 h-6 rounded-md bg-slate-800/80 p-0.5 flex-shrink-0 flex items-center justify-center">
-              {match.away.imageUrl ? (
-                <Image
-                  src={match.away.imageUrl}
-                  alt={match.away.name}
-                  width={20}
-                  height={20}
-                  className="object-contain"
-                />
-              ) : (
-                <Shield className="w-3.5 h-3.5 text-slate-500" />
-              )}
+            <div className="relative w-6 h-6 rounded-md bg-slate-800/80 p-0.5 flex-shrink-0 flex items-center justify-center overflow-hidden">
+              <EntityImage
+                src={match.away.imageUrl}
+                alt={match.away.name}
+                width={20}
+                height={20}
+                entityType="club"
+                className="object-contain"
+              />
             </div>
             <span
               className={`text-sm truncate font-medium ${

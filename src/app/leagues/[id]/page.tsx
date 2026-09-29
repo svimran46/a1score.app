@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import Image from "next/image";
+import { EntityImage } from "@/components/EntityImage";
 import Link from "next/link";
 import { getLeagueById } from "@/lib/data/leagues";
 import { formatCompactEur } from "@/lib/utils";
@@ -133,12 +133,13 @@ export default async function LeaguePage({ params }: LeaguePageProps) {
                     <td className="py-3 pr-4">
                       {row.clubId ? (
                         <Link href={`/clubs/${row.clubId}`} className="flex items-center gap-3">
-                          <div className="relative w-6 h-6 rounded-md bg-slate-800 p-0.5 flex-shrink-0">
-                            <Image
+                          <div className="relative w-6 h-6 rounded-md bg-slate-800 p-0.5 flex-shrink-0 overflow-hidden">
+                            <EntityImage
                               src={row.imageUrl}
                               alt={row.name}
                               fill
                               sizes="24px"
+                              entityType="club"
                               className="object-contain"
                             />
                           </div>
@@ -148,12 +149,13 @@ export default async function LeaguePage({ params }: LeaguePageProps) {
                         </Link>
                       ) : (
                         <div className="flex items-center gap-3">
-                          <div className="relative w-6 h-6 rounded-md bg-slate-800 p-0.5 flex-shrink-0">
-                            <Image
+                          <div className="relative w-6 h-6 rounded-md bg-slate-800 p-0.5 flex-shrink-0 overflow-hidden">
+                            <EntityImage
                               src={row.imageUrl}
                               alt={row.name}
                               fill
                               sizes="24px"
+                              entityType="club"
                               className="object-contain"
                             />
                           </div>
@@ -207,18 +209,15 @@ export default async function LeaguePage({ params }: LeaguePageProps) {
                   <td className="py-3 text-center font-bold text-slate-500">{idx + 1}</td>
                   <td className="py-3 pr-4">
                     <Link href={`/clubs/${club.id}`} className="flex items-center gap-3">
-                      <div className="relative w-7 h-7 rounded-lg bg-slate-800 p-1 flex-shrink-0">
-                        {club.logoUrl ? (
-                          <Image
-                            src={club.logoUrl}
-                            alt={club.name}
-                            fill
-                            sizes="28px"
-                            className="object-contain"
-                          />
-                        ) : (
-                          <Shield className="w-4 h-4 m-auto text-slate-500" />
-                        )}
+                      <div className="relative w-7 h-7 rounded-lg bg-slate-800 p-1 flex-shrink-0 overflow-hidden">
+                        <EntityImage
+                          src={club.logoUrl}
+                          alt={club.name}
+                          fill
+                          sizes="28px"
+                          entityType="club"
+                          className="object-contain"
+                        />
                       </div>
                       <span className="text-white font-semibold group-hover:text-emerald-400 transition-colors">
                         {club.name}

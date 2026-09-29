@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { EntityImage } from "./EntityImage";
 import { formatCompactEur } from "@/lib/utils";
 import type { MarketMover } from "@/lib/data/players";
 import { TrendingUp, TrendingDown, ArrowUpRight, ArrowDownRight, User, Shield } from "lucide-react";
@@ -82,17 +82,14 @@ export function MarketMovers({ risers, fallers }: MarketMoversProps) {
 
                   {/* Photo */}
                   <div className="relative w-12 h-12 rounded-xl bg-slate-800 flex-shrink-0 overflow-hidden border border-slate-700/60">
-                    {player.photoUrl ? (
-                      <Image
-                        src={player.photoUrl}
-                        alt={player.fullName}
-                        fill
-                        sizes="48px"
-                        className="object-cover group-hover:scale-105 transition-transform"
-                      />
-                    ) : (
-                      <User className="w-6 h-6 m-auto text-slate-500" />
-                    )}
+                    <EntityImage
+                      src={player.photoUrl}
+                      alt={player.fullName}
+                      fill
+                      sizes="48px"
+                      entityType="player"
+                      className="object-cover group-hover:scale-105 transition-transform"
+                    />
                   </div>
 
                   {/* Info */}

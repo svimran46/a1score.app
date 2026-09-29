@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import Image from "next/image";
+import { EntityImage } from "@/components/EntityImage";
 import Link from "next/link";
 import { getClubById, getClubTransfers } from "@/lib/data/clubs";
 import { formatCompactEur, formatEur } from "@/lib/utils";
@@ -56,20 +56,15 @@ export default async function ClubPage({ params }: ClubPageProps) {
       <div className="rounded-3xl glass-panel p-6 sm:p-8 border border-slate-800 bg-slate-900/40">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div className="flex items-center gap-6">
-            <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-slate-800 p-2 border border-slate-700/80 shadow-xl flex-shrink-0">
-              {club.logoUrl ? (
-                <Image
-                  src={club.logoUrl}
-                  alt={club.name}
-                  fill
-                  sizes="96px"
-                  className="object-contain p-2"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-slate-500">
-                  <Shield className="w-12 h-12" />
-                </div>
-              )}
+            <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-slate-800 p-2 border border-slate-700/80 shadow-xl flex-shrink-0 overflow-hidden">
+              <EntityImage
+                src={club.logoUrl}
+                alt={club.name}
+                fill
+                sizes="96px"
+                entityType="club"
+                className="object-contain p-2"
+              />
             </div>
 
             <div className="space-y-1">
@@ -157,17 +152,14 @@ export default async function ClubPage({ params }: ClubPageProps) {
                     <td className="py-3 pr-4">
                       <Link href={`/players/${slug}`} className="flex items-center gap-3">
                         <div className="relative w-8 h-8 rounded-lg bg-slate-800 overflow-hidden flex-shrink-0">
-                          {p.photoUrl ? (
-                            <Image
-                              src={p.photoUrl}
-                              alt={p.fullName}
-                              fill
-                              sizes="32px"
-                              className="object-cover"
-                            />
-                          ) : (
-                            <User className="w-4 h-4 m-auto text-slate-500" />
-                          )}
+                          <EntityImage
+                            src={p.photoUrl}
+                            alt={p.fullName}
+                            fill
+                            sizes="32px"
+                            entityType="player"
+                            className="object-cover"
+                          />
                         </div>
                         <div>
                           <span className="text-white font-semibold group-hover:text-amber-400 transition-colors">
