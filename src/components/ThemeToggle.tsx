@@ -46,7 +46,7 @@ export function ThemeToggle() {
       type="button"
       onClick={toggleTheme}
       title={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
-      className="p-2 rounded-xl text-slate-400 hover:text-amber-400 hover:bg-slate-800/60 transition-colors"
+      className="min-h-[44px] min-w-[44px] p-2.5 rounded-xl text-slate-400 hover:text-amber-400 hover:bg-slate-800/60 transition-colors flex items-center justify-center"
       aria-label="Toggle visual theme"
     >
       {theme === "dark" ? (

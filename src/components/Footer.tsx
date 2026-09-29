@@ -22,10 +22,13 @@ export function Footer() {
           <div>
             <h4 className="font-semibold text-xs uppercase tracking-wider mb-3 text-foreground">Explore</h4>
             <ul className="space-y-2 text-xs">
-              <li><Link href="/search?filter=valuable" className="hover:text-amber-400 transition-colors">Most Valuable Players</Link></li>
-              <li><Link href="/clubs" className="hover:text-amber-400 transition-colors">Top European Clubs</Link></li>
-              <li><Link href="/leagues" className="hover:text-amber-400 transition-colors">Premier League, La Liga & More</Link></li>
-              <li><Link href="/matches" className="hover:text-amber-400 transition-colors">Live Match Center</Link></li>
+              <li><Link href="/matches" className="hover:text-amber-400 transition-colors">Matches</Link></li>
+              <li><Link href="/players" className="hover:text-amber-400 transition-colors">Players</Link></li>
+              <li><Link href="/clubs" className="hover:text-amber-400 transition-colors">Clubs</Link></li>
+              <li><Link href="/leagues" className="hover:text-amber-400 transition-colors">Leagues</Link></li>
+              <li><Link href="/search?filter=valuable" className="hover:text-amber-400 transition-colors">Market Values</Link></li>
+              <li><Link href="/transfers" className="hover:text-amber-400 transition-colors">Transfers</Link></li>
+              <li><Link href="/methodology" className="hover:text-amber-400 transition-colors">Methodology</Link></li>
             </ul>
           </div>
 

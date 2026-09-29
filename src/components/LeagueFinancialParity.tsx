@@ -37,7 +37,7 @@ export interface LeagueStandingRow {
   pts: number;
   totalSquadValue?: number;
   clubId?: string | null;
-  imageUrl?: string;
+  imageUrl?: string | null;
 }
 
 interface LeagueFinancialParityProps {
