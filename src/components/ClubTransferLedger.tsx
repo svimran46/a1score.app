@@ -4,6 +4,7 @@ import { useState } from "react";
 import { EntityImage } from "./EntityImage";
 import Link from "next/link";
 import { formatCompactEur } from "@/lib/utils";
+import { formatTransferFee } from "@/lib/transfers";
 import {
   ArrowDownLeft,
   ArrowUpRight,
@@ -19,7 +20,7 @@ export interface ClubTransferRecord {
   fromClubName: string | null;
   toClubName: string | null;
   date: string | Date;
-  feeEur: number;
+  feeEur: number | null;
   transferType?: string | null;
   player: {
     id: string;
@@ -210,15 +211,22 @@ export function ClubTransferLedger({
                     {formatDate(t.date)}
                   </td>
                   <td className="py-3 text-right font-extrabold whitespace-nowrap text-sm tabular-nums">
-                    <span
-                      className={
-                        activeTab === "arrivals"
-                          ? "text-amber-400"
-                          : "text-emerald-400"
-                      }
-                    >
-                      {formatCompactEur(t.feeEur)}
-                    </span>
+                    {(() => {
+                      const feeInfo = formatTransferFee(t.feeEur, t.transferType);
+                      return (
+                        <span
+                          className={
+                            feeInfo.isAmount
+                              ? activeTab === "arrivals"
+                                ? "text-amber-400"
+                                : "text-emerald-400"
+                              : "text-slate-400 text-xs font-semibold px-2 py-0.5 rounded bg-slate-800/80 border border-slate-700/50"
+                          }
+                        >
+                          {feeInfo.label}
+                        </span>
+                      );
+                    })()}
                   </td>
                 </tr>
               );

@@ -18,11 +18,7 @@ interface StatsTableProps {
 
 export function StatsTable({ stats }: StatsTableProps) {
   if (!stats || stats.length === 0) {
-    return (
-      <div className="rounded-2xl glass-panel p-6 border border-slate-800 text-center text-slate-500 text-xs">
-        No detailed season stats recorded.
-      </div>
-    );
+    return null;
   }
 
   const hasRating = stats.some((s) => typeof s.rating === "number" && s.rating > 0);

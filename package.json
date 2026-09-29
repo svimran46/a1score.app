@@ -12,7 +12,8 @@
     "db:migrate": "prisma migrate dev",
     "db:generate": "prisma generate",
     "sync:dataset": "tsx scripts/sync-dataset.ts",
-    "data:validate": "tsx scripts/validate-data.ts"
+    "data:validate": "tsx scripts/validate-data.ts",
+    "test": "tsx --test tests/**/*.test.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "5.22.0",

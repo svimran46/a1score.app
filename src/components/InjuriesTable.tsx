@@ -15,11 +15,7 @@ interface InjuriesTableProps {
 
 export function InjuriesTable({ injuries }: InjuriesTableProps) {
   if (!injuries || injuries.length === 0) {
-    return (
-      <div className="rounded-2xl glass-panel p-6 border border-slate-800 text-center text-slate-500 text-xs">
-        No recorded injuries for this player.
-      </div>
-    );
+    return null;
   }
 
   return (

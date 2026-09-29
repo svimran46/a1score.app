@@ -10,7 +10,7 @@ export function isYouthMove(
   transferType?: string | null
 ): boolean {
   const youthRegex =
-    /(\bU\d{2}\b|\bYouth\b|\bYth\.?\b|\bJuvenil\b|\bSub-\d{2}\b|\bCastilla\b|\bAtlètic\b|\bB-Team\b|\bReserves\b|\bAcademy\b|\bPrimavera\b|\bJgd\.?\b)/i;
+    /(\bU\d{2}\b|\bYouth\b|\bYth\.?\b|\bJuvenil\b|\bSub-\d{2}\b|\bCastilla\b|\bAtlètic\b|\bB-Team\b|\bReserves\b|\bAcademy\b|\bPrimavera\b|\bJgd\.?\b|\bII\b|\bB\b)/i;
 
   const isFromYouth = !!fromClubName && youthRegex.test(fromClubName);
   const isToYouth = !!toClubName && youthRegex.test(toClubName);

@@ -87,8 +87,13 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
       try {
         const res = await fetch(`/api/players/search?q=${encodeURIComponent(query.trim())}`);
         if (res.ok) {
-          const data = await res.json();
-          setPlayers(Array.isArray(data) ? data.slice(0, 6) : []);
+          const json = await res.json();
+          const playerList = Array.isArray(json)
+            ? json
+            : Array.isArray(json?.data)
+            ? json.data
+            : [];
+          setPlayers(playerList.slice(0, 6));
         }
       } catch (err) {
         console.error("Search API error:", err);

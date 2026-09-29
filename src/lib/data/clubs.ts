@@ -129,9 +129,8 @@ export async function getClubTransfers(clubName: string) {
           )
         `)
         .ilike("toClubName", `%${cleanName}%`)
-        .gt("feeEur", 0)
-        .order("feeEur", { ascending: false })
-        .limit(5),
+        .order("feeEur", { ascending: false, nullsFirst: false })
+        .limit(8),
 
       supabase
         .from("Transfer")
@@ -152,9 +151,8 @@ export async function getClubTransfers(clubName: string) {
           )
         `)
         .ilike("fromClubName", `%${cleanName}%`)
-        .gt("feeEur", 0)
-        .order("feeEur", { ascending: false })
-        .limit(5),
+        .order("feeEur", { ascending: false, nullsFirst: false })
+        .limit(8),
     ]);
 
     const formatTransfers = (list: any[]) =>
@@ -163,7 +161,7 @@ export async function getClubTransfers(clubName: string) {
         fromClubName: t.fromClubName,
         toClubName: t.toClubName,
         date: t.date,
-        feeEur: Number(t.feeEur) || 0,
+        feeEur: t.feeEur !== null && t.feeEur !== undefined ? Number(t.feeEur) : null,
         transferType: t.transferType,
         player: Array.isArray(t.player) ? t.player[0] : t.player,
       }));

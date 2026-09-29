@@ -47,6 +47,7 @@ export function formatDate(date: Date | string | null | undefined): string {
 export function calculateAge(dob: Date | string | null | undefined): number | null {
   if (!dob) return null;
   const birth = typeof dob === "string" ? new Date(dob) : dob;
+  if (isNaN(birth.getTime())) return null;
   const now = new Date();
   let age = now.getFullYear() - birth.getFullYear();
   const m = now.getMonth() - birth.getMonth();
