@@ -26,6 +26,7 @@ export async function generateMetadata({ params }: ClubPageProps): Promise<Metad
     };
   }
 
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://a1score.app";
   const formattedVal = club.totalSquadValue
     ? formatCompactEur(club.totalSquadValue)
     : "Valuation pending";
@@ -33,6 +34,9 @@ export async function generateMetadata({ params }: ClubPageProps): Promise<Metad
   return {
     title: `${club.name} — Squad Market Value (${formattedVal}), Roster & Stats | a1score.app`,
     description: `Official squad sheet, player valuations, and financial analytics for ${club.name}. Total squad valuation: ${formattedVal}. Detailed roster profiles on a1score.app.`,
+    alternates: {
+      canonical: `${baseUrl}/clubs/${params.id}`,
+    },
     openGraph: {
       title: `${club.name} — Squad Market Value (${formattedVal})`,
       description: `Explore ${club.name} squad valuation, player roster, and transfer profiles.`,
@@ -48,10 +52,36 @@ export default async function ClubPage({ params }: ClubPageProps) {
     notFound();
   }
 
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://a1score.app";
   const transfersData = await getClubTransfers(club.name);
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SportsTeam",
+    name: club.name,
+    sport: "Football",
+    logo: club.logoUrl || undefined,
+    url: `${baseUrl}/clubs/${params.id}`,
+    memberOf: club.league
+      ? {
+          "@type": "SportsOrganization",
+          name: club.league.name,
+          url: `${baseUrl}/leagues/${club.league.id}`,
+        }
+      : undefined,
+    member: club.players?.slice(0, 30).map((p: any) => ({
+      "@type": "Person",
+      name: p.fullName,
+      jobTitle: p.position,
+    })),
+  };
 
   return (
     <div className="space-y-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Club Header */}
       <div className="rounded-3xl glass-panel p-6 sm:p-8 border border-slate-800 bg-slate-900/40">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">

@@ -30,6 +30,7 @@ export async function generateMetadata({ params }: PlayerPageProps): Promise<Met
     };
   }
 
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://a1score.app";
   const formattedVal = player.latestMarketValue
     ? formatCompactEur(player.latestMarketValue)
     : "Valuation pending";
@@ -38,6 +39,9 @@ export async function generateMetadata({ params }: PlayerPageProps): Promise<Met
   return {
     title: `${player.fullName} — Market Value (${formattedVal}), Stats & Transfers | a1score.app`,
     description: `${player.fullName} (${player.position}) playing for ${clubName}. Current market valuation: ${formattedVal}. Career transfer history, verified season statistics, and valuation evolution chart on a1score.app.`,
+    alternates: {
+      canonical: `${baseUrl}/players/${params.slug}`,
+    },
     openGraph: {
       title: `${player.fullName} — Market Value & Career Stats | a1score.app`,
       description: `${player.position} at ${clubName} valued at ${formattedVal}. Complete career stats, valuation curve, and transfer ledger.`,
@@ -53,14 +57,40 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
     notFound();
   }
 
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://a1score.app";
   const age = calculateAge(player.dateOfBirth);
   const latestValuation = player.marketValues[player.marketValues.length - 1];
 
   // Fetch positional peers for benchmarking
   const peers = await getPositionalPeers(player.position, player.id, 5);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: player.fullName,
+    alternateName: player.commonName || undefined,
+    jobTitle: `Professional Footballer (${player.position})`,
+    image: player.photoUrl || undefined,
+    nationality: player.nationality?.[0] || undefined,
+    birthDate: player.dateOfBirth
+      ? new Date(player.dateOfBirth).toISOString().split("T")[0]
+      : undefined,
+    memberOf: player.currentClub
+      ? {
+          "@type": "SportsTeam",
+          name: player.currentClub.name,
+          url: `${baseUrl}/clubs/${player.currentClub.id}`,
+        }
+      : undefined,
+    url: `${baseUrl}/players/${params.slug}`,
+  };
+
   return (
     <div className="space-y-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Player Header Card */}
       <div className="relative overflow-hidden rounded-3xl glass-panel p-6 sm:p-8 border border-slate-800 bg-slate-900/40">
         <div className="flex flex-col md:flex-row items-start md:items-center gap-6 justify-between">

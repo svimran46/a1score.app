@@ -24,9 +24,14 @@ export async function generateMetadata({ params }: LeaguePageProps): Promise<Met
     };
   }
 
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://a1score.app";
+
   return {
     title: `${league.name} — Standings, Club Valuations & Stats | a1score.app`,
     description: `Official ${league.name} standings (${league.season || "2024/2025"}), live table, ${league.clubCount} participating clubs, and squad market valuation analytics on a1score.app.`,
+    alternates: {
+      canonical: `${baseUrl}/leagues/${params.id}`,
+    },
     openGraph: {
       title: `${league.name} — Standings & Market Values`,
       description: `Explore live table, club rankings, and cumulative squad market values for ${league.name}.`,
@@ -41,11 +46,29 @@ export default async function LeaguePage({ params }: LeaguePageProps) {
     return notFound();
   }
 
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://a1score.app";
   const totalLeagueValue = league.clubs.reduce((acc, c) => acc + c.totalSquadValue, 0);
   const hasStandings = league.standings && league.standings.length > 0;
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SportsOrganization",
+    name: league.name,
+    sport: "Football",
+    url: `${baseUrl}/leagues/${params.id}`,
+    subOrganization: league.clubs?.slice(0, 30).map((c) => ({
+      "@type": "SportsTeam",
+      name: c.name,
+      url: `${baseUrl}/clubs/${c.id}`,
+    })),
+  };
+
   return (
     <div className="space-y-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* League Header */}
       <div className="rounded-3xl glass-panel p-6 sm:p-8 border border-slate-800 bg-slate-900/40">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">

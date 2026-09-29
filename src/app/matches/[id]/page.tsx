@@ -37,6 +37,7 @@ export async function generateMetadata({ params }: MatchPageProps): Promise<Meta
     };
   }
 
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://a1score.app";
   const home = match.teams?.home?.name || "Home Team";
   const away = match.teams?.away?.name || "Away Team";
   const scoreStr = match.general?.started
@@ -51,6 +52,9 @@ export async function generateMetadata({ params }: MatchPageProps): Promise<Meta
   return {
     title: `${home} ${scoreStr} ${away} — Live Match Center (${statusStr}) | a1score.app`,
     description: `Live match intelligence for ${home} ${scoreStr} ${away}. Confirmed lineups, tactical formations, live match timeline, stats, and squad market valuations on a1score.app.`,
+    alternates: {
+      canonical: `${baseUrl}/matches/${params.id}`,
+    },
     openGraph: {
       title: `${home} ${scoreStr} ${away} — Live Match Center`,
       description: `Live score, lineups, and squad valuations for ${home} vs ${away}.`,
@@ -90,8 +94,37 @@ export default async function MatchDetailsPage({ params }: MatchPageProps) {
     lineup?.awayTeam?.totalStarterMarketValue ||
     awayStarters.reduce((acc: number, p: any) => acc + (p.marketValue || 0), 0);
 
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://a1score.app";
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SportsEvent",
+    name: `${homeTeam?.name || "Home"} vs ${awayTeam?.name || "Away"}`,
+    sport: "Football",
+    url: `${baseUrl}/matches/${params.id}`,
+    startDate: general?.matchTimeUTC || undefined,
+    eventStatus: isFinished
+      ? "https://schema.org/EventFinished"
+      : isLive
+      ? "https://schema.org/EventLive"
+      : "https://schema.org/EventScheduled",
+    homeTeam: {
+      "@type": "SportsTeam",
+      name: homeTeam?.name || "Home",
+      logo: homeTeam?.imageUrl || undefined,
+    },
+    awayTeam: {
+      "@type": "SportsTeam",
+      name: awayTeam?.name || "Away",
+      logo: awayTeam?.imageUrl || undefined,
+    },
+  };
+
   return (
     <div className="space-y-8 max-w-5xl mx-auto">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Top navigation & Live Refresher */}
       <div className="flex items-center justify-between">
         <Link
