@@ -248,3 +248,198 @@ export async function searchPlayers(
     return [];
   }
 }
+
+export interface MarketMover {
+  id: string;
+  fullName: string;
+  commonName?: string | null;
+  slug: string;
+  position: string;
+  photoUrl?: string | null;
+  currentClub?: {
+    id?: string;
+    name: string;
+    logoUrl?: string | null;
+  } | null;
+  latestValue: number;
+  prevValue: number;
+  diff: number;
+  percentage: number;
+  lastUpdated?: string;
+}
+
+/**
+ * Computes authentic market value risers and fallers based on chronological valuation records
+ */
+export async function getMarketValueMovers(limit = 6): Promise<{ risers: MarketMover[]; fallers: MarketMover[] }> {
+  try {
+    const { data: players, error } = await supabase
+      .from("Player")
+      .select(`
+        id,
+        fullName,
+        commonName,
+        position,
+        photoUrl,
+        transfermarktId,
+        latestMarketValue,
+        currentClub:Club (
+          id,
+          name,
+          logoUrl
+        ),
+        marketValues:MarketValueHistory (
+          date,
+          valueEur
+        )
+      `)
+      .order("latestMarketValue", { ascending: false, nullsFirst: false })
+      .limit(60);
+
+    if (error || !players) {
+      console.error("Error fetching market value movers:", error);
+      return { risers: [], fallers: [] };
+    }
+
+    const calculatedMovers: MarketMover[] = [];
+
+    for (const p of players) {
+      const mvs = (p.marketValues || []).sort(
+        (a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime()
+      );
+
+      if (mvs.length >= 2) {
+        const latestPoint = mvs[mvs.length - 1];
+        const prevPoint = mvs[mvs.length - 2];
+        const latestVal = Number(latestPoint.valueEur);
+        const prevVal = Number(prevPoint.valueEur);
+        const diff = latestVal - prevVal;
+        const percentage = prevVal > 0 ? (diff / prevVal) * 100 : 0;
+
+        const slug = `${p.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${
+          p.transfermarktId || p.id
+        }`;
+
+        const clubRaw = (p as any).currentClub;
+        const currentClub = Array.isArray(clubRaw) ? clubRaw[0] || null : clubRaw || null;
+
+        calculatedMovers.push({
+          id: p.id,
+          fullName: p.fullName,
+          commonName: p.commonName,
+          slug,
+          position: p.position,
+          photoUrl: p.photoUrl,
+          currentClub,
+          latestValue: latestVal,
+          prevValue: prevVal,
+          diff,
+          percentage,
+          lastUpdated: latestPoint.date,
+        });
+      }
+    }
+
+    const risers = calculatedMovers
+      .filter((m) => m.diff > 0)
+      .sort((a, b) => b.diff - a.diff)
+      .slice(0, limit);
+
+    const fallers = calculatedMovers
+      .filter((m) => m.diff < 0)
+      .sort((a, b) => a.diff - b.diff)
+      .slice(0, limit);
+
+    return { risers, fallers };
+  } catch (err) {
+    console.error("Failed to compute market value movers:", err);
+    return { risers: [], fallers: [] };
+  }
+}
+
+export interface PositionalPeer {
+  id: string;
+  fullName: string;
+  commonName?: string | null;
+  slug: string;
+  position: string;
+  subPosition?: string | null;
+  dateOfBirth?: string | Date | null;
+  photoUrl?: string | null;
+  latestMarketValue: number;
+  currentClub?: {
+    name: string;
+    logoUrl?: string | null;
+  } | null;
+  rank: number;
+}
+
+/**
+ * Retrieves top worldwide peers playing in the same primary position
+ */
+export async function getPositionalPeers(
+  position: string,
+  excludePlayerId: string,
+  limit = 5
+): Promise<PositionalPeer[]> {
+  try {
+    // Simplify position to primary category if needed (e.g. "Central Midfield" -> "Midfield")
+    let primaryPos = position;
+    if (position.includes("Midfield")) primaryPos = "Midfield";
+    else if (position.includes("Forward") || position.includes("Winger") || position.includes("Striker") || position.includes("Attack")) primaryPos = "Attack";
+    else if (position.includes("Back") || position.includes("Defender")) primaryPos = "Defender";
+    else if (position.includes("Goalkeeper")) primaryPos = "Goalkeeper";
+
+    const { data: peers, error } = await supabase
+      .from("Player")
+      .select(`
+        id,
+        fullName,
+        commonName,
+        position,
+        subPosition,
+        photoUrl,
+        transfermarktId,
+        dateOfBirth,
+        latestMarketValue,
+        currentClub:Club (
+          name,
+          logoUrl
+        )
+      `)
+      .ilike("position", `%${primaryPos}%`)
+      .order("latestMarketValue", { ascending: false, nullsFirst: false })
+      .limit(limit + 5);
+
+    if (error || !peers) {
+      console.error("Error fetching positional peers:", error);
+      return [];
+    }
+
+    const filtered = peers
+      .filter((p: any) => p.id !== excludePlayerId && p.transfermarktId !== excludePlayerId)
+      .slice(0, limit);
+
+    return filtered.map((p: any, idx: number) => {
+      const clubRaw = p.currentClub;
+      const currentClub = Array.isArray(clubRaw) ? clubRaw[0] || null : clubRaw || null;
+
+      return {
+        id: p.id,
+        fullName: p.fullName,
+        commonName: p.commonName,
+        slug: `${p.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${p.transfermarktId || p.id}`,
+        position: p.position,
+        subPosition: p.subPosition,
+        dateOfBirth: p.dateOfBirth,
+        photoUrl: p.photoUrl,
+        latestMarketValue: p.latestMarketValue ? Number(p.latestMarketValue) : 0,
+        currentClub,
+        rank: idx + 1,
+      };
+    });
+  } catch (err) {
+    console.error("Failed to fetch positional peers:", err);
+    return [];
+  }
+}

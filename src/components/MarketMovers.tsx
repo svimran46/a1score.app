@@ -1,0 +1,144 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { formatCompactEur } from "@/lib/utils";
+import type { MarketMover } from "@/lib/data/players";
+import { TrendingUp, TrendingDown, ArrowUpRight, ArrowDownRight, User, Shield } from "lucide-react";
+
+interface MarketMoversProps {
+  risers: MarketMover[];
+  fallers: MarketMover[];
+}
+
+export function MarketMovers({ risers, fallers }: MarketMoversProps) {
+  const [activeTab, setActiveTab] = useState<"risers" | "fallers">("risers");
+
+  const displayedList = activeTab === "risers" ? risers : fallers;
+
+  return (
+    <div className="rounded-3xl glass-panel p-6 sm:p-8 border border-slate-800 space-y-6">
+      {/* Header with Switcher Tabs */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 gap-4">
+        <div>
+          <div className="flex items-center gap-2">
+            <h2 className="text-xl font-black text-white tracking-tight">
+              Market Value Movers
+            </h2>
+            <span className="text-xs px-2.5 py-0.5 rounded-full font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+              Verified Trajectories
+            </span>
+          </div>
+          <p className="text-xs text-slate-400 mt-1">
+            Biggest valuation shifts across Europe&apos;s top flight competitions
+          </p>
+        </div>
+
+        {/* Tab switchers */}
+        <div className="flex items-center bg-slate-900/90 p-1 rounded-2xl border border-slate-800 text-xs font-bold">
+          <button
+            type="button"
+            onClick={() => setActiveTab("risers")}
+            className={`flex items-center gap-1.5 px-4 py-2 rounded-xl transition-all ${
+              activeTab === "risers"
+                ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shadow-sm"
+                : "text-slate-400 hover:text-white"
+            }`}
+          >
+            <TrendingUp className="w-3.5 h-3.5" />
+            Top Risers ({risers.length})
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab("fallers")}
+            className={`flex items-center gap-1.5 px-4 py-2 rounded-xl transition-all ${
+              activeTab === "fallers"
+                ? "bg-rose-500/20 text-rose-400 border border-rose-500/30 shadow-sm"
+                : "text-slate-400 hover:text-white"
+            }`}
+          >
+            <TrendingDown className="w-3.5 h-3.5" />
+            Top Fallers ({fallers.length})
+          </button>
+        </div>
+      </div>
+
+      {/* Grid of Movers */}
+      {displayedList.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {displayedList.map((player, idx) => {
+            const isGain = player.diff > 0;
+            return (
+              <Link
+                key={player.id}
+                href={`/players/${player.slug}`}
+                className="group rounded-2xl glass-panel glass-panel-hover p-4 border border-slate-800/80 hover:border-amber-500/30 flex items-center justify-between transition-all"
+              >
+                <div className="flex items-center gap-3.5 min-w-0 pr-2">
+                  <span className="w-5 text-center font-black text-slate-500 text-xs tabular-nums">
+                    #{idx + 1}
+                  </span>
+
+                  {/* Photo */}
+                  <div className="relative w-12 h-12 rounded-xl bg-slate-800 flex-shrink-0 overflow-hidden border border-slate-700/60">
+                    {player.photoUrl ? (
+                      <Image
+                        src={player.photoUrl}
+                        alt={player.fullName}
+                        fill
+                        sizes="48px"
+                        className="object-cover group-hover:scale-105 transition-transform"
+                      />
+                    ) : (
+                      <User className="w-6 h-6 m-auto text-slate-500" />
+                    )}
+                  </div>
+
+                  {/* Info */}
+                  <div className="min-w-0">
+                    <h3 className="text-sm font-bold text-white tracking-tight truncate group-hover:text-amber-400 transition-colors">
+                      {player.commonName || player.fullName}
+                    </h3>
+                    <div className="flex items-center gap-1.5 text-xs text-slate-400 mt-0.5 truncate">
+                      {player.currentClub?.name || "Club"} • {player.position}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Valuations and Delta Badge */}
+                <div className="flex flex-col items-end flex-shrink-0 text-right space-y-1">
+                  <span className="text-sm font-black text-amber-400 tabular-nums">
+                    {formatCompactEur(player.latestValue)}
+                  </span>
+
+                  <span
+                    className={`inline-flex items-center gap-0.5 px-2 py-0.5 rounded-md text-[10px] font-bold tabular-nums ${
+                      isGain
+                        ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
+                        : "bg-rose-500/15 text-rose-400 border border-rose-500/30"
+                    }`}
+                  >
+                    {isGain ? (
+                      <ArrowUpRight className="w-3 h-3" />
+                    ) : (
+                      <ArrowDownRight className="w-3 h-3" />
+                    )}
+                    <span>
+                      {isGain ? "+" : ""}
+                      {formatCompactEur(player.diff)} ({Math.abs(player.percentage).toFixed(1)}%)
+                    </span>
+                  </span>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="py-8 text-center text-slate-500 text-xs">
+          No market value movers recorded.
+        </div>
+      )}
+    </div>
+  );
+}

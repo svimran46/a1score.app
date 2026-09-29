@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { getMostValuablePlayers } from "@/lib/data/players";
+import { getMostValuablePlayers, getMarketValueMovers } from "@/lib/data/players";
 import { getLeagues } from "@/lib/data/leagues";
 import { getMatchesByDate } from "@/lib/fotmob/client";
 import { PlayerCard } from "@/components/PlayerCard";
 import { MatchCard } from "@/components/MatchCard";
+import { MarketMovers } from "@/components/MarketMovers";
 import { LiveAutoRefresher } from "@/components/LiveAutoRefresher";
 import { formatCompactEur } from "@/lib/utils";
 import {
@@ -23,10 +24,11 @@ export const revalidate = 30; // Fresh intelligence and scores
 export const runtime = "edge";
 
 export default async function HomePage() {
-  const [valuablePlayers, leagues, matchesData] = await Promise.all([
+  const [valuablePlayers, leagues, matchesData, movers] = await Promise.all([
     getMostValuablePlayers(8),
     getLeagues(),
     getMatchesByDate().catch(() => null),
+    getMarketValueMovers(6).catch(() => ({ risers: [], fallers: [] })),
   ]);
 
   // Extract up to 3 highlighted matches (prioritizing live, then upcoming/recent)
@@ -215,6 +217,13 @@ export default async function HomePage() {
           )}
         </div>
       </section>
+
+      {/* Market Value Movers (Top Risers & Fallers) */}
+      {movers && (movers.risers.length > 0 || movers.fallers.length > 0) && (
+        <section>
+          <MarketMovers risers={movers.risers} fallers={movers.fallers} />
+        </section>
+      )}
 
       {/* Most Valuable Players Worldwide */}
       <section className="space-y-4">

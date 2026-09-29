@@ -1,11 +1,13 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { getPlayerBySlugOrId } from "@/lib/data/players";
+import { getPlayerBySlugOrId, getPositionalPeers } from "@/lib/data/players";
 import { MarketValueChart } from "@/components/MarketValueChart";
 import { TransfersTable } from "@/components/TransfersTable";
 import { StatsTable } from "@/components/StatsTable";
 import { InjuriesTable } from "@/components/InjuriesTable";
+import { PositionalPeers } from "@/components/PositionalPeers";
+import { PlayerIntelligenceRibbon } from "@/components/PlayerIntelligenceRibbon";
 import { calculateAge, formatCompactEur, formatEur, formatDate } from "@/lib/utils";
 import { User, Shield, Calendar, Globe, Ruler, Footprints, TrendingUp } from "lucide-react";
 
@@ -53,6 +55,9 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
 
   const age = calculateAge(player.dateOfBirth);
   const latestValuation = player.marketValues[player.marketValues.length - 1];
+
+  // Fetch positional peers for benchmarking
+  const peers = await getPositionalPeers(player.position, player.id, 5);
 
   return (
     <div className="space-y-8">
@@ -188,13 +193,35 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
         </div>
       </div>
 
-      {/* Market Value Progression Chart */}
+      {/* Synthesis: Valuation Intelligence & Performance Correlation */}
+      <PlayerIntelligenceRibbon
+        latestMarketValue={player.latestMarketValue}
+        marketValues={player.marketValues}
+        seasonStats={player.seasonStats}
+        dateOfBirth={player.dateOfBirth}
+        position={player.subPosition || player.position}
+      />
+
+      {/* Market Value Progression Chart with Peak Annotations and Milestones */}
       <section>
         <MarketValueChart
           data={player.marketValues}
           playerName={player.commonName || player.fullName}
+          transfers={player.transfers}
+          dateOfBirth={player.dateOfBirth}
         />
       </section>
+
+      {/* Positional Peer Benchmarking */}
+      {peers.length > 0 && (
+        <section>
+          <PositionalPeers
+            currentMarketValue={player.latestMarketValue}
+            currentPosition={player.subPosition || player.position}
+            peers={peers}
+          />
+        </section>
+      )}
 
       {/* Season Stats & Transfers */}
       <div className="space-y-8">
