@@ -38,17 +38,17 @@ interface PlayerIntelligenceRibbonProps {
 }
 
 export function PlayerIntelligenceRibbon({
-  latestMarketValue,
-  marketValues,
-  seasonStats,
+  latestMarketValue = 0,
+  marketValues = [],
+  seasonStats = [],
   dateOfBirth,
-  position,
+  position = "Player",
 }: PlayerIntelligenceRibbonProps) {
-  // Sort market values chronologically
+  // Sort market values chronologically, filtering out invalid dates
   const sortedValues = useMemo(() => {
-    return [...marketValues].sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-    );
+    return (marketValues || [])
+      .filter((mv) => mv && mv.date && !isNaN(new Date(mv.date).getTime()))
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   }, [marketValues]);
 
   // Compute 1Y or previous delta
@@ -56,8 +56,8 @@ export function PlayerIntelligenceRibbon({
     if (sortedValues.length < 2) return null;
     const latest = sortedValues[sortedValues.length - 1];
     const prev = sortedValues[sortedValues.length - 2];
-    const diff = latest.valueEur - prev.valueEur;
-    const pct = prev.valueEur > 0 ? (diff / prev.valueEur) * 100 : 0;
+    const diff = (latest?.valueEur || 0) - (prev?.valueEur || 0);
+    const pct = prev?.valueEur && prev.valueEur > 0 ? (diff / prev.valueEur) * 100 : 0;
 
     return {
       diff,
@@ -70,12 +70,13 @@ export function PlayerIntelligenceRibbon({
   // Peak analysis
   const peakAnalysis = useMemo(() => {
     if (sortedValues.length === 0) return null;
-    const peak = [...sortedValues].sort((a, b) => b.valueEur - a.valueEur)[0];
+    const peak = [...sortedValues].sort((a, b) => (b?.valueEur || 0) - (a?.valueEur || 0))[0];
+    if (!peak) return null;
     const isAtPeak = latestMarketValue >= peak.valueEur;
     return {
       peakValue: peak.valueEur,
       isAtPeak,
-      delta: peak.valueEur - latestMarketValue,
+      delta: Math.max(0, peak.valueEur - latestMarketValue),
     };
   }, [sortedValues, latestMarketValue]);
 
@@ -167,12 +168,14 @@ export function PlayerIntelligenceRibbon({
             <Sparkles className="w-3 h-3 text-amber-400" /> Peak Status
           </span>
           <div className="text-base sm:text-lg font-black text-amber-400">
-            {peakAnalysis?.isAtPeak ? "All-Time High" : "Near Peak"}
+            {peakAnalysis ? (peakAnalysis.isAtPeak ? "All-Time High" : "Near Peak") : "Baseline"}
           </div>
           <div className="text-[11px] text-slate-500 tabular-nums">
-            {peakAnalysis?.isAtPeak
-              ? `Max recorded €${formatCompactEur(peakAnalysis.peakValue)}`
-              : `-${formatCompactEur(peakAnalysis?.delta || 0)} from peak`}
+            {peakAnalysis
+              ? peakAnalysis.isAtPeak
+                ? `Max recorded €${formatCompactEur(peakAnalysis.peakValue)}`
+                : `-${formatCompactEur(peakAnalysis.delta)} from peak`
+              : "Valuation baseline"}
           </div>
         </div>
 

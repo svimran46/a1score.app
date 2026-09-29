@@ -224,33 +224,48 @@ export async function fotmobFetch<T = any>(path: string, revalidate = 5): Promis
   const url = `${FOTMOB_BASE}${path}`;
   const xMas = getXMasHeader(path);
 
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 8000);
+  // Retry once on failure or timeout (2 attempts total)
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 5000); // 5s timeout
 
-  try {
-    const res = await fetch(url, {
-      method: "GET",
-      headers: {
-        ...FOTMOB_HEADERS,
-        "x-mas": xMas,
-      },
-      signal: controller.signal,
-      next: { revalidate },
-    } as any);
+    try {
+      const res = await fetch(url, {
+        method: "GET",
+        headers: {
+          ...FOTMOB_HEADERS,
+          "x-mas": xMas,
+        },
+        signal: controller.signal,
+        next: { revalidate },
+      } as any);
 
-    if (!res.ok) {
-      console.warn(`[Live Match API] ${path} returned status ${res.status}`);
+      clearTimeout(timer);
+
+      if (!res.ok) {
+        if (attempt === 1 && (res.status === 429 || res.status >= 500)) {
+          await new Promise((r) => setTimeout(r, 200));
+          continue;
+        }
+        console.warn(`[Live Match API] ${path} returned status ${res.status}`);
+        return null;
+      }
+
+      const json = await res.json();
+      return sanitizeObjectImages(json) as T;
+    } catch (err: any) {
+      clearTimeout(timer);
+      if (attempt === 1) {
+        // Retry once after brief pause
+        await new Promise((r) => setTimeout(r, 200));
+        continue;
+      }
+      console.warn(`[Live Match API Error] Failed fetching ${path} (attempts exhausted):`, err.message || err);
       return null;
     }
-
-    const json = await res.json();
-    return sanitizeObjectImages(json) as T;
-  } catch (err: any) {
-    console.error(`[Live Match API Error] Failed fetching ${path}:`, err.message || err);
-    return null;
-  } finally {
-    clearTimeout(timer);
   }
+
+  return null;
 }
 
 export interface FotmobTeam {

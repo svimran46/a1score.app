@@ -79,6 +79,8 @@ export async function getMostValuablePlayers(limit = 10, positionFilter?: string
 }
 
 export async function getPlayerBySlugOrId(slugOrId: string) {
+  if (!slugOrId) return null;
+
   // 1. First, attempt to fetch live profile + valuation graph + transfers via TM proxy
   try {
     const livePlayer = await tmGetPlayer(slugOrId);
@@ -89,7 +91,7 @@ export async function getPlayerBySlugOrId(slugOrId: string) {
           if (fotmobData && fotmobData.seasonStats && fotmobData.seasonStats.length > 0) {
             livePlayer.seasonStats = fotmobData.seasonStats;
           }
-        } catch (e) {
+        } catch {
           // ignore error
         }
       }
@@ -101,10 +103,14 @@ export async function getPlayerBySlugOrId(slugOrId: string) {
 
   // 2. Fallback to Supabase Database
   try {
-    const parts = slugOrId.split("-");
-    const possibleTmId = parts[parts.length - 1];
+    // Extract any trailing numeric ID from the slug (e.g. 'd-sir-dou--914562' -> '914562')
+    const numericMatch = slugOrId.match(/\d+$/);
+    const numericId = numericMatch ? numericMatch[0] : null;
 
-    const { data: player, error } = await supabase
+    // Clean alphanumeric slug for sanitized searching
+    const sanitizedId = slugOrId.replace(/[^a-zA-Z0-9_-]/g, "");
+
+    let queryBuilder = supabase
       .from("Player")
       .select(`
         *,
@@ -124,30 +130,124 @@ export async function getPlayerBySlugOrId(slugOrId: string) {
         injuries:Injury (
           *
         )
-      `)
-      .or(`id.eq.${slugOrId},transfermarktId.eq.${possibleTmId},transfermarktId.eq.${slugOrId}`)
-      .maybeSingle();
+      `);
 
-    if (error || !player) {
-      console.error(`Error fetching player ${slugOrId} from DB:`, error);
+    // Match by numeric transfermarktId, internal ID, or exact transfermarktId
+    if (numericId && numericId === sanitizedId) {
+      queryBuilder = queryBuilder.or(`transfermarktId.eq.${numericId},id.eq.${sanitizedId}`);
+    } else if (numericId) {
+      queryBuilder = queryBuilder.or(`transfermarktId.eq.${numericId},id.eq.${sanitizedId}`);
+    } else if (sanitizedId) {
+      queryBuilder = queryBuilder.or(`id.eq.${sanitizedId},transfermarktId.eq.${sanitizedId}`);
+    } else {
       return null;
     }
 
-    // Sort market values chronologically (asc) for charts
+    let { data: player, error } = await queryBuilder.maybeSingle();
+
+    // Secondary fallback: if ID lookup failed, search by name derived from slug
+    if ((error || !player) && slugOrId.includes("-")) {
+      const nameParts = slugOrId.replace(/-\d+$/, "").replace(/--+/g, "-").split("-").filter(Boolean);
+      if (nameParts.length > 0) {
+        const nameGuess = nameParts.join(" ");
+        const playerSelectFields = `
+          *,
+          currentClub:Club (
+            *,
+            league:League ( * )
+          ),
+          marketValues:MarketValueHistory (
+            *
+          ),
+          seasonStats:SeasonStats (
+            *
+          ),
+          transfers:Transfer (
+            *
+          ),
+          injuries:Injury (
+            *
+          )
+        `;
+
+        // 1. Direct case-insensitive match
+        const { data: nameMatch } = await supabase
+          .from("Player")
+          .select(playerSelectFields)
+          .ilike("fullName", `%${nameGuess}%`)
+          .order("latestMarketValue", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        if (nameMatch) {
+          player = nameMatch;
+        } else {
+          // 2. Flexible token/accent matching:
+          // Replace vowels with single-character wildcard '_' to bridge accented characters
+          // (e.g. 'mbappe' -> 'mb_pp_', which matches 'Mbappé', or 'kylian' & 'mbappe' -> '%kylian%mbapp%')
+          const wildcardTokens = nameParts.map((p) => p.replace(/[aeiouy]/gi, "_"));
+          const joinedPattern = wildcardTokens.join("%");
+
+          let { data: accentMatch } = await supabase
+            .from("Player")
+            .select(playerSelectFields)
+            .ilike("fullName", `%${joinedPattern}%`)
+            .order("latestMarketValue", { ascending: false })
+            .limit(1)
+            .maybeSingle();
+
+          // 3. If still not found, try matching by the longest distinctive name part (e.g. surname 'mbappe' or 'haaland')
+          if (!accentMatch) {
+            const sortedParts = [...nameParts].sort((a, b) => b.length - a.length);
+            for (const part of sortedParts) {
+              if (part.length >= 4) {
+                const partPattern = part.replace(/[aeiouy]/gi, "_");
+                const { data: singleMatch } = await supabase
+                  .from("Player")
+                  .select(playerSelectFields)
+                  .ilike("fullName", `%${partPattern}%`)
+                  .order("latestMarketValue", { ascending: false })
+                  .limit(1)
+                  .maybeSingle();
+                if (singleMatch) {
+                  accentMatch = singleMatch;
+                  break;
+                }
+              }
+            }
+          }
+
+          if (accentMatch) {
+            player = accentMatch;
+          }
+        }
+      }
+    }
+
+    if (!player) {
+      return null;
+    }
+
+    // Sort market values chronologically (asc) for charts, filtering out invalid dates
     const sortedMarketValues = (player.marketValues || [])
+      .filter((mv: any) => mv && mv.date && !isNaN(new Date(mv.date).getTime()))
       .map((mv: any) => ({
         ...mv,
-        valueEur: Number(mv.valueEur),
+        valueEur: Number(mv.valueEur) || 0,
       }))
       .sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-    // Sort transfers chronologically (desc)
+    // Sort transfers chronologically (desc), safely handling null/invalid dates
     const sortedTransfers = (player.transfers || [])
       .map((t: any) => ({
         ...t,
         feeEur: t.feeEur ? Number(t.feeEur) : null,
       }))
-      .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      .sort((a: any, b: any) => {
+        const da = a.date ? new Date(a.date).getTime() : 0;
+        const db = b.date ? new Date(b.date).getTime() : 0;
+        return db - da;
+      });
 
     // Sort stats by season (desc)
     let sortedSeasonStats = (player.seasonStats || []).sort(
@@ -181,11 +281,24 @@ export async function getPlayerBySlugOrId(slugOrId: string) {
     const extId = player.transfermarktId || player.id;
     const clubRaw = player.currentClub;
     const currentClub = Array.isArray(clubRaw) ? clubRaw[0] || null : clubRaw || null;
+    const safeDob = player.dateOfBirth && !isNaN(new Date(player.dateOfBirth).getTime()) ? player.dateOfBirth : null;
 
     return {
       ...player,
       sourceId: extId,
-      slug: `${player.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${extId}`,
+      fullName: player.fullName || "Player Profile",
+      commonName: player.commonName || player.fullName || "Player Profile",
+      dateOfBirth: safeDob,
+      nationality: Array.isArray(player.nationality)
+        ? player.nationality
+        : typeof player.nationality === "string" && player.nationality
+        ? [player.nationality]
+        : [],
+      position: player.position || "Unknown",
+      subPosition: player.subPosition || null,
+      preferredFoot: player.preferredFoot || null,
+      heightCm: player.heightCm ? Number(player.heightCm) : null,
+      slug: `${(player.fullName || "player").toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${extId}`,
       photoUrl: sanitizeImageUrl(player.photoUrl, "player", extId),
       currentClub: currentClub
         ? {
@@ -202,7 +315,7 @@ export async function getPlayerBySlugOrId(slugOrId: string) {
       injuries,
     };
   } catch (error) {
-    console.error(`Error fetching player ${slugOrId}:`, error);
+    console.error(`Error fetching player ${slugOrId} from DB:`, error);
     return null;
   }
 }
@@ -429,13 +542,15 @@ export async function getPositionalPeers(
   excludePlayerId: string,
   limit = 5
 ): Promise<PositionalPeer[]> {
+  if (!position) return [];
+
   try {
     // Simplify position to primary category if needed (e.g. "Central Midfield" -> "Midfield")
-    let primaryPos = position;
-    if (position.includes("Midfield")) primaryPos = "Midfield";
-    else if (position.includes("Forward") || position.includes("Winger") || position.includes("Striker") || position.includes("Attack")) primaryPos = "Attack";
-    else if (position.includes("Back") || position.includes("Defender")) primaryPos = "Defender";
-    else if (position.includes("Goalkeeper")) primaryPos = "Goalkeeper";
+    let primaryPos = String(position);
+    if (primaryPos.includes("Midfield")) primaryPos = "Midfield";
+    else if (primaryPos.includes("Forward") || primaryPos.includes("Winger") || primaryPos.includes("Striker") || primaryPos.includes("Attack")) primaryPos = "Attack";
+    else if (primaryPos.includes("Back") || primaryPos.includes("Defender")) primaryPos = "Defender";
+    else if (primaryPos.includes("Goalkeeper")) primaryPos = "Goalkeeper";
 
     const { data: peers, error } = await supabase
       .from("Player")
@@ -459,7 +574,7 @@ export async function getPositionalPeers(
       .limit(limit + 5);
 
     if (error || !peers) {
-      console.error("Error fetching positional peers:", error);
+      console.warn("Error fetching positional peers:", error?.message || error);
       return [];
     }
 

@@ -15,6 +15,7 @@ import {
   Search,
   Menu,
   X,
+  MoreHorizontal,
 } from "lucide-react";
 import { CommandPalette } from "@/components/CommandPalette";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -142,9 +143,13 @@ function NavbarContent() {
   const [isMac, setIsMac] = useState(false);
   const [liveCount, setLiveCount] = useState<number | null>(null);
 
-  // Mobile chip bar scroll-hide state
-  const [showMobileChips, setShowMobileChips] = useState(true);
+  // Top bar scroll auto-hide & border state
+  const [showTopBar, setShowTopBar] = useState(true);
+  const [isScrolled, setIsScrolled] = useState(false);
   const lastScrollYRef = useRef(0);
+
+  // Mobile virtual keyboard detection (to hide bottom tab bar while keyboard is open)
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
 
   // Drawer accessibility & gesture refs
   const drawerRef = useRef<HTMLDivElement>(null);
@@ -197,18 +202,22 @@ function NavbarContent() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // Scroll listener for mobile chip row (hide on scroll-down, reveal on scroll-up)
+  // Scroll listener for Top Bar (auto-hide on scroll-down, show on scroll-up, 1px bottom border on scroll)
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       const deltaY = currentScrollY - lastScrollYRef.current;
 
-      if (currentScrollY <= 12) {
-        setShowMobileChips(true);
-      } else if (deltaY > 6 && currentScrollY > 40) {
-        setShowMobileChips(false);
+      setIsScrolled(currentScrollY > 10);
+
+      if (currentScrollY <= 20) {
+        setShowTopBar(true);
+      } else if (deltaY > 6 && currentScrollY > 56) {
+        // Scrolling down -> hide top bar
+        setShowTopBar(false);
       } else if (deltaY < -6) {
-        setShowMobileChips(true);
+        // Scrolling up -> show top bar
+        setShowTopBar(true);
       }
 
       lastScrollYRef.current = currentScrollY;
@@ -216,6 +225,48 @@ function NavbarContent() {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Mobile virtual keyboard detection via visualViewport and input focus
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const handleResize = () => {
+      if (window.visualViewport) {
+        // If viewport is shorter than 80% of screen height, virtual keyboard is active
+        setIsKeyboardOpen(window.visualViewport.height < window.innerHeight * 0.8);
+      }
+    };
+
+    const handleFocusIn = (e: FocusEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (
+        target &&
+        (target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.isContentEditable)
+      ) {
+        setIsKeyboardOpen(true);
+      }
+    };
+
+    const handleFocusOut = () => {
+      setIsKeyboardOpen(false);
+    };
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", handleResize);
+    }
+    window.addEventListener("focusin", handleFocusIn);
+    window.addEventListener("focusout", handleFocusOut);
+
+    return () => {
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener("resize", handleResize);
+      }
+      window.removeEventListener("focusin", handleFocusIn);
+      window.removeEventListener("focusout", handleFocusOut);
+    };
   }, []);
 
   // Close drawer on route change
@@ -227,7 +278,6 @@ function NavbarContent() {
   useEffect(() => {
     if (!drawerOpen) return;
 
-    // Focus close button on open
     setTimeout(() => {
       closeButtonRef.current?.focus();
     }, 50);
@@ -274,7 +324,6 @@ function NavbarContent() {
     const deltaX = e.changedTouches[0].clientX - touchStartXRef.current;
     const deltaY = e.changedTouches[0].clientY - touchStartYRef.current;
 
-    // Horizontal swipe right of at least 50px with less vertical deviation
     if (deltaX > 50 && Math.abs(deltaY) < 60) {
       setDrawerOpen(false);
       menuButtonRef.current?.focus();
@@ -284,32 +333,44 @@ function NavbarContent() {
     touchStartYRef.current = null;
   };
 
+  // Determine active state for mobile bottom tab bar items
+  const isHomeActive = pathname === "/";
+  const isMatchesActive = pathname === "/matches" || pathname.startsWith("/match/");
+  const isPlayersActive = pathname === "/players" || pathname.startsWith("/player/");
+  const isClubsActive = pathname === "/clubs" || pathname.startsWith("/club/");
+  const isMoreActive =
+    drawerOpen ||
+    pathname === "/leagues" ||
+    pathname.startsWith("/league/") ||
+    (pathname === "/search" && filterParam === "valuable") ||
+    pathname === "/transfers" ||
+    pathname.startsWith("/transfer") ||
+    pathname === "/methodology";
+
   return (
     <>
-      <header className="sticky top-0 z-40 w-full glass-panel border-b border-slate-800/80 bg-slate-950/85 backdrop-blur-xl transition-all">
-        {/* Main Header Bar (56px mobile / 64px desktop / 80px TV) */}
+      {/* 
+        TOP BAR (56px mobile / 64px desktop / 80px TV)
+        Sticky with backdrop blur and 1px bottom border on scroll.
+        Auto-hide on scroll-down, show on scroll-up.
+      */}
+      <header
+        className={`sticky top-0 z-40 w-full bg-slate-950/90 dark:bg-slate-950/90 bg-white/90 backdrop-blur-xl transition-all duration-300 ease-in-out ${
+          isScrolled ? "border-b border-slate-800/80 shadow-md" : "border-b border-transparent"
+        } ${
+          showTopBar || drawerOpen || commandPaletteOpen ? "translate-y-0" : "-translate-y-full"
+        }`}
+        style={{
+          paddingTop: "env(safe-area-inset-top, 0px)",
+        }}
+      >
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14 sm:h-16 2xl:h-20 gap-2 sm:gap-4">
-            {/* Left: Home Button + A1 Logo & Wordmark */}
+            {/* Left: Logo (A1 mark + wordmark, links to /) - Separate Home button removed */}
             <div className="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
-              {/* Home button (house icon) */}
               <Link
                 href="/"
-                aria-label="Home"
-                className={`min-h-[44px] min-w-[44px] p-2.5 rounded-xl flex items-center justify-center transition-colors ${
-                  pathname === "/"
-                    ? "text-amber-400 bg-amber-500/10 border border-amber-500/30"
-                    : "text-slate-400 hover:text-white hover:bg-slate-800/60 border border-transparent"
-                }`}
-                title="Home"
-              >
-                <Home className="w-5 h-5" />
-              </Link>
-
-              {/* Logo + Wordmark */}
-              <Link
-                href="/"
-                className="flex items-center gap-2 group flex-shrink-0 min-h-[44px] py-1"
+                className="flex items-center gap-2 group flex-shrink-0 min-h-[44px] py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-xl"
                 aria-label="a1score.app home"
               >
                 <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition-transform flex-shrink-0">
@@ -328,7 +389,7 @@ function NavbarContent() {
               </Link>
             </div>
 
-            {/* Desktop Navigation (>=1024px: icon + label | 768-1023px: icon + short label) */}
+            {/* Desktop & Tablet Navigation (>=1024px: icon + label | 768-1023px: icon + short label) */}
             <nav
               aria-label="Primary Navigation"
               className="hidden md:flex items-center gap-0.5 lg:gap-1 text-xs lg:text-sm font-medium text-slate-300"
@@ -340,7 +401,7 @@ function NavbarContent() {
                   <Link
                     key={cat.href}
                     href={cat.href}
-                    className={`flex items-center gap-1 lg:gap-1.5 px-2 lg:px-3 py-1.5 lg:py-2 rounded-xl transition-all min-h-[44px] ${
+                    className={`flex items-center gap-1 lg:gap-1.5 px-2 lg:px-3 py-1.5 lg:py-2 rounded-xl transition-all min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
                       active
                         ? "text-amber-400 bg-amber-500/10 border border-amber-500/30 font-semibold shadow-sm shadow-amber-500/10"
                         : "text-slate-300 hover:text-white hover:bg-slate-800/60 border border-transparent"
@@ -352,7 +413,7 @@ function NavbarContent() {
                         <span className="absolute -top-1 -right-1 w-2 h-2 bg-rose-500 rounded-full animate-ping" />
                       )}
                     </div>
-                    {/* Full label >=1024px, short label on 768-1023px */}
+                    {/* Full label on >=1024px, short label on 768-1023px */}
                     <span className="hidden lg:inline">{cat.name}</span>
                     <span className="lg:hidden">{cat.shortName}</span>
                     {/* Live count badge */}
@@ -373,7 +434,7 @@ function NavbarContent() {
                 type="button"
                 data-search-trigger="desktop"
                 onClick={() => setCommandPaletteOpen(true)}
-                className="hidden lg:flex items-center justify-between gap-3 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-slate-700/60 text-slate-400 hover:text-slate-200 hover:border-slate-500 transition-all text-xs shadow-inner min-h-[44px] group"
+                className="hidden lg:flex items-center justify-between gap-3 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-slate-700/60 text-slate-400 hover:text-slate-200 hover:border-slate-500 transition-all text-xs shadow-inner min-h-[44px] group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
                 aria-label="Search players, clubs, leagues"
               >
                 <div className="flex items-center gap-2">
@@ -390,7 +451,7 @@ function NavbarContent() {
                 type="button"
                 data-search-trigger="compact"
                 onClick={() => setCommandPaletteOpen(true)}
-                className="lg:hidden min-h-[44px] min-w-[44px] p-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors flex items-center justify-center"
+                className="lg:hidden min-h-[44px] min-w-[44px] p-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
                 aria-label="Search players, clubs, leagues"
                 title="Search (Ctrl+K)"
               >
@@ -405,7 +466,7 @@ function NavbarContent() {
                 ref={menuButtonRef}
                 type="button"
                 onClick={() => setDrawerOpen(true)}
-                className="xl:hidden min-h-[44px] min-w-[44px] p-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors flex items-center justify-center"
+                className="xl:hidden min-h-[44px] min-w-[44px] p-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
                 aria-label="Open navigation menu"
                 aria-expanded={drawerOpen}
                 aria-controls="navigation-drawer"
@@ -415,43 +476,104 @@ function NavbarContent() {
             </div>
           </div>
         </div>
-
-        {/* Mobile sticky horizontally scrollable chip row (<768px) */}
-        {/* Hides smoothly on scroll-down, reveals on scroll-up */}
-        <div
-          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out border-t border-slate-800/80 bg-slate-950/95 backdrop-blur-md ${
-            showMobileChips
-              ? "max-h-14 opacity-100 py-1.5 px-3 pointer-events-auto"
-              : "max-h-0 opacity-0 py-0 px-3 border-transparent pointer-events-none"
-          }`}
-        >
-          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar scroll-smooth">
-            {CATEGORIES.map((cat) => {
-              const active = cat.isActive(pathname, filterParam);
-              const Icon = cat.icon;
-              return (
-                <Link
-                  key={cat.href}
-                  href={cat.href}
-                  className={`min-h-[38px] px-3 py-1.5 text-xs font-medium rounded-full shrink-0 flex items-center gap-1.5 transition-all ${
-                    active
-                      ? "text-amber-400 bg-amber-500/15 border border-amber-500/40 font-semibold"
-                      : "text-slate-300 bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:text-white"
-                  }`}
-                >
-                  <Icon className="w-3.5 h-3.5" />
-                  <span>{cat.shortName}</span>
-                  {cat.isLiveMatches && liveCount !== null && liveCount > 0 && (
-                    <span className="inline-flex items-center px-1 rounded-full text-[9px] font-bold bg-rose-500 text-white leading-none py-0.5">
-                      {liveCount}
-                    </span>
-                  )}
-                </Link>
-              );
-            })}
-          </div>
-        </div>
       </header>
+
+      {/* 
+        FIXED BOTTOM TAB BAR (mobile < 768px)
+        5 items: Home, Matches (live-count badge), Players, Clubs, More (opens drawer).
+        56px + safe-area inset, blurred dark background, active tab in accent colour.
+        Hidden while the keyboard is open.
+      */}
+      <nav
+        aria-label="Mobile Bottom Navigation"
+        className={`fixed bottom-0 left-0 right-0 z-40 md:hidden bg-slate-950/90 dark:bg-slate-950/90 bg-white/95 border-t border-slate-800/80 backdrop-blur-xl transition-transform duration-200 ${
+          isKeyboardOpen ? "translate-y-full pointer-events-none" : "translate-y-0"
+        }`}
+        style={{
+          paddingBottom: "env(safe-area-inset-bottom, 0px)",
+        }}
+      >
+        <div className="grid grid-cols-5 h-14 items-center">
+          {/* 1. Home */}
+          <Link
+            href="/"
+            className={`flex flex-col items-center justify-center min-h-[44px] h-full py-1 text-[10px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
+              isHomeActive
+                ? "text-amber-400 font-semibold"
+                : "text-slate-400 hover:text-slate-200"
+            }`}
+            aria-label="Home"
+          >
+            <Home className="w-5 h-5" />
+            <span className="tracking-tight mt-0.5">Home</span>
+          </Link>
+
+          {/* 2. Matches (live-count badge) */}
+          <Link
+            href="/matches"
+            className={`flex flex-col items-center justify-center min-h-[44px] h-full py-1 text-[10px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
+              isMatchesActive
+                ? "text-amber-400 font-semibold"
+                : "text-slate-400 hover:text-slate-200"
+            }`}
+            aria-label="Matches"
+          >
+            <div className="relative flex items-center justify-center">
+              <Radio className="w-5 h-5" />
+              {liveCount !== null && liveCount > 0 && (
+                <span className="absolute -top-1 -right-2 min-w-[14px] h-3.5 px-1 rounded-full text-[9px] font-bold bg-rose-500 text-white flex items-center justify-center leading-none">
+                  {liveCount}
+                </span>
+              )}
+            </div>
+            <span className="tracking-tight mt-0.5">Matches</span>
+          </Link>
+
+          {/* 3. Players */}
+          <Link
+            href="/players"
+            className={`flex flex-col items-center justify-center min-h-[44px] h-full py-1 text-[10px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
+              isPlayersActive
+                ? "text-amber-400 font-semibold"
+                : "text-slate-400 hover:text-slate-200"
+            }`}
+            aria-label="Players"
+          >
+            <Users className="w-5 h-5" />
+            <span className="tracking-tight mt-0.5">Players</span>
+          </Link>
+
+          {/* 4. Clubs */}
+          <Link
+            href="/clubs"
+            className={`flex flex-col items-center justify-center min-h-[44px] h-full py-1 text-[10px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
+              isClubsActive
+                ? "text-amber-400 font-semibold"
+                : "text-slate-400 hover:text-slate-200"
+            }`}
+            aria-label="Clubs"
+          >
+            <Shield className="w-5 h-5" />
+            <span className="tracking-tight mt-0.5">Clubs</span>
+          </Link>
+
+          {/* 5. More (opens drawer with Leagues, Values, Transfers, Methodology) */}
+          <button
+            type="button"
+            onClick={() => setDrawerOpen(true)}
+            className={`flex flex-col items-center justify-center min-h-[44px] h-full py-1 text-[10px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
+              isMoreActive
+                ? "text-amber-400 font-semibold"
+                : "text-slate-400 hover:text-slate-200"
+            }`}
+            aria-label="More navigation options"
+            aria-expanded={drawerOpen}
+          >
+            <MoreHorizontal className="w-5 h-5" />
+            <span className="tracking-tight mt-0.5">More</span>
+          </button>
+        </div>
+      </nav>
 
       {/* TV Left Rail (>=1920px: 72px icon rail expanding to 240px on focus/hover) */}
       <aside
@@ -505,7 +627,7 @@ function NavbarContent() {
         />
       )}
 
-      {/* Slim Sidebar / Drawer (<1280px) */}
+      {/* Slim Sidebar / Drawer (<1280px, max 280px, items only, no extra text) */}
       <div
         id="navigation-drawer"
         ref={drawerRef}
@@ -514,11 +636,15 @@ function NavbarContent() {
         aria-label="Navigation Menu"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
-        className={`fixed top-0 bottom-0 right-0 z-50 w-[min(280px,78vw)] bg-slate-950 border-l border-slate-800/90 shadow-2xl flex flex-col transform transition-transform duration-200 ease-in-out ${
+        className={`fixed top-0 bottom-0 right-0 z-50 w-[min(280px,80vw)] max-w-[280px] bg-slate-950 border-l border-slate-800/90 shadow-2xl flex flex-col transform transition-transform duration-200 ease-in-out ${
           drawerOpen ? "translate-x-0" : "translate-x-full pointer-events-none"
         }`}
+        style={{
+          paddingTop: "env(safe-area-inset-top, 0px)",
+          paddingBottom: "env(safe-area-inset-bottom, 0px)",
+        }}
       >
-        {/* Drawer Header: Title + Close Button (Exactly 48px height) */}
+        {/* Drawer Header: Title + Close Button (48px height) */}
         <div className="h-12 px-4 border-b border-slate-800/80 flex items-center justify-between flex-shrink-0">
           <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
             Navigation
@@ -530,14 +656,14 @@ function NavbarContent() {
               setDrawerOpen(false);
               menuButtonRef.current?.focus();
             }}
-            className="min-h-[44px] min-w-[44px] -mr-2 p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors flex items-center justify-center"
+            className="min-h-[44px] min-w-[44px] -mr-2 p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
             aria-label="Close menu"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Drawer Content: ONLY navigation items, exactly 48px row height */}
+        {/* Drawer Content: Navigation items only, exactly 48px row height */}
         <nav
           aria-label="Drawer Navigation"
           className="flex-1 overflow-y-auto py-2 divide-y divide-transparent"
@@ -550,7 +676,7 @@ function NavbarContent() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setDrawerOpen(false)}
-                className={`h-12 px-4 flex items-center justify-between text-sm font-medium transition-colors ${
+                className={`h-12 px-4 flex items-center justify-between text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
                   active
                     ? "bg-amber-500/10 text-amber-400 border-l-2 border-amber-400 font-semibold"
                     : "text-slate-300 hover:text-white hover:bg-slate-900 border-l-2 border-transparent"
@@ -570,7 +696,7 @@ function NavbarContent() {
           })}
         </nav>
 
-        {/* Drawer Footer: Theme Toggle ONLY */}
+        {/* Drawer Footer: Appearance Toggle ONLY */}
         <div className="p-3 border-t border-slate-800/80 flex items-center justify-between flex-shrink-0 bg-slate-950/60">
           <span className="text-xs text-slate-400 font-medium">Appearance</span>
           <ThemeToggle />

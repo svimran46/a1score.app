@@ -8,17 +8,23 @@ export function cn(...inputs: ClassValue[]) {
 export function formatEur(amount: number | bigint | null | undefined): string {
   if (amount == null) return "N/A";
   const num = typeof amount === "bigint" ? Number(amount) : amount;
+  if (typeof num !== "number" || isNaN(num)) return "N/A";
   if (num === 0) return "Free";
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "EUR",
-    maximumFractionDigits: 0,
-  }).format(num);
+  try {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "EUR",
+      maximumFractionDigits: 0,
+    }).format(num);
+  } catch {
+    return `€${num}`;
+  }
 }
 
 export function formatCompactEur(amount: number | bigint | null | undefined): string {
   if (amount == null) return "N/A";
   const num = typeof amount === "bigint" ? Number(amount) : amount;
+  if (typeof num !== "number" || isNaN(num)) return "N/A";
   if (num === 0) return "Free";
   
   if (num >= 1_000_000_000) {
@@ -36,23 +42,32 @@ export function formatCompactEur(amount: number | bigint | null | undefined): st
 
 export function formatDate(date: Date | string | null | undefined): string {
   if (!date) return "-";
-  const d = typeof date === "string" ? new Date(date) : date;
-  return new Intl.DateTimeFormat("en-GB", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  }).format(d);
+  try {
+    const d = typeof date === "string" ? new Date(date) : date;
+    if (!d || isNaN(d.getTime())) return "-";
+    return new Intl.DateTimeFormat("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    }).format(d);
+  } catch {
+    return "-";
+  }
 }
 
 export function calculateAge(dob: Date | string | null | undefined): number | null {
   if (!dob) return null;
-  const birth = typeof dob === "string" ? new Date(dob) : dob;
-  if (isNaN(birth.getTime())) return null;
-  const now = new Date();
-  let age = now.getFullYear() - birth.getFullYear();
-  const m = now.getMonth() - birth.getMonth();
-  if (m < 0 || (m === 0 && now.getDate() < birth.getDate())) {
-    age--;
+  try {
+    const birth = typeof dob === "string" ? new Date(dob) : dob;
+    if (!birth || isNaN(birth.getTime())) return null;
+    const now = new Date();
+    let age = now.getFullYear() - birth.getFullYear();
+    const m = now.getMonth() - birth.getMonth();
+    if (m < 0 || (m === 0 && now.getDate() < birth.getDate())) {
+      age--;
+    }
+    return age >= 0 && age <= 120 ? age : null;
+  } catch {
+    return null;
   }
-  return age;
 }

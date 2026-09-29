@@ -87,7 +87,7 @@ export default function RootLayout({
       <body className="bg-ink-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-amber-500 selection:text-ink-950 transition-colors duration-200">
         <GridKeyNavigation />
         <Navbar />
-        <main className="app-container flex-1 pt-3 pb-8 sm:py-6">
+        <main className="app-container flex-1 pt-3 pb-20 sm:pb-8 sm:py-6">
           {children}
         </main>
         <Footer />

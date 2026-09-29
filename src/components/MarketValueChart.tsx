@@ -45,17 +45,20 @@ export function MarketValueChart({
 }: MarketValueChartProps) {
   const [timeRange, setTimeRange] = useState<"ALL" | "3Y" | "1Y">("ALL");
 
-  if (!data || data.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center p-12 text-slate-500 rounded-2xl glass-panel">
-        <p className="text-sm">No historical market valuation records available yet.</p>
-      </div>
-    );
-  }
+  // Filter only points that have a valid date and numeric value
+  const validPoints = useMemo(() => {
+    return (data || []).filter((p) => {
+      if (!p || !p.date) return false;
+      const t = new Date(p.date).getTime();
+      return !isNaN(t) && typeof p.valueEur === "number" && !isNaN(p.valueEur);
+    });
+  }, [data]);
 
   // Pre-calculate full timeline
   const fullTimeline = useMemo(() => {
-    const sorted = [...data].sort(
+    if (validPoints.length === 0) return [];
+
+    const sorted = [...validPoints].sort(
       (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
     );
 
@@ -66,18 +69,20 @@ export function MarketValueChart({
 
       // Check if any transfer occurred near this date (within 60 days)
       const pointTime = new Date(point.date).getTime();
-      const nearbyTransfer = transfers.find((t) => {
+      const nearbyTransfer = (transfers || []).find((t) => {
+        if (!t || !t.date) return false;
         const tTime = new Date(t.date).getTime();
+        if (isNaN(tTime)) return false;
         return Math.abs(pointTime - tTime) <= 60 * 24 * 60 * 60 * 1000;
       });
 
       return {
-        id: point.id,
+        id: point.id || `val-${idx}`,
         dateStr: formatDate(point.date),
         rawDate: point.date,
         timestamp: pointTime,
         value: point.valueEur,
-        club: point.clubName || "Unknown Club",
+        club: point.clubName || "Club",
         diffFromPrev,
         pctFromPrev,
         transferNote: nearbyTransfer
@@ -85,15 +90,17 @@ export function MarketValueChart({
           : null,
       };
     });
-  }, [data, transfers]);
+  }, [validPoints, transfers]);
 
   // Overall peak calculation
   const overallPeak = useMemo(() => {
+    if (fullTimeline.length === 0) return null;
     return [...fullTimeline].sort((a, b) => b.value - a.value)[0];
   }, [fullTimeline]);
 
   // Filtered dataset for selected time range
   const filteredData = useMemo(() => {
+    if (fullTimeline.length === 0) return [];
     if (timeRange === "ALL" || fullTimeline.length <= 4) return fullTimeline;
 
     const latestTime = fullTimeline[fullTimeline.length - 1].timestamp;
@@ -104,9 +111,17 @@ export function MarketValueChart({
     return filtered.length >= 2 ? filtered : fullTimeline.slice(-4);
   }, [fullTimeline, timeRange]);
 
+  if (fullTimeline.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center p-12 text-slate-500 rounded-2xl glass-panel border border-slate-800">
+        <p className="text-sm">No historical market valuation records available yet.</p>
+      </div>
+    );
+  }
+
   const latest = fullTimeline[fullTimeline.length - 1];
-  const isAtPeak = latest?.value >= overallPeak?.value;
-  const deltaFromPeak = overallPeak ? overallPeak.value - latest.value : 0;
+  const isAtPeak = overallPeak && latest ? latest.value >= overallPeak.value : false;
+  const deltaFromPeak = overallPeak && latest ? Math.max(0, overallPeak.value - latest.value) : 0;
   const deltaPct = overallPeak && overallPeak.value > 0
     ? Math.round((deltaFromPeak / overallPeak.value) * 100)
     : 0;

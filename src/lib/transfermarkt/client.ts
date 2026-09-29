@@ -38,37 +38,53 @@ export function parseEurValue(str: string | null | undefined): number {
 
 async function tmFetch(path: string, isJson = false, revalidate = 3600): Promise<any | null> {
   const url = path.startsWith("http") ? path : `${TM_BASE}${path}`;
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 8000);
 
-  try {
-    const res = await fetch(url, {
-      method: "GET",
-      headers: {
-        ...TM_HEADERS,
-        Accept: isJson
-          ? "application/json"
-          : "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-      },
-      signal: controller.signal,
-      next: { revalidate },
-    } as any);
+  // Retry once on failure or timeout (2 attempts total)
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 5000); // 5s timeout
 
-    if (!res.ok) {
-      console.warn(`[TM Proxy] ${url} returned status ${res.status}`);
+    try {
+      const res = await fetch(url, {
+        method: "GET",
+        headers: {
+          ...TM_HEADERS,
+          Accept: isJson
+            ? "application/json"
+            : "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        },
+        signal: controller.signal,
+        next: { revalidate },
+      } as any);
+
+      clearTimeout(timer);
+
+      if (!res.ok) {
+        if (attempt === 1 && (res.status === 429 || res.status >= 500)) {
+          await new Promise((r) => setTimeout(r, 200));
+          continue;
+        }
+        console.warn(`[TM Proxy] ${url} returned status ${res.status}`);
+        return null;
+      }
+
+      if (isJson) {
+        return await res.json();
+      }
+      return await res.text();
+    } catch (err: any) {
+      clearTimeout(timer);
+      if (attempt === 1) {
+        // Retry once after brief pause
+        await new Promise((r) => setTimeout(r, 200));
+        continue;
+      }
+      console.warn(`[TM Proxy Error] Failed fetching ${url} (attempts exhausted):`, err.message || err);
       return null;
     }
-
-    if (isJson) {
-      return await res.json();
-    }
-    return await res.text();
-  } catch (err: any) {
-    console.error(`[TM Proxy Error] Failed fetching ${url}:`, err.message || err);
-    return null;
-  } finally {
-    clearTimeout(timer);
   }
+
+  return null;
 }
 
 /**
@@ -281,15 +297,21 @@ export async function tmGetPlayer(slugOrId: string) {
       }
     }
 
-    // 2. Map Market Value History
+    // 2. Map Market Value History safely
     const marketValues: any[] = [];
     if (mvData && Array.isArray(mvData.list)) {
       for (const item of mvData.list) {
+        if (!item) continue;
+        const d = new Date(item.x);
+        if (isNaN(d.getTime())) continue; // Skip invalid date points
+        const val = Number(item.y);
+        if (isNaN(val)) continue;
+
         marketValues.push({
           id: `tm-val-${pId}-${item.x}`,
           playerId: pId,
-          date: new Date(item.x).toISOString(),
-          valueEur: Number(item.y),
+          date: d.toISOString(),
+          valueEur: val,
           clubName: item.verein || null,
         });
       }
@@ -299,19 +321,23 @@ export async function tmGetPlayer(slugOrId: string) {
     const latestValuation =
       marketValues.length > 0 ? marketValues[marketValues.length - 1].valueEur : 0;
 
-    // 3. Map Transfers
+    // 3. Map Transfers safely
     const transfers: any[] = [];
     if (transferData && Array.isArray(transferData.transfers)) {
       for (let i = 0; i < transferData.transfers.length; i++) {
         const t = transferData.transfers[i];
+        if (!t) continue;
         const dateStr = t.dateUnformatted || t.date;
-        const d = dateStr ? new Date(dateStr) : new Date();
+        let d = dateStr ? new Date(dateStr) : null;
+        if (!d || isNaN(d.getTime())) {
+          d = new Date();
+        }
         const feeVal = parseEurValue(t.fee);
 
         transfers.push({
           id: `tm-tf-${pId}-${i}`,
           playerId: pId,
-          date: isNaN(d.getTime()) ? new Date().toISOString() : d.toISOString(),
+          date: d.toISOString(),
           fromClubName: t.from?.clubName || null,
           toClubName: t.to?.clubName || null,
           feeEur: feeVal > 0 ? feeVal : null,
@@ -324,14 +350,17 @@ export async function tmGetPlayer(slugOrId: string) {
       }
     }
 
+    // Validate DOB
+    const safeDob = dateOfBirth && !isNaN(dateOfBirth.getTime()) ? dateOfBirth : null;
+
     return {
       id: pId,
       sourceId: pId,
-      fullName,
-      commonName: fullName,
-      dateOfBirth,
-      nationality: nationalities,
-      position,
+      fullName: fullName || "Player Profile",
+      commonName: fullName || "Player Profile",
+      dateOfBirth: safeDob,
+      nationality: Array.isArray(nationalities) ? nationalities : [],
+      position: position || "Unknown",
       subPosition,
       preferredFoot,
       heightCm,
@@ -342,7 +371,7 @@ export async function tmGetPlayer(slugOrId: string) {
             id: currentClubId || "unknown",
             name: currentClubName,
             logoUrl: currentClubId
-              ? sanitizeImageUrl(`https://img.a.transfermarkt.technology/wappen/head/${currentClubId}.png`, "club", currentClubId)
+              ? sanitizeImageUrl(null, "club", currentClubId)
               : null,
             league: leagueInfo,
           }
