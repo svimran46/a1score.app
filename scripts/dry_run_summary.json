@@ -1,0 +1,324 @@
+{
+  "summaryReport": [
+    {
+      "club": "Manchester City",
+      "tmCount": 24,
+      "currentDbCount": 31,
+      "alreadyAtClub": 24,
+      "toAttach": 0,
+      "toReassign": 0,
+      "toDetach": 7,
+      "expectedFinalCount": 24
+    },
+    {
+      "club": "Liverpool FC",
+      "tmCount": 29,
+      "currentDbCount": 36,
+      "alreadyAtClub": 26,
+      "toAttach": 2,
+      "toReassign": 1,
+      "toDetach": 10,
+      "expectedFinalCount": 29
+    },
+    {
+      "club": "Manchester United",
+      "tmCount": 29,
+      "currentDbCount": 25,
+      "alreadyAtClub": 20,
+      "toAttach": 5,
+      "toReassign": 3,
+      "toDetach": 5,
+      "expectedFinalCount": 28
+    },
+    {
+      "club": "Tottenham Hotspur",
+      "tmCount": 28,
+      "currentDbCount": 24,
+      "alreadyAtClub": 15,
+      "toAttach": 9,
+      "toReassign": 4,
+      "toDetach": 9,
+      "expectedFinalCount": 28
+    },
+    {
+      "club": "Newcastle United",
+      "tmCount": 25,
+      "currentDbCount": 17,
+      "alreadyAtClub": 13,
+      "toAttach": 5,
+      "toReassign": 6,
+      "toDetach": 4,
+      "expectedFinalCount": 24
+    },
+    {
+      "club": "Brighton & Hove Albion",
+      "tmCount": 30,
+      "currentDbCount": 16,
+      "alreadyAtClub": 12,
+      "toAttach": 12,
+      "toReassign": 1,
+      "toDetach": 4,
+      "expectedFinalCount": 25
+    },
+    {
+      "club": "Brentford FC",
+      "tmCount": 28,
+      "currentDbCount": 29,
+      "alreadyAtClub": 21,
+      "toAttach": 2,
+      "toReassign": 2,
+      "toDetach": 8,
+      "expectedFinalCount": 25
+    },
+    {
+      "club": "Crystal Palace",
+      "tmCount": 28,
+      "currentDbCount": 29,
+      "alreadyAtClub": 17,
+      "toAttach": 5,
+      "toReassign": 3,
+      "toDetach": 12,
+      "expectedFinalCount": 25
+    },
+    {
+      "club": "AFC Bournemouth",
+      "tmCount": 29,
+      "currentDbCount": 31,
+      "alreadyAtClub": 23,
+      "toAttach": 0,
+      "toReassign": 4,
+      "toDetach": 8,
+      "expectedFinalCount": 27
+    },
+    {
+      "club": "Aston Villa",
+      "tmCount": 27,
+      "currentDbCount": 27,
+      "alreadyAtClub": 15,
+      "toAttach": 6,
+      "toReassign": 4,
+      "toDetach": 12,
+      "expectedFinalCount": 25
+    },
+    {
+      "club": "Nottingham Forest",
+      "tmCount": 24,
+      "currentDbCount": 17,
+      "alreadyAtClub": 11,
+      "toAttach": 11,
+      "toReassign": 2,
+      "toDetach": 6,
+      "expectedFinalCount": 24
+    },
+    {
+      "club": "Sunderland AFC",
+      "tmCount": 28,
+      "currentDbCount": 35,
+      "alreadyAtClub": 20,
+      "toAttach": 3,
+      "toReassign": 2,
+      "toDetach": 15,
+      "expectedFinalCount": 25
+    },
+    {
+      "club": "Leeds United",
+      "tmCount": 24,
+      "currentDbCount": 14,
+      "alreadyAtClub": 9,
+      "toAttach": 11,
+      "toReassign": 4,
+      "toDetach": 5,
+      "expectedFinalCount": 24
+    },
+    {
+      "club": "Fulham FC",
+      "tmCount": 26,
+      "currentDbCount": 24,
+      "alreadyAtClub": 21,
+      "toAttach": 0,
+      "toReassign": 3,
+      "toDetach": 3,
+      "expectedFinalCount": 24
+    },
+    {
+      "club": "Everton FC",
+      "tmCount": 21,
+      "currentDbCount": 24,
+      "alreadyAtClub": 16,
+      "toAttach": 2,
+      "toReassign": 2,
+      "toDetach": 8,
+      "expectedFinalCount": 20
+    },
+    {
+      "club": "Ipswich Town",
+      "tmCount": 28,
+      "currentDbCount": 23,
+      "alreadyAtClub": 21,
+      "toAttach": 4,
+      "toReassign": 3,
+      "toDetach": 2,
+      "expectedFinalCount": 28
+    },
+    {
+      "club": "Coventry City",
+      "tmCount": 29,
+      "currentDbCount": 24,
+      "alreadyAtClub": 24,
+      "toAttach": 2,
+      "toReassign": 3,
+      "toDetach": 0,
+      "expectedFinalCount": 29
+    },
+    {
+      "club": "Hull City",
+      "tmCount": 33,
+      "currentDbCount": 45,
+      "alreadyAtClub": 26,
+      "toAttach": 5,
+      "toReassign": 2,
+      "toDetach": 19,
+      "expectedFinalCount": 33
+    }
+  ],
+  "missingFromDb": [
+    {
+      "club": "Manchester United",
+      "clubId": "cmuihqgxr00ddh29e8cr2u808",
+      "tmId": "503883",
+      "name": "Senne Lammens"
+    },
+    {
+      "club": "Newcastle United",
+      "clubId": "cmuihqepp00c5h29e6dizfj3r",
+      "tmId": "923757",
+      "name": "Ewen Jaouen"
+    },
+    {
+      "club": "Brighton & Hove Albion",
+      "clubId": "cmuihomne002bb23fq0sdhdrm",
+      "tmId": "750903",
+      "name": "Jaouen Hadjam"
+    },
+    {
+      "club": "Brighton & Hove Albion",
+      "clubId": "cmuihomne002bb23fq0sdhdrm",
+      "tmId": "539252",
+      "name": "Costinha"
+    },
+    {
+      "club": "Brighton & Hove Albion",
+      "clubId": "cmuihomne002bb23fq0sdhdrm",
+      "tmId": "1421433",
+      "name": "Zadok Yohanna"
+    },
+    {
+      "club": "Brighton & Hove Albion",
+      "clubId": "cmuihomne002bb23fq0sdhdrm",
+      "tmId": "703408",
+      "name": "Femi Azeez"
+    },
+    {
+      "club": "Brighton & Hove Albion",
+      "clubId": "cmuihomne002bb23fq0sdhdrm",
+      "tmId": "888785",
+      "name": "Promise David"
+    },
+    {
+      "club": "Brentford FC",
+      "clubId": "cmuihocpq001vb23fu3cm5yh8",
+      "tmId": "915418",
+      "name": "Jannik Schuster"
+    },
+    {
+      "club": "Brentford FC",
+      "clubId": "cmuihocpq001vb23fu3cm5yh8",
+      "tmId": "1071138",
+      "name": "Benjamin Fredrick"
+    },
+    {
+      "club": "Brentford FC",
+      "clubId": "cmuihocpq001vb23fu3cm5yh8",
+      "tmId": "1011936",
+      "name": "Kaye Furo"
+    },
+    {
+      "club": "Crystal Palace",
+      "clubId": "cmuihqfqr00cqh29e2077zt3y",
+      "tmId": "945021",
+      "name": "Anan Khalaili"
+    },
+    {
+      "club": "Crystal Palace",
+      "clubId": "cmuihqfqr00cqh29e2077zt3y",
+      "tmId": "881116",
+      "name": "Darío Osorio"
+    },
+    {
+      "club": "Crystal Palace",
+      "clubId": "cmuihqfqr00cqh29e2077zt3y",
+      "tmId": "1007383",
+      "name": "Zavier Gozo"
+    },
+    {
+      "club": "AFC Bournemouth",
+      "clubId": "cmuihqh6y00dfh29eokvzxktp",
+      "tmId": "471690",
+      "name": "Max Aarons"
+    },
+    {
+      "club": "AFC Bournemouth",
+      "clubId": "cmuihqh6y00dfh29eokvzxktp",
+      "tmId": "746740",
+      "name": "Daniel Jebbison"
+    },
+    {
+      "club": "Aston Villa",
+      "clubId": "cmuihq8vi008xh29edz4vg4xw",
+      "tmId": "1282860",
+      "name": "Modou Kéba Cissé"
+    },
+    {
+      "club": "Aston Villa",
+      "clubId": "cmuihq8vi008xh29edz4vg4xw",
+      "tmId": "331726",
+      "name": "Tammy Abraham"
+    },
+    {
+      "club": "Sunderland AFC",
+      "clubId": "cmuihq47i006bh29e3kejf8oh",
+      "tmId": "1401779",
+      "name": "Jules Ahoka"
+    },
+    {
+      "club": "Sunderland AFC",
+      "clubId": "cmuihq47i006bh29e3kejf8oh",
+      "tmId": "277697",
+      "name": "Alan Browne"
+    },
+    {
+      "club": "Sunderland AFC",
+      "clubId": "cmuihq47i006bh29e3kejf8oh",
+      "tmId": "903611",
+      "name": "Nilson Angulo"
+    },
+    {
+      "club": "Fulham FC",
+      "clubId": "cmuihqg9600cxh29echnkyx9e",
+      "tmId": "817613",
+      "name": "Alex Borto"
+    },
+    {
+      "club": "Fulham FC",
+      "clubId": "cmuihqg9600cxh29echnkyx9e",
+      "tmId": "900195",
+      "name": "Kevin"
+    },
+    {
+      "club": "Everton FC",
+      "clubId": "cmuihq4bo006fh29ef9sfod5p",
+      "tmId": "538216",
+      "name": "Hayden Hackney"
+    }
+  ]
+}

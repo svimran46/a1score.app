@@ -1,0 +1,1998 @@
+[
+  {
+    "tmId": "281",
+    "clubName": "Manchester City",
+    "clubId": "cmuihq3vs0069h29ebm5xqhye",
+    "tmSquadSize": 24,
+    "currentDbSize": 31,
+    "alreadyAtClub": 24,
+    "toAttach": [],
+    "toReassign": [],
+    "toCreate": [],
+    "toDetach": [
+      {
+        "id": "FM_1187225",
+        "name": "Josh Wilson-Esbrand",
+        "tmId": null
+      },
+      {
+        "id": "cmuihvxfp04e7sexpuxl5r6dm",
+        "name": "Nathan Aké",
+        "tmId": "177476"
+      },
+      {
+        "id": "cmuihw3ek0bbasexpm5jfxo1v",
+        "name": "Max Alleyne",
+        "tmId": "843595"
+      },
+      {
+        "id": "cmuihw0jk08eisexplqpqf0t0",
+        "name": "Tijjani Reijnders",
+        "tmId": "460939"
+      },
+      {
+        "id": "cmuihw0jp08h7sexpvpztw1o9",
+        "name": "Nico González",
+        "tmId": "466805"
+      },
+      {
+        "id": "cmuihw2q00avtsexppurxa90p",
+        "name": "Savinho",
+        "tmId": "743591"
+      },
+      {
+        "id": "cmuihw3ez0bmlsexpk658e1si",
+        "name": "Sverre Nypan",
+        "tmId": "911736"
+      }
+    ],
+    "expectedFinal": 24,
+    "isPerfectMatch": true
+  },
+  {
+    "tmId": "31",
+    "clubName": "Liverpool FC",
+    "clubId": "cmuihq5k0006zh29erp4cykkk",
+    "tmSquadSize": 29,
+    "currentDbSize": 36,
+    "alreadyAtClub": 26,
+    "toAttach": [
+      {
+        "id": "cmuihw3ek0bbesexpcvzn5nsf",
+        "name": "James McConnell",
+        "tmId": "845289"
+      },
+      {
+        "id": "cmuihw3f20borsexpl2oubz28",
+        "name": "Lewis Koumas",
+        "tmId": "922462"
+      }
+    ],
+    "toReassign": [
+      {
+        "id": "cmuihw3f90bt9sexpzyhu00fv",
+        "name": "Víctor Muñoz",
+        "tmId": "935231",
+        "fromClub": "CA Osasuna",
+        "fromClubId": "cmuihq61m0079h29efscx2qh5"
+      }
+    ],
+    "toCreate": [],
+    "toDetach": [
+      {
+        "id": "cmuihw0it085osexput721p1b",
+        "name": "Curtis Jones",
+        "tmId": "433188"
+      },
+      {
+        "id": "cmuihw3eq0befsexpy6echsfc",
+        "name": "Tommy Pilling",
+        "tmId": "861577"
+      },
+      {
+        "id": "cmuihw3eq0bf0sexpzo6aq252",
+        "name": "Stefan Bajcetic",
+        "tmId": "864799"
+      },
+      {
+        "id": "cmuihw3fe0bxcsexpeb82ym8t",
+        "name": "Michael Laffey",
+        "tmId": "947407"
+      },
+      {
+        "id": "cmuihw44d0cpbsexp92cim43f",
+        "name": "Amara Nallo",
+        "tmId": "1108049"
+      },
+      {
+        "id": "cmuihw1dd09ddsexp91i1kapk",
+        "name": "Harvey Elliott",
+        "tmId": "565822"
+      },
+      {
+        "id": "cmuihw24d0a0jsexppe8m4ifg",
+        "name": "Calvin Ramsay",
+        "tmId": "633652"
+      },
+      {
+        "id": "cmuihw2px0asvsexposua05vs",
+        "name": "Kaide Gordon",
+        "tmId": "732119"
+      },
+      {
+        "id": "cmuihw3f80bsbsexpejaetk2o",
+        "name": "Ármin Pécsi",
+        "tmId": "933215"
+      },
+      {
+        "id": "cmuihw3fb0bvhsexp57h8f53e",
+        "name": "Jayden Danns",
+        "tmId": "939290"
+      }
+    ],
+    "expectedFinal": 29,
+    "isPerfectMatch": true
+  },
+  {
+    "tmId": "985",
+    "clubName": "Manchester United",
+    "clubId": "cmuihqgxr00ddh29e8cr2u808",
+    "tmSquadSize": 29,
+    "currentDbSize": 25,
+    "alreadyAtClub": 20,
+    "toAttach": [
+      {
+        "id": "cmuihw24609vssexp3n65h4ai",
+        "name": "Dermot Mee",
+        "tmId": "620362"
+      },
+      {
+        "id": "cmuihw43s0c9ksexpk7m36h4p",
+        "name": "Harry Amass",
+        "tmId": "1011738"
+      },
+      {
+        "id": "cmuihw2q00avusexpi5wxxlyb",
+        "name": "Andrey Santos",
+        "tmId": "743600"
+      },
+      {
+        "id": "cmuihw43y0cebsexpirsjfnb9",
+        "name": "Tyler Fletcher",
+        "tmId": "1049911"
+      },
+      {
+        "id": "cmuihw3f40bpxsexpxr16y1qp",
+        "name": "Shea Lacey",
+        "tmId": "926309"
+      }
+    ],
+    "toReassign": [
+      {
+        "id": "cmuihvvw8036ysexpibga9uvv",
+        "name": "Karl Darlow",
+        "tmId": "99397",
+        "fromClub": "Leeds United",
+        "fromClubId": "cmuihq8hv008ph29ejwdrv7xd"
+      },
+      {
+        "id": "cmuihw43g0c1ssexp5lpf6ebj",
+        "name": "Carlos Baleba",
+        "tmId": "973085",
+        "fromClub": "Brighton & Hove Albion",
+        "fromClubId": "cmuihomne002bb23fq0sdhdrm"
+      },
+      {
+        "id": "cmuihvy6j05ljsexpm3b43eo2",
+        "name": "Youri Tielemans",
+        "tmId": "249565",
+        "fromClub": "Aston Villa",
+        "fromClubId": "cmuihq8vi008xh29edz4vg4xw"
+      }
+    ],
+    "toCreate": [
+      {
+        "name": "Senne Lammens",
+        "tmId": "503883",
+        "pos": "Goalkeeper",
+        "dob": "2002-07-07T00:00:00.000Z",
+        "nationality": [
+          "Belgium"
+        ],
+        "mvRaw": "€35.00m"
+      }
+    ],
+    "toDetach": [
+      {
+        "id": "cmuihvzav06sdsexposm6jo65",
+        "name": "Altay Bayındır",
+        "tmId": "336077"
+      },
+      {
+        "id": "cmuihw43s0c9fsexpldm8wujd",
+        "name": "Jack Fletcher",
+        "tmId": "1011140"
+      },
+      {
+        "id": "cmuihw3ez0bmjsexp6zsi8vz8",
+        "name": "Tyler Fredricson",
+        "tmId": "911424"
+      },
+      {
+        "id": "cmuihw43w0ccssexps464mf3j",
+        "name": "Chido Obi",
+        "tmId": "1042886"
+      },
+      {
+        "id": "cmuihw4rt0d38sexph1ji3lo9",
+        "name": "Diego León",
+        "tmId": "1283997"
+      }
+    ],
+    "expectedFinal": 29,
+    "isPerfectMatch": true
+  },
+  {
+    "tmId": "148",
+    "clubName": "Tottenham Hotspur",
+    "clubId": "cmuihpzs8003vh29eyrxt8nk5",
+    "tmSquadSize": 28,
+    "currentDbSize": 24,
+    "alreadyAtClub": 15,
+    "toAttach": [
+      {
+        "id": "cmuihvvst02qcsexpiw9rrul8",
+        "name": "Martin Dúbravka",
+        "tmId": "74960"
+      },
+      {
+        "id": "cmuihw0js08icsexplmy1y0tz",
+        "name": "Marcos Senesi",
+        "tmId": "469781"
+      },
+      {
+        "id": "cmuihvy6r05rbsexp75hxke37",
+        "name": "Tosin Adarabioyo",
+        "tmId": "258878"
+      },
+      {
+        "id": "cmuihw3et0bh3sexpmyuk69lh",
+        "name": "Mateus Fernandes",
+        "tmId": "880245"
+      },
+      {
+        "id": "cmuihw0k508ossexpwiadlptn",
+        "name": "Conor Gallagher",
+        "tmId": "488362"
+      },
+      {
+        "id": "cmuihw1de09dxsexpi52ye6t2",
+        "name": "Xavi Simons",
+        "tmId": "566931"
+      },
+      {
+        "id": "cmuihw2qb0b2gsexpi6m11gzd",
+        "name": "Mathys Tel",
+        "tmId": "801734"
+      },
+      {
+        "id": "cmuihw1c0093wsexpvdfoji1h",
+        "name": "Mykhaylo Mudryk",
+        "tmId": "537860"
+      },
+      {
+        "id": "cmuihw1cw096msexphjyubv7o",
+        "name": "Mohammed Kudus",
+        "tmId": "543499"
+      }
+    ],
+    "toReassign": [
+      {
+        "id": "cmuihw1do09hlsexpowo1wzpq",
+        "name": "Jan Paul van Hecke",
+        "tmId": "576314",
+        "fromClub": "Brighton & Hove Albion",
+        "fromClubId": "cmuihomne002bb23fq0sdhdrm"
+      },
+      {
+        "id": "cmuihvy6505aysexpks3e6nyy",
+        "name": "Andrew Robertson",
+        "tmId": "234803",
+        "fromClub": "Hull City",
+        "fromClubId": "cmuihq56p006vh29efww9bqgh"
+      },
+      {
+        "id": "cmuihvzwb07rasexpbq3bnvry",
+        "name": "Sandro Tonali",
+        "tmId": "397033",
+        "fromClub": "Newcastle United",
+        "fromClubId": "cmuihqepp00c5h29e6dizfj3r"
+      },
+      {
+        "id": "cmuihw2q00avtsexppurxa90p",
+        "name": "Savinho",
+        "tmId": "743591",
+        "fromClub": "Manchester City",
+        "fromClubId": "cmuihq3vs0069h29ebm5xqhye"
+      }
+    ],
+    "toCreate": [],
+    "toDetach": [
+      {
+        "id": "cmuihvyqu064ksexp6ttb66ol",
+        "name": "Guglielmo Vicario",
+        "tmId": "286047"
+      },
+      {
+        "id": "cmuihvzbi0776sexp57a41jij",
+        "name": "Cristian Romero",
+        "tmId": "355915"
+      },
+      {
+        "id": "cmuihw0k208mqsexpa280gxoz",
+        "name": "Djed Spence",
+        "tmId": "483348"
+      },
+      {
+        "id": "cmuihw1dg09ewsexpvn4sq5qv",
+        "name": "Radu Drăgușin",
+        "tmId": "568559"
+      },
+      {
+        "id": "cmuihw1dg09eysexpet5m9lol",
+        "name": "Pape Matar Sarr",
+        "tmId": "568693"
+      },
+      {
+        "id": "cmuihw43x0cdvsexp3pa7ja9f",
+        "name": "Yusuf Akhamrich",
+        "tmId": "1047345"
+      },
+      {
+        "id": "cmuihw3et0bh7sexp7u5xy2q2",
+        "name": "Rio Kyerematen",
+        "tmId": "882172"
+      },
+      {
+        "id": "cmuihw3eu0bi6sexppo7k8vr8",
+        "name": "Luca Gunter",
+        "tmId": "888637"
+      },
+      {
+        "id": "cmuihw43j0c49sexp7kzw6j1g",
+        "name": "Callum Olusesi",
+        "tmId": "985546"
+      }
+    ],
+    "expectedFinal": 28,
+    "isPerfectMatch": true
+  },
+  {
+    "tmId": "762",
+    "clubName": "Newcastle United",
+    "clubId": "cmuihqepp00c5h29e6dizfj3r",
+    "tmSquadSize": 25,
+    "currentDbSize": 17,
+    "alreadyAtClub": 13,
+    "toAttach": [
+      {
+        "id": "cmuihw43h0c28sexp3wuhb53d",
+        "name": "Aladji Bamba",
+        "tmId": "975347"
+      },
+      {
+        "id": "cmuihw0k908sjsexplo0ric0q",
+        "name": "Jacob Ramsey",
+        "tmId": "503749"
+      },
+      {
+        "id": "cmuihw44d0cpssexpcin0ouzz",
+        "name": "Sean Steur",
+        "tmId": "1111063"
+      },
+      {
+        "id": "cmuihw1ej09jnsexpgz9u834f",
+        "name": "Anthony Elanga",
+        "tmId": "583189"
+      },
+      {
+        "id": "cmuihvzw007kqsexpozqfxsf9",
+        "name": "Yoane Wissa",
+        "tmId": "388165"
+      }
+    ],
+    "toReassign": [
+      {
+        "id": "cmuihw24a09z3sexph5e0wb6e",
+        "name": "Lukas Hornicek",
+        "tmId": "629773",
+        "fromClub": "SC Braga",
+        "fromClubId": "cmuihnyer0015b23fholjonq1"
+      },
+      {
+        "id": "cmuihw1bj08xusexp07ekcady",
+        "name": "Malick Thiaw",
+        "tmId": "521964",
+        "fromClub": "FC Schalke 04",
+        "fromClubId": "cmuihq5qq0075h29elabq5hjd"
+      },
+      {
+        "id": "cmuihw1bh08wzsexpfeqg40xr",
+        "name": "Amar Dedić",
+        "tmId": "519184",
+        "fromClub": "SL Benfica",
+        "fromClubId": "cmuihq4q6006lh29eutf0qltf"
+      },
+      {
+        "id": "cmuihw0jp08h7sexpvpztw1o9",
+        "name": "Nico González",
+        "tmId": "466805",
+        "fromClub": "Manchester City",
+        "fromClubId": "cmuihq3vs0069h29ebm5xqhye"
+      },
+      {
+        "id": "cmuihw4460cj9sexpco4wrgdz",
+        "name": "Bazoumana Touré",
+        "tmId": "1067904",
+        "fromClub": "TSG 1899 Hoffenheim",
+        "fromClubId": "cmuihqbor00adh29elg30kgzn"
+      },
+      {
+        "id": "cmuihw2pv0ar0sexpmnrbhk2n",
+        "name": "Matias Fernandez-Pardo",
+        "tmId": "724129",
+        "fromClub": "LOSC Lille",
+        "fromClubId": "cmuihnzfj0017b23f7qeka8w7"
+      }
+    ],
+    "toCreate": [
+      {
+        "name": "Ewen Jaouen",
+        "tmId": "923757",
+        "pos": "Goalkeeper",
+        "dob": "2005-12-29T00:00:00.000Z",
+        "nationality": [
+          "France",
+          "Germany"
+        ],
+        "mvRaw": "€12.00m"
+      }
+    ],
+    "toDetach": [
+      {
+        "id": "cmuihvzwb07rasexpbq3bnvry",
+        "name": "Sandro Tonali",
+        "tmId": "397033"
+      },
+      {
+        "id": "cmuihw43t0cajsexpq6rn0hxx",
+        "name": "Aidan Harris",
+        "tmId": "1019170"
+      },
+      {
+        "id": "cmuihw24m0a8jsexp3tp5w1r3",
+        "name": "Max Thompson",
+        "tmId": "660768"
+      },
+      {
+        "id": "cmuihw43t0caisexpscqsayus",
+        "name": "Adam Harrison",
+        "tmId": "1019169"
+      }
+    ],
+    "expectedFinal": 25,
+    "isPerfectMatch": true
+  },
+  {
+    "tmId": "1237",
+    "clubName": "Brighton & Hove Albion",
+    "clubId": "cmuihomne002bb23fq0sdhdrm",
+    "tmSquadSize": 30,
+    "currentDbSize": 16,
+    "alreadyAtClub": 12,
+    "toAttach": [
+      {
+        "id": "cmuihw3ev0bj6sexpjxnpjiqz",
+        "name": "Luka Vuskovic",
+        "tmId": "892160"
+      },
+      {
+        "id": "cmuihvzal06kmsexpztni9hlf",
+        "name": "Olivier Boscagli",
+        "tmId": "318508"
+      },
+      {
+        "id": "cmuihw0j20877sexpg1inrt8v",
+        "name": "Michael Svoboda",
+        "tmId": "438961"
+      },
+      {
+        "id": "cmuihw0iq084esexpikou8igk",
+        "name": "Maxim De Cuyper",
+        "tmId": "429915"
+      },
+      {
+        "id": "cmuihvy6705c3sexph9eklxyw",
+        "name": "Costinha",
+        "tmId": "539252"
+      },
+      {
+        "id": "cmuihw3fe0bxrsexp5j4g368n",
+        "name": "Chema Andrés",
+        "tmId": "948279"
+      },
+      {
+        "id": "cmuihvzwj07vjsexpevjikyvm",
+        "name": "Matt O'Riley",
+        "tmId": "406634"
+      },
+      {
+        "id": "cmuihw4rf0cx1sexpi97p09gn",
+        "name": "Malick Yalcouyé",
+        "tmId": "1178758"
+      },
+      {
+        "id": "cmuihvvva02vtsexpntmxisij",
+        "name": "Pascal Groß",
+        "tmId": "82873"
+      },
+      {
+        "id": "cmuihw44d0cpnsexp8on3v5ys",
+        "name": "Ibrahim Osman",
+        "tmId": "1110406"
+      },
+      {
+        "id": "cmuihw4410cgusexpbv45kkaa",
+        "name": "Charalampos Kostoulas",
+        "tmId": "1060087"
+      },
+      {
+        "id": "cmuihw24i0a4isexp71hiuana",
+        "name": "Evan Ferguson",
+        "tmId": "648046"
+      },
+      {
+        "id": "cmuihw3fe0by2sexptpl4dkni",
+        "name": "Stefanos Tzimas",
+        "tmId": "950091"
+      }
+    ],
+    "toReassign": [
+      {
+        "id": "cmuihvzwk07wwsexpfephiswz",
+        "name": "Pascal Struijk",
+        "tmId": "410708",
+        "fromClub": "Leeds United",
+        "fromClubId": "cmuihq8hv008ph29ejwdrv7xd"
+      }
+    ],
+    "toCreate": [
+      {
+        "name": "Jaouen Hadjam",
+        "tmId": "750903",
+        "pos": "Left-Back",
+        "dob": "2003-03-26T00:00:00.000Z",
+        "nationality": [
+          "Algeria",
+          "France"
+        ],
+        "mvRaw": "€7.00m"
+      },
+      {
+        "name": "Zadok Yohanna",
+        "tmId": "1421433",
+        "pos": "Right Winger",
+        "dob": "2007-06-29T00:00:00.000Z",
+        "nationality": [
+          "Nigeria"
+        ],
+        "mvRaw": "€18.00m"
+      },
+      {
+        "name": "Femi Azeez",
+        "tmId": "703408",
+        "pos": "Right Winger",
+        "dob": "2001-06-05T00:00:00.000Z",
+        "nationality": [
+          "Nigeria",
+          "England"
+        ],
+        "mvRaw": "€15.00m"
+      },
+      {
+        "name": "Promise David",
+        "tmId": "888785",
+        "pos": "Centre-Forward",
+        "dob": "2001-07-03T00:00:00.000Z",
+        "nationality": [
+          "Canada",
+          "Nigeria"
+        ],
+        "mvRaw": "€17.00m"
+      }
+    ],
+    "toDetach": [
+      {
+        "id": "cmuihw1do09hlsexpowo1wzpq",
+        "name": "Jan Paul van Hecke",
+        "tmId": "576314"
+      },
+      {
+        "id": "cmuihw4460cj7sexpj9chah07",
+        "name": "Harry Howell",
+        "tmId": "1067168"
+      },
+      {
+        "id": "cmuihw3f20boosexp1hvizdvo",
+        "name": "Charlie Tasker",
+        "tmId": "921662"
+      },
+      {
+        "id": "cmuihw43g0c1ssexp5lpf6ebj",
+        "name": "Carlos Baleba",
+        "tmId": "973085"
+      }
+    ],
+    "expectedFinal": 30,
+    "isPerfectMatch": true
+  },
+  {
+    "tmId": "1148",
+    "clubName": "Brentford FC",
+    "clubId": "cmuihocpq001vb23fu3cm5yh8",
+    "tmSquadSize": 28,
+    "currentDbSize": 29,
+    "alreadyAtClub": 21,
+    "toAttach": [
+      {
+        "id": "cmuihw44e0cpvsexpxjws1fzw",
+        "name": "El Hadji Malick Diouf",
+        "tmId": "1111589"
+      },
+      {
+        "id": "cmuihvwrd03iosexp0jh96jb0",
+        "name": "Callum Wilson",
+        "tmId": "123682"
+      }
+    ],
+    "toReassign": [
+      {
+        "id": "cmuihw2qd0b44sexp7rlb55h5",
+        "name": "Mamadou Sangaré",
+        "tmId": "808348",
+        "fromClub": "RC Lens",
+        "fromClubId": "cmuihqfi000cjh29exp3khwxc"
+      },
+      {
+        "id": "cmuihw2pf0aersexplusstlzf",
+        "name": "Jaidon Anthony",
+        "tmId": "684210",
+        "fromClub": "Burnley FC",
+        "fromClubId": "cmuihoaiv001rb23fn6cviuyz"
+      }
+    ],
+    "toCreate": [
+      {
+        "name": "Jannik Schuster",
+        "tmId": "915418",
+        "pos": "Centre-Back",
+        "dob": "2006-05-16T00:00:00.000Z",
+        "nationality": [
+          "Austria",
+          "Korea, South"
+        ],
+        "mvRaw": "€18.00m"
+      },
+      {
+        "name": "Benjamin Fredrick",
+        "tmId": "1071138",
+        "pos": "Centre-Back",
+        "dob": "2005-05-28T00:00:00.000Z",
+        "nationality": [
+          "Nigeria"
+        ],
+        "mvRaw": "€600k"
+      },
+      {
+        "name": "Kaye Furo",
+        "tmId": "1011936",
+        "pos": "Centre-Forward",
+        "dob": "2007-02-06T00:00:00.000Z",
+        "nationality": [
+          "Belgium",
+          "Nigeria"
+        ],
+        "mvRaw": "€8.00m"
+      }
+    ],
+    "toDetach": [
+      {
+        "id": "cmuihw2pz0auksexpxksqvx4z",
+        "name": "Matthew Cox",
+        "tmId": "741236"
+      },
+      {
+        "id": "cmuihw3ez0blxsexpp1pbs55k",
+        "name": "Riley Owen",
+        "tmId": "907218"
+      },
+      {
+        "id": "cmuihw44b0cnmsexpaqvzpo4j",
+        "name": "Romelle Donovan",
+        "tmId": "1091562"
+      },
+      {
+        "id": "cmuihvzws081csexp5ea0tthe",
+        "name": "Frank Onyeka",
+        "tmId": "421637"
+      },
+      {
+        "id": "cmuihw43r0c8osexplsv2rt9v",
+        "name": "Conor McManus",
+        "tmId": "1008162"
+      },
+      {
+        "id": "cmuihw4r50ctdsexplluenb08",
+        "name": "Benjamin Arthur",
+        "tmId": "1144158"
+      },
+      {
+        "id": "cmuihw43d0byqsexpb35wc35j",
+        "name": "Jayden Meghoma",
+        "tmId": "954104"
+      },
+      {
+        "id": "cmuihw4r40ct5sexpoqdcaxpf",
+        "name": "Yunus Konak",
+        "tmId": "1141628"
+      }
+    ],
+    "expectedFinal": 28,
+    "isPerfectMatch": true
+  },
+  {
+    "tmId": "873",
+    "clubName": "Crystal Palace",
+    "clubId": "cmuihqfqr00cqh29e2077zt3y",
+    "tmSquadSize": 28,
+    "currentDbSize": 29,
+    "alreadyAtClub": 17,
+    "toAttach": [
+      {
+        "id": "cmuihw4480ckysexpd4e5l0c8",
+        "name": "Honest Ahanor",
+        "tmId": "1077175"
+      },
+      {
+        "id": "cmuihvzvy07j8sexpt7pgesch",
+        "name": "Axel Disasi",
+        "tmId": "386047"
+      },
+      {
+        "id": "cmuihvzar06pmsexpx2cwwq1x",
+        "name": "Takehiro Tomiyasu",
+        "tmId": "331560"
+      },
+      {
+        "id": "cmuihvzaj06jusexp6r3qyhcf",
+        "name": "Ben Chilwell",
+        "tmId": "316125"
+      },
+      {
+        "id": "cmuihvzws0813sexp5p0wz39k",
+        "name": "Quinten Timber",
+        "tmId": "420213"
+      }
+    ],
+    "toReassign": [
+      {
+        "id": "cmuihvzaq06pjsexptgj04ke9",
+        "name": "Óscar Mingueza",
+        "tmId": "331505",
+        "fromClub": "Celta de Vigo",
+        "fromClubId": "cmuihqg9e00czh29eqgxwp7l7"
+      },
+      {
+        "id": "cmuihw1em09k5sexpvvvnin7w",
+        "name": "Dwight McNeil",
+        "tmId": "584769",
+        "fromClub": "Everton FC",
+        "fromClubId": "cmuihq4bo006fh29ef9sfod5p"
+      },
+      {
+        "id": "cmuihw0k808resexpz375djes",
+        "name": "Evann Guessand",
+        "tmId": "500689",
+        "fromClub": "Aston Villa",
+        "fromClubId": "cmuihq8vi008xh29edz4vg4xw"
+      }
+    ],
+    "toCreate": [
+      {
+        "name": "Anan Khalaili",
+        "tmId": "945021",
+        "pos": "Right-Back",
+        "dob": "2004-09-03T00:00:00.000Z",
+        "nationality": [
+          "Israel"
+        ],
+        "mvRaw": "€23.00m"
+      },
+      {
+        "name": "Darío Osorio",
+        "tmId": "881116",
+        "pos": "Right Winger",
+        "dob": "2004-01-24T00:00:00.000Z",
+        "nationality": [
+          "Chile"
+        ],
+        "mvRaw": "€15.00m"
+      },
+      {
+        "name": "Zavier Gozo",
+        "tmId": "1007383",
+        "pos": "Right Winger",
+        "dob": "2007-03-22T00:00:00.000Z",
+        "nationality": [
+          "United States",
+          "Cote d'Ivoire"
+        ],
+        "mvRaw": "€6.00m"
+      }
+    ],
+    "toDetach": [
+      {
+        "id": "cmuihvyr306aysexpbg4y034s",
+        "name": "Borna Sosa",
+        "tmId": "293194"
+      },
+      {
+        "id": "cmuihvvvi02xmsexptqezevzx",
+        "name": "Nathaniel Clyne",
+        "tmId": "85177"
+      },
+      {
+        "id": "cmuihw3eq0beisexpkmmfajrb",
+        "name": "Danny Imray",
+        "tmId": "862109"
+      },
+      {
+        "id": "cmuihw3eq0bf5sexpwchr2gnk",
+        "name": "David Ozoh",
+        "tmId": "865993"
+      },
+      {
+        "id": "cmuihw43g0c12sexpjrygiatd",
+        "name": "Romain Esse",
+        "tmId": "967319"
+      },
+      {
+        "id": "cmuihw0js08iqsexppfs95c33",
+        "name": "Brennan Johnson",
+        "tmId": "470607"
+      },
+      {
+        "id": "cmuihw0k608pqsexp2odxz0qi",
+        "name": "Daniel Muñoz",
+        "tmId": "493003"
+      },
+      {
+        "id": "cmuihw43q0c80sexpn2qndj18",
+        "name": "Zach Marsh",
+        "tmId": "1004679"
+      },
+      {
+        "id": "cmuihw43x0cdrsexppvcsfhrn",
+        "name": "Rio Cardines",
+        "tmId": "1047257"
+      },
+      {
+        "id": "cmuihw43x0cdssexpwrap83a1",
+        "name": "Caleb Kporha",
+        "tmId": "1047261"
+      },
+      {
+        "id": "cmuihw2q20axbsexps9makg4r",
+        "name": "Justin Devenny",
+        "tmId": "747009"
+      },
+      {
+        "id": "cmuihw3f20bocsexplfkk7wak",
+        "name": "Jackson Izquierdo",
+        "tmId": "920005"
+      }
+    ],
+    "expectedFinal": 28,
+    "isPerfectMatch": true
+  },
+  {
+    "tmId": "989",
+    "clubName": "AFC Bournemouth",
+    "clubId": "cmuihqh6y00dfh29eokvzxktp",
+    "tmSquadSize": 29,
+    "currentDbSize": 31,
+    "alreadyAtClub": 23,
+    "toAttach": [],
+    "toReassign": [
+      {
+        "id": "cmuihvyr606e1sexpwxx5yrw6",
+        "name": "Michele Di Gregorio",
+        "tmId": "301238",
+        "fromClub": "Juventus FC",
+        "fromClubId": "cmuihqb7i00a9h29e7t17vakf"
+      },
+      {
+        "id": "cmuihw24i0a56sexpjzixpfn4",
+        "name": "António Silva",
+        "tmId": "650568",
+        "fromClub": "SL Benfica",
+        "fromClubId": "cmuihq4q6006lh29eutf0qltf"
+      },
+      {
+        "id": "cmuihw24t0adhsexpdn4d8r66",
+        "name": "Juanlu Sánchez",
+        "tmId": "676042",
+        "fromClub": "Sevilla FC",
+        "fromClubId": "cmuihq7is0085h29ez260bgnc"
+      },
+      {
+        "id": "cmuihw3fe0bxpsexpynyq9i52",
+        "name": "Álvaro Rodríguez",
+        "tmId": "948275",
+        "fromClub": "Elche CF",
+        "fromClubId": "cmuihq03y0041h29ezh2jdh2h"
+      }
+    ],
+    "toCreate": [
+      {
+        "name": "Max Aarons",
+        "tmId": "471690",
+        "pos": "Right-Back",
+        "dob": "2000-01-04T00:00:00.000Z",
+        "nationality": [
+          "England",
+          "Jamaica"
+        ],
+        "mvRaw": "€2.50m"
+      },
+      {
+        "name": "Daniel Jebbison",
+        "tmId": "746740",
+        "pos": "Centre-Forward",
+        "dob": "2003-08-13T00:00:00.000Z",
+        "nationality": [
+          "Canada",
+          "England"
+        ],
+        "mvRaw": "€6.00m"
+      }
+    ],
+    "toDetach": [
+      {
+        "id": "cmuihvy6k05mesexpkxjae5ka",
+        "name": "Enes Ünal",
+        "tmId": "251106"
+      },
+      {
+        "id": "cmuihw44b0cnhsexp1vckxvvw",
+        "name": "Remy Rees-Dottin",
+        "tmId": "1089802"
+      },
+      {
+        "id": "cmuihw1d709a9sexpl01no323",
+        "name": "Romain Faivre",
+        "tmId": "555076"
+      },
+      {
+        "id": "cmuihw1ei09jesexpumv958da",
+        "name": "Will Dennis",
+        "tmId": "582078"
+      },
+      {
+        "id": "cmuihw1el09jzsexp9g30116r",
+        "name": "Owen Bevan",
+        "tmId": "583990"
+      },
+      {
+        "id": "cmuihw43o0c6hsexpcl9l06xu",
+        "name": "Matai Akinmboni",
+        "tmId": "994604"
+      },
+      {
+        "id": "cmuihw2pz0auosexpuxd857vv",
+        "name": "Álex Jiménez",
+        "tmId": "741257"
+      },
+      {
+        "id": "cmuihw43i0c3msexp3kiwwm84",
+        "name": "Callan McKenna",
+        "tmId": "983248"
+      }
+    ],
+    "expectedFinal": 29,
+    "isPerfectMatch": true
+  },
+  {
+    "tmId": "405",
+    "clubName": "Aston Villa",
+    "clubId": "cmuihq8vi008xh29edz4vg4xw",
+    "tmSquadSize": 27,
+    "currentDbSize": 27,
+    "alreadyAtClub": 15,
+    "toAttach": [
+      {
+        "id": "cmuihw0k908sysexp1djixsok",
+        "name": "Taylor Harwood-Bellis",
+        "tmId": "503977"
+      },
+      {
+        "id": "cmuihw24409u6sexpti4q2ldj",
+        "name": "Matteo Ruggeri",
+        "tmId": "616631"
+      },
+      {
+        "id": "cmuihw2qf0b52sexpn07mu3sh",
+        "name": "Alejandro Garnacho",
+        "tmId": "811779"
+      },
+      {
+        "id": "cmuihw43u0causexpww52xv2c",
+        "name": "George Hemmings",
+        "tmId": "1023191"
+      },
+      {
+        "id": "cmuihw2q80azisexph36zzipm",
+        "name": "Nicolas Jackson",
+        "tmId": "776890"
+      },
+      {
+        "id": "cmuihw4rm0d0vsexpeqhueb89",
+        "name": "Brian Madjo",
+        "tmId": "1226357"
+      }
+    ],
+    "toReassign": [
+      {
+        "id": "cmuihw0is0857sexpky0i4v42",
+        "name": "Zion Suzuki",
+        "tmId": "432298",
+        "fromClub": "Parma Calcio 1913",
+        "fromClubId": "cmuihouiw002pb23fjq3m9qng"
+      },
+      {
+        "id": "cmuihw0jy08ktsexp0la5teas",
+        "name": "Aaron Wan-Bissaka",
+        "tmId": "477758",
+        "fromClub": "West Ham United",
+        "fromClubId": "cmuihq7mj0089h29e0q3gm3nk"
+      },
+      {
+        "id": "cmuihw2py0atdsexpdepfhuvq",
+        "name": "João Gomes",
+        "tmId": "735570",
+        "fromClub": "Wolverhampton Wanderers",
+        "fromClubId": "cmuihqbq700ahh29euibcxp0b"
+      },
+      {
+        "id": "cmuihw3f50bq9sexpufbun6ue",
+        "name": "Johan Manzambi",
+        "tmId": "927353",
+        "fromClub": "SC Freiburg",
+        "fromClubId": "cmuihqc7a00anh29ekc5foq1r"
+      }
+    ],
+    "toCreate": [
+      {
+        "name": "Modou Kéba Cissé",
+        "tmId": "1282860",
+        "pos": "Centre-Back",
+        "dob": "2005-08-04T00:00:00.000Z",
+        "nationality": [
+          "Senegal"
+        ],
+        "mvRaw": "€6.00m"
+      },
+      {
+        "name": "Tammy Abraham",
+        "tmId": "331726",
+        "pos": "Centre-Forward",
+        "dob": "1997-10-02T00:00:00.000Z",
+        "nationality": [
+          "England",
+          "Nigeria"
+        ],
+        "mvRaw": "€18.00m"
+      }
+    ],
+    "toDetach": [
+      {
+        "id": "cmuihvzao06mzsexphnrl2y25",
+        "name": "Ollie Watkins",
+        "tmId": "324358"
+      },
+      {
+        "id": "cmuihvy6j05ljsexpm3b43eo2",
+        "name": "Youri Tielemans",
+        "tmId": "249565"
+      },
+      {
+        "id": "cmuihw1dq09j0sexpc2jmk883",
+        "name": "Samuel Iling-Junior",
+        "tmId": "581672"
+      },
+      {
+        "id": "cmuihw24909xxsexp67nrf35h",
+        "name": "Lewis Dobbin",
+        "tmId": "627248"
+      },
+      {
+        "id": "cmuihw24o0aabsexpki4cuxwz",
+        "name": "Ronnie Hollingshead",
+        "tmId": "667490"
+      },
+      {
+        "id": "cmuihvzw007khsexpziixstti",
+        "name": "Leon Bailey",
+        "tmId": "387626"
+      },
+      {
+        "id": "cmuihw4430chusexphsnro9ac",
+        "name": "Andrés García",
+        "tmId": "1063329"
+      },
+      {
+        "id": "cmuihw0k808resexpz375djes",
+        "name": "Evann Guessand",
+        "tmId": "500689"
+      },
+      {
+        "id": "cmuihw24s0acrsexp2xeg7wrc",
+        "name": "Enzo Barrenechea",
+        "tmId": "671915"
+      },
+      {
+        "id": "cmuihw2ps0aodsexpf58ullyc",
+        "name": "James Wright",
+        "tmId": "712181"
+      },
+      {
+        "id": "cmuihw3el0bc1sexpe4lvbxq3",
+        "name": "Kosta Nedeljkovic",
+        "tmId": "848682"
+      },
+      {
+        "id": "cmuihw4rk0czrsexpmm5ggtwg",
+        "name": "Bradley Burrowes",
+        "tmId": "1202361"
+      }
+    ],
+    "expectedFinal": 27,
+    "isPerfectMatch": true
+  },
+  {
+    "tmId": "703",
+    "clubName": "Nottingham Forest",
+    "clubId": "cmuihqdq000bkh29et7iwzrfd",
+    "tmSquadSize": 24,
+    "currentDbSize": 17,
+    "alreadyAtClub": 11,
+    "toAttach": [
+      {
+        "id": "cmuihw0it085fsexp8e6j824l",
+        "name": "John Victor",
+        "tmId": "432914"
+      },
+      {
+        "id": "cmuihvzvx07i1sexpxs2ko3xj",
+        "name": "Steven Benda",
+        "tmId": "381469"
+      },
+      {
+        "id": "cmuihw43j0c3xsexpnfj3fg2i",
+        "name": "Jair Cunha",
+        "tmId": "984096"
+      },
+      {
+        "id": "cmuihw1bk08yisexpjs3ukgkc",
+        "name": "Luca Netz",
+        "tmId": "524285"
+      },
+      {
+        "id": "cmuihw2pq0am4sexpglukmi13",
+        "name": "Nicolò Savona",
+        "tmId": "708072"
+      },
+      {
+        "id": "cmuihvy5z055fsexpv4ojj431",
+        "name": "Xaver Schlager",
+        "tmId": "223979"
+      },
+      {
+        "id": "cmuihw1ej09josexpgfmmaeks",
+        "name": "James McAtee",
+        "tmId": "583199"
+      },
+      {
+        "id": "cmuihvzvo07busexpgqv4mlqy",
+        "name": "Dan Ndoye",
+        "tmId": "365108"
+      },
+      {
+        "id": "cmuihw24209sasexpd4p7xivg",
+        "name": "Liam Delap",
+        "tmId": "610849"
+      },
+      {
+        "id": "cmuihw0is0853sexpboijliph",
+        "name": "Igor Jesus",
+        "tmId": "432164"
+      },
+      {
+        "id": "cmuihw1em09kgsexp0yqj35u9",
+        "name": "Arnaud Kalimuendo",
+        "tmId": "585959"
+      }
+    ],
+    "toReassign": [
+      {
+        "id": "cmuihw43h0c24sexptukg691y",
+        "name": "Ousmane Diomande",
+        "tmId": "974982",
+        "fromClub": "Sporting CP",
+        "fromClubId": "cmuihq6jo007lh29e9jpaabxs"
+      },
+      {
+        "id": "cmuihw0k608pqsexp2odxz0qi",
+        "name": "Daniel Muñoz",
+        "tmId": "493003",
+        "fromClub": "Crystal Palace",
+        "fromClubId": "cmuihqfqr00cqh29e2077zt3y"
+      }
+    ],
+    "toCreate": [],
+    "toDetach": [
+      {
+        "id": "cmuihw24o0aacsexpxvaefmxn",
+        "name": "Ben Hammond",
+        "tmId": "667498"
+      },
+      {
+        "id": "cmuihw3f30bpjsexpwnpa3fwf",
+        "name": "Justin Hanks",
+        "tmId": "925092"
+      },
+      {
+        "id": "cmuihw3f30bpksexpdo28kxmn",
+        "name": "Jack Thompson",
+        "tmId": "925093"
+      },
+      {
+        "id": "cmuihw24s0ad3sexp360xfzfm",
+        "name": "Morato",
+        "tmId": "673492"
+      },
+      {
+        "id": "cmuihw43o0c6gsexp9lyrvy4x",
+        "name": "Keehan Willows",
+        "tmId": "994594"
+      },
+      {
+        "id": "cmuihw3eo0bd8sexpgvzlpvgm",
+        "name": "Aaron Bott",
+        "tmId": "855282"
+      }
+    ],
+    "expectedFinal": 24,
+    "isPerfectMatch": true
+  },
+  {
+    "tmId": "289",
+    "clubName": "Sunderland AFC",
+    "clubId": "cmuihq47i006bh29e3kejf8oh",
+    "tmSquadSize": 28,
+    "currentDbSize": 35,
+    "alreadyAtClub": 20,
+    "toAttach": [
+      {
+        "id": "cmuihvyqf05t9sexp63jcfzz0",
+        "name": "Kevin Danso",
+        "tmId": "263236"
+      },
+      {
+        "id": "cmuihw0k808rnsexpmq22pee2",
+        "name": "Aji Alese",
+        "tmId": "502065"
+      },
+      {
+        "id": "cmuihvvwa037psexp6r03oyv9",
+        "name": "Thomas Meunier",
+        "tmId": "100986"
+      }
+    ],
+    "toReassign": [
+      {
+        "id": "cmuihw4ri0cyvsexpheoha5q5",
+        "name": "Dayann Methalie",
+        "tmId": "1191444",
+        "fromClub": "FC Toulouse",
+        "fromClubId": "cmuihq9dj0097h29elsved1su"
+      },
+      {
+        "id": "cmuihw2q00avasexpsu0jz5ar",
+        "name": "Malick Fofana",
+        "tmId": "743386",
+        "fromClub": "Olympique Lyon",
+        "fromClubId": "cmuihnsd9000tb23f30w9l9tm"
+      }
+    ],
+    "toCreate": [
+      {
+        "name": "Jules Ahoka",
+        "tmId": "1401779",
+        "pos": "Defensive Midfield",
+        "dob": "2006-05-08T00:00:00.000Z",
+        "nationality": [
+          "DR Congo"
+        ],
+        "mvRaw": "€300k"
+      },
+      {
+        "name": "Alan Browne",
+        "tmId": "277697",
+        "pos": "Central Midfield",
+        "dob": "1995-04-15T00:00:00.000Z",
+        "nationality": [
+          "Ireland"
+        ],
+        "mvRaw": "€2.00m"
+      },
+      {
+        "name": "Nilson Angulo",
+        "tmId": "903611",
+        "pos": "Left Winger",
+        "dob": "2003-06-19T00:00:00.000Z",
+        "nationality": [
+          "Ecuador"
+        ],
+        "mvRaw": "€17.00m"
+      }
+    ],
+    "toDetach": [
+      {
+        "id": "cmuihvy600562sexp6l761g0f",
+        "name": "Patrick Roberts",
+        "tmId": "225452"
+      },
+      {
+        "id": "cmuihvxfr04fmsexpz8ip92lm",
+        "name": "Arthur Masuaku",
+        "tmId": "181380"
+      },
+      {
+        "id": "cmuihw1d909blsexp70m523f7",
+        "name": "Niall Huggins",
+        "tmId": "559801"
+      },
+      {
+        "id": "cmuihw24n0a8qsexp2jjo0bg7",
+        "name": "Leo Hjelde",
+        "tmId": "661208"
+      },
+      {
+        "id": "cmuihw3ej0bawsexpp8y53li6",
+        "name": "Luís Semedo",
+        "tmId": "840687"
+      },
+      {
+        "id": "cmuihw3fa0buosexpy22z1wir",
+        "name": "Harrison Jones",
+        "tmId": "937840"
+      },
+      {
+        "id": "cmuihw43g0c15sexpjzcvyrj0",
+        "name": "Eliezer Mayenda",
+        "tmId": "967346"
+      },
+      {
+        "id": "cmuihw0jv08k4sexp1b3es0gk",
+        "name": "Anthony Patterson",
+        "tmId": "475946"
+      },
+      {
+        "id": "cmuihw1ct094nsexpn292sopa",
+        "name": "Timothée Pembélé",
+        "tmId": "538998"
+      },
+      {
+        "id": "cmuihw1dl09fvsexp5iwovlag",
+        "name": "Dan Neil",
+        "tmId": "570336"
+      },
+      {
+        "id": "cmuihw24509umsexpa3a2cicf",
+        "name": "Jenson Seelt",
+        "tmId": "617755"
+      },
+      {
+        "id": "cmuihw24l0a7psexpg8yiw4co",
+        "name": "Simon Adingra",
+        "tmId": "658536"
+      },
+      {
+        "id": "cmuihw4490cljsexpzx9qmhc4",
+        "name": "Timur Tuterov",
+        "tmId": "1079078"
+      },
+      {
+        "id": "cmuihw3f20bossexp0tx1r70j",
+        "name": "Ben Middlemas",
+        "tmId": "922463"
+      },
+      {
+        "id": "cmuihw43s0c9xsexpui2fmckc",
+        "name": "Ahmed Abdullahi",
+        "tmId": "1015619"
+      }
+    ],
+    "expectedFinal": 28,
+    "isPerfectMatch": true
+  },
+  {
+    "tmId": "399",
+    "clubName": "Leeds United",
+    "clubId": "cmuihq8hv008ph29ejwdrv7xd",
+    "tmSquadSize": 24,
+    "currentDbSize": 14,
+    "alreadyAtClub": 9,
+    "toAttach": [
+      {
+        "id": "cmuihvxg604q7sexpwidro8nd",
+        "name": "Michael Zetterer",
+        "tmId": "196813"
+      },
+      {
+        "id": "cmuihw24u0ae3sexpcsi96yqi",
+        "name": "Tarik Muharemović",
+        "tmId": "679423"
+      },
+      {
+        "id": "cmuihvzvr07dzsexperdps3g2",
+        "name": "Jaka Bijol",
+        "tmId": "371851"
+      },
+      {
+        "id": "cmuihvzbl07aksexpn86qa6nt",
+        "name": "Gabriel Gudmundsson",
+        "tmId": "362108"
+      },
+      {
+        "id": "cmuihvzwm07ypsexpm9yaiwcr",
+        "name": "James Justin",
+        "tmId": "413220"
+      },
+      {
+        "id": "cmuihvzb706zrsexp8kly9192",
+        "name": "Anton Stach",
+        "tmId": "344069"
+      },
+      {
+        "id": "cmuihvzb9071ssexpuohcwyal",
+        "name": "Sean Longstaff",
+        "tmId": "346707"
+      },
+      {
+        "id": "cmuihvzb9071ysexpumpma9he",
+        "name": "Noah Okafor",
+        "tmId": "346890"
+      },
+      {
+        "id": "cmuihvyr806fasexpyz5d3lhb",
+        "name": "Dominic Calvert-Lewin",
+        "tmId": "306024"
+      },
+      {
+        "id": "cmuihvyra06htsexpi51v0uxk",
+        "name": "Lukas Nmecha",
+        "tmId": "314288"
+      },
+      {
+        "id": "cmuihw3ei0ba6sexpihfi9nwn",
+        "name": "Mateo Joseph",
+        "tmId": "834742"
+      }
+    ],
+    "toReassign": [
+      {
+        "id": "cmuihvxg304npsexp7hkzqcv5",
+        "name": "Nico Elvedi",
+        "tmId": "192635",
+        "fromClub": "Borussia Mönchengladbach",
+        "fromClubId": "cmuihq0qz004fh29e00fpn7fy"
+      },
+      {
+        "id": "cmuihw1bv091esexpig2cqnz6",
+        "name": "Melvin Bard",
+        "tmId": "532775",
+        "fromClub": "OGC Nice",
+        "fromClubId": "cmuihq9ie009bh29e4ay5p2yp"
+      },
+      {
+        "id": "cmuihw3fb0bvmsexp375mkdmo",
+        "name": "Jean-Mattéo Bahoya",
+        "tmId": "939964",
+        "fromClub": "Eintracht Frankfurt",
+        "fromClubId": "cmuihq2b80057h29e0r17uj2f"
+      },
+      {
+        "id": "cmuihvyqq060jsexp26ft7zga",
+        "name": "Harry Wilson",
+        "tmId": "279455",
+        "fromClub": "Fulham FC",
+        "fromClubId": "cmuihqg9600cxh29echnkyx9e"
+      }
+    ],
+    "toCreate": [],
+    "toDetach": [
+      {
+        "id": "cmuihvy6705c5sexph2mu3zjj",
+        "name": "Sam Byram",
+        "tmId": "236953"
+      },
+      {
+        "id": "cmuihvvw8036ysexpibga9uvv",
+        "name": "Karl Darlow",
+        "tmId": "99397"
+      },
+      {
+        "id": "cmuihw24909y8sexpt3k55pn3",
+        "name": "Wilfried Gnonto",
+        "tmId": "627626"
+      },
+      {
+        "id": "cmuihvzvp07d5sexpj8xf70p9",
+        "name": "Joël Piroe",
+        "tmId": "369962"
+      },
+      {
+        "id": "cmuihvzwk07wwsexpfephiswz",
+        "name": "Pascal Struijk",
+        "tmId": "410708"
+      }
+    ],
+    "expectedFinal": 24,
+    "isPerfectMatch": true
+  },
+  {
+    "tmId": "931",
+    "clubName": "Fulham FC",
+    "clubId": "cmuihqg9600cxh29echnkyx9e",
+    "tmSquadSize": 26,
+    "currentDbSize": 24,
+    "alreadyAtClub": 21,
+    "toAttach": [],
+    "toReassign": [
+      {
+        "id": "cmuihw0ja08apsexp8b1mkcuj",
+        "name": "David Affengruber",
+        "tmId": "452483",
+        "fromClub": "Elche CF",
+        "fromClubId": "cmuihq03y0041h29ezh2jdh2h"
+      },
+      {
+        "id": "cmuihw2q30axnsexp6tpk69de",
+        "name": "Shea Charles",
+        "tmId": "747951",
+        "fromClub": "Southampton FC",
+        "fromClubId": "cmuihq0t3004hh29e03es83vu"
+      },
+      {
+        "id": "cmuihw3f70bs2sexpla9v2tqi",
+        "name": "Hugo Larsson",
+        "tmId": "931838",
+        "fromClub": "Eintracht Frankfurt",
+        "fromClubId": "cmuihq2b80057h29e0r17uj2f"
+      }
+    ],
+    "toCreate": [
+      {
+        "name": "Alex Borto",
+        "tmId": "817613",
+        "pos": "Goalkeeper",
+        "dob": "2003-11-06T00:00:00.000Z",
+        "nationality": [
+          "United States",
+          "Poland"
+        ],
+        "mvRaw": ""
+      },
+      {
+        "name": "Kevin",
+        "tmId": "900195",
+        "pos": "Left Winger",
+        "dob": "2003-01-04T00:00:00.000Z",
+        "nationality": [
+          "Brazil"
+        ],
+        "mvRaw": "€25.00m"
+      }
+    ],
+    "toDetach": [
+      {
+        "id": "cmuihvyqq060jsexp26ft7zga",
+        "name": "Harry Wilson",
+        "tmId": "279455"
+      },
+      {
+        "id": "cmuihw2q30axmsexpd2dfzjtk",
+        "name": "Alfie McNally",
+        "tmId": "747950"
+      },
+      {
+        "id": "cmuihw3ef0b6ysexpld80kah0",
+        "name": "Luke Harris",
+        "tmId": "817612"
+      }
+    ],
+    "expectedFinal": 26,
+    "isPerfectMatch": true
+  },
+  {
+    "tmId": "29",
+    "clubName": "Everton FC",
+    "clubId": "cmuihq4bo006fh29ef9sfod5p",
+    "tmSquadSize": 21,
+    "currentDbSize": 24,
+    "alreadyAtClub": 16,
+    "toAttach": [
+      {
+        "id": "cmuihvxgf04w0sexpr3q1spks",
+        "name": "Jack Grealish",
+        "tmId": "203460"
+      },
+      {
+        "id": "cmuihw3fa0bu9sexppvti9m0q",
+        "name": "Tyrique George",
+        "tmId": "936874"
+      }
+    ],
+    "toReassign": [
+      {
+        "id": "cmuihvyqu064dsexpxmvavobg",
+        "name": "Ainsley Maitland-Niles",
+        "tmId": "285845",
+        "fromClub": "Olympique Lyon",
+        "fromClubId": "cmuihnsd9000tb23f30w9l9tm"
+      },
+      {
+        "id": "cmuihw0js08iqsexppfs95c33",
+        "name": "Brennan Johnson",
+        "tmId": "470607",
+        "fromClub": "Crystal Palace",
+        "fromClubId": "cmuihqfqr00cqh29e2077zt3y"
+      }
+    ],
+    "toCreate": [
+      {
+        "name": "Hayden Hackney",
+        "tmId": "538216",
+        "pos": "Defensive Midfield",
+        "dob": "2002-06-26T00:00:00.000Z",
+        "nationality": [
+          "England",
+          "Scotland"
+        ],
+        "mvRaw": "€32.00m"
+      }
+    ],
+    "toDetach": [
+      {
+        "id": "cmuihvwrh03lisexp2wgahjd5",
+        "name": "Idrissa Gueye",
+        "tmId": "126665"
+      },
+      {
+        "id": "cmuihw3fb0bv1sexpfya6b2ts",
+        "name": "Adam Aznou",
+        "tmId": "938146"
+      },
+      {
+        "id": "cmuihvzwu082ksexpkmi7f97w",
+        "name": "Nathan Patterson",
+        "tmId": "424015"
+      },
+      {
+        "id": "cmuihw1dn09h0sexpy1lvxln2",
+        "name": "Harry Tyrer",
+        "tmId": "574448"
+      },
+      {
+        "id": "cmuihw1em09k5sexpvvvnin7w",
+        "name": "Dwight McNeil",
+        "tmId": "584769"
+      },
+      {
+        "id": "cmuihw23v09n8sexpk9amd02x",
+        "name": "Beto",
+        "tmId": "595809"
+      },
+      {
+        "id": "cmuihw24k0a6vsexpnz078kbu",
+        "name": "Reece Welch",
+        "tmId": "655986"
+      },
+      {
+        "id": "cmuihw43t0cabsexprazi81lg",
+        "name": "Callum Bates",
+        "tmId": "1018716"
+      }
+    ],
+    "expectedFinal": 21,
+    "isPerfectMatch": true
+  },
+  {
+    "tmId": "677",
+    "clubName": "Ipswich Town",
+    "clubId": "cmuihqdak00bdh29e51a0c9yd",
+    "tmSquadSize": 28,
+    "currentDbSize": 23,
+    "alreadyAtClub": 21,
+    "toAttach": [
+      {
+        "id": "cmuihvyrb06irsexplk9z8s74",
+        "name": "Azor Matusiwa",
+        "tmId": "315145"
+      },
+      {
+        "id": "cmuihw2ps0aolsexpqbaq6wg7",
+        "name": "Marcelino Núñez",
+        "tmId": "715558"
+      },
+      {
+        "id": "cmuihw24m0a8lsexppwooop7w",
+        "name": "Julio Enciso",
+        "tmId": "660867"
+      },
+      {
+        "id": "cmuihw24709vzsexpoyk7vt21",
+        "name": "Kasey McAteer",
+        "tmId": "621193"
+      }
+    ],
+    "toReassign": [
+      {
+        "id": "cmuihvzbi077tsexp36r49mwy",
+        "name": "Florentino",
+        "tmId": "357162",
+        "fromClub": "SL Benfica",
+        "fromClubId": "cmuihq4q6006lh29eutf0qltf"
+      },
+      {
+        "id": "cmuihvzwl07xesexp1pi8iwpc",
+        "name": "Zian Flemming",
+        "tmId": "411537",
+        "fromClub": "Burnley FC",
+        "fromClubId": "cmuihoaiv001rb23fn6cviuyz"
+      },
+      {
+        "id": "cmuihvxg704rcsexpe4mnrja6",
+        "name": "Chuba Akpom",
+        "tmId": "197642",
+        "fromClub": "Hull City",
+        "fromClubId": "cmuihq56p006vh29efww9bqgh"
+      }
+    ],
+    "toCreate": [],
+    "toDetach": [
+      {
+        "id": "cmuihvzws081asexpvoy277oz",
+        "name": "George Hirst",
+        "tmId": "420808"
+      },
+      {
+        "id": "cmuihw0it085qsexpo3tii9ja",
+        "name": "Corrie Ndaba",
+        "tmId": "433329"
+      }
+    ],
+    "expectedFinal": 28,
+    "isPerfectMatch": true
+  },
+  {
+    "tmId": "990",
+    "clubName": "Coventry City",
+    "clubId": "cmundu5xu0001zjoe1l91im6d",
+    "tmSquadSize": 29,
+    "currentDbSize": 24,
+    "alreadyAtClub": 24,
+    "toAttach": [
+      {
+        "id": "cmuihw1br08zosexp7cjuf5xk",
+        "name": "Luke Woolfenden",
+        "tmId": "527425"
+      },
+      {
+        "id": "cmuihw43k0c4lsexprvch5gra",
+        "name": "Sidiki Chérif",
+        "tmId": "986288"
+      }
+    ],
+    "toReassign": [
+      {
+        "id": "cmuihw24h0a3lsexpo4u07nrp",
+        "name": "Carl Rushworth",
+        "tmId": "646353",
+        "fromClub": "Hull City",
+        "fromClubId": "cmuihq56p006vh29efww9bqgh"
+      },
+      {
+        "id": "cmuihvzws081csexp5ea0tthe",
+        "name": "Frank Onyeka",
+        "tmId": "421637",
+        "fromClub": "Brentford FC",
+        "fromClubId": "cmuihocpq001vb23fu3cm5yh8"
+      },
+      {
+        "id": "cmuihw24109r5sexppsa3qrr8",
+        "name": "Loum Tchaouna",
+        "tmId": "607226",
+        "fromClub": "Burnley FC",
+        "fromClubId": "cmuihoaiv001rb23fn6cviuyz"
+      }
+    ],
+    "toCreate": [],
+    "toDetach": [],
+    "expectedFinal": 29,
+    "isPerfectMatch": true
+  },
+  {
+    "tmId": "3008",
+    "clubName": "Hull City",
+    "clubId": "cmuihq56p006vh29efww9bqgh",
+    "tmSquadSize": 33,
+    "currentDbSize": 45,
+    "alreadyAtClub": 26,
+    "toAttach": [
+      {
+        "id": "cmuihvy6j05m0sexpkrix7n7q",
+        "name": "Matt Targett",
+        "tmId": "250478"
+      },
+      {
+        "id": "cmuihw24609vlsexpnlx42mab",
+        "name": "Lucas Gourna-Douath",
+        "tmId": "620313"
+      },
+      {
+        "id": "cmuihw1bn08yksexp3tqsz6nd",
+        "name": "Hidemasa Morita",
+        "tmId": "524315"
+      },
+      {
+        "id": "cmuihw4r10crtsexpwnkizxs4",
+        "name": "Robinio Vaz",
+        "tmId": "1131161"
+      },
+      {
+        "id": "cmuihw43v0cc3sexpri0j5icd",
+        "name": "Ilyas Ansah",
+        "tmId": "1035765"
+      }
+    ],
+    "toReassign": [
+      {
+        "id": "cmuihw43v0cbzsexpdcgjpip7",
+        "name": "Nobel Mendy",
+        "tmId": "1034853",
+        "fromClub": "Rayo Vallecano",
+        "fromClubId": "cmuihq7gc0083h29exnlti38f"
+      },
+      {
+        "id": "cmuihw0jv08k2sexp53djm7jq",
+        "name": "Sorba Thomas",
+        "tmId": "475416",
+        "fromClub": "Stoke City",
+        "fromClubId": "cmuihqbom00abh29eeqdmk8ig"
+      }
+    ],
+    "toCreate": [],
+    "toDetach": [
+      {
+        "id": "cmuihvy5v051wsexpnvl6kwe0",
+        "name": "Jordy de Wijs",
+        "tmId": "215096"
+      },
+      {
+        "id": "cmuihw1d909besexpgce6tmiv",
+        "name": "Salah Oulad",
+        "tmId": "559330"
+      },
+      {
+        "id": "cmuihw24j0a61sexpvath1inn",
+        "name": "Toby Collyer",
+        "tmId": "654253"
+      },
+      {
+        "id": "cmuihvyqf05tssexptjryclzk",
+        "name": "Reece Burke",
+        "tmId": "264220"
+      },
+      {
+        "id": "cmuihw1dr09j2sexp9jmp2vk2",
+        "name": "Harvey Vale",
+        "tmId": "581675"
+      },
+      {
+        "id": "cmuihvxg704rcsexpe4mnrja6",
+        "name": "Chuba Akpom",
+        "tmId": "197642"
+      },
+      {
+        "id": "cmuihvyr806fesexpp0eo1pbz",
+        "name": "Benjamin Tetteh",
+        "tmId": "306382"
+      },
+      {
+        "id": "cmuihvu4n01ihsexpjhvf9u4f",
+        "name": "Vito Mannone",
+        "tmId": "33781"
+      },
+      {
+        "id": "cmuihw0kc08u8sexpjhz0pedh",
+        "name": "Josh Bowler",
+        "tmId": "506470"
+      },
+      {
+        "id": "cmuihw0iu085ysexp5ho0h61h",
+        "name": "Scott Twine",
+        "tmId": "433818"
+      },
+      {
+        "id": "cmuihvwru03wqsexpjtqv2i47",
+        "name": "Conor Townsend",
+        "tmId": "146509"
+      },
+      {
+        "id": "cmuihvy6505aysexpks3e6nyy",
+        "name": "Andrew Robertson",
+        "tmId": "234803"
+      },
+      {
+        "id": "cmuihvy6q05qosexpolwnirkt",
+        "name": "Kasey Palmer",
+        "tmId": "258216"
+      },
+      {
+        "id": "cmuihw24h0a3lsexpo4u07nrp",
+        "name": "Carl Rushworth",
+        "tmId": "646353"
+      },
+      {
+        "id": "cmuihvzvq07djsexplpl2a2ci",
+        "name": "Ivor Pandur",
+        "tmId": "371013"
+      },
+      {
+        "id": "cmuihw0k508o8sexpa4oz3jgv",
+        "name": "Liam Millar",
+        "tmId": "487417"
+      },
+      {
+        "id": "cmuihw24509v1sexpc0523j1p",
+        "name": "Tyler Morton",
+        "tmId": "618494"
+      },
+      {
+        "id": "cmuihw2pi0ahnsexpoc69hlyy",
+        "name": "Abu Kamara",
+        "tmId": "696764"
+      },
+      {
+        "id": "cmuihw3f90btrsexprxp1zzch",
+        "name": "Yu Hirakawa",
+        "tmId": "936237"
+      }
+    ],
+    "expectedFinal": 33,
+    "isPerfectMatch": true
+  }
+]
