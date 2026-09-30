@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { EntityImage } from "./EntityImage";
 import { formatCompactEur } from "@/lib/utils";
+import { getClubDisplayName } from "@/lib/data/clubs";
 import type { MarketMover } from "@/lib/data/players";
 import { TrendingUp, TrendingDown, ArrowUpRight, ArrowDownRight, User, Shield } from "lucide-react";
 
@@ -17,6 +18,12 @@ export function MarketMovers({ risers, fallers }: MarketMoversProps) {
 
   const displayedList = activeTab === "risers" ? risers : fallers;
 
+  // Dynamic valuation revision date label derived from actual database records (D7)
+  const latestDateRaw = risers[0]?.lastUpdated || fallers[0]?.lastUpdated;
+  const latestRevisionLabel = latestDateRaw
+    ? new Date(latestDateRaw).toLocaleDateString("en-GB", { month: "short", year: "numeric" })
+    : null;
+
   return (
     <div className="rounded-3xl glass-panel p-4 sm:p-8 border border-slate-800 space-y-4 sm:space-y-6">
       {/* Header with Switcher Tabs */}
@@ -27,7 +34,7 @@ export function MarketMovers({ risers, fallers }: MarketMoversProps) {
               Market Value Movers
             </h2>
             <span className="self-start sm:self-auto text-xs px-2.5 py-0.5 rounded-full font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20 whitespace-nowrap">
-              Transfermarkt Updates (21 Jul 2026)
+              {latestRevisionLabel ? `Data as of ${latestRevisionLabel}` : "Data as of Latest Market Revision"}
             </span>
           </div>
           <p className="text-xs text-slate-400 mt-1 [text-wrap:balance]">
@@ -101,7 +108,9 @@ export function MarketMovers({ risers, fallers }: MarketMoversProps) {
                       {player.commonName || player.fullName}
                     </h3>
                     <div className="flex items-center gap-1 text-[11px] sm:text-xs text-slate-400 mt-0.5 truncate">
-                      <span className="truncate">{player.currentClub?.name || "Club"}</span>
+                      <span className="truncate" title={player.currentClub?.name || "Club"}>
+                        {player.currentClub ? getClubDisplayName(player.currentClub) : "Club"}
+                      </span>
                       <span className="shrink-0">•</span>
                       <span className="shrink-0">{player.position}</span>
                     </div>
@@ -109,7 +118,7 @@ export function MarketMovers({ risers, fallers }: MarketMoversProps) {
                 </div>
 
                 {/* Valuations and Delta Badge */}
-                <div className="flex flex-col items-end shrink-0 text-right space-y-1">
+                <div className="flex flex-col items-end shrink-0 text-right space-y-0.5">
                   <span className="text-xs sm:text-sm font-black text-amber-400 tabular-nums whitespace-nowrap">
                     {formatCompactEur(player.latestValue)}
                   </span>
@@ -130,6 +139,10 @@ export function MarketMovers({ risers, fallers }: MarketMoversProps) {
                       {isGain ? "+" : ""}
                       {formatCompactEur(player.diff)} ({Math.abs(player.percentage).toFixed(0)}%)
                     </span>
+                  </span>
+
+                  <span className="text-[10px] text-slate-500 tabular-nums whitespace-nowrap">
+                    vs prev: {formatCompactEur(player.prevValue)}
                   </span>
                 </div>
               </Link>
