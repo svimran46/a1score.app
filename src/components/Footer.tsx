@@ -5,7 +5,7 @@ const exploreLinks = [
   { label: "Players", href: "/players" },
   { label: "Clubs", href: "/clubs" },
   { label: "Leagues", href: "/leagues" },
-  { label: "Market Values", href: "/values" },
+  { label: "Market Values", href: "/players" },
   { label: "Transfers", href: "/transfers" },
   { label: "Methodology", href: "/methodology" },
 ];
