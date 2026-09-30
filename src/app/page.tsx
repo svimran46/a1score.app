@@ -111,7 +111,7 @@ export default async function HomePage() {
               <div className="text-base sm:text-xl font-black text-white tabular-nums">
                 Every 5s
               </div>
-              <div className="text-[11px] text-slate-400">Real-time pitch feeds</div>
+              <div className="text-[11px] text-slate-400">Match Center live poll</div>
             </div>
 
             <div className="p-3 sm:p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800/80 flex flex-col justify-between space-y-1">

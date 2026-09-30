@@ -158,7 +158,7 @@ export default function MethodologyPage() {
             <span className="text-emerald-400 font-bold text-sm">5 Seconds</span>
             <h4 className="text-white font-semibold">Live Match Intelligence</h4>
             <p className="text-slate-400">
-              Scores, minute counters, timeline cards, goals, and confirmed tactical lineups.
+              Scores, minute counters, timeline cards, and confirmed lineups. Actively polled in Match Center during live matches via LiveAutoRefresher.
             </p>
           </div>
 
