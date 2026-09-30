@@ -1,95 +1,95 @@
-# a1score.app — Football Player Database & Market Valuation Platform
+# a1score.app — Football Intelligence & Market Valuation Platform
 
-**a1score.app** is an independent football intelligence and player analytics platform providing player career profiles, market value trajectory charts, transfer histories, competition standings, and squad valuations.
+**a1score.app** ("Money meets the pitch") is a high-performance football intelligence and player analytics platform providing player career profiles, market value trajectory benchmarks, verified transfer records, competition standings, and squad valuations.
 
-Built with a 100% bespoke, modern dark-themed user interface, responsive charts, and server-rendered SEO-optimized pages using Next.js 14+ App Router on Cloudflare Pages.
+Built with a bespoke dark-themed interface, responsive charts, and Edge-rendered pages using Next.js 14 App Router deployed on Cloudflare Pages.
 
 ---
 
 ## ⚡ Tech Stack
 
-- **Framework:** [Next.js 14+](https://nextjs.org/) (App Router, ISR, Server Components, Route Handlers)
-- **Language:** TypeScript
+- **Framework:** [Next.js 14](https://nextjs.org/) (App Router, Edge Runtime across all routes)
+- **Deployment & Edge Hosting:** [Cloudflare Pages](https://pages.cloudflare.com/) via `@cloudflare/next-on-pages`
+- **Language:** TypeScript (Strict mode, zero-warning builds)
 - **Styling:** Tailwind CSS (Custom Dark Palette & Glassmorphic Surface System)
-- **Database:** PostgreSQL (Hosted on Supabase or Neon)
-- **ORM:** [Prisma](https://www.prisma.io/)
-- **Charts:** [Recharts](https://recharts.org/) (Responsive Area Charts with gradients & tooltips)
+- **Data Layer:** [Supabase](https://supabase.com/) REST API (`@supabase/supabase-js`) with strict Row Level Security (RLS)
+- **Live Match Feeds & Standings:** [FotMob API](https://www.fotmob.com/)
+- **Market Values & Rosters:** Official Transfermarkt Dataset & Feeds
+- **Charts:** [Recharts](https://recharts.org/)
 - **Icons:** [Lucide React](https://lucide.dev/)
-- **Automation:** GitHub Actions (`.github/workflows/sync-dataset.yml`)
-- **Hosting:** Vercel
+- **Automation & Testing:** Node.js native test runner & GitHub Actions
 
 ---
 
-## 🏗️ Architecture & Pages
+## 🏗️ Architecture & Routes
 
-- **Home (`/`):** Global search bar, top competition quick links, and top most valuable players.
-- **Player Profile (`/players/[slug]`):** Biographical header, current valuation, interactive valuation history chart over time, career statistics breakdown, transfer history timeline, and injury history.
-- **Club Profile (`/clubs/[id]`):** Club badges, total squad valuation, and squad roster table ranked by player market value.
-- **League Profile (`/leagues/[id]`):** Participating clubs ranked by total squad valuation.
-- **Search & Explorer (`/search`):** Multi-attribute filtering across player positions and names.
-- **API Handlers (`/api/...`):** Clean REST endpoints for search, player details, club details, and leagues.
+All application routes run on the Edge Runtime (`export const runtime = "edge"`):
+
+- **Home (`/`):** Live matches, market value risers, competition quick links, and intelligence search.
+- **Matches (`/matches`, `/matches/[id]`):** Real-time scores, timeline events, lineups, and head-to-head records.
+- **Player Profile (`/players/[slug]`):** Market valuation history, career stats, and transfer timeline.
+- **Club Profile (`/clubs/[id]`):** Senior squad rosters, total squad valuation, and positional depth.
+- **League Directory (`/leagues`, `/leagues/[id]`):** Club standings and valuation rankings.
+- **Transfers (`/transfers`):** Recent market transfers and loan transactions.
+- **Asset Proxy (`/img/...`):** Hardened server-side asset proxy with hostname allowlists and SSRF mitigation.
 
 ---
 
 ## 🚀 Getting Started
 
 ### 1. Prerequisites
-- Node.js 18+ (tested on Node 20 & 22)
-- npm or npx
-- A PostgreSQL database (e.g. from [Supabase](https://supabase.com/) or [Neon](https://neon.tech/))
+- Node.js 18+ or Node 20+
+- npm
 
 ### 2. Environment Setup
 
-Create a `.env` file in the root directory:
+Create `.env` based on `.env.example`:
 
 ```bash
 cp .env.example .env
 ```
 
-Set your PostgreSQL connection string:
+Configure your Supabase project credentials:
 
 ```env
-DATABASE_URL="postgresql://postgres:[PASSWORD]@db.[REF].supabase.co:5432/postgres?sslmode=require"
+NEXT_PUBLIC_SUPABASE_URL="https://[YOUR_PROJECT_REF].supabase.co"
+NEXT_PUBLIC_SUPABASE_ANON_KEY="[YOUR_ANON_JWT]"
+NEXT_PUBLIC_SITE_URL="https://a1score.app"
 ```
 
-### 3. Install & Push Prisma Schema
-
-```bash
-npm install
-npm run db:push
-```
-
-### 4. Seed / Ingest Real Data
-
-Populate clubs, competitions, players, valuations, and transfers directly using the zero-scraping CC0 dataset pipeline:
-
-```bash
-npm run sync:dataset
-```
-
-### 5. Run the Local Development Server
+### 3. Development Server
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:3000](http://localhost:3000).
+
+### 4. Running Checks & Tests
+
+```bash
+npx tsc --noEmit     # TypeScript typecheck
+npm run lint         # ESLint validation
+npm test             # Unit test suite
+npm run build        # Production Next.js build
+npm run check:rls    # Supabase RLS security verification
+```
 
 ---
 
-## 🔄 Data Architecture
- 
-1. **Valuation & Profile Engine:** Curated longitudinal dataset capturing player bios, market valuation trajectory, commercial transfers, and club rosters.
-2. **Match Operations Engine:** Real-time live scores, match clocks, confirmed tactical lineups, and event feeds delivered with low-latency edge caching.
+## 🚢 Deployment to Cloudflare Pages
 
----
-
-## 🚢 Deployment to Vercel
-
-1. Push this repository to GitHub (`svimran46/a1score.app`).
-2. Import the project into [Vercel](https://vercel.com/).
-3. Add the `DATABASE_URL` environment variable under Project Settings.
-4. Deploy! Next.js will automatically generate pages and handle ISR revalidation.
+1. Connect your repository to Cloudflare Pages.
+2. Build configuration:
+   - **Framework preset:** `None` (or `Next.js (Static HTML Export)`)
+   - **Build command:** `npx @cloudflare/next-on-pages`
+   - **Build output directory:** `.vercel/output/static`
+   - **Node.js compatibility flag:** `nodejs_compat`
+   - **Compatibility date:** `2024-09-23` or newer
+3. Environment variables in Cloudflare Dashboard:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `NEXT_PUBLIC_SITE_URL`
 
 ---
 
