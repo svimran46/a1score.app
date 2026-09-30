@@ -60,3 +60,14 @@ The following items are external platform dependencies or administrative tasks t
 * **Status:** `scripts/verify-data-integrity.ts` and `scripts/check-links.ts` are committed and callable via `npm run verify:data`.
 * **Recommended Administrative Action:**
   - Add a GitHub Actions workflow to run `npm run verify:data` and `npm run build` on every Pull Request to `main`.
+
+### Item 4: Rotate Supabase Anon Key in Supabase Dashboard
+* **Category:** Security & Credential Hygiene
+* **Problem:** The previous Supabase project anon JWT key was committed as a fallback in source code (`src/lib/supabase.ts`) in earlier git revisions. Although anon keys are intended to be public when Row Level Security (RLS) is active, rotating exposed credentials is an essential security posture best practice.
+* **Why Code Cannot Resolve This:** Key generation and rotation must be executed within the Supabase Cloud administrative console.
+* **Required Administrative Action:**
+  1. Open the [Supabase Dashboard](https://supabase.com/dashboard) and navigate to **Project Settings &rarr; API**.
+  2. Rotate / generate a new `anon` `public` API key.
+  3. Update `NEXT_PUBLIC_SUPABASE_ANON_KEY` in Cloudflare Pages environment variables and local `.env`.
+  4. Verify that Row Level Security is enabled on all tables following [docs/SUPABASE_RLS.md](file:///c:/Users/User/Documents/antigravity/epic-brahmagupta/docs/SUPABASE_RLS.md) and execute `npx tsx scripts/check-rls.ts`.
+

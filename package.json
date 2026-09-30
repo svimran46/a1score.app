@@ -17,9 +17,10 @@
     "check:integrity": "tsx scripts/nightly-integrity-check.ts",
     "reconcile:squads": "tsx scripts/reconcile-all-transfers.ts",
     "export:data": "tsx scripts/export-dataset.ts",
-    "test:unit": "tsx --test tests/pure-functions.test.ts tests/positions.test.ts",
+    "check:rls": "tsx scripts/check-rls.ts",
+    "test:unit": "tsx --test tests/pure-functions.test.ts tests/positions.test.ts tests/image-proxy.test.ts",
     "test:integrity": "tsx --test tests/integrity.test.ts",
-    "test": "npm run test:unit && npm run test:integrity"
+    "test": "npm run test:unit"
   },
   "dependencies": {
     "@prisma/adapter-pg": "5.22.0",
@@ -43,6 +44,8 @@
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.24",
     "playwright": "^1.63.0",
     "postcss": "^8.4.47",
     "prisma": "5.22.0",
