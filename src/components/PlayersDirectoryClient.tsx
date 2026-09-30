@@ -34,7 +34,7 @@ interface PlayersDirectoryClientProps {
   initialPlayers: PlayerItem[];
 }
 
-const ITEMS_PER_PAGE = 24;
+const ITEMS_PER_PAGE = 40;
 
 export function PlayersDirectoryClient({ initialPlayers }: PlayersDirectoryClientProps) {
   const router = useRouter();
@@ -380,7 +380,7 @@ export function PlayersDirectoryClient({ initialPlayers }: PlayersDirectoryClien
             <h2 className="text-base font-bold text-white tracking-tight">
               {hasActiveFilters
                 ? `Filtered Valuations (${filteredPlayers.length} found)`
-                : `Top ${initialPlayers.length} Worldwide Valuations`}
+                : `Top ${paginatedPlayers.length} Worldwide Valuations${currentPage > 1 ? ` (Page ${currentPage})` : ""}`}
             </h2>
           </div>
           <div className="flex items-center gap-2 text-xs text-slate-400">

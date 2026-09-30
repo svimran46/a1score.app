@@ -544,7 +544,7 @@ export async function getMarketValueMovers(limit = 6): Promise<{ risers: MarketM
         )
       `)
       .order("latestMarketValue", { ascending: false, nullsFirst: false })
-      .limit(60);
+      .limit(300);
 
     if (error || !players) {
       console.error("Error fetching market value movers:", error);
