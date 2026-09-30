@@ -16,7 +16,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 const R2_BASE_URL = "https://pub-e682421888d945d684bcae8890b0ec20.r2.dev/data";
-const DATA_DIR = path.join(process.cwd(), "data");
+const DATA_DIR = path.join(process.cwd(), "data", "raw");
 
 // Target competitions to prioritize (Top European Leagues & Continental)
 const TRACKED_COMPETITIONS = new Set([

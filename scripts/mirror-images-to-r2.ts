@@ -56,7 +56,7 @@ interface ImageTask {
 }
 
 async function collectClubImages(limit?: number): Promise<ImageTask[]> {
-  const clubsPath = path.join(process.cwd(), "data", "clubs.csv");
+  const clubsPath = path.join(process.cwd(), "data", "raw", "clubs.csv");
   if (!fs.existsSync(clubsPath)) {
     console.warn(`[WARN] ${clubsPath} not found.`);
     return [];
@@ -86,7 +86,7 @@ async function collectClubImages(limit?: number): Promise<ImageTask[]> {
 }
 
 async function collectPlayerImages(limit?: number): Promise<ImageTask[]> {
-  const playersPath = path.join(process.cwd(), "data", "players.csv");
+  const playersPath = path.join(process.cwd(), "data", "raw", "players.csv");
   if (!fs.existsSync(playersPath)) {
     console.warn(`[WARN] ${playersPath} not found.`);
     return [];

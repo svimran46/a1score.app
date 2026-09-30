@@ -46,8 +46,8 @@ async function run() {
   console.log("Columns and indexes created/verified.");
 
   // Step 2: Read players.csv and update Player
-  console.log("\n2. Reading data/players.csv and updating Player table via UNNEST...");
-  const playersCsv = parse(fs.readFileSync("data/players.csv", "utf-8"), { columns: true });
+  console.log("\n2. Reading data/raw/players.csv and updating Player table via UNNEST...");
+  const playersCsv = parse(fs.readFileSync("data/raw/players.csv", "utf-8"), { columns: true });
   console.log(`Parsed ${playersCsv.length} players from CSV.`);
 
   // Get all player TM IDs in DB

@@ -22,9 +22,9 @@ async function main() {
   console.log("=================================================\n");
 
   // 1. Read CSV
-  const csvContent = fs.readFileSync("data/clubs.csv", "utf-8");
+  const csvContent = fs.readFileSync("data/raw/clubs.csv", "utf-8");
   const records = parse(csvContent, { columns: true }) as ClubRow[];
-  console.log(`Read ${records.length} club records from data/clubs.csv.`);
+  console.log(`Read ${records.length} club records from data/raw/clubs.csv.`);
 
   // 2. Resolve DB connection host
   const connStr = process.env.DATABASE_URL || process.env.DIRECT_URL;

@@ -45,6 +45,6 @@ next-env.d.ts
 .freebuff/
 
 # data downloads
-/data/
+/data/raw/
 /tmp/
 reconcile-log-*.csv

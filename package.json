@@ -16,6 +16,7 @@
     "verify:data": "tsx scripts/verify-data-integrity.ts",
     "check:integrity": "tsx scripts/nightly-integrity-check.ts",
     "reconcile:squads": "tsx scripts/reconcile-all-transfers.ts",
+    "export:data": "tsx scripts/export-dataset.ts",
     "test": "tsx --test tests/**/*.test.ts"
   },
   "dependencies": {
