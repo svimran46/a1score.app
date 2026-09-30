@@ -111,6 +111,15 @@ export function MarketValueChart({
     return filtered.length >= 2 ? filtered : fullTimeline.slice(-4);
   }, [fullTimeline, timeRange]);
 
+  // Calculate age at peak if DOB available (unconditional hook order)
+  const ageAtPeak = useMemo(() => {
+    if (!dateOfBirth || !overallPeak) return null;
+    const birthYear = new Date(dateOfBirth).getFullYear();
+    const peakYear = new Date(overallPeak.rawDate).getFullYear();
+    const age = peakYear - birthYear;
+    return age > 0 ? age : null;
+  }, [dateOfBirth, overallPeak]);
+
   if (fullTimeline.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center p-12 text-slate-500 rounded-2xl glass-panel border border-slate-800">
@@ -125,15 +134,6 @@ export function MarketValueChart({
   const deltaPct = overallPeak && overallPeak.value > 0
     ? Math.round((deltaFromPeak / overallPeak.value) * 100)
     : 0;
-
-  // Calculate age at peak if DOB available
-  const ageAtPeak = useMemo(() => {
-    if (!dateOfBirth || !overallPeak) return null;
-    const birthYear = new Date(dateOfBirth).getFullYear();
-    const peakYear = new Date(overallPeak.rawDate).getFullYear();
-    const age = peakYear - birthYear;
-    return age > 0 ? age : null;
-  }, [dateOfBirth, overallPeak]);
 
   return (
     <div className="rounded-2xl glass-panel p-6 border border-slate-800">

@@ -149,7 +149,7 @@ export async function GET(
       return neutralResponse();
     }
 
-    return new NextResponse(buffer, {
+    return new NextResponse(buffer.buffer as ArrayBuffer, {
       status: 200,
       headers: {
         "Content-Type": contentType,
