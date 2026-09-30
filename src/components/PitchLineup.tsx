@@ -55,7 +55,7 @@ export function PitchLineup({
         <Users className="w-8 h-8 text-slate-500 mx-auto" />
         <h4 className="text-sm font-semibold text-white">Lineups Pending Confirmation</h4>
         <p className="text-xs text-slate-400 max-w-sm mx-auto">
-          Tactical formations and confirmed starting XIs will be synchronized directly from the match officials prior to kickoff.
+          Tactical formations and confirmed starting XIs will be synchronized directly from match feeds prior to kickoff.
         </p>
       </div>
     );

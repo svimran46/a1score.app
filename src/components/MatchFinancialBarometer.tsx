@@ -71,7 +71,7 @@ export function MatchFinancialBarometer({
     const aScore = awayScore ?? 0;
 
     if (!isCoverageSufficient) {
-      verdict = `Provisional Lineup Coverage (${homeValued}/${homeTotalCount} vs ${awayValued}/${awayTotalCount} valued): Disparity multiplier qualified until verified valuations are confirmed for full starting XIs.`;
+      verdict = `Provisional Lineup Coverage (${homeValued}/${homeTotalCount} vs ${awayValued}/${awayTotalCount} valued): Disparity multiplier qualified until documented valuations are confirmed for full starting XIs.`;
     } else if (!isUpcoming) {
       if (hScore === aScore) {
         verdict =

@@ -14,7 +14,7 @@ export const runtime = "edge";
 export const metadata: Metadata = constructMetadata({
   title: "Commercial Transfer Hub — Latest Moves & Record Fees",
   description:
-    "Comprehensive football transfer tracker: verified commercial fees, record transfers, and market expenditure on a1score.app.",
+    "Comprehensive football transfer tracker: documented commercial fees, record transfers, and market expenditure on a1score.app.",
   path: "/transfers",
 });
 
@@ -102,7 +102,7 @@ export default async function TransfersPage() {
           Commercial Transfer Hub
         </h1>
         <p className="text-sm text-slate-400 mt-1 max-w-2xl">
-          Verified player transactions, historical record fees, and commercial market expenditure across global football.
+          Documented player transactions, historical record fees, and commercial market expenditure across global football.
         </p>
       </div>
 
@@ -115,7 +115,7 @@ export default async function TransfersPage() {
               All-Time Record Transfers
             </h2>
           </div>
-          <span className="text-xs text-slate-500 font-medium">Top 20 Verified Fees</span>
+          <span className="text-xs text-slate-500 font-medium">Top 20 Documented Fees</span>
         </div>
 
         <div className="rounded-2xl glass-panel border border-slate-800 overflow-hidden">
@@ -199,7 +199,7 @@ export default async function TransfersPage() {
               Recent Market Activity
             </h2>
           </div>
-          <span className="text-xs text-slate-500 font-medium">Verified Commercial Moves</span>
+          <span className="text-xs text-slate-500 font-medium">Documented Commercial Moves</span>
         </div>
 
         <div className="rounded-2xl glass-panel border border-slate-800 overflow-hidden">
@@ -284,7 +284,7 @@ export default async function TransfersPage() {
       <div className="pt-4 border-t border-slate-800/80 text-[11px] text-slate-500 leading-relaxed flex items-center justify-between">
         <span className="flex items-center gap-1.5">
           <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
-          Verified Commercial Ledger
+          Documented Commercial Ledger
         </span>
         <span>Excludes internal youth academy progressions</span>
       </div>

@@ -57,9 +57,13 @@ export async function getLeagues() {
   }
 }
 
-export async function getLeagueById(id: string) {
+export async function getLeagueById(idOrSlug: string) {
   try {
-    const { data: league, error } = await supabase
+    const raw = (idOrSlug || "").trim();
+    const cuidMatch = raw.match(/c[a-z0-9]{24}/i);
+    const cuid = cuidMatch ? cuidMatch[0] : null;
+
+    let query = supabase
       .from("League")
       .select(`
         id,
@@ -81,12 +85,18 @@ export async function getLeagueById(id: string) {
           lastSeason,
           transfermarktId
         )
-      `)
-      .or(`id.eq.${id},transfermarktId.eq.${id}`)
-      .maybeSingle();
+      `);
+
+    if (cuid) {
+      query = query.or(`id.eq.${cuid},transfermarktId.eq.${raw}`);
+    } else {
+      query = query.or(`id.eq.${raw},transfermarktId.eq.${raw}`);
+    }
+
+    const { data: league, error } = await query.maybeSingle();
 
     if (error || !league) {
-      console.error(`Error fetching league ${id}:`, error);
+      console.error(`Error fetching league ${idOrSlug}:`, error);
       return null;
     }
 
@@ -224,7 +234,7 @@ export async function getLeagueById(id: string) {
       lastUpdated: new Date().toISOString(),
     };
   } catch (error) {
-    console.error(`Error fetching league ${id}:`, error);
+    console.error(`Error fetching league ${idOrSlug}:`, error);
     return null;
   }
 }

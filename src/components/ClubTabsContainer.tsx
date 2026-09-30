@@ -101,7 +101,7 @@ export function ClubTabsContainer({
                 <h3 className="text-base font-bold text-white tracking-tight">
                   Home Ground & Stadium
                 </h3>
-                <p className="text-xs text-slate-400">Official venue infrastructure</p>
+                <p className="text-xs text-slate-400">Club stadium & infrastructure</p>
               </div>
             </div>
 
@@ -316,7 +316,7 @@ export function ClubTabsContainer({
               </div>
             ) : (
               <div className="py-8 text-center text-xs text-slate-500">
-                Next fixture schedule pending official announcement.
+                Next fixture schedule pending announcement.
               </div>
             )}
           </div>

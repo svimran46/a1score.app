@@ -2,19 +2,19 @@ import { MetadataRoute } from "next";
 import { getTopClubs } from "@/lib/data/clubs";
 import { getMostValuablePlayers } from "@/lib/data/players";
 import { SITE_URL } from "@/lib/metadata";
+import { getClubSlug, getLeagueSlug } from "@/lib/slugs";
 
 export const runtime = "edge";
 export const revalidate = 86400; // Cache sitemap for 24 hours
 
-const TRACKED_LEAGUE_IDS = [
-  "GB1", // Premier League
-  "ES1", // La Liga
-  "IT1", // Serie A
-  "L1",  // Bundesliga
-  "FR1", // Ligue 1
-  "NL1", // Eredivisie
-  "PO1", // Liga Portugal
-  "CL",  // UEFA Champions League
+const TRACKED_LEAGUES = [
+  { name: "Premier League", id: "cmuihndux0003b23fizizm4a0" },
+  { name: "LaLiga", id: "cmuihnet00007b23f2qf4z79i" },
+  { name: "Serie A", id: "cmuihnf000008b23fghk99r1h" },
+  { name: "Bundesliga", id: "cmuihnfps0009b23fe6s9s949" },
+  { name: "Ligue 1", id: "cmuihnggh000ab23ftw5z9a34" },
+  { name: "Liga Portugal", id: "cmuihnh71000bb23f7w76a380" },
+  { name: "Eredivisie", id: "cmuihnhvo000cb23f1m06d5s7" },
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -38,7 +38,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${SITE_URL}/players`,
       lastModified: now,
       changeFrequency: "daily",
-      priority: 0.8,
+      priority: 0.85,
+    },
+    {
+      url: `${SITE_URL}/values`,
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.85,
     },
     {
       url: `${SITE_URL}/clubs`,
@@ -58,22 +64,34 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly",
       priority: 0.5,
     },
+    {
+      url: `${SITE_URL}/privacy`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.3,
+    },
+    {
+      url: `${SITE_URL}/terms`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.3,
+    },
   ];
 
-  // 2. League Competitions
-  const leagueRoutes: MetadataRoute.Sitemap = TRACKED_LEAGUE_IDS.map((id) => ({
-    url: `${SITE_URL}/leagues/${id}`,
+  // 2. League Competitions (Readable Slugs)
+  const leagueRoutes: MetadataRoute.Sitemap = TRACKED_LEAGUES.map((l) => ({
+    url: `${SITE_URL}/leagues/${getLeagueSlug(l)}`,
     lastModified: now,
     changeFrequency: "daily",
     priority: 0.85,
   }));
 
-  // 3. Dynamic Top Clubs
+  // 3. Dynamic Top Clubs (Readable Slugs)
   let clubRoutes: MetadataRoute.Sitemap = [];
   try {
-    const clubs = await getTopClubs(60);
+    const clubs = await getTopClubs(100);
     clubRoutes = clubs.map((c) => ({
-      url: `${SITE_URL}/clubs/${c.id}`,
+      url: `${SITE_URL}/clubs/${getClubSlug(c)}`,
       lastModified: now,
       changeFrequency: "weekly",
       priority: 0.75,
@@ -82,7 +100,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.warn("[Sitemap] Failed to fetch top clubs for sitemap:", err);
   }
 
-  // 4. Dynamic Most Valuable Players
+  // 4. Dynamic Most Valuable Players (Readable Slugs)
   let playerRoutes: MetadataRoute.Sitemap = [];
   try {
     const players = await getMostValuablePlayers(120);

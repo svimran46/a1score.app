@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import { EntityImage } from "./EntityImage";
 import { formatCompactEur } from "@/lib/utils";
+import { getLeagueSlug } from "@/lib/slugs";
 import {
   Trophy,
   Globe,
@@ -101,7 +102,7 @@ export function LeaguesDirectoryClient({ initialLeagues }: LeaguesDirectoryClien
           return (
             <Link
               key={league.id}
-              href={`/leagues/${league.id}`}
+              href={`/leagues/${getLeagueSlug(league)}`}
               className="group rounded-3xl glass-panel glass-panel-hover p-5 border border-slate-800 flex flex-col justify-between gap-5 transition-all hover:border-amber-500/30"
             >
               {/* Header: Crest / Flag + Name & Country */}

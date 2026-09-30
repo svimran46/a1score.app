@@ -61,7 +61,7 @@ export function MatchTimeline({
           </h3>
         </div>
         <span className="text-xs text-slate-500 tabular-nums">
-          {actionableEvents.length} Verified Incidents
+          {actionableEvents.length} Match Events
         </span>
       </div>
 
@@ -176,7 +176,7 @@ export function MatchTimeline({
       <div className="pt-4 border-t border-slate-800/80 text-[11px] text-slate-500 leading-relaxed flex items-start gap-2">
         <ShieldAlert className="w-4 h-4 text-slate-500 flex-shrink-0 mt-0.5" />
         <p>
-          <strong className="text-slate-400">Disciplinary Reconciliation:</strong> Match statistics reflect the formal match report recorded by competition officials, while the timeline logs verified on-pitch active match incidents.
+          <strong className="text-slate-400">Disciplinary Reconciliation:</strong> Match statistics reflect the formal match report recorded by competition officials, while the timeline logs recorded on-pitch active match incidents.
         </p>
       </div>
     </div>

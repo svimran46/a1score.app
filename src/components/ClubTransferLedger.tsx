@@ -82,7 +82,7 @@ export function ClubTransferLedger({
               Transfer Flow & Record Ledger
             </h3>
             <p className="text-xs text-slate-400">
-              Verified historical commercial market fees for {clubName}
+              Documented historical commercial market fees for {clubName}
             </p>
           </div>
         </div>
@@ -314,7 +314,7 @@ export function ClubTransferLedger({
       <div className="flex items-center justify-between text-[11px] text-slate-500 pt-2 border-t border-slate-800/60">
         <span className="flex items-center gap-1">
           <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
-          Verified Commercial Ledger
+          Documented Commercial Ledger
         </span>
         <span>Excludes internal youth academy progressions</span>
       </div>

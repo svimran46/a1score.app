@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import { EntityImage } from "@/components/EntityImage";
 import { formatCompactEur } from "@/lib/utils";
+import { getClubSlug } from "@/lib/slugs";
 import { ArrowUpDown, Trophy, Calendar, Sparkles } from "lucide-react";
 import type { LeagueLegendItem } from "@/lib/fotmob/client";
 
@@ -253,7 +254,7 @@ export function LeagueStandingsTable({
                   <td className="py-3 px-3 pr-4">
                     {row.clubId ? (
                       <Link
-                        href={`/clubs/${row.clubId}`}
+                        href={`/clubs/${getClubSlug({ id: row.clubId, name: row.name })}`}
                         className="flex items-center gap-2.5 group-hover:text-amber-400 transition-colors"
                       >
                         <div className="relative w-6 h-6 rounded-md bg-slate-800 p-0.5 flex-shrink-0 overflow-hidden">

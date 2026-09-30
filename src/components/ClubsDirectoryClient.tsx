@@ -5,6 +5,7 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import Link from "next/link";
 import { EntityImage } from "./EntityImage";
 import { formatCompactEur } from "@/lib/utils";
+import { getClubSlug } from "@/lib/slugs";
 import {
   Search,
   Filter,
@@ -335,7 +336,7 @@ export function ClubsDirectoryClient({ initialClubs }: ClubsDirectoryClientProps
           {paginatedClubs.map((club) => (
             <Link
               key={club.id}
-              href={`/clubs/${club.id}`}
+              href={`/clubs/${getClubSlug(club)}`}
               className="group rounded-2xl glass-panel glass-panel-hover p-4 border border-slate-800 flex flex-col justify-between gap-3 transition-all"
             >
               {/* Top Row: Crest, Name, League */}

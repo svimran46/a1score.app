@@ -43,7 +43,7 @@ export async function generateMetadata({ params }: PlayerPageProps): Promise<Met
 
   return constructMetadata({
     title: `${displayName} — Market Value (${formattedVal}), Stats & Transfers`,
-    description: `${displayName} (${displayPos}) playing for ${clubName}. Current market valuation: ${formattedVal}. Career transfer history, verified season statistics, and valuation evolution chart on a1score.app.`,
+    description: `${displayName} (${displayPos}) playing for ${clubName}. Current market valuation: ${formattedVal}. Career transfer history, documented season statistics, and valuation evolution chart on a1score.app.`,
     path: `/players/${params.slug}`,
     image: player.photoUrl || undefined,
   });
@@ -106,11 +106,25 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
       ? player.nationality
       : "Unknown";
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: "Players", item: `${SITE_URL}/players` },
+      { "@type": "ListItem", position: 3, name: player.fullName || "Player", item: `${SITE_URL}/players/${params.slug}` },
+    ],
+  };
+
   return (
     <div className="space-y-8">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
       {/* Section 1: Player Header Card */}
@@ -122,7 +136,7 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
               <div className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-2xl bg-slate-800 overflow-hidden border-2 border-slate-700/80 shadow-2xl shrink-0 mx-auto sm:mx-0">
                 <EntityImage
                   src={player.photoUrl}
-                  alt={player.fullName || "Player"}
+                  alt={`Portrait of ${player.fullName || "player"}`}
                   fill
                   className="object-cover"
                   sizes="128px"

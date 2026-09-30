@@ -1,10 +1,11 @@
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { EntityImage } from "@/components/EntityImage";
 import Link from "next/link";
 import { getClubById, getClubTransfers } from "@/lib/data/clubs";
 import { getFotmobTeamDetails } from "@/lib/fotmob/client";
 import { FOTMOB_TEAM_MAPPINGS } from "@/lib/league-mappings";
 import { formatCompactEur } from "@/lib/utils";
+import { getClubSlug } from "@/lib/slugs";
 import { Shield, Users, Trophy, Globe, Calendar, Clock } from "lucide-react";
 import { ClubTabsContainer } from "@/components/ClubTabsContainer";
 
@@ -33,11 +34,12 @@ export async function generateMetadata({ params }: ClubPageProps): Promise<Metad
   const formattedVal = club.totalSquadValue
     ? formatCompactEur(club.totalSquadValue)
     : "Valuation pending";
+  const canonicalSlug = getClubSlug(club);
 
   return constructMetadata({
     title: `${club.name} — Squad Market Value (${formattedVal}), Roster & Stats`,
     description: `Senior squad market valuations, player profiles, and financial analytics for ${club.name}. Total squad valuation: ${formattedVal} on a1score.app.`,
-    path: `/clubs/${params.id}`,
+    path: `/clubs/${canonicalSlug}`,
     image: club.logoUrl || undefined,
   });
 }
@@ -47,6 +49,12 @@ export default async function ClubPage({ params }: ClubPageProps) {
 
   if (!club) {
     notFound();
+  }
+
+  // 301 redirect legacy CUID or numeric ID to canonical slug URL (G1)
+  const canonicalSlug = getClubSlug(club);
+  if (params.id !== canonicalSlug && (params.id === club.id || params.id === String(club.transfermarktId))) {
+    permanentRedirect(`/clubs/${canonicalSlug}`);
   }
 
   // Find FotMob team ID
@@ -76,7 +84,7 @@ export default async function ClubPage({ params }: ClubPageProps) {
     name: club.name,
     sport: "Football",
     logo: club.logoUrl || undefined,
-    url: `${SITE_URL}/clubs/${params.id}`,
+    url: `${SITE_URL}/clubs/${canonicalSlug}`,
     memberOf: club.league
       ? {
           "@type": "SportsOrganization",
@@ -91,11 +99,25 @@ export default async function ClubPage({ params }: ClubPageProps) {
     })),
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: "Clubs", item: `${SITE_URL}/clubs` },
+      { "@type": "ListItem", position: 3, name: club.name, item: `${SITE_URL}/clubs/${canonicalSlug}` },
+    ],
+  };
+
   return (
     <div className="space-y-8">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
       {/* Club Header */}

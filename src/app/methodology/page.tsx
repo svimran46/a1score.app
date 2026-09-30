@@ -56,7 +56,7 @@ export default function MethodologyPage() {
             </li>
             <li className="flex items-start gap-2">
               <span className="text-emerald-400 font-bold shrink-0">•</span>
-              <span><strong>Commercial Ledger:</strong> Verified accounting separating free moves, loan agreements, and multi-million euro transactions without ambiguity.</span>
+              <span><strong>Commercial Ledger:</strong> Systematic accounting separating free moves, loan agreements, and multi-million euro transactions without ambiguity.</span>
             </li>
           </ul>
         </div>
@@ -75,7 +75,7 @@ export default function MethodologyPage() {
             </h2>
           </div>
           <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-            Live fixtures, in-play scores, confirmed tactical lineups with pitch formations, real-time match events, official league tables, and player tournament performance are processed through our low-latency edge synchronisation layer.
+            Live fixtures, in-play scores, confirmed tactical lineups with pitch formations, real-time match events, domestic league tables, and player tournament performance are processed through our low-latency edge synchronisation layer.
           </p>
           <ul className="space-y-2 text-xs text-slate-400 pt-2 border-t border-slate-800">
             <li className="flex items-start gap-2">
@@ -84,11 +84,11 @@ export default function MethodologyPage() {
             </li>
             <li className="flex items-start gap-2">
               <span className="text-emerald-400 font-bold shrink-0">•</span>
-              <span><strong>Official League Rosters:</strong> Standings and club allocations strictly reflect active season memberships (e.g. 20 Premier League, 20 LaLiga, 18 Bundesliga).</span>
+              <span><strong>Active League Rosters:</strong> Standings and club allocations strictly reflect active season memberships (e.g. 20 Premier League, 20 LaLiga, 18 Bundesliga).</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-emerald-400 font-bold shrink-0">•</span>
-              <span><strong>Disciplinary Reconciliation:</strong> Clear distinction between aggregate match official reports and active on-pitch timeline incidents.</span>
+              <span><strong>Disciplinary Reconciliation:</strong> Clear distinction between aggregate match referee reports and active on-pitch timeline incidents.</span>
             </li>
           </ul>
         </div>
@@ -121,7 +121,7 @@ export default function MethodologyPage() {
 
           <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-1.5">
             <span className="text-amber-400 font-bold text-sm">5 Minutes</span>
-            <h4 className="text-white font-semibold">Official League Standings</h4>
+            <h4 className="text-white font-semibold">Domestic League Standings</h4>
             <p className="text-slate-400">
               League points, goal differentials, and tournament qualification indicators.
             </p>
@@ -144,7 +144,7 @@ export default function MethodologyPage() {
           The Zero Fabricated Data Commitment
         </h3>
         <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-          Every statistic, transfer fee, lineup position, and market value displayed on A1Score is grounded in real, verifiable football feeds. When a fee is not officially disclosed by clubs, we transparently mark it as &ldquo;Undisclosed&rdquo; rather than fabricating an estimate. When an academy player transitions through youth ranks, we explicitly flag the move as an internal promotion rather than blending it with senior market transfers.
+          Every statistic, transfer fee, lineup position, and market value displayed on a1score.app is grounded in real, verifiable football feeds. When a fee is not publicly disclosed by clubs, we transparently mark it as &ldquo;Undisclosed&rdquo; rather than fabricating an estimate. When an academy player transitions through youth ranks, we explicitly flag the move as an internal promotion rather than blending it with senior market transfers.
         </p>
       </div>
     </div>

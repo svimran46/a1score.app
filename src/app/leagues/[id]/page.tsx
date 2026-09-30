@@ -1,8 +1,9 @@
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { EntityImage } from "@/components/EntityImage";
 import Link from "next/link";
 import { getLeagueById } from "@/lib/data/leagues";
 import { formatCompactEur } from "@/lib/utils";
+import { getLeagueSlug } from "@/lib/slugs";
 import { Trophy, Clock } from "lucide-react";
 import { LeagueFinancialParity } from "@/components/LeagueFinancialParity";
 import { LeagueStandingsTable } from "@/components/LeagueStandingsTable";
@@ -29,10 +30,12 @@ export async function generateMetadata({ params }: LeaguePageProps): Promise<Met
     });
   }
 
+  const canonicalSlug = getLeagueSlug(league);
+
   return constructMetadata({
     title: `${league.name} — Standings, Club Valuations & Stats`,
     description: `${league.name} standings (${league.season || "2026/2027"}), competition table, ${league.clubCount} participating clubs, and squad market valuation analytics on a1score.app.`,
-    path: `/leagues/${params.id}`,
+    path: `/leagues/${canonicalSlug}`,
     image: league.logoUrl || undefined,
   });
 }
@@ -44,6 +47,12 @@ export default async function LeaguePage({ params }: LeaguePageProps) {
     return notFound();
   }
 
+  // 301 redirect legacy CUID or code to canonical slug URL (G1)
+  const canonicalSlug = getLeagueSlug(league);
+  if (params.id !== canonicalSlug && (params.id === league.id || params.id === league.transfermarktId)) {
+    permanentRedirect(`/leagues/${canonicalSlug}`);
+  }
+
   const totalLeagueValue = league.clubs.reduce((acc, c) => acc + c.totalSquadValue, 0);
   const hasStandings = league.standings && league.standings.length > 0;
 
@@ -52,7 +61,7 @@ export default async function LeaguePage({ params }: LeaguePageProps) {
     "@type": "SportsOrganization",
     name: league.name,
     sport: "Football",
-    url: `${SITE_URL}/leagues/${params.id}`,
+    url: `${SITE_URL}/leagues/${canonicalSlug}`,
     subOrganization: league.clubs?.slice(0, 30).map((c) => ({
       "@type": "SportsTeam",
       name: c.name,
@@ -60,11 +69,25 @@ export default async function LeaguePage({ params }: LeaguePageProps) {
     })),
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: "Leagues", item: `${SITE_URL}/leagues` },
+      { "@type": "ListItem", position: 3, name: league.name, item: `${SITE_URL}/leagues/${canonicalSlug}` },
+    ],
+  };
+
   return (
     <div className="space-y-8">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
       {/* League Header */}

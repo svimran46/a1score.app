@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { EntityImage } from "@/components/EntityImage";
 import { Trophy, Flame, Compass, ChevronRight } from "lucide-react";
+import { getLeagueSlug } from "@/lib/slugs";
 import type { LeaguePlayerLeader } from "@/lib/fotmob/client";
 
 interface LeagueLeadersProps {
@@ -178,7 +179,7 @@ export function LeagueLeaders({
             {otherLeagues.map((l) => (
               <Link
                 key={l.id}
-                href={`/leagues/${l.id}`}
+                href={`/leagues/${getLeagueSlug(l)}`}
                 className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/80 hover:border-amber-500/40 hover:bg-slate-900/80 transition-all group"
               >
                 <div className="relative w-6 h-6 rounded-md bg-slate-800 p-0.5 flex-shrink-0 overflow-hidden">

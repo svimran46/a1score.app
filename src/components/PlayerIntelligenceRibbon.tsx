@@ -80,7 +80,7 @@ export function PlayerIntelligenceRibbon({
     };
   }, [sortedValues, latestMarketValue]);
 
-  // Aggregate current season verified performance
+  // Aggregate current season performance
   const seasonTotals = useMemo(() => {
     if (!seasonStats || seasonStats.length === 0) return null;
 
@@ -203,7 +203,7 @@ export function PlayerIntelligenceRibbon({
             {seasonTotals?.avgRating ? (
               <span className="text-amber-400 font-extrabold">{seasonTotals.avgRating} / 10</span>
             ) : (
-              <span className="text-slate-300">Verified</span>
+              <span className="text-slate-300">Active</span>
             )}
           </div>
           <div className="text-[11px] text-slate-500">

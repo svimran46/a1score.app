@@ -113,10 +113,10 @@ export default async function HomePage() {
                 <BookOpen className="w-3 h-3 text-blue-400 shrink-0" /> Data Quality
               </span>
               <div className="text-base sm:text-xl font-black text-white">
-                Verified Sources
+                FotMob & TM
               </div>
               <Link href="/methodology" className="text-[11px] text-amber-400 hover:underline">
-                View methodology →
+                View data sources →
               </Link>
             </div>
           </div>
@@ -219,7 +219,7 @@ export default async function HomePage() {
                 className="rounded-2xl glass-panel p-4 border border-slate-800/60 text-slate-400 text-xs"
               >
                 <div className="font-semibold text-white">{name}</div>
-                <div className="text-[11px] text-slate-500 mt-1">Official League</div>
+                <div className="text-[11px] text-slate-500 mt-1">Domestic League</div>
               </div>
             ))
           )}
@@ -240,11 +240,11 @@ export default async function HomePage() {
             <TrendingUp className="w-5 h-5 text-amber-400" />
             <div>
               <h2 className="text-xl font-bold text-white tracking-tight">Most Valuable Players</h2>
-              <p className="text-xs text-slate-400">Verified market valuations and squad expenditure analytics</p>
+              <p className="text-xs text-slate-400">Transfermarkt player market valuations and squad capital analytics</p>
             </div>
           </div>
           <Link
-            href="/search?filter=valuable"
+            href="/values"
             className="text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1 transition-colors"
           >
             View Worldwide Rankings <ArrowRight className="w-3.5 h-3.5" />
@@ -279,7 +279,7 @@ export default async function HomePage() {
             How Valuation Data &amp; Live Match Delivery Are Grounded
           </h3>
           <p className="text-xs text-slate-400 leading-relaxed">
-            Read our methodology on how market valuations, career trajectory graphs, and real-time match events are verified and processed with zero fabricated numbers.
+            Read our methodology on how player valuations, career trajectory graphs, and live match events are sourced and processed with zero fabricated numbers.
           </p>
         </div>
 

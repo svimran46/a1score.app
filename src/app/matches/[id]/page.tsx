@@ -52,11 +52,12 @@ export default async function MatchDetailsPage({ params }: MatchPageProps) {
   const { general = {}, teams = {}, status = {} } = matchAny;
   const homeTeam = teams?.home || {};
   const awayTeam = teams?.away || {};
+  const matchTitle = `${homeTeam?.name || "Home"} vs ${awayTeam?.name || "Away"}`;
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SportsEvent",
-    name: `${homeTeam?.name || "Home"} vs ${awayTeam?.name || "Away"}`,
+    name: matchTitle,
     sport: "Football",
     url: `${SITE_URL}/matches/${params.id}`,
     startDate: general?.matchTimeUTCDate || undefined,
@@ -77,11 +78,25 @@ export default async function MatchDetailsPage({ params }: MatchPageProps) {
     },
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: "Matches", item: `${SITE_URL}/matches` },
+      { "@type": "ListItem", position: 3, name: matchTitle, item: `${SITE_URL}/matches/${params.id}` },
+    ],
+  };
+
   return (
     <div className="w-full">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <MatchCenterClient initialMatch={match} />
     </div>

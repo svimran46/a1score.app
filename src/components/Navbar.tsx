@@ -62,9 +62,9 @@ const CATEGORIES: NavCategory[] = [
   {
     name: "Market Values",
     shortName: "Values",
-    href: "/search?filter=valuable",
+    href: "/values",
     icon: TrendingUp,
-    isActive: (p, f) => p === "/search" && f === "valuable",
+    isActive: (p, f) => p === "/values" || (p === "/search" && f === "valuable"),
   },
   {
     name: "Transfers",
@@ -115,9 +115,9 @@ const DRAWER_ITEMS: Array<{
   },
   {
     name: "Market Values",
-    href: "/search?filter=valuable",
+    href: "/values",
     icon: TrendingUp,
-    isActive: (p, f) => p === "/search" && f === "valuable",
+    isActive: (p, f) => p === "/values" || (p === "/search" && f === "valuable"),
   },
   {
     name: "Transfers",
@@ -634,6 +634,7 @@ function NavbarContent() {
         role="dialog"
         aria-modal="true"
         aria-label="Navigation Menu"
+        aria-hidden={!drawerOpen}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
         className={`fixed top-0 bottom-0 right-0 z-50 w-[min(280px,80vw)] max-w-[280px] bg-slate-950 border-l border-slate-800/90 shadow-2xl flex flex-col transform transition-transform duration-200 ease-in-out ${

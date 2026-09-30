@@ -32,8 +32,8 @@ export function StatsTab({ match }: StatsTabProps) {
         <h4 className="text-base font-bold text-white">No Match Statistics Recorded</h4>
         <p className="text-xs sm:text-sm text-slate-400 max-w-md mx-auto leading-relaxed">
           {status?.isUpcoming
-            ? "Official match statistics will begin tracking live once the referee blows the whistle."
-            : "No official statistical data is available for this match."}
+            ? "Detailed match statistics will begin tracking live once the match kicks off."
+            : "No match statistical data is available for this fixture."}
         </p>
       </div>
     );
