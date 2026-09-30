@@ -17,7 +17,9 @@
     "check:integrity": "tsx scripts/nightly-integrity-check.ts",
     "reconcile:squads": "tsx scripts/reconcile-all-transfers.ts",
     "export:data": "tsx scripts/export-dataset.ts",
-    "test": "tsx --test tests/**/*.test.ts"
+    "test:unit": "tsx --test tests/pure-functions.test.ts tests/positions.test.ts",
+    "test:integrity": "tsx --test tests/integrity.test.ts",
+    "test": "npm run test:unit && npm run test:integrity"
   },
   "dependencies": {
     "@prisma/adapter-pg": "5.22.0",
