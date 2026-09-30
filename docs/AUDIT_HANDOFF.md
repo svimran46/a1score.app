@@ -24,7 +24,7 @@
 - **Problem:** API-Football enforces a restrictive 100 req/day paywall and requires external paid credentials.
 - **Solution:** Replaced entirely with:
   1. **FotMob API:** Reverse-engineered edge client with dynamic pure-JavaScript MD5 anti-bot signature generator (`x-mas` header) running without native Node.js crypto dependencies. Supplies live fixtures, scores, pitch coordinates, events, and standings at zero cost.
-  2. **Transfermarkt Ingestion & Live Proxy:** Open dataset mirror ingested into Supabase (16k+ players, 254k+ valuation points, 100k+ transfers) supplemented by an edge HTML/CEAPI parser (`src/lib/transfermarkt/client.ts`).
+  2. **Transfermarkt Ingestion & Live Proxy:** Open dataset mirror ingested into Supabase (16k+ players, 254k+ valuation points, 100k+ transfers) supplemented by an edge HTML/CEAPI parser (`src/lib/transfermarkt/client.ts`). Note: `npm run sync:dataset` no longer manages club assignments; rosters are owned by the audit/reconcile scripts.
 
 ### B. Cloudflare Pages Edge Runtime Limitations
 - Cloudflare Pages dynamic routes execute inside a V8 Edge isolate (`_worker.js`).

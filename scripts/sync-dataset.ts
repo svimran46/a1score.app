@@ -114,10 +114,16 @@ const LEAGUE_NAMES: Record<string, { name: string; country: string; tier: number
   CL: { name: "UEFA Champions League", country: "Europe", tier: 1 },
 };
 
-async function syncCompetitions(filePath: string) {
+async function syncCompetitions(filePath: string, isDryRun: boolean) {
   console.log("\n--- Syncing Competitions / Leagues ---");
   const records = await parseCsv(filePath);
   const tracked = records.filter((r) => TRACKED_COMPETITIONS.has(r.competition_id));
+
+  console.log(`Found ${tracked.length} tracked competitions.`);
+  if (isDryRun) {
+    console.log(`[DRY-RUN] Skipping competition upserts. No changes written.`);
+    return;
+  }
 
   for (const r of tracked) {
     const meta = LEAGUE_NAMES[r.competition_id];
@@ -143,10 +149,16 @@ async function syncCompetitions(filePath: string) {
   console.log(`Synced ${tracked.length} leagues.`);
 }
 
-async function syncClubs(filePath: string) {
+async function syncClubs(filePath: string, isDryRun: boolean) {
   console.log("\n--- Syncing Clubs ---");
   const records = await parseCsv(filePath);
   const tracked = records.filter((r) => TRACKED_COMPETITIONS.has(r.domestic_competition_id));
+
+  console.log(`Found ${tracked.length} tracked clubs.`);
+  if (isDryRun) {
+    console.log(`[DRY-RUN] Skipping club upserts. No changes written.`);
+    return;
+  }
 
   // In-memory league lookup
   const leagues = await prisma.league.findMany();
@@ -178,7 +190,7 @@ async function syncClubs(filePath: string) {
   console.log(`Synced ${tracked.length} clubs.`);
 }
 
-async function syncPlayers(filePath: string) {
+async function syncPlayers(filePath: string, isDryRun: boolean) {
   console.log("\n--- Syncing Players ---");
   const records = await parseCsv(filePath);
   const tracked = records.filter((r) =>
@@ -214,30 +226,76 @@ async function syncPlayers(filePath: string) {
     });
   }
 
-  // Part B Rule 3: Replace createMany({ skipDuplicates }) with upsert updating currentClubId, value and status
+  // Pre-fetch all existing player rows matching these TM IDs to calculate create vs update and prepare backup
+  const allTmIds = playerRows.map((p) => p.transfermarktId);
+  const existingPlayers = await prisma.player.findMany({
+    where: { transfermarktId: { in: allTmIds } },
+    select: {
+      id: true,
+      transfermarktId: true,
+      currentClubId: true,
+      status: true,
+      lastSeason: true,
+      dateOfBirth: true,
+    },
+  });
+  const existingPlayerMap = new Map(existingPlayers.map((p) => [p.transfermarktId, p]));
+
+  const updateCount = existingPlayers.length;
+  const createCount = playerRows.length - updateCount;
+
+  console.log(`[Player Counts] Would create: ${createCount} | Would update: ${updateCount} (Total parsed: ${playerRows.length})`);
+  console.log(`[Safety Guard] Re-sync will NEVER overwrite currentClubId, status, or lastSeason of existing players.`);
+
+  if (isDryRun) {
+    console.log(`[DRY-RUN] Skipping player upserts. No changes written.`);
+    return;
+  }
+
+  // Dump every Player row that will be touched before upserting
+  const backupsDir = path.join(process.cwd(), "backups");
+  if (!fs.existsSync(backupsDir)) {
+    fs.mkdirSync(backupsDir, { recursive: true });
+  }
+  const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+  const backupPath = path.join(backupsDir, `sync-dataset-${timestamp}.json`);
+  const backupData = existingPlayers.map((p) => ({
+    id: p.id,
+    currentClubId: p.currentClubId,
+    status: p.status,
+    lastSeason: p.lastSeason,
+  }));
+  fs.writeFileSync(backupPath, JSON.stringify(backupData, null, 2), "utf-8");
+  console.log(`[Backup] Saved ${existingPlayers.length} existing player records to ${backupPath}`);
+
+  // Upsert: update only latestMarketValue, position, subPosition, heightCm, photoUrl, and dateOfBirth when missing.
+  // NEVER overwrite currentClubId, status, or lastSeason of existing players!
   const chunkSize = 200;
   for (let i = 0; i < playerRows.length; i += chunkSize) {
     const chunk = playerRows.slice(i, i + chunkSize);
     await Promise.all(
-      chunk.map((p) =>
-        prisma.player.upsert({
+      chunk.map((p) => {
+        const existing = existingPlayerMap.get(p.transfermarktId);
+        const updatePayload: any = {
+          latestMarketValue: p.latestMarketValue,
+          position: p.position,
+          subPosition: p.subPosition,
+          heightCm: p.heightCm,
+          photoUrl: p.photoUrl,
+        };
+        if (existing && existing.dateOfBirth == null && p.dateOfBirth) {
+          updatePayload.dateOfBirth = p.dateOfBirth;
+        }
+
+        return prisma.player.upsert({
           where: { transfermarktId: p.transfermarktId },
-          update: {
-            currentClubId: p.currentClubId,
-            latestMarketValue: p.latestMarketValue,
-            lastSeason: p.lastSeason,
-            status: p.currentClubId ? "first_team" : "departed",
-            position: p.position,
-            subPosition: p.subPosition,
-            heightCm: p.heightCm,
-            photoUrl: p.photoUrl,
-          },
+          update: updatePayload,
           create: {
             ...p,
             status: p.currentClubId ? "first_team" : "departed",
           },
-        })
-      )
+        });
+      })
     );
     if ((i + chunkSize) % 1000 === 0 || i + chunkSize >= playerRows.length) {
       console.log(`Upserted ${Math.min(i + chunkSize, playerRows.length)}/${playerRows.length} players...`);
@@ -247,7 +305,7 @@ async function syncPlayers(filePath: string) {
   console.log(`Finished syncing ${playerRows.length} players.`);
 }
 
-async function syncValuations(filePath: string) {
+async function syncValuations(filePath: string, isDryRun: boolean) {
   console.log("\n--- Syncing Market Value History ---");
   const records = await parseCsv(filePath);
 
@@ -260,8 +318,12 @@ async function syncValuations(filePath: string) {
     (r) => playerMap.has(String(r.player_id)) && r.market_value_in_eur
   );
 
-  console.log(`Preparing ${relevant.length} valuation entries...`);
-  
+  console.log(`Found ${relevant.length} relevant valuation entries.`);
+  if (isDryRun) {
+    console.log(`[DRY-RUN] Skipping valuation sync. No changes written.`);
+    return;
+  }
+
   // Clear old valuations to keep clean state
   await prisma.marketValueHistory.deleteMany();
 
@@ -293,7 +355,7 @@ async function syncValuations(filePath: string) {
   console.log(`Finished syncing ${dataRows.length} valuations.`);
 }
 
-async function syncTransfers(filePath: string) {
+async function syncTransfers(filePath: string, isDryRun: boolean) {
   console.log("\n--- Syncing Transfers ---");
   const records = await parseCsv(filePath);
   const players = await prisma.player.findMany({
@@ -302,7 +364,12 @@ async function syncTransfers(filePath: string) {
   const playerMap = new Map(players.map((p) => [p.transfermarktId, p.id]));
 
   const relevant = records.filter((r) => playerMap.has(String(r.player_id)));
-  console.log(`Preparing ${relevant.length} transfer records...`);
+  console.log(`Found ${relevant.length} relevant transfer records.`);
+
+  if (isDryRun) {
+    console.log(`[DRY-RUN] Skipping transfer sync. No changes written.`);
+    return;
+  }
 
   await prisma.transfer.deleteMany();
 
@@ -349,7 +416,12 @@ async function syncTransfers(filePath: string) {
 }
 
 async function main() {
+  const isApply = process.argv.includes("--apply");
+  const isDryRun = !isApply;
+
   console.log("=== a1score.app High-Performance Data Pipeline Sync ===");
+  console.log(`Mode: ${isDryRun ? "DRY-RUN (Default - Run with --apply to write changes)" : "APPLY"}\n`);
+
   try {
     const compFile = await downloadFile("competitions.csv");
     const clubsFile = await downloadFile("clubs.csv");
@@ -357,13 +429,17 @@ async function main() {
     const valFile = await downloadFile("player_valuations.csv");
     const transfersFile = await downloadFile("transfers.csv");
 
-    await syncCompetitions(compFile);
-    await syncClubs(clubsFile);
-    await syncPlayers(playersFile);
-    await syncValuations(valFile);
-    await syncTransfers(transfersFile);
+    await syncCompetitions(compFile, isDryRun);
+    await syncClubs(clubsFile, isDryRun);
+    await syncPlayers(playersFile, isDryRun);
+    await syncValuations(valFile, isDryRun);
+    await syncTransfers(transfersFile, isDryRun);
 
-    console.log("\n✅ [Pipeline Complete] a1score.app database is fully populated with real data!");
+    if (isDryRun) {
+      console.log("\n[Dry-Run Complete] 0 changes written to database. Run with --apply to execute.");
+    } else {
+      console.log("\n✅ [Pipeline Complete] a1score.app database is fully populated with real data!");
+    }
   } catch (error) {
     console.error("Pipeline failed with error:", error);
     process.exit(1);
