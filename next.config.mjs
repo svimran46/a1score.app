@@ -4,16 +4,6 @@ const nextConfig = {
   images: {
     loader: 'custom',
     loaderFile: './src/lib/image-loader.ts',
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'media.api-sports.io',
-      },
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-      },
-    ],
   },
   async headers() {
     return [
