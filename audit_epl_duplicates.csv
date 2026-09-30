@@ -1,0 +1,2 @@
+duplicateType,identifierOrKey,player1Id,player1Name,player1Club,player1DoB,player1TmId,player2Id,player2Name,player2Club,player2DoB,player2TmId,details
+"SAME_NAME_AND_DOB","joao ricciulli|1999-10-10","cmuihw0jl08f8sexpq21mhmk6","João Ricciulli","Unassigned","1999-10-10","461923","cmuihvzwc07rzsexpkijbdtgl","João Ricciulli","Unassigned","1999-10-10","398057","Multiple records share identical name and date of birth (1999-10-10)"

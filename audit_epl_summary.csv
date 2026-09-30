@@ -1,0 +1,21 @@
+clubId,clubName,dbRosterSize,fotmobSquadSize,matchCount,attachCount,reassignCount,detachCount,createCount,conflictCount,manualReviewCount,netDiffAfterChanges
+"cmuiho5do001hb23froc57owj","Arsenal FC",28,24,24,0,0,4,0,0,0,0
+"cmuihq8vi008xh29edz4vg4xw","Aston Villa",28,27,15,4,6,13,2,0,0,0
+"cmuihqh6y00dfh29eokvzxktp","AFC Bournemouth",31,30,23,1,4,8,2,0,0,0
+"cmuihocpq001vb23fu3cm5yh8","Brentford FC",30,28,20,1,2,10,5,0,0,0
+"cmuihomne002bb23fq0sdhdrm","Brighton & Hove Albion",17,29,11,12,1,6,4,0,1,-1
+"cmuihqcpo00b1h29edf8q9ksb","Chelsea FC",41,27,20,2,4,21,1,0,0,0
+"cmundu5xu0001zjoe1l91im6d","Coventry City",24,29,24,2,3,0,0,0,0,0
+"cmuihqfqr00cqh29e2077zt3y","Crystal Palace",30,28,18,4,3,12,3,0,0,0
+"cmuihq4bo006fh29ef9sfod5p","Everton FC",24,23,15,3,3,9,2,0,0,0
+"cmuihqg9600cxh29echnkyx9e","Fulham FC",24,25,21,0,3,3,1,0,0,0
+"cmuihq56p006vh29efww9bqgh","Hull City",45,33,26,6,0,20,0,0,1,-1
+"cmuihqdak00bdh29e51a0c9yd","Ipswich Town",23,29,22,5,1,1,1,0,0,0
+"cmuihq8hv008ph29ejwdrv7xd","Leeds United",14,24,9,11,4,5,0,0,0,0
+"cmuihq5k0006zh29erp4cykkk","Liverpool FC",36,28,26,1,1,10,0,0,0,0
+"cmuihq3vs0069h29ebm5xqhye","Manchester City",31,25,24,0,1,7,0,0,0,0
+"cmuihqgxr00ddh29e8cr2u808","Manchester United",25,30,21,4,4,4,1,0,0,0
+"cmuihqepp00c5h29e6dizfj3r","Newcastle United",17,26,10,5,6,7,5,0,0,0
+"cmuihqdq000bkh29et7iwzrfd","Nottingham Forest",17,24,11,9,3,6,1,0,0,0
+"cmuihq47i006bh29e3kejf8oh","Sunderland AFC",35,28,19,2,2,16,5,0,0,0
+"cmuihpzs8003vh29eyrxt8nk5","Tottenham Hotspur",24,28,15,7,5,9,0,0,1,-1
