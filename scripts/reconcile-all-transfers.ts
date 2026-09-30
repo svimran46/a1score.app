@@ -193,6 +193,8 @@ async function main() {
   console.log(`Detached ${academyDetach.rowCount} unvalued youth/academy players from senior rosters.`);
 
   // 6. Update lastSyncedAt for all clubs and recompute squadSize & totalMarketValue
+  // Note: Loaned players (status = 'on_loan') count toward their currentClubId (loan club)
+  // and are excluded from their parentClubId since currentClubId != parentClubId.
   console.log("Updating club squad aggregates & lastSyncedAt...");
   await client.query(`
     UPDATE "Club" c
@@ -202,12 +204,14 @@ async function main() {
         SELECT COUNT(p.id)
         FROM "Player" p
         WHERE p."currentClubId" = c.id
+          AND (p."status" IS NULL OR p."status" != 'departed')
           AND (p."lastSeason" IS NULL OR p."lastSeason" >= 2025)
       ),
       "totalMarketValue" = COALESCE((
         SELECT SUM(p."latestMarketValue")
         FROM "Player" p
         WHERE p."currentClubId" = c.id
+          AND (p."status" IS NULL OR p."status" != 'departed')
           AND (p."lastSeason" IS NULL OR p."lastSeason" >= 2025)
       ), 0);
   `);

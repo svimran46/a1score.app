@@ -26,7 +26,10 @@ model Player {
   lastSeason      Int?
   status          String?              @default("first_team")
   currentClubId   String?
-  currentClub     Club?                @relation(fields: [currentClubId], references: [id])
+  currentClub     Club?                @relation("CurrentClubPlayers", fields: [currentClubId], references: [id])
+  parentClubId    String?
+  parentClub      Club?                @relation("ParentClubPlayers", fields: [parentClubId], references: [id])
+  loanUntil       DateTime?
   marketValues    MarketValueHistory[]
   seasonStats     SeasonStats[]
   transfers       Transfer[]
@@ -37,6 +40,7 @@ model Player {
   @@index([fullName])
   @@index([position])
   @@index([currentClubId])
+  @@index([parentClubId])
   @@index([latestMarketValue])
   @@index([status])
 }
@@ -55,7 +59,8 @@ model Club {
   squadSource     String?  @default("FotMob + Transfermarkt")
   leagueId        String?
   league          League?  @relation(fields: [leagueId], references: [id])
-  players         Player[]
+  players         Player[] @relation("CurrentClubPlayers")
+  loanedOutPlayers Player[] @relation("ParentClubPlayers")
 
   @@index([leagueId])
   @@index([name])

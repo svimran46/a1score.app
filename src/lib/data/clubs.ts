@@ -82,11 +82,13 @@ export function computeClubMetrics(rawPlayers: any[]) {
     const age = birthYear ? 2026 - birthYear : (typeof p.age === "number" ? p.age : null);
     const val = p.latestMarketValue ? Number(p.latestMarketValue) : 0;
     
-    // Explicit status determines tier: first_team, academy, loan_out
+    // Explicit status determines tier: first_team, academy, loan_out, on_loan
     const tier = p.status === "academy"
       ? "academy"
       : p.status === "loan_out"
       ? "loan_out"
+      : p.status === "on_loan"
+      ? "on_loan"
       : "first_team";
 
     return {
@@ -104,7 +106,7 @@ export function computeClubMetrics(rawPlayers: any[]) {
     };
   });
 
-  const firstTeam = squadWithValues.filter((p: any) => p.tier === "first_team");
+  const firstTeam = squadWithValues.filter((p: any) => p.tier === "first_team" || p.tier === "on_loan");
   const academy = squadWithValues.filter((p: any) => p.tier === "academy");
   const squadToUse = firstTeam.length > 0 ? firstTeam : squadWithValues;
 
@@ -140,7 +142,7 @@ export async function getClubById(idOrSlug: string) {
       .select(`
         *,
         league:League ( * ),
-        players:Player (
+        players:Player!Player_currentClubId_fkey (
           id,
           fullName,
           commonName,
@@ -152,7 +154,10 @@ export async function getClubById(idOrSlug: string) {
           dateOfBirth,
           latestMarketValue,
           lastSeason,
-          status
+          status,
+          parentClubId,
+          loanUntil,
+          parentClub:Club!Player_parentClubId_fkey ( id, name )
         )
       `);
 
@@ -175,7 +180,7 @@ export async function getClubById(idOrSlug: string) {
         .select(`
           *,
           league:League ( * ),
-          players:Player (
+          players:Player!Player_currentClubId_fkey (
             id,
             fullName,
             commonName,
@@ -187,7 +192,10 @@ export async function getClubById(idOrSlug: string) {
             dateOfBirth,
             latestMarketValue,
             lastSeason,
-            status
+            status,
+            parentClubId,
+            loanUntil,
+            parentClub:Club!Player_parentClubId_fkey ( id, name )
           )
         `)
         .ilike("name", `%${cleanTerm}%`)
@@ -318,7 +326,7 @@ export async function getAllClubs() {
         lastSeason,
         transfermarktId,
         league:League ( id, name, country ),
-        players:Player ( latestMarketValue, dateOfBirth, lastSeason, status )
+        players:Player!Player_currentClubId_fkey ( latestMarketValue, dateOfBirth, lastSeason, status )
       `)
       .order("totalMarketValue", { ascending: false, nullsFirst: false })
       .order("name", { ascending: true });

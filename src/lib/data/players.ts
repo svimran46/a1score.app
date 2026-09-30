@@ -81,7 +81,7 @@ export async function getMostValuablePlayers(limit = 40, positionFilter?: string
         dateOfBirth,
         latestMarketValue,
         lastSeason,
-        currentClub:Club (
+        currentClub:Club!Player_currentClubId_fkey (
           id,
           name,
           logoUrl,
@@ -186,7 +186,11 @@ export async function getPlayerBySlugOrId(slugOrId: string) {
       .from("Player")
       .select(`
         *,
-        currentClub:Club (
+        currentClub:Club!Player_currentClubId_fkey (
+          *,
+          league:League ( * )
+        ),
+        parentClub:Club!Player_parentClubId_fkey (
           *,
           league:League ( * )
         ),
@@ -224,7 +228,11 @@ export async function getPlayerBySlugOrId(slugOrId: string) {
         const nameGuess = nameParts.join(" ");
         const playerSelectFields = `
           *,
-          currentClub:Club (
+          currentClub:Club!Player_currentClubId_fkey (
+            *,
+            league:League ( * )
+          ),
+          parentClub:Club!Player_parentClubId_fkey (
             *,
             league:League ( * )
           ),
@@ -438,7 +446,7 @@ export async function searchPlayers(
         photoUrl,
         transfermarktId,
         latestMarketValue,
-        currentClub:Club (
+        currentClub:Club!Player_currentClubId_fkey (
           id,
           name,
           logoUrl,
@@ -525,7 +533,7 @@ export async function getMarketValueMovers(limit = 6): Promise<{ risers: MarketM
         photoUrl,
         transfermarktId,
         latestMarketValue,
-        currentClub:Club (
+        currentClub:Club!Player_currentClubId_fkey (
           id,
           name,
           logoUrl
@@ -655,7 +663,7 @@ export async function getPositionalPeers(
         transfermarktId,
         dateOfBirth,
         latestMarketValue,
-        currentClub:Club (
+        currentClub:Club!Player_currentClubId_fkey (
           name,
           logoUrl
         )
@@ -680,7 +688,7 @@ export async function getPositionalPeers(
           transfermarktId,
           dateOfBirth,
           latestMarketValue,
-          currentClub:Club (
+          currentClub:Club!Player_currentClubId_fkey (
             name,
             logoUrl
           )
