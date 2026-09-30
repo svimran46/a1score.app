@@ -94,7 +94,8 @@ import { getCanonicalPosition } from "@/lib/positions";
  */
 export async function tmGetMostValuablePlayers(limit = 25, positionFilter?: string) {
   try {
-    const pagesToFetch = limit > 25 ? [1, 2] : [1];
+    const totalPages = Math.min(Math.ceil(limit / 25), 4);
+    const pagesToFetch = Array.from({ length: totalPages }, (_, i) => i + 1);
     const players: any[] = [];
     const seenIds = new Set<string>();
 

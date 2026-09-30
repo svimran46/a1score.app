@@ -39,7 +39,7 @@ export function PlayerCard({ player }: PlayerCardProps) {
         <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-slate-800 shrink-0 overflow-hidden border border-slate-700/60">
           <EntityImage
             src={player.photoUrl}
-            alt={player.fullName}
+            alt=""
             fill
             entityType="player"
             className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -71,7 +71,7 @@ export function PlayerCard({ player }: PlayerCardProps) {
                   <div className="relative w-3.5 h-3.5 shrink-0">
                     <EntityImage
                       src={player.currentClub.logoUrl}
-                      alt={player.currentClub.name}
+                      alt=""
                       fill
                       sizes="14px"
                       entityType="club"

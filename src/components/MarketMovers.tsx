@@ -27,11 +27,14 @@ export function MarketMovers({ risers, fallers }: MarketMoversProps) {
               Market Value Movers
             </h2>
             <span className="self-start sm:self-auto text-xs px-2.5 py-0.5 rounded-full font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20 whitespace-nowrap">
-              Verified Trajectories
+              Transfermarkt Updates (June 2026)
             </span>
           </div>
           <p className="text-xs text-slate-400 mt-1 [text-wrap:balance]">
-            Biggest valuation shifts across Europe&apos;s top flight competitions
+            Significant valuation shifts across Europe&apos;s top flight competitions vs previous market revision
+          </p>
+          <p className="text-[10px] text-slate-500 mt-0.5">
+            Note: Updates are issued in periodic league-wide tranches, which can cause clustering from recently updated clubs.
           </p>
         </div>
 
@@ -84,7 +87,7 @@ export function MarketMovers({ risers, fallers }: MarketMoversProps) {
                   <div className="relative w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-slate-800 shrink-0 overflow-hidden border border-slate-700/60">
                     <EntityImage
                       src={player.photoUrl}
-                      alt={player.fullName}
+                      alt=""
                       fill
                       sizes="48px"
                       entityType="player"
