@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect } from "react";
-import { AlertTriangle, RefreshCw, Home, Search } from "lucide-react";
+import { AlertTriangle, RefreshCw, Home, Shield } from "lucide-react";
 import Link from "next/link";
 
-export default function Error({
+export default function ClubError({
   error,
   reset,
 }: {
@@ -12,20 +12,19 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Log error to console in dev, could be wired to a reporting service
-    console.error("[a1score] Unhandled error:", error);
+    console.error("[a1score] Club profile error:", error);
   }, [error]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4 space-y-6">
       <div className="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center">
-        <AlertTriangle className="w-8 h-8 text-amber-400" />
+        <Shield className="w-8 h-8 text-amber-400" />
       </div>
 
       <div className="space-y-2">
-        <h1 className="text-2xl font-bold text-white">Something went wrong</h1>
+        <h1 className="text-2xl font-bold text-white">Club Profile Unavailable</h1>
         <p className="text-sm text-slate-400 max-w-md">
-          An unexpected error occurred while loading this page. Please try again or search the platform.
+          Something went wrong loading this club profile. Please try again or explore other clubs.
         </p>
         {error.digest && (
           <p className="text-[10px] font-mono text-slate-600 mt-2">
@@ -43,11 +42,11 @@ export default function Error({
           Try Again
         </button>
         <Link
-          href="/search"
+          href="/clubs"
           className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-800 text-amber-400 text-sm font-semibold hover:bg-slate-700 border border-slate-700 transition-colors"
         >
-          <Search className="w-4 h-4" />
-          Search
+          <Shield className="w-4 h-4" />
+          Browse Clubs
         </Link>
         <Link
           href="/"
