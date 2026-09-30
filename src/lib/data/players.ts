@@ -13,7 +13,9 @@ export async function getMostValuablePlayers(limit = 40, positionFilter?: string
   // Fetch DB clubs to map TM club IDs to canonical DB club IDs
   let dbClubsMap = new Map<string, any>();
   try {
-    const { data: dbClubs } = await supabase.from("Club").select("id, name, transfermarktId, logoUrl");
+    const { data: dbClubs } = await supabase
+      .from("Club")
+      .select("id, name, transfermarktId, logoUrl, league:League ( id, name, country )");
     if (dbClubs) {
       dbClubs.forEach((c) => {
         if (c.transfermarktId) dbClubsMap.set(c.transfermarktId, c);
@@ -53,6 +55,7 @@ export async function getMostValuablePlayers(limit = 40, positionFilter?: string
                 id: canonicalClubId,
                 name: canonicalClubName,
                 logoUrl: canonicalClubLogo,
+                league: matchedClub?.league || p.currentClub?.league || null,
               }
             : null,
         };
@@ -135,6 +138,25 @@ export async function getPlayerBySlugOrId(slugOrId: string) {
   try {
     const livePlayer = await tmGetPlayer(slugOrId);
     if (livePlayer && livePlayer.fullName !== slugOrId && (livePlayer.latestMarketValue > 0 || (livePlayer.marketValues && livePlayer.marketValues.length > 0))) {
+      // Ensure currentClub uses canonical DB CUID so links use canonical slug
+      if (livePlayer.currentClub && livePlayer.currentClub.id) {
+        try {
+          const { data: dbClub } = await supabase
+            .from("Club")
+            .select("id, name, logoUrl")
+            .or(`transfermarktId.eq.${livePlayer.currentClub.id},id.eq.${livePlayer.currentClub.id}`)
+            .maybeSingle();
+
+          if (dbClub) {
+            livePlayer.currentClub.id = dbClub.id;
+            livePlayer.currentClub.name = dbClub.name;
+            if (dbClub.logoUrl) livePlayer.currentClub.logoUrl = dbClub.logoUrl;
+          }
+        } catch {
+          // ignore
+        }
+      }
+
       if (!livePlayer.seasonStats || livePlayer.seasonStats.length === 0) {
         try {
           const fotmobData = await getFotmobPlayerStats(livePlayer.commonName || livePlayer.fullName);
@@ -610,14 +632,18 @@ export async function getPositionalPeers(
   if (!position) return [];
 
   try {
-    // Simplify position to primary category if needed (e.g. "Central Midfield" -> "Midfield")
+    // Use the specific position term first for precision (e.g. "Centre-Forward"),
+    // only falling back to broader group if too few results
     let primaryPos = String(position);
-    if (primaryPos.includes("Midfield")) primaryPos = "Midfield";
-    else if (primaryPos.includes("Forward") || primaryPos.includes("Winger") || primaryPos.includes("Striker") || primaryPos.includes("Attack")) primaryPos = "Attack";
-    else if (primaryPos.includes("Back") || primaryPos.includes("Defender")) primaryPos = "Defender";
-    else if (primaryPos.includes("Goalkeeper")) primaryPos = "Goalkeeper";
+    const broadGroup = primaryPos.includes("Midfield") ? "Midfield"
+      : (primaryPos.includes("Forward") || primaryPos.includes("Striker")) ? "Forward"
+      : primaryPos.includes("Winger") ? "Winger"
+      : (primaryPos.includes("Back") || primaryPos.includes("Defender")) ? "Defender"
+      : primaryPos.includes("Goalkeeper") ? "Goalkeeper"
+      : primaryPos;
 
-    const { data: peers, error } = await supabase
+    // Try specific subPosition or position first (e.g. "Centre-Forward")
+    const { data: specificPeers, error: specificError } = await supabase
       .from("Player")
       .select(`
         id,
@@ -634,12 +660,42 @@ export async function getPositionalPeers(
           logoUrl
         )
       `)
-      .ilike("position", `%${primaryPos}%`)
+      .or(`subPosition.ilike.%${primaryPos}%,position.ilike.%${primaryPos}%`)
       .order("latestMarketValue", { ascending: false, nullsFirst: false })
       .limit(limit + 5);
 
-    if (error || !peers) {
-      console.warn("Error fetching positional peers:", error?.message || error);
+    let peers = specificPeers || [];
+
+    // If too few specific results, fall back to broader group
+    if (peers.length < limit + 1 && broadGroup !== primaryPos) {
+      const { data: broadPeers } = await supabase
+        .from("Player")
+        .select(`
+          id,
+          fullName,
+          commonName,
+          position,
+          subPosition,
+          photoUrl,
+          transfermarktId,
+          dateOfBirth,
+          latestMarketValue,
+          currentClub:Club (
+            name,
+            logoUrl
+          )
+        `)
+        .or(`position.ilike.%${broadGroup}%,subPosition.ilike.%${broadGroup}%`)
+        .order("latestMarketValue", { ascending: false, nullsFirst: false })
+        .limit(limit + 5);
+
+      if (broadPeers && broadPeers.length > peers.length) {
+        peers = broadPeers;
+      }
+    }
+
+    if (!peers || peers.length === 0) {
+      console.warn("Error fetching positional peers:", specificError?.message || specificError);
       return [];
     }
 

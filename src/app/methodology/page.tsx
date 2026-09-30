@@ -94,6 +94,49 @@ export default function MethodologyPage() {
         </div>
       </div>
 
+      {/* Squad Metrics & Tier Classification Standard (R2-1) */}
+      <div className="rounded-3xl glass-panel p-4 sm:p-8 border border-slate-800 bg-slate-900/40 space-y-4">
+        <div className="flex items-center gap-3">
+          <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 shrink-0">
+            <Layers className="w-5 h-5" />
+          </div>
+          <div>
+            <h3 className="text-base sm:text-lg font-bold text-white tracking-tight [text-wrap:balance]">
+              First-Team Squad &amp; Valuation Methodology
+            </h3>
+            <p className="text-xs text-slate-400 [text-wrap:balance]">
+              Strict unified definitions governing squad counts, total squad valuations, and average squad age across all platform views
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 text-xs">
+          <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-1.5">
+            <span className="text-amber-400 font-bold text-sm">First-Team Tier Definition</span>
+            <h4 className="text-white font-semibold">Active Senior Roster</h4>
+            <p className="text-slate-400 leading-relaxed">
+              Players currently contracted for the active campaign (<code className="text-amber-300">lastSeason &ge; 2025</code>) with an established transfer market valuation (<code className="text-amber-300">&gt; €0</code>) or aged 20+. Academy/youth registrants under 20 without active market valuations are classified into the academy tier and isolated from senior averages.
+            </p>
+          </div>
+
+          <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-1.5">
+            <span className="text-emerald-400 font-bold text-sm">Squad Valuation Parity</span>
+            <h4 className="text-white font-semibold">Total Market Value</h4>
+            <p className="text-slate-400 leading-relaxed">
+              Every club squad valuation is the exact arithmetic sum of its active first-team players&apos; individual valuations. The same canonical figure is enforced across club directory cards, club profile hero headers, domestic league tables, parity charts, meta descriptions, and OpenGraph cards.
+            </p>
+          </div>
+
+          <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-1.5">
+            <span className="text-blue-400 font-bold text-sm">Authentic Demographic Age</span>
+            <h4 className="text-white font-semibold">Real Average Age</h4>
+            <p className="text-slate-400 leading-relaxed">
+              Squad average age is calculated directly from verifiable birth dates (<code className="text-blue-300">2026 - birthYear</code>) of active first-team players, rounded to one decimal place. If birth dates are unavailable, the metric displays &ldquo;N/A&rdquo; rather than an estimated figure.
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Data Refresh Lifecycle */}
       <div className="rounded-3xl glass-panel p-4 sm:p-8 border border-slate-800 space-y-4 sm:space-y-6">
         <div className="flex items-center gap-3">

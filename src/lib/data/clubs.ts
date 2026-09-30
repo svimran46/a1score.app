@@ -4,19 +4,122 @@ import { getLeagueStandings } from "@/lib/fotmob/client";
 import { sanitizeImageUrl } from "@/lib/image-sanitize";
 import { getCanonicalPosition } from "@/lib/positions";
 
+import { FOTMOB_TEAM_MAPPINGS } from "@/lib/league-mappings";
+
+export const CLUB_SHORT_NAMES: Record<string, string> = {
+  "Associazione Sportiva Roma": "AS Roma",
+  "1. Fußballclub Heidenheim 1846": "1. FC Heidenheim",
+  "Bologna Football Club 1909": "Bologna FC",
+  "Borussia Mönchengladbach": "M'gladbach",
+  "CF União Madeira (-2021)": "União Madeira",
+  "De Graafschap Doetinchem": "De Graafschap",
+  "Desportivo Aves (- 2020)": "Desportivo Aves",
+  "Fortuna Sittardia Combinatie": "Fortuna Sittard",
+  "Società Sportiva Lazio S.p.A.": "SS Lazio",
+  "Thonon Évian Grand Genève FC": "Thonon Évian",
+  "Wolverhampton Wanderers": "Wolves",
+  "Brighton and Hove Albion": "Brighton",
+  "Brighton & Hove Albion": "Brighton",
+  "Manchester City": "Man City",
+  "Manchester United": "Man United",
+  "Paris Saint-Germain": "PSG",
+  "Atlético de Madrid": "Atlético Madrid",
+};
+
+export function getClubShortName(fullName: string): string {
+  if (!fullName) return "";
+  if (CLUB_SHORT_NAMES[fullName]) return CLUB_SHORT_NAMES[fullName];
+  return fullName
+    .replace(/^Associazione Sportiva\s+/i, "AS ")
+    .replace(/^Società Sportiva\s+/i, "SS ")
+    .replace(/\s+S\.p\.A\.?$/i, "")
+    .replace(/\s+Football Club\s+/i, " FC ")
+    .replace(/^1\.\s*Fußballclub\s+/i, "1. FC ");
+}
+
 /**
- * Extracts possible identifiers (CUID, TM ID, slug) from an input string.
+ * Extracts possible identifiers (CUID, TM ID, FotMob ID, slug) from an input string.
  */
 export function extractClubIdentifiers(idOrSlug: string) {
   const raw = (idOrSlug || "").trim();
   const cuidMatch = raw.match(/c[a-z0-9]{24}/i);
   const cuid = cuidMatch ? cuidMatch[0] : null;
 
-  // Numeric TM ID at the end or standalone
+  // Numeric ID
   const numMatch = raw.match(/\b\d+\b/);
-  const tmId = numMatch ? numMatch[0] : null;
+  const numId = numMatch ? numMatch[0] : null;
 
-  return { raw, cuid, tmId };
+  // Check FotMob mapping for numeric ID (e.g. 8456 for Man City, 9823 for Bayern)
+  let tmId = numId;
+  let fotmobCuid: string | null = null;
+  if (numId && FOTMOB_TEAM_MAPPINGS[Number(numId)]) {
+    const mapping = FOTMOB_TEAM_MAPPINGS[Number(numId)];
+    if (mapping.tmId) tmId = mapping.tmId;
+    if (mapping.clubId) fotmobCuid = mapping.clubId;
+  }
+
+  return { raw, cuid: cuid || fotmobCuid, tmId };
+}
+
+/**
+ * Canonical function for first-team squad, club total value, average age and player count.
+ * Used consistently across club page, /clubs, league pages, /leagues, OG images and JSON-LD.
+ * Definition:
+ * - Active player: lastSeason === null || lastSeason >= 2025
+ * - First team tier: latestMarketValue > 0 OR age >= 20
+ * - Total squad valuation: sum of first team players' latestMarketValue
+ * - Average age: arithmetic mean of first team players with known age/DOB, rounded to 1 decimal
+ * - Squad size / player count: count of first team players
+ */
+export function computeClubMetrics(rawPlayers: any[]) {
+  const active = (rawPlayers || []).filter(
+    (p: any) => p.lastSeason === null || p.lastSeason >= 2025
+  );
+
+  const squadWithValues = active.map((p: any) => {
+    const extId = p.transfermarktId || p.id || p.sourceId;
+    const canonicalPos = getCanonicalPosition(p.subPosition || p.position);
+    const birthYear = p.dateOfBirth ? new Date(p.dateOfBirth).getFullYear() : null;
+    const age = birthYear ? 2026 - birthYear : (typeof p.age === "number" ? p.age : null);
+    const val = p.latestMarketValue ? Number(p.latestMarketValue) : 0;
+    const tier = (val > 0 || (age !== null && age >= 20)) ? "first_team" : "academy";
+
+    return {
+      ...p,
+      sourceId: extId,
+      slug: `${(p.fullName || "player").toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${extId}`,
+      photoUrl: sanitizeImageUrl(p.photoUrl, "player", extId),
+      position: canonicalPos.detailed,
+      positionGroup: canonicalPos.group,
+      canonicalPosition: canonicalPos,
+      latestMarketValue: val,
+      age,
+      contractUntil: p.contractUntil || null,
+      tier,
+    };
+  });
+
+  const firstTeam = squadWithValues.filter((p: any) => p.tier === "first_team");
+  const academy = squadWithValues.filter((p: any) => p.tier === "academy");
+  const squadToUse = firstTeam.length > 0 ? firstTeam : squadWithValues;
+
+  const totalSquadValue = squadToUse.reduce(
+    (acc: number, curr: any) => acc + curr.latestMarketValue,
+    0
+  );
+
+  const ages = squadToUse.map((p: any) => p.age).filter((a: any): a is number => typeof a === "number" && a > 0);
+  const averageAge = ages.length > 0 ? (ages.reduce((s: number, a: number) => s + a, 0) / ages.length).toFixed(1) : null;
+
+  return {
+    players: squadWithValues.sort((a: any, b: any) => b.latestMarketValue - a.latestMarketValue),
+    firstTeamPlayers: squadToUse.sort((a: any, b: any) => b.latestMarketValue - a.latestMarketValue),
+    academyPlayers: academy.sort((a: any, b: any) => b.latestMarketValue - a.latestMarketValue),
+    totalSquadValue,
+    totalMarketValue: totalSquadValue,
+    squadSize: squadToUse.length,
+    averageAge,
+  };
 }
 
 export async function getClubById(idOrSlug: string) {
@@ -102,44 +205,50 @@ export async function getClubById(idOrSlug: string) {
     ? sanitizeImageUrl(`https://img.a.transfermarkt.technology/wappen/head/${effectiveTmId}.png`, "club", effectiveTmId)
     : null;
 
-  // 2. Try Transfermarkt live squad proxy for current first team roster and valuations
+  // 2. Authoritative Database metrics (used if DB has active player roster)
+  if (dbClub && dbClub.players && dbClub.players.length > 0) {
+    const metrics = computeClubMetrics(dbClub.players);
+    const finalVal = metrics.totalSquadValue > 0
+      ? metrics.totalSquadValue
+      : (dbClub.totalMarketValue ? Number(dbClub.totalMarketValue) : 0);
+    const finalSize = metrics.squadSize > 0
+      ? metrics.squadSize
+      : (dbClub.squadSize || 0);
+
+    return {
+      ...dbClub,
+      id: dbClub.id,
+      name: dbClub.name,
+      shortName: getClubShortName(dbClub.name),
+      logoUrl: canonicalLogo,
+      league: dbClub.league
+        ? {
+            ...dbClub.league,
+            logoUrl: sanitizeImageUrl(dbClub.league.logoUrl, "league", dbClub.league.id),
+          }
+        : null,
+      players: metrics.players,
+      firstTeamPlayers: metrics.firstTeamPlayers,
+      academyPlayers: metrics.academyPlayers,
+      totalSquadValue: finalVal,
+      totalMarketValue: finalVal,
+      squadSize: finalSize,
+      averageAge: metrics.averageAge,
+    };
+  }
+
+  // 3. Fallback to Transfermarkt live squad proxy if club roster was not in DB
   if (effectiveTmId) {
     try {
       const liveClub = await tmGetClub(effectiveTmId);
       if (liveClub && liveClub.players && liveClub.players.length > 0) {
-        const livePlayers = liveClub.players.map((p: any) => {
-          const extId = p.sourceId || p.id;
-          const canonicalPos = getCanonicalPosition(p.position);
-          return {
-            ...p,
-            sourceId: extId,
-            slug: `${p.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${extId}`,
-            photoUrl: sanitizeImageUrl(p.photoUrl, "player", extId),
-            position: canonicalPos.detailed,
-            positionGroup: canonicalPos.group,
-            canonicalPosition: canonicalPos,
-            latestMarketValue: p.latestMarketValue ? Number(p.latestMarketValue) : 0,
-            tier: p.tier || ((p.latestMarketValue && p.latestMarketValue > 0) || (p.age && p.age >= 20) ? "first_team" : "academy"),
-          };
-        });
-
-        const firstTeam = livePlayers.filter((p: any) => p.tier === "first_team");
-        const academy = livePlayers.filter((p: any) => p.tier === "academy");
-        const squadToUse = firstTeam.length > 0 ? firstTeam : livePlayers;
-
-        const totalSquadValue = squadToUse.reduce(
-          (sum: number, p: any) => sum + (p.latestMarketValue || 0),
-          0
-        );
-
-        const ages = squadToUse.map((p: any) => p.age).filter((a: any): a is number => typeof a === "number" && a > 0);
-        const averageAge = ages.length > 0 ? (ages.reduce((s: number, a: number) => s + a, 0) / ages.length).toFixed(1) : null;
-
+        const metrics = computeClubMetrics(liveClub.players);
         return {
           id: canonicalId,
           sourceId: effectiveTmId,
           transfermarktId: effectiveTmId,
           name: canonicalName,
+          shortName: getClubShortName(canonicalName),
           logoUrl: canonicalLogo,
           country: dbClub?.country || null,
           league: dbClub?.league
@@ -148,82 +257,43 @@ export async function getClubById(idOrSlug: string) {
                 logoUrl: sanitizeImageUrl(dbClub.league.logoUrl, "league", dbClub.league.id),
               }
             : null,
-          totalSquadValue,
-          totalMarketValue: totalSquadValue,
-          squadSize: squadToUse.length,
-          averageAge,
-          players: livePlayers,
-          firstTeamPlayers: squadToUse,
-          academyPlayers: academy,
+          totalSquadValue: metrics.totalSquadValue,
+          totalMarketValue: metrics.totalMarketValue,
+          squadSize: metrics.squadSize,
+          averageAge: metrics.averageAge,
+          players: metrics.players,
+          firstTeamPlayers: metrics.firstTeamPlayers,
+          academyPlayers: metrics.academyPlayers,
         };
       }
     } catch (proxyErr) {
-      console.warn(`[Data Layer] TM Live Club fetch failed for ${effectiveTmId}, falling back to DB:`, proxyErr);
+      console.warn(`[Data Layer] TM Live Club fetch failed for ${effectiveTmId}:`, proxyErr);
     }
   }
 
-  // 3. Fallback to Supabase Database (strictly filtered to active players, lastSeason >= 2025)
   if (!dbClub) {
     return null;
   }
-
-  const rawDbPlayers = (dbClub.players || []).filter(
-    (p: any) => p.lastSeason === null || p.lastSeason >= 2025
-  );
-
-  const squadWithValues = rawDbPlayers.map((p: any) => {
-    const extId = p.transfermarktId || p.id;
-    const canonicalPos = getCanonicalPosition(p.subPosition || p.position);
-    const birthYear = p.dateOfBirth ? new Date(p.dateOfBirth).getFullYear() : null;
-    const age = birthYear ? 2026 - birthYear : null;
-    const val = p.latestMarketValue ? Number(p.latestMarketValue) : 0;
-    const tier = (val > 0 || (age !== null && age >= 20)) ? "first_team" : "academy";
-
-    return {
-      ...p,
-      sourceId: extId,
-      slug: `${p.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${extId}`,
-      photoUrl: sanitizeImageUrl(p.photoUrl, "player", extId),
-      position: canonicalPos.detailed,
-      positionGroup: canonicalPos.group,
-      canonicalPosition: canonicalPos,
-      latestMarketValue: val,
-      age,
-      contractUntil: null,
-      tier,
-    };
-  });
-
-  const firstTeam = squadWithValues.filter((p: any) => p.tier === "first_team");
-  const academy = squadWithValues.filter((p: any) => p.tier === "academy");
-  const squadToUse = firstTeam.length > 0 ? firstTeam : squadWithValues;
-
-  const totalSquadValue = squadToUse.reduce(
-    (acc: number, curr: any) => acc + curr.latestMarketValue,
-    0
-  );
-
-  const ages = squadToUse.map((p: any) => p.age).filter((a: any): a is number => typeof a === "number" && a > 0);
-  const averageAge = ages.length > 0 ? (ages.reduce((s: number, a: number) => s + a, 0) / ages.length).toFixed(1) : null;
 
   return {
     ...dbClub,
     id: dbClub.id,
     name: dbClub.name,
-    logoUrl: sanitizeImageUrl(dbClub.logoUrl, "club", dbClub.id),
+    shortName: getClubShortName(dbClub.name),
+    logoUrl: canonicalLogo,
     league: dbClub.league
       ? {
           ...dbClub.league,
           logoUrl: sanitizeImageUrl(dbClub.league.logoUrl, "league", dbClub.league.id),
         }
       : null,
-    players: squadWithValues.sort((a: any, b: any) => b.latestMarketValue - a.latestMarketValue),
-    firstTeamPlayers: squadToUse.sort((a: any, b: any) => b.latestMarketValue - a.latestMarketValue),
-    academyPlayers: academy.sort((a: any, b: any) => b.latestMarketValue - a.latestMarketValue),
-    totalSquadValue,
-    totalMarketValue: totalSquadValue,
-    squadSize: squadToUse.length,
-    averageAge,
+    players: [],
+    firstTeamPlayers: [],
+    academyPlayers: [],
+    totalSquadValue: dbClub.totalMarketValue ? Number(dbClub.totalMarketValue) : 0,
+    totalMarketValue: dbClub.totalMarketValue ? Number(dbClub.totalMarketValue) : 0,
+    squadSize: dbClub.squadSize || 0,
+    averageAge: null,
   };
 }
 
@@ -240,7 +310,8 @@ export async function getAllClubs() {
         totalMarketValue,
         lastSeason,
         transfermarktId,
-        league:League ( id, name, country )
+        league:League ( id, name, country ),
+        players:Player ( latestMarketValue, dateOfBirth, lastSeason )
       `)
       .order("totalMarketValue", { ascending: false, nullsFirst: false })
       .order("name", { ascending: true });
@@ -250,9 +321,10 @@ export async function getAllClubs() {
       return [];
     }
 
-    // Load league standings to attach domestic league rank
+    // Load league standings to attach domestic league rank by team ID
     const fotmobIds = [47, 87, 55, 54, 53, 61, 57];
-    const teamRankMap = new Map<string, number>();
+    const teamRankByClubId = new Map<string, number>();
+    const teamRankByTmId = new Map<string, number>();
 
     try {
       const standingsArrays = await Promise.all(
@@ -265,8 +337,9 @@ export async function getAllClubs() {
 
       standingsArrays.forEach((arr) => {
         arr.forEach((t: any) => {
-          if (t.name) teamRankMap.set(t.name.toLowerCase(), t.idx);
-          if (t.shortName) teamRankMap.set(t.shortName.toLowerCase(), t.idx);
+          const mapping = FOTMOB_TEAM_MAPPINGS[t.id];
+          if (mapping?.clubId) teamRankByClubId.set(mapping.clubId, t.idx);
+          if (mapping?.tmId) teamRankByTmId.set(mapping.tmId, t.idx);
         });
       });
     } catch {
@@ -274,37 +347,30 @@ export async function getAllClubs() {
     }
 
     return clubs.map((club: any) => {
-      const rawSquadSize = club.squadSize;
-      const effectiveSquadSize =
-        typeof rawSquadSize === "number" && rawSquadSize >= 18 && rawSquadSize <= 38
-          ? rawSquadSize
-          : 24;
-
-      const cNameLow = club.name.toLowerCase();
-      const cleanName = cNameLow
-        .replace(/^(fc|cf|ac|as|ssc|afc|bsc|rcd|rc)\s+/i, "")
-        .replace(/\s+(fc|cf|afc|bsc|sad)$/i, "")
-        .trim();
+      const metrics = computeClubMetrics(club.players || []);
+      const finalSquadVal = metrics.totalSquadValue > 0
+        ? metrics.totalSquadValue
+        : (club.totalMarketValue ? Number(club.totalMarketValue) : 0);
+      const finalSquadSize = metrics.squadSize > 0
+        ? metrics.squadSize
+        : (club.squadSize || null);
 
       const leagueRank =
-        teamRankMap.get(cNameLow) ||
-        teamRankMap.get(cleanName) ||
-        teamRankMap.get(cNameLow.split(" ")[0]) ||
+        teamRankByClubId.get(club.id) ||
+        (club.transfermarktId ? teamRankByTmId.get(club.transfermarktId) : null) ||
         null;
-
-      const hash = (club.id || club.name).split("").reduce((acc: number, char: string) => acc + char.charCodeAt(0), 0);
-      const computedAge = (25.0 + (hash % 24) * 0.1).toFixed(1);
 
       return {
         id: club.id,
         name: club.name,
+        shortName: getClubShortName(club.name),
         logoUrl: sanitizeImageUrl(club.logoUrl, "club", club.id),
         country: club.country || club.league?.country || null,
         leagueName: club.league?.name ?? null,
         leagueId: club.league?.id ?? null,
-        playerCount: effectiveSquadSize,
-        totalSquadValue: club.totalMarketValue ? Number(club.totalMarketValue) : 0,
-        averageAge: computedAge,
+        playerCount: finalSquadSize,
+        totalSquadValue: finalSquadVal,
+        averageAge: metrics.averageAge,
         leagueRank,
       };
     });
