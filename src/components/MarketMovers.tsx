@@ -27,7 +27,7 @@ export function MarketMovers({ risers, fallers }: MarketMoversProps) {
               Market Value Movers
             </h2>
             <span className="self-start sm:self-auto text-xs px-2.5 py-0.5 rounded-full font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20 whitespace-nowrap">
-              Transfermarkt Updates (June 2026)
+              Transfermarkt Updates (21 Jul 2026)
             </span>
           </div>
           <p className="text-xs text-slate-400 mt-1 [text-wrap:balance]">

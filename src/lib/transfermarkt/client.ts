@@ -42,7 +42,7 @@ async function tmFetch(path: string, isJson = false, revalidate = 3600): Promise
   // Retry once on failure or timeout (2 attempts total)
   for (let attempt = 1; attempt <= 2; attempt++) {
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 5000); // 5s timeout
+    const timer = setTimeout(() => controller.abort(), 1500); // 1.5s max edge timeout
 
     try {
       const res = await fetch(url, {

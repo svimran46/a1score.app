@@ -45,12 +45,9 @@ export default async function HomePage() {
     : allMatches;
   const featuredMatches = matchPool.slice(0, 3);
 
-  // Compute big 5 cumulative value
-  const big5Leagues = leagues.filter((l) =>
-    ["GB1", "ES1", "IT1", "L1", "FR1"].includes(l.id) ||
-    ["Premier League", "LaLiga", "Serie A", "Bundesliga", "Ligue 1"].includes(l.name)
-  );
-  const totalBig5Valuation = big5Leagues.reduce((acc, l) => acc + l.totalMarketValue, 0);
+  // Compute cumulative valuation across all tracked domestic top-flight leagues (equals /leagues total)
+  const totalTop7Valuation = leagues.reduce((acc, l) => acc + (l.totalMarketValue || 0), 0);
+  const totalTop7Clubs = leagues.reduce((sum, l) => sum + (l.clubCount || 0), 0);
 
   return (
     <div className="space-y-8 sm:space-y-12">
@@ -99,12 +96,12 @@ export default async function HomePage() {
 
             <div className="p-3 sm:p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800/80 flex flex-col justify-between space-y-1">
               <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider flex items-center gap-1">
-                <Scale className="w-3 h-3 text-emerald-400 shrink-0" /> Big 5 Valuation
+                <Scale className="w-3 h-3 text-emerald-400 shrink-0" /> Top 7 Leagues Value
               </span>
               <div className="text-base sm:text-xl font-black text-emerald-400 tabular-nums">
-                {totalBig5Valuation > 0 ? formatCompactEur(totalBig5Valuation) : "€35.7B"}
+                {totalTop7Valuation > 0 ? formatCompactEur(totalTop7Valuation) : "€36.3B"}
               </div>
-              <div className="text-[11px] text-slate-400">{leagues.reduce((sum, l) => sum + (l.clubCount || 0), 0) || 96} top-flight clubs</div>
+              <div className="text-[11px] text-slate-400">{totalTop7Clubs || 132} top-flight clubs</div>
             </div>
 
             <div className="p-3 sm:p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800/80 flex flex-col justify-between space-y-1">
@@ -244,17 +241,17 @@ export default async function HomePage() {
 
       {/* Most Valuable Players Worldwide */}
       <section className="space-y-4">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4">
           <div className="flex items-center gap-2">
-            <TrendingUp className="w-5 h-5 text-amber-400" />
+            <TrendingUp className="w-5 h-5 text-amber-400 shrink-0" />
             <div>
               <h2 className="text-xl font-bold text-white tracking-tight">Most Valuable Players</h2>
               <p className="text-xs text-slate-400">Transfermarkt player market valuations and squad capital analytics</p>
             </div>
           </div>
           <Link
-            href="/values"
-            className="text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1 transition-colors"
+            href="/players"
+            className="text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1 transition-colors self-start sm:self-auto shrink-0"
           >
             View Worldwide Rankings <ArrowRight className="w-3.5 h-3.5" />
           </Link>

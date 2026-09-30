@@ -14,6 +14,8 @@
     "sync:dataset": "tsx scripts/sync-dataset.ts",
     "data:validate": "tsx scripts/validate-data.ts",
     "verify:data": "tsx scripts/verify-data-integrity.ts",
+    "check:integrity": "tsx scripts/nightly-integrity-check.ts",
+    "reconcile:squads": "tsx scripts/reconcile-all-transfers.ts",
     "test": "tsx --test tests/**/*.test.ts"
   },
   "dependencies": {

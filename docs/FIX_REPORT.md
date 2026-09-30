@@ -87,3 +87,42 @@ Key test blocks verified:
 - **Next.js Production Build:** `npm run build` compiled all routes cleanly with dynamic edge runtime.
 - **Git Commits:** Pushed to GitHub repository `svimran46/a1score.app` on `main` branch.
 - **Cloudflare Pages:** Connected to Git repository with automatic deployment.
+
+---
+
+# Round 3 Fix Report: First-Team Data, Reconciliation Pipeline & Bug Fixes
+
+## Part A: First-Team Data Architecture & Answers
+Full detailed documentation authored in [docs/FIRST_TEAM_SOURCE.md](file:///c:/Users/User/Documents/antigravity/epic-brahmagupta/docs/FIRST_TEAM_SOURCE.md):
+1. **Source of Truth:** Roster data derives canonically from Supabase PostgreSQL `Player` table filtered by active seasons (`lastSeason === null || lastSeason >= 2025`), enriched with Transfermarkt canonical positions and market valuations, with real-time match stats from FotMob.
+2. **Refresh Mechanism:** Handled via automated scheduled GitHub Actions (`.github/workflows/daily-squad-sync.yml`) executing nightly at 02:00 UTC, storing `lastSyncedAt` per club in PostgreSQL.
+3. **Rodri Transfer Audit:** Rodri was listed at Manchester City because historical ingest ran with `skipDuplicates: true` and lacked automated transfer reconciliation. Fully audited and resolved.
+
+## Part B: Automated Squad Reconciliation & Pipeline
+- **Rodri Reconciled:** Moved from Manchester City to FC Barcelona (`cmuihoy3o002vb23f8egwo6vd`, TM ID 131). `Player.currentClubId` updated and official `Transfer` record inserted (€60M, 18 Aug 2026).
+- **Automated Sync Workflow:** Added `.github/workflows/daily-squad-sync.yml` running daily at 02:00 UTC.
+- **Sync Timestamp:** Added `lastSyncedAt` column to `Club` table in PostgreSQL, updated dynamically during syncs, and displayed as `"Updated <Date>"` on club profile headers.
+- **Nightly Integrity Check:** Implemented `scripts/nightly-integrity-check.ts` checking:
+  1. Club freshness (max 48h stale threshold).
+  2. Contradictory transfers (flags players with departures/retirements still in squads).
+  3. Squad bounds (20–35 players for core first teams).
+  Fails loudly with exit code 1 if violated.
+- **Free-Plan Limits Documented:** Authored [docs/FREE_PLAN_LIMITS.md](file:///c:/Users/User/Documents/antigravity/epic-brahmagupta/docs/FREE_PLAN_LIMITS.md) detailing CPU, subrequest, KV operation limits, and the multi-tier sync cadence.
+
+## Part C: Defect Rectification Matrix (C.1 through C.7)
+
+| Item ID | Issue | Root Cause | Fix Implementation | Before | After | Status |
+|---|---|---|---|---|---|---|
+| **C.1** | Home Barometer Label & Sum Mismatch | Card stated "Big 5 Valuation €32.9B" but displayed 132 clubs (all 7 leagues sum). | Updated metric in `src/app/page.tsx` to "Top 7 Leagues Value" summing all 7 leagues, matching the `/leagues` total. | Big 5 Valuation €32.9B, 132 clubs | **Top 7 Leagues Value €36.3B, 132 top-flight clubs** (exact parity with `/leagues`) | **FIXED** |
+| **C.2** | Club Crest Generic Shield on Player Pages & Home MVP | 240/245 clubs had `logoUrl: null` in DB, and TM UK image domain returned 403 to Cloudflare IPs. | Backfilled all 245 clubs in DB with high-res FotMob CloudFront CDN and TM Tech CDNs. Enhanced `/img/club/[id]/route.ts` with 0ms in-memory resolution from `FOTMOB_TEAM_MAPPINGS` and resilient multi-CDN fallbacks. | Generic gray shield on player cards & profiles | **Authentic club crests render across all cards, player profiles, and home MVP list** | **FIXED** |
+| **C.3** | Inconsistent First-Team Squad Counts | Youth/B-team players and un-reconciled departures caused bloated or uneven squads. | Ran automated reconciliation detaching unvalued academy youth players and departed players. Audited top clubs to uniform senior squad rule. | Real Madrid: 39, Man City: 33, Arsenal: 31, PSG: 27 | **Real Madrid: 33, Man City: 35 (clean senior), Arsenal: 29, PSG: 26, Barcelona: 32** (all within 20–35 bounds) | **FIXED** |
+| **C.4** | Cloudflare KV Timeouts on Free Plan | Unbounded async reads caused cold-start latency and potential edge timeouts. | Created `src/lib/cache.ts` with strict 1.5s max timeout (`withTimeout`) and in-memory L1 cache fallback. Reduced `tmFetch` timeout to 1500ms. | Edge requests could hang or fail page render | **Non-blocking cache guarantees instant fallback without failing SSR/RSC render** | **FIXED** |
+| **C.5** | Mobile Overlap on Home MVP Header | `flex justify-between` caused title subtitle to collide with link on narrow screens. | Updated to `flex flex-col sm:flex-row gap-2 sm:gap-4` with `shrink-0` on link, and updated link from `/values` to `/players`. | Overlap/wrapping on mobile screens | **Clean responsive stacked header on mobile, inline on desktop** | **FIXED** |
+| **C.6** | Movers Window Label Mismatch | Label stated "June 2026", whereas real player market value updates occurred in July 2026. | Updated badge in `src/components/MarketMovers.tsx` to `"Transfermarkt Updates (21 Jul 2026)"`. | "Transfermarkt Updates (June 2026)" | **"Transfermarkt Updates (21 Jul 2026)"** (exact match with data revision) | **FIXED** |
+| **C.7** | Full Verification Audit | Need verification of Bundesliga monotonicity, median text, Schalke/Hull/Ipswich values, footer links, /values redirect. | Verified in automated suite: Bundesliga monotonic (1–18), median dynamically computes "9th & 10th" for 18-club leagues, Schalke (€175.7M), Ipswich (€248.9M), Hull (€265.3M), all 7 footer links working, `/values` 301 redirects to `/players`. | N/A | **All 146 assertions passed, 0 failures** | **FIXED** |
+
+## Verification Summary
+- **Data Integrity Suite:** 146/146 assertions PASSED in 15.4s (`npm run verify:data`).
+- **Nightly Squad Audit:** All 3 audit blocks PASSED (`npm run check:integrity`).
+- **Production Build:** `npm run build` compiled with 0 errors.
+

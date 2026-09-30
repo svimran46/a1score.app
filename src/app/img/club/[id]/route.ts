@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { NEUTRAL_CLUB_SVG } from "@/lib/neutral-avatars";
+import { FOTMOB_TEAM_MAPPINGS } from "@/lib/league-mappings";
 
 export const runtime = "edge";
 
@@ -38,6 +39,32 @@ export async function GET(
 ) {
   const clubId = params.id;
 
+  // 1. Instant in-memory resolution from FOTMOB_TEAM_MAPPINGS (0ms)
+  let fotmobId: number | null = null;
+  let tmId: string | null = null;
+
+  // Check if clubId is numeric FotMob team ID
+  if (/^\d+$/.test(clubId) && FOTMOB_TEAM_MAPPINGS[Number(clubId)]) {
+    fotmobId = Number(clubId);
+    tmId = FOTMOB_TEAM_MAPPINGS[Number(clubId)].tmId || null;
+  } else {
+    // Check by CUID or TM ID in mapping
+    for (const [fIdStr, mapping] of Object.entries(FOTMOB_TEAM_MAPPINGS)) {
+      if (mapping.clubId === clubId || mapping.tmId === clubId) {
+        fotmobId = Number(fIdStr);
+        tmId = mapping.tmId || null;
+        break;
+      }
+    }
+  }
+
+  // If FotMob ID resolved, try high-reliability AWS Cloudfront CDN first
+  if (fotmobId) {
+    const fotmobRes = await tryFetch(`https://images.fotmob.com/image_resources/logo/teamlogo/${fotmobId}.png`);
+    if (fotmobRes) return fotmobRes;
+  }
+
+  // 2. Query Supabase DB for club record
   try {
     const { data: club } = await supabase
       .from("Club")
@@ -45,25 +72,32 @@ export async function GET(
       .or(`id.eq.${clubId},transfermarktId.eq.${clubId}`)
       .maybeSingle();
 
-    // 1. Try the database logoUrl first
     if (club?.logoUrl) {
       const res = await tryFetch(club.logoUrl);
       if (res) return res;
     }
 
-    // 2. Fallback: construct CDN URL from transfermarktId
-    const tmId = club?.transfermarktId;
-    if (tmId) {
-      // Try primary CDN (Transfermarkt image server)
-      const cdnUrl = `https://www.transfermarkt.co.uk/images/wappen/head/${tmId}.png`;
-      const res = await tryFetch(cdnUrl);
-      if (res) return res;
+    const effectiveTmId = club?.transfermarktId || tmId || (/^\d+$/.test(clubId) ? clubId : null);
+    if (effectiveTmId) {
+      // Try TM Technology CDN
+      const cdnTechRes = await tryFetch(`https://img.a.transfermarkt.technology/wappen/head/${effectiveTmId}.png`);
+      if (cdnTechRes) return cdnTechRes;
+
+      // Try primary UK Transfermarkt
+      const cdnUkRes = await tryFetch(`https://www.transfermarkt.co.uk/images/wappen/head/${effectiveTmId}.png`);
+      if (cdnUkRes) return cdnUkRes;
     }
   } catch (err) {
     console.error(`[Image Proxy] Error for club ${clubId}:`, err);
   }
 
-  // 3. Final fallback: neutral SVG
+  // 3. Fallback: if tmId was known, try TM Technology CDN
+  if (tmId) {
+    const cdnTechRes = await tryFetch(`https://img.a.transfermarkt.technology/wappen/head/${tmId}.png`);
+    if (cdnTechRes) return cdnTechRes;
+  }
+
+  // 4. Final fallback: neutral SVG
   return new NextResponse(NEUTRAL_CLUB_SVG, {
     status: 200,
     headers: {

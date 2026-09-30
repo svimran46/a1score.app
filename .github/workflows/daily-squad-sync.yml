@@ -1,0 +1,40 @@
+name: Daily Squad Reconciliation & Nightly Integrity Check
+
+on:
+  schedule:
+    # Runs daily at 02:00 UTC (automated nightly sync)
+    - cron: '0 2 * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub UI
+
+jobs:
+  squad-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Reconcile Squads & Transfers
+        run: npx tsx scripts/reconcile-all-transfers.ts
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+
+      - name: Nightly Integrity Check
+        run: npx tsx scripts/nightly-integrity-check.ts
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
