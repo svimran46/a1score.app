@@ -1,3 +1,5 @@
+process.env.SITE_URL = process.env.SITE_URL || "https://a1score.app";
+
 import test from "node:test";
 import assert from "node:assert/strict";
 import { isYouthMove, formatTransferFee } from "../src/lib/transfers";
@@ -170,4 +172,24 @@ test("cloudflareImageLoader - respects resizing and CDN mirrors", () => {
   const extUrl = "https://example.com/portrait/header/12345.jpg";
   const res = cloudflareImageLoader({ src: extUrl, width: 128, quality: 80 });
   assert.equal(res.startsWith("/img/asset/"), true);
+});
+
+test("formatTitle - formats titles cleanly without duplicate suffixes", async () => {
+  const { formatTitle } = await import("../src/lib/metadata");
+  assert.equal(formatTitle("Premier League"), "Premier League | a1score.app");
+  assert.equal(formatTitle("Premier League | a1score.app"), "Premier League | a1score.app");
+  assert.equal(formatTitle("Real Madrid | a1score.app "), "Real Madrid | a1score.app");
+});
+
+test("constructMetadata - enforces canonical and og:url consistency", async () => {
+  process.env.SITE_URL = "https://a1score.app";
+  const { constructMetadata } = await import("../src/lib/metadata");
+  const meta = constructMetadata({
+    title: "Manchester City",
+    description: "Squad analytics",
+    path: "/clubs/manchester-city",
+  });
+  assert.equal(meta.title, "Manchester City | a1score.app");
+  assert.equal(meta.alternates?.canonical, "https://a1score.app/clubs/manchester-city");
+  assert.equal((meta.openGraph as any)?.url, "https://a1score.app/clubs/manchester-city");
 });

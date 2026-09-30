@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 import { getTopClubs } from "@/lib/data/clubs";
 import { getMostValuablePlayers } from "@/lib/data/players";
-import { SITE_URL } from "@/lib/metadata";
+import { getEffectiveSiteUrl } from "@/lib/metadata";
 import { getClubSlug, getLeagueSlug } from "@/lib/slugs";
 
 export const runtime = "edge";
@@ -18,60 +18,61 @@ const TRACKED_LEAGUES = [
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const baseUrl = getEffectiveSiteUrl();
   const now = new Date();
 
   // 1. Static Core Pages
   const staticRoutes: MetadataRoute.Sitemap = [
     {
-      url: `${SITE_URL}`,
+      url: `${baseUrl}`,
       lastModified: now,
       changeFrequency: "hourly",
       priority: 1.0,
     },
     {
-      url: `${SITE_URL}/matches`,
+      url: `${baseUrl}/matches`,
       lastModified: now,
       changeFrequency: "always",
       priority: 0.9,
     },
     {
-      url: `${SITE_URL}/players`,
+      url: `${baseUrl}/players`,
       lastModified: now,
       changeFrequency: "daily",
       priority: 0.85,
     },
     {
-      url: `${SITE_URL}/values`,
+      url: `${baseUrl}/values`,
       lastModified: now,
       changeFrequency: "daily",
       priority: 0.85,
     },
     {
-      url: `${SITE_URL}/clubs`,
+      url: `${baseUrl}/clubs`,
       lastModified: now,
       changeFrequency: "daily",
       priority: 0.8,
     },
     {
-      url: `${SITE_URL}/leagues`,
+      url: `${baseUrl}/leagues`,
       lastModified: now,
       changeFrequency: "daily",
       priority: 0.8,
     },
     {
-      url: `${SITE_URL}/methodology`,
+      url: `${baseUrl}/methodology`,
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.5,
     },
     {
-      url: `${SITE_URL}/privacy`,
+      url: `${baseUrl}/privacy`,
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.3,
     },
     {
-      url: `${SITE_URL}/terms`,
+      url: `${baseUrl}/terms`,
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.3,
@@ -80,7 +81,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // 2. League Competitions (Readable Slugs)
   const leagueRoutes: MetadataRoute.Sitemap = TRACKED_LEAGUES.map((l) => ({
-    url: `${SITE_URL}/leagues/${getLeagueSlug(l)}`,
+    url: `${baseUrl}/leagues/${getLeagueSlug(l)}`,
     lastModified: now,
     changeFrequency: "daily",
     priority: 0.85,
@@ -91,7 +92,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const clubs = await getTopClubs(100);
     clubRoutes = clubs.map((c) => ({
-      url: `${SITE_URL}/clubs/${getClubSlug(c)}`,
+      url: `${baseUrl}/clubs/${getClubSlug(c)}`,
       lastModified: now,
       changeFrequency: "weekly",
       priority: 0.75,
@@ -107,7 +108,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     playerRoutes = players.map((p) => {
       const slug = p.slug || `${p.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${p.sourceId || p.id}`;
       return {
-        url: `${SITE_URL}/players/${slug}`,
+        url: `${baseUrl}/players/${slug}`,
         lastModified: now,
         changeFrequency: "weekly",
         priority: 0.7,

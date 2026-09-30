@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
-  const host = request.headers.get("host") || "";
+  const host = request.headers.get("x-forwarded-host") || request.headers.get("host") || "";
   const response = NextResponse.next();
 
   // If accessed via *.pages.dev, inject noindex header to prevent duplicate host indexing (G2)

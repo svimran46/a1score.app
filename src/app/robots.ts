@@ -1,9 +1,10 @@
 import { MetadataRoute } from "next";
-import { SITE_URL } from "@/lib/metadata";
+import { getEffectiveSiteUrl } from "@/lib/metadata";
 
 export const runtime = "edge";
 
 export default function robots(): MetadataRoute.Robots {
+  const baseUrl = getEffectiveSiteUrl();
   return {
     rules: [
       {
@@ -12,6 +13,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/search", "/api/"],
       },
     ],
-    sitemap: `${SITE_URL}/sitemap.xml`,
+    sitemap: `${baseUrl}/sitemap.xml`,
   };
 }
