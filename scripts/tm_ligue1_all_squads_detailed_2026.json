@@ -1,0 +1,6937 @@
+{
+  "162": [
+    {
+      "number": "16",
+      "name": "Philipp Köhn",
+      "tmId": "251322",
+      "pos": "Goalkeeper",
+      "dob": "1998-04-02T00:00:00.000Z",
+      "age": 28,
+      "nationality": [
+        "Switzerland",
+        "Germany"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/251322-1661531623.png"
+    },
+    {
+      "number": "1",
+      "name": "Lukas Hradecky",
+      "tmId": "48015",
+      "pos": "Goalkeeper",
+      "dob": "1989-11-24T00:00:00.000Z",
+      "age": 36,
+      "nationality": [
+        "Finland",
+        "Slovakia"
+      ],
+      "mvRaw": "€1.50m",
+      "marketValueBigInt": "1500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/48015-1695367833.jpg"
+    },
+    {
+      "number": "40",
+      "name": "Jules Stawiecki",
+      "tmId": "1075582",
+      "pos": "Goalkeeper",
+      "dob": "2007-04-10T00:00:00.000Z",
+      "age": 19,
+      "nationality": [
+        "France",
+        "Poland"
+      ],
+      "mvRaw": "€150k",
+      "marketValueBigInt": "150000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1075582-1779871264.jpg"
+    },
+    {
+      "number": "13",
+      "name": "Christian Mawissa",
+      "tmId": "1005240",
+      "pos": "Centre-Back",
+      "dob": "2005-04-18T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "France",
+        "DR Congo"
+      ],
+      "mvRaw": "€15.00m",
+      "marketValueBigInt": "15000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1005240-1708555606.jpg"
+    },
+    {
+      "number": "72",
+      "name": "Sadibou Sané",
+      "tmId": "1111777",
+      "pos": "Centre-Back",
+      "dob": "2004-06-10T00:00:00.000Z",
+      "age": 22,
+      "nationality": [
+        "Senegal"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1111777-1697462116.png"
+    },
+    {
+      "number": "22",
+      "name": "Mohammed Salisu",
+      "tmId": "563963",
+      "pos": "Centre-Back",
+      "dob": "1999-04-17T00:00:00.000Z",
+      "age": 27,
+      "nationality": [
+        "Ghana"
+      ],
+      "mvRaw": "€10.00m",
+      "marketValueBigInt": "10000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/563963-1668428508.jpg"
+    },
+    {
+      "number": "15",
+      "name": "Eric Dier",
+      "tmId": "175722",
+      "pos": "Centre-Back",
+      "dob": "1994-01-15T00:00:00.000Z",
+      "age": 32,
+      "nationality": [
+        "England",
+        "Portugal"
+      ],
+      "mvRaw": "€4.00m",
+      "marketValueBigInt": "4000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/175722-1665608595.jpg"
+    },
+    {
+      "number": "44",
+      "name": "Samuel Nibombe",
+      "tmId": "981700",
+      "pos": "Centre-Back",
+      "dob": "2007-08-15T00:00:00.000Z",
+      "age": 19,
+      "nationality": [
+        "Belgium",
+        "Togo"
+      ],
+      "mvRaw": "€1.00m",
+      "marketValueBigInt": "1000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/981700-1693953677.png"
+    },
+    {
+      "number": "20",
+      "name": "Nazinho",
+      "tmId": "668587",
+      "pos": "Left-Back",
+      "dob": "2003-07-20T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "Portugal",
+        "Guinea-Bissau"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/668587-1772556287.jpg"
+    },
+    {
+      "number": "2",
+      "name": "Vanderson",
+      "tmId": "789082",
+      "pos": "Right-Back",
+      "dob": "2001-06-21T00:00:00.000Z",
+      "age": 25,
+      "nationality": [
+        "Brazil"
+      ],
+      "mvRaw": "€18.00m",
+      "marketValueBigInt": "18000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/789082-1655282894.jpg"
+    },
+    {
+      "number": "4",
+      "name": "Jordan Teze",
+      "tmId": "364245",
+      "pos": "Right-Back",
+      "dob": "1999-09-30T00:00:00.000Z",
+      "age": 27,
+      "nationality": [
+        "Netherlands",
+        "DR Congo"
+      ],
+      "mvRaw": "€15.00m",
+      "marketValueBigInt": "15000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/364245-1707214531.jpg"
+    },
+    {
+      "number": "6",
+      "name": "Denis Zakaria",
+      "tmId": "334526",
+      "pos": "Defensive Midfield",
+      "dob": "1996-11-20T00:00:00.000Z",
+      "age": 29,
+      "nationality": [
+        "Switzerland",
+        "DR Congo"
+      ],
+      "mvRaw": "€25.00m",
+      "marketValueBigInt": "25000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/334526-1780491997.jpg"
+    },
+    {
+      "number": "8",
+      "name": "Lamine Camara",
+      "tmId": "918969",
+      "pos": "Central Midfield",
+      "dob": "2004-01-01T00:00:00.000Z",
+      "age": 22,
+      "nationality": [
+        "Senegal"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/918969-1726834088.jpg"
+    },
+    {
+      "number": "28",
+      "name": "Mamadou Coulibaly",
+      "tmId": "745173",
+      "pos": "Central Midfield",
+      "dob": "2004-04-21T00:00:00.000Z",
+      "age": 22,
+      "nationality": [
+        "France",
+        "Mali"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/745173-1693947752.png"
+    },
+    {
+      "number": "19",
+      "name": "Pape Cabral",
+      "tmId": "1075588",
+      "pos": "Central Midfield",
+      "dob": "2007-01-20T00:00:00.000Z",
+      "age": 19,
+      "nationality": [
+        "France",
+        "Senegal"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1075588-1693953767.png"
+    },
+    {
+      "number": "37",
+      "name": "Edan Diop",
+      "tmId": "745178",
+      "pos": "Central Midfield",
+      "dob": "2004-08-28T00:00:00.000Z",
+      "age": 22,
+      "nationality": [
+        "France",
+        "Senegal"
+      ],
+      "mvRaw": "€3.00m",
+      "marketValueBigInt": "3000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/745178-1757426837.jpg"
+    },
+    {
+      "number": "46",
+      "name": "Anis Soubeir",
+      "tmId": "1307000",
+      "pos": "Central Midfield",
+      "dob": "2007-05-30T00:00:00.000Z",
+      "age": 19,
+      "nationality": [
+        "Morocco",
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1307000-1788969230.jpg"
+    },
+    {
+      "number": "10",
+      "name": "Aleksandr Golovin",
+      "tmId": "263918",
+      "pos": "Attacking Midfield",
+      "dob": "1996-05-30T00:00:00.000Z",
+      "age": 30,
+      "nationality": [
+        "Russia"
+      ],
+      "mvRaw": "€18.00m",
+      "marketValueBigInt": "18000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/263918-1790708734.png"
+    },
+    {
+      "number": "17",
+      "name": "Stanis Idumbo",
+      "tmId": "743387",
+      "pos": "Attacking Midfield",
+      "dob": "2005-06-29T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "DR Congo",
+        "Belgium"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/743387-1652692759.jpg"
+    },
+    {
+      "number": "7",
+      "name": "Mathys Detourbet",
+      "tmId": "1171981",
+      "pos": "Left Winger",
+      "dob": "2007-04-29T00:00:00.000Z",
+      "age": 19,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1171981-1749199277.jpg"
+    },
+    {
+      "number": "31",
+      "name": "Ansu Fati",
+      "tmId": "466810",
+      "pos": "Left Winger",
+      "dob": "2002-10-31T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "Spain",
+        "Guinea-Bissau"
+      ],
+      "mvRaw": "€15.00m",
+      "marketValueBigInt": "15000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/466810-1721828228.jpg"
+    },
+    {
+      "number": "18",
+      "name": "Takumi Minamino",
+      "tmId": "165793",
+      "pos": "Left Winger",
+      "dob": "1995-01-16T00:00:00.000Z",
+      "age": 31,
+      "nationality": [
+        "Japan"
+      ],
+      "mvRaw": "€10.00m",
+      "marketValueBigInt": "10000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/165793-1737490576.jpg"
+    },
+    {
+      "number": "9",
+      "name": "Folarin Balogun",
+      "tmId": "503770",
+      "pos": "Centre-Forward",
+      "dob": "2001-07-03T00:00:00.000Z",
+      "age": 25,
+      "nationality": [
+        "United States",
+        "England"
+      ],
+      "mvRaw": "€50.00m",
+      "marketValueBigInt": "50000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/503770-1672838317.jpg"
+    },
+    {
+      "number": "11",
+      "name": "Matthis Abline",
+      "tmId": "659543",
+      "pos": "Centre-Forward",
+      "dob": "2003-03-28T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/659543-1704213657.jpg"
+    },
+    {
+      "number": "14",
+      "name": "Mika Biereth",
+      "tmId": "565821",
+      "pos": "Centre-Forward",
+      "dob": "2003-02-08T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "Denmark",
+        "England"
+      ],
+      "mvRaw": "€15.00m",
+      "marketValueBigInt": "15000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/565821-1736777758.jpg"
+    },
+    {
+      "number": "29",
+      "name": "Paris Brunner",
+      "tmId": "918414",
+      "pos": "Centre-Forward",
+      "dob": "2006-02-15T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "Germany",
+        "DR Congo"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/918414-1790256791.jpg"
+    }
+  ],
+  "244": [
+    {
+      "number": "1",
+      "name": "Jeffrey de Lange",
+      "tmId": "315253",
+      "pos": "Goalkeeper",
+      "dob": "1998-04-01T00:00:00.000Z",
+      "age": 28,
+      "nationality": [
+        "Netherlands"
+      ],
+      "mvRaw": "€2.50m",
+      "marketValueBigInt": "2500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/315253-1723035184.jpg"
+    },
+    {
+      "number": "92",
+      "name": "Théo Vermot",
+      "tmId": "620912",
+      "pos": "Goalkeeper",
+      "dob": "1997-01-27T00:00:00.000Z",
+      "age": 29,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/620912-1544003880.jpg"
+    },
+    {
+      "number": "40",
+      "name": "Jelle Van Neck",
+      "tmId": "727086",
+      "pos": "Goalkeeper",
+      "dob": "2004-03-07T00:00:00.000Z",
+      "age": 22,
+      "nationality": [
+        "Belgium"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/727086-1672605198.jpg"
+    },
+    {
+      "number": "21",
+      "name": "Nayef Aguerd",
+      "tmId": "361914",
+      "pos": "Centre-Back",
+      "dob": "1996-03-30T00:00:00.000Z",
+      "age": 30,
+      "nationality": [
+        "Morocco"
+      ],
+      "mvRaw": "€15.00m",
+      "marketValueBigInt": "15000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/361914-1659355782.jpg"
+    },
+    {
+      "number": "4",
+      "name": "CJ Egan-Riley",
+      "tmId": "581669",
+      "pos": "Centre-Back",
+      "dob": "2003-01-02T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "England",
+        "Ireland"
+      ],
+      "mvRaw": "€9.00m",
+      "marketValueBigInt": "9000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/581669-1751272190.jpg"
+    },
+    {
+      "number": "18",
+      "name": "Bamo Meïté",
+      "tmId": "807165",
+      "pos": "Centre-Back",
+      "dob": "2001-12-03T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "Cote d'Ivoire",
+        "France"
+      ],
+      "mvRaw": "€7.00m",
+      "marketValueBigInt": "7000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/807165-1724754649.jpg"
+    },
+    {
+      "number": "13",
+      "name": "Derek Cornelius",
+      "tmId": "328609",
+      "pos": "Centre-Back",
+      "dob": "1997-11-25T00:00:00.000Z",
+      "age": 28,
+      "nationality": [
+        "Canada",
+        "Jamaica"
+      ],
+      "mvRaw": "€2.50m",
+      "marketValueBigInt": "2500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/328609-1618857970.jpg"
+    },
+    {
+      "number": "33",
+      "name": "Emerson",
+      "tmId": "181778",
+      "pos": "Left-Back",
+      "dob": "1994-08-03T00:00:00.000Z",
+      "age": 32,
+      "nationality": [
+        "Italy",
+        "Brazil"
+      ],
+      "mvRaw": "€9.00m",
+      "marketValueBigInt": "9000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/181778-1660636930.jpg"
+    },
+    {
+      "number": "25",
+      "name": "Ulisses Garcia",
+      "tmId": "192616",
+      "pos": "Left-Back",
+      "dob": "1996-01-11T00:00:00.000Z",
+      "age": 30,
+      "nationality": [
+        "Switzerland",
+        "Cape Verde"
+      ],
+      "mvRaw": "€3.00m",
+      "marketValueBigInt": "3000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/192616-1700236348.jpg"
+    },
+    {
+      "number": "22",
+      "name": "Timothy Weah",
+      "tmId": "370846",
+      "pos": "Right-Back",
+      "dob": "2000-02-22T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "United States",
+        "France"
+      ],
+      "mvRaw": "€20.00m",
+      "marketValueBigInt": "20000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/370846-1692277669.jpg"
+    },
+    {
+      "number": "23",
+      "name": "Pierre-Emile Højbjerg",
+      "tmId": "167799",
+      "pos": "Defensive Midfield",
+      "dob": "1995-08-05T00:00:00.000Z",
+      "age": 31,
+      "nationality": [
+        "Denmark",
+        "France"
+      ],
+      "mvRaw": "€15.00m",
+      "marketValueBigInt": "15000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/167799-1629882773.jpg"
+    },
+    {
+      "number": "6",
+      "name": "Tochukwu Nnadi",
+      "tmId": "920470",
+      "pos": "Defensive Midfield",
+      "dob": "2003-06-30T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "Nigeria"
+      ],
+      "mvRaw": "€4.50m",
+      "marketValueBigInt": "4500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/920470-1709895127.png"
+    },
+    {
+      "number": "19",
+      "name": "Geoffrey Kondogbia",
+      "tmId": "127189",
+      "pos": "Defensive Midfield",
+      "dob": "1993-02-15T00:00:00.000Z",
+      "age": 33,
+      "nationality": [
+        "Central African Republic",
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/127189-1703066053.jpg"
+    },
+    {
+      "number": "8",
+      "name": "Himad Abdelli",
+      "tmId": "592979",
+      "pos": "Central Midfield",
+      "dob": "1999-11-17T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "Algeria",
+        "France"
+      ],
+      "mvRaw": "€5.00m",
+      "marketValueBigInt": "5000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/592979-1750956367.png"
+    },
+    {
+      "number": "7",
+      "name": "Angel Gomes",
+      "tmId": "392770",
+      "pos": "Attacking Midfield",
+      "dob": "2000-08-31T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "England",
+        "Portugal"
+      ],
+      "mvRaw": "€10.00m",
+      "marketValueBigInt": "10000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/392770-1666690396.jpg"
+    },
+    {
+      "number": "14",
+      "name": "Igor Paixão",
+      "tmId": "653610",
+      "pos": "Left Winger",
+      "dob": "2000-06-28T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "Brazil"
+      ],
+      "mvRaw": "€35.00m",
+      "marketValueBigInt": "35000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/653610-1723200804.jpg"
+    },
+    {
+      "number": "43",
+      "name": "Tadjidine Mmadi",
+      "tmId": "1206824",
+      "pos": "Left Winger",
+      "dob": "2007-03-03T00:00:00.000Z",
+      "age": 19,
+      "nationality": [
+        "France",
+        "Comoros"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1206824-1760563123.jpg"
+    },
+    {
+      "number": "48",
+      "name": "Keyliane Abdallah",
+      "tmId": "1183719",
+      "pos": "Right Winger",
+      "dob": "2006-04-05T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "France",
+        "Comoros"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1183719-1770052012.jpg"
+    },
+    {
+      "number": "77",
+      "name": "Amine Harit",
+      "tmId": "372711",
+      "pos": "Right Winger",
+      "dob": "1997-06-18T00:00:00.000Z",
+      "age": 29,
+      "nationality": [
+        "Morocco",
+        "France"
+      ],
+      "mvRaw": "€5.00m",
+      "marketValueBigInt": "5000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/372711-1759747205.jpg"
+    },
+    {
+      "number": "9",
+      "name": "Amine Gouiri",
+      "tmId": "418659",
+      "pos": "Centre-Forward",
+      "dob": "2000-02-16T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "Algeria",
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/418659-1762353913.jpg"
+    },
+    {
+      "number": "11",
+      "name": "Neal Maupay",
+      "tmId": "217115",
+      "pos": "Centre-Forward",
+      "dob": "1996-08-14T00:00:00.000Z",
+      "age": 30,
+      "nationality": [
+        "France",
+        "Argentina"
+      ],
+      "mvRaw": "€4.00m",
+      "marketValueBigInt": "4000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/217115-1700737951.jpg"
+    },
+    {
+      "number": "29",
+      "name": "Faris Moumbagna",
+      "tmId": "599663",
+      "pos": "Centre-Forward",
+      "dob": "2000-07-01T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "Cameroon"
+      ],
+      "mvRaw": "€3.50m",
+      "marketValueBigInt": "3500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/599663-1767803513.jpg"
+    }
+  ],
+  "273": [
+    {
+      "number": "30",
+      "name": "Brice Samba",
+      "tmId": "191056",
+      "pos": "Goalkeeper",
+      "dob": "1994-04-25T00:00:00.000Z",
+      "age": 32,
+      "nationality": [
+        "France",
+        "Congo"
+      ],
+      "mvRaw": "€7.00m",
+      "marketValueBigInt": "7000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/191056-1602242038.jpg"
+    },
+    {
+      "number": "16",
+      "name": "Nicolas Lemaître",
+      "tmId": "373939",
+      "pos": "Goalkeeper",
+      "dob": "1997-01-12T00:00:00.000Z",
+      "age": 29,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€500k",
+      "marketValueBigInt": "500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/373939-1669736193.jpg"
+    },
+    {
+      "number": "60",
+      "name": "Kilian Belazzoug",
+      "tmId": "1169721",
+      "pos": "Goalkeeper",
+      "dob": "2006-07-18T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "Algeria",
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1169721-1759490431.jpg"
+    },
+    {
+      "number": "4",
+      "name": "Charlie Cresswell",
+      "tmId": "597659",
+      "pos": "Centre-Back",
+      "dob": "2002-08-17T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "England"
+      ],
+      "mvRaw": "€25.00m",
+      "marketValueBigInt": "25000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/597659-1641461698.jpg"
+    },
+    {
+      "number": "48",
+      "name": "Abdelhamid Ait Boudlal",
+      "tmId": "1134251",
+      "pos": "Centre-Back",
+      "dob": "2006-04-16T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "Morocco"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1134251-1758528519.jpg"
+    },
+    {
+      "number": "24",
+      "name": "Anthony Rouault",
+      "tmId": "690799",
+      "pos": "Centre-Back",
+      "dob": "2001-05-29T00:00:00.000Z",
+      "age": 25,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€12.00m",
+      "marketValueBigInt": "12000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/690799-1723707069.jpg"
+    },
+    {
+      "number": "5",
+      "name": "Gonçalo Oliveira",
+      "tmId": "1078918",
+      "pos": "Centre-Back",
+      "dob": "2006-07-04T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "Portugal"
+      ],
+      "mvRaw": "€3.00m",
+      "marketValueBigInt": "3000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1078918-1743156047.jpg"
+    },
+    {
+      "number": "26",
+      "name": "Quentin Merlin",
+      "tmId": "557613",
+      "pos": "Left-Back",
+      "dob": "2002-05-16T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€15.00m",
+      "marketValueBigInt": "15000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/557613-1704213356.jpg"
+    },
+    {
+      "number": "18",
+      "name": "Mahamadou Nagida",
+      "tmId": "1176345",
+      "pos": "Left-Back",
+      "dob": "2005-06-28T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "Cameroon"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1176345-1702911497.jpg"
+    },
+    {
+      "number": "95",
+      "name": "Przemyslaw Frankowski",
+      "tmId": "239743",
+      "pos": "Right-Back",
+      "dob": "1995-04-12T00:00:00.000Z",
+      "age": 31,
+      "nationality": [
+        "Poland"
+      ],
+      "mvRaw": "€6.00m",
+      "marketValueBigInt": "6000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/239743-1669189009.jpg"
+    },
+    {
+      "number": "14",
+      "name": "Bryan Reynolds",
+      "tmId": "475208",
+      "pos": "Right-Back",
+      "dob": "2001-06-28T00:00:00.000Z",
+      "age": 25,
+      "nationality": [
+        "United States"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/475208-1706611075.jpg"
+    },
+    {
+      "number": "45",
+      "name": "Mahdi Camara",
+      "tmId": "324795",
+      "pos": "Central Midfield",
+      "dob": "1998-06-30T00:00:00.000Z",
+      "age": 28,
+      "nationality": [
+        "France",
+        "The Gambia"
+      ],
+      "mvRaw": "€12.00m",
+      "marketValueBigInt": "12000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/324795-1710182811.jpg"
+    },
+    {
+      "number": "6",
+      "name": "Djaoui Cissé",
+      "tmId": "931160",
+      "pos": "Central Midfield",
+      "dob": "2004-01-31T00:00:00.000Z",
+      "age": 22,
+      "nationality": [
+        "France",
+        "Mali"
+      ],
+      "mvRaw": "€10.00m",
+      "marketValueBigInt": "10000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/931160-1740392570.jpg"
+    },
+    {
+      "number": "21",
+      "name": "Valentin Rongier",
+      "tmId": "332889",
+      "pos": "Central Midfield",
+      "dob": "1994-12-07T00:00:00.000Z",
+      "age": 31,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€8.00m",
+      "marketValueBigInt": "8000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/332889-1703065877.jpg"
+    },
+    {
+      "number": "28",
+      "name": "Adrien Thomasson",
+      "tmId": "215977",
+      "pos": "Central Midfield",
+      "dob": "1993-12-10T00:00:00.000Z",
+      "age": 32,
+      "nationality": [
+        "France",
+        "Croatia"
+      ],
+      "mvRaw": "€4.00m",
+      "marketValueBigInt": "4000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/215977-1673538425.jpg"
+    },
+    {
+      "number": "10",
+      "name": "Ludovic Blas",
+      "tmId": "288225",
+      "pos": "Unknown",
+      "dob": "1997-12-31T00:00:00.000Z",
+      "age": 28,
+      "nationality": [
+        "Martinique",
+        "France"
+      ],
+      "mvRaw": "€10.00m",
+      "marketValueBigInt": "10000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/288225-1762353535.jpg"
+    },
+    {
+      "number": "17",
+      "name": "Sebastian Szymański",
+      "tmId": "320748",
+      "pos": "Attacking Midfield",
+      "dob": "1999-05-10T00:00:00.000Z",
+      "age": 27,
+      "nationality": [
+        "Poland"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/320748-1765461620.jpg"
+    },
+    {
+      "number": "",
+      "name": "Ayanda Sishuba",
+      "tmId": "977877",
+      "pos": "Attacking Midfield",
+      "dob": "2005-02-02T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "Belgium",
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/977877-1773267783.png"
+    },
+    {
+      "number": "65",
+      "name": "Henrick Do Marcolino",
+      "tmId": "1170001",
+      "pos": "Attacking Midfield",
+      "dob": "2006-03-21T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "Gabon",
+        "France"
+      ],
+      "mvRaw": "€300k",
+      "marketValueBigInt": "300000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/default.jpg"
+    },
+    {
+      "number": "90",
+      "name": "Issa Soumaré",
+      "tmId": "568698",
+      "pos": "Left Winger",
+      "dob": "2000-10-10T00:00:00.000Z",
+      "age": 25,
+      "nationality": [
+        "Senegal",
+        "Mauritania"
+      ],
+      "mvRaw": "€8.00m",
+      "marketValueBigInt": "8000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/568698-1781647289.jpg"
+    },
+    {
+      "number": "11",
+      "name": "Mousa Al-Tamari",
+      "tmId": "551505",
+      "pos": "Right Winger",
+      "dob": "1997-06-10T00:00:00.000Z",
+      "age": 29,
+      "nationality": [
+        "Jordan"
+      ],
+      "mvRaw": "€10.00m",
+      "marketValueBigInt": "10000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/551505-1780404888.jpg"
+    },
+    {
+      "number": "70",
+      "name": "Arnaud Nordin",
+      "tmId": "324811",
+      "pos": "Right Winger",
+      "dob": "1998-06-17T00:00:00.000Z",
+      "age": 28,
+      "nationality": [
+        "France",
+        "Martinique"
+      ],
+      "mvRaw": "€4.00m",
+      "marketValueBigInt": "4000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/324811-1752587724.jpg"
+    },
+    {
+      "number": "35",
+      "name": "Elías Legendre Quiñónez",
+      "tmId": "1227106",
+      "pos": "Right Winger",
+      "dob": "2008-04-22T00:00:00.000Z",
+      "age": 18,
+      "nationality": [
+        "Ecuador",
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1227106-1741010867.JPG"
+    },
+    {
+      "number": "9",
+      "name": "Estéban Lepaul",
+      "tmId": "461607",
+      "pos": "Centre-Forward",
+      "dob": "2000-04-18T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/461607-1750956916.png"
+    },
+    {
+      "number": "12",
+      "name": "Eliezer Mayenda",
+      "tmId": "967346",
+      "pos": "Centre-Forward",
+      "dob": "2005-05-08T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "Spain",
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/967346-1724772065.jpg"
+    },
+    {
+      "number": "22",
+      "name": "Boulaye Dia",
+      "tmId": "626913",
+      "pos": "Centre-Forward",
+      "dob": "1996-11-16T00:00:00.000Z",
+      "age": 29,
+      "nationality": [
+        "Senegal",
+        "France"
+      ],
+      "mvRaw": "€5.00m",
+      "marketValueBigInt": "5000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/626913-1730127040.jpg"
+    }
+  ],
+  "290": [
+    {
+      "number": "23",
+      "name": "Mamadou Diop",
+      "tmId": "917147",
+      "pos": "Goalkeeper",
+      "dob": "2000-01-03T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "Mauritania",
+        "Senegal"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/917147-1741879989.jpg"
+    },
+    {
+      "number": "1",
+      "name": "Paul Nardi",
+      "tmId": "189744",
+      "pos": "Goalkeeper",
+      "dob": "1994-05-18T00:00:00.000Z",
+      "age": 32,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€1.20m",
+      "marketValueBigInt": "1200000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/189744-1695061969.jpg"
+    },
+    {
+      "number": "37",
+      "name": "Louis Mezerette",
+      "tmId": "1167216",
+      "pos": "Goalkeeper",
+      "dob": "2006-08-30T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/default.jpg"
+    },
+    {
+      "number": "92",
+      "name": "Clément Akpa",
+      "tmId": "806793",
+      "pos": "Centre-Back",
+      "dob": "2001-11-24T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "Cote d'Ivoire",
+        "France"
+      ],
+      "mvRaw": "€9.00m",
+      "marketValueBigInt": "9000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/806793-1709202392.jpg"
+    },
+    {
+      "number": "20",
+      "name": "Sinaly Diomandé",
+      "tmId": "702441",
+      "pos": "Centre-Back",
+      "dob": "2001-04-09T00:00:00.000Z",
+      "age": 25,
+      "nationality": [
+        "Cote d'Ivoire"
+      ],
+      "mvRaw": "€6.00m",
+      "marketValueBigInt": "6000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/702441-1672831343.jpg"
+    },
+    {
+      "number": "4",
+      "name": "Axel Tuanzebe",
+      "tmId": "342046",
+      "pos": "Centre-Back",
+      "dob": "1997-11-14T00:00:00.000Z",
+      "age": 28,
+      "nationality": [
+        "DR Congo",
+        "England"
+      ],
+      "mvRaw": "€5.00m",
+      "marketValueBigInt": "5000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/342046-1774470130.jpg"
+    },
+    {
+      "number": "24",
+      "name": "Bryan Okoh",
+      "tmId": "539795",
+      "pos": "Centre-Back",
+      "dob": "2003-05-16T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "Switzerland",
+        "United States"
+      ],
+      "mvRaw": "€4.00m",
+      "marketValueBigInt": "4000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/539795-1722523891.png"
+    },
+    {
+      "number": "15",
+      "name": "Christ Makosso",
+      "tmId": "1113528",
+      "pos": "Centre-Back",
+      "dob": "2004-05-09T00:00:00.000Z",
+      "age": 22,
+      "nationality": [
+        "Congo"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1113528-1709886612.jpg"
+    },
+    {
+      "number": "35",
+      "name": "Elikya Legros",
+      "tmId": "1291928",
+      "pos": "Centre-Back",
+      "dob": "2008-06-06T00:00:00.000Z",
+      "age": 18,
+      "nationality": [
+        "France",
+        "DR Congo"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1291928-1758200427.jpg"
+    },
+    {
+      "number": "13",
+      "name": "Telli Siwe",
+      "tmId": "1091353",
+      "pos": "Centre-Back",
+      "dob": "2004-12-14T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "France",
+        "Cameroon"
+      ],
+      "mvRaw": "€1.00m",
+      "marketValueBigInt": "1000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1091353-1758200091.jpg"
+    },
+    {
+      "number": "38",
+      "name": "Alvin Petit Dol",
+      "tmId": "1144938",
+      "pos": "Centre-Back",
+      "dob": "2006-11-07T00:00:00.000Z",
+      "age": 19,
+      "nationality": [
+        "France",
+        "Haiti"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/default.jpg"
+    },
+    {
+      "number": "22",
+      "name": "Fredrik Oppegård",
+      "tmId": "539665",
+      "pos": "Left-Back",
+      "dob": "2002-08-07T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "Norway"
+      ],
+      "mvRaw": "€1.50m",
+      "marketValueBigInt": "1500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/539665-1621853412.jpg"
+    },
+    {
+      "number": "93",
+      "name": "Sékou Fofana",
+      "tmId": "668941",
+      "pos": "Left-Back",
+      "dob": "2003-03-25T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "France",
+        "Cote d'Ivoire"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/668941-1764844513.jpg"
+    },
+    {
+      "number": "",
+      "name": "Ackah-Tidiane Zoukrou",
+      "tmId": "1205629",
+      "pos": "Left-Back",
+      "dob": "2008-09-13T00:00:00.000Z",
+      "age": 18,
+      "nationality": [
+        "France",
+        "Senegal"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/default.jpg"
+    },
+    {
+      "number": "29",
+      "name": "Marvin Senaya",
+      "tmId": "830890",
+      "pos": "Right-Back",
+      "dob": "2001-01-28T00:00:00.000Z",
+      "age": 25,
+      "nationality": [
+        "Ghana",
+        "France"
+      ],
+      "mvRaw": "€3.00m",
+      "marketValueBigInt": "3000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/830890-1732575526.png"
+    },
+    {
+      "number": "27",
+      "name": "Lamine Sy",
+      "tmId": "796865",
+      "pos": "Right-Back",
+      "dob": "2002-08-10T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "Senegal",
+        "France"
+      ],
+      "mvRaw": "€2.50m",
+      "marketValueBigInt": "2500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/796865-1700668998.png"
+    },
+    {
+      "number": "46",
+      "name": "Arthur Piedfort",
+      "tmId": "775981",
+      "pos": "Defensive Midfield",
+      "dob": "2005-02-01T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "Belgium"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/775981-1781076483.jpg"
+    },
+    {
+      "number": "17",
+      "name": "Pierre Ekwah",
+      "tmId": "538994",
+      "pos": "Defensive Midfield",
+      "dob": "2002-01-15T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "France",
+        "Cameroon"
+      ],
+      "mvRaw": "€2.00m",
+      "marketValueBigInt": "2000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/538994-1789578182.jpg"
+    },
+    {
+      "number": "18",
+      "name": "Assane Dioussé",
+      "tmId": "287635",
+      "pos": "Defensive Midfield",
+      "dob": "1997-09-20T00:00:00.000Z",
+      "age": 29,
+      "nationality": [
+        "Senegal"
+      ],
+      "mvRaw": "€500k",
+      "marketValueBigInt": "500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/287635-1657714916.jpg"
+    },
+    {
+      "number": "34",
+      "name": "Lamfia Dioubaté",
+      "tmId": "1291922",
+      "pos": "Defensive Midfield",
+      "dob": "2007-07-20T00:00:00.000Z",
+      "age": 19,
+      "nationality": [
+        "France",
+        "Guinea"
+      ],
+      "mvRaw": "€300k",
+      "marketValueBigInt": "300000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/default.jpg"
+    },
+    {
+      "number": "5",
+      "name": "Kévin Danois",
+      "tmId": "743496",
+      "pos": "Central Midfield",
+      "dob": "2004-06-28T00:00:00.000Z",
+      "age": 22,
+      "nationality": [
+        "France",
+        "Guadeloupe"
+      ],
+      "mvRaw": "€20.00m",
+      "marketValueBigInt": "20000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/743496-1672330479.jpg"
+    },
+    {
+      "number": "8",
+      "name": "Naouirou Ahamada",
+      "tmId": "538971",
+      "pos": "Central Midfield",
+      "dob": "2002-03-29T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "France",
+        "Comoros"
+      ],
+      "mvRaw": "€3.00m",
+      "marketValueBigInt": "3000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/538971-1657181756.jpg"
+    },
+    {
+      "number": "36",
+      "name": "Tidiane Devernois",
+      "tmId": "1174032",
+      "pos": "Central Midfield",
+      "dob": "2007-10-18T00:00:00.000Z",
+      "age": 18,
+      "nationality": [
+        "France",
+        "Senegal"
+      ],
+      "mvRaw": "€300k",
+      "marketValueBigInt": "300000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/default.jpg"
+    },
+    {
+      "number": "28",
+      "name": "Romain Faivre",
+      "tmId": "555076",
+      "pos": "Attacking Midfield",
+      "dob": "1998-07-14T00:00:00.000Z",
+      "age": 28,
+      "nationality": [
+        "France",
+        "Algeria"
+      ],
+      "mvRaw": "€4.00m",
+      "marketValueBigInt": "4000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/555076-1672831296.jpg"
+    },
+    {
+      "number": "19",
+      "name": "Danny Namaso",
+      "tmId": "392767",
+      "pos": "Left Winger",
+      "dob": "2000-08-28T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "Cameroon",
+        "England"
+      ],
+      "mvRaw": "€6.00m",
+      "marketValueBigInt": "6000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/392767-1669115274.png"
+    },
+    {
+      "number": "77",
+      "name": "Aristide Zossou",
+      "tmId": "1310513",
+      "pos": "Left Winger",
+      "dob": "2005-06-14T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "Cote d'Ivoire",
+        "Benin"
+      ],
+      "mvRaw": "€2.50m",
+      "marketValueBigInt": "2500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1310513-1778863128.jpg"
+    },
+    {
+      "number": "32",
+      "name": "Rayan Mandengue",
+      "tmId": "1119338",
+      "pos": "Left Winger",
+      "dob": "2006-01-06T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "Cameroon"
+      ],
+      "mvRaw": "€400k",
+      "marketValueBigInt": "400000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1119338-1789720434.jpg"
+    },
+    {
+      "number": "9",
+      "name": "Cameron Archer",
+      "tmId": "533662",
+      "pos": "Centre-Forward",
+      "dob": "2001-12-09T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "England",
+        "Jamaica"
+      ],
+      "mvRaw": "€7.00m",
+      "marketValueBigInt": "7000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/533662-1641461875.jpg"
+    },
+    {
+      "number": "3",
+      "name": "Rémy Labeau Lascary",
+      "tmId": "917778",
+      "pos": "Centre-Forward",
+      "dob": "2003-03-03T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "France",
+        "Guadeloupe"
+      ],
+      "mvRaw": "€4.00m",
+      "marketValueBigInt": "4000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/917778-1676913774.jpg"
+    },
+    {
+      "number": "31",
+      "name": "Ryan Rodin",
+      "tmId": "1010856",
+      "pos": "Centre-Forward",
+      "dob": "2006-03-02T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "France",
+        "Martinique"
+      ],
+      "mvRaw": "€300k",
+      "marketValueBigInt": "300000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/default.jpg"
+    },
+    {
+      "number": "49",
+      "name": "Xiangxin Wei",
+      "tmId": "1265965",
+      "pos": "Centre-Forward",
+      "dob": "2008-03-05T00:00:00.000Z",
+      "age": 18,
+      "nationality": [
+        "China"
+      ],
+      "mvRaw": "€300k",
+      "marketValueBigInt": "300000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1265965-1763154919.jpg"
+    }
+  ],
+  "415": [
+    {
+      "number": "16",
+      "name": "Guillaume Restes",
+      "tmId": "912902",
+      "pos": "Goalkeeper",
+      "dob": "2005-03-11T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "France",
+        "Cote d'Ivoire"
+      ],
+      "mvRaw": "€18.00m",
+      "marketValueBigInt": "18000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/912902-1676656145.jpg"
+    },
+    {
+      "number": "60",
+      "name": "Mathys Niflore",
+      "tmId": "1075580",
+      "pos": "Goalkeeper",
+      "dob": "2007-03-02T00:00:00.000Z",
+      "age": 19,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€2.50m",
+      "marketValueBigInt": "2500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1075580-1778863179.jpg"
+    },
+    {
+      "number": "3",
+      "name": "Mark McKenzie",
+      "tmId": "429259",
+      "pos": "Centre-Back",
+      "dob": "1999-02-25T00:00:00.000Z",
+      "age": 27,
+      "nationality": [
+        "United States",
+        "Jamaica"
+      ],
+      "mvRaw": "€7.00m",
+      "marketValueBigInt": "7000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/429259-1714036622.png"
+    },
+    {
+      "number": "2",
+      "name": "Rasmus Nicolaisen",
+      "tmId": "283227",
+      "pos": "Centre-Back",
+      "dob": "1997-03-16T00:00:00.000Z",
+      "age": 29,
+      "nationality": [
+        "Denmark"
+      ],
+      "mvRaw": "€5.00m",
+      "marketValueBigInt": "5000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/283227-1626438001.jpg"
+    },
+    {
+      "number": "5",
+      "name": "Seny Koumbassa",
+      "tmId": "1075583",
+      "pos": "Centre-Back",
+      "dob": "2007-06-20T00:00:00.000Z",
+      "age": 19,
+      "nationality": [
+        "France",
+        "Guinea"
+      ],
+      "mvRaw": "€5.00m",
+      "marketValueBigInt": "5000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1075583-1770737252.jpg"
+    },
+    {
+      "number": "19",
+      "name": "David Odogu",
+      "tmId": "897423",
+      "pos": "Centre-Back",
+      "dob": "2006-06-03T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "Germany",
+        "Nigeria"
+      ],
+      "mvRaw": "€5.00m",
+      "marketValueBigInt": "5000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/897423-1789734902.jpg"
+    },
+    {
+      "number": "12",
+      "name": "Christ Tapé",
+      "tmId": "1270796",
+      "pos": "Left-Back",
+      "dob": "2006-03-02T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "Cote d'Ivoire"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1270796-1778410254.jpg"
+    },
+    {
+      "number": "22",
+      "name": "Rafik Messali",
+      "tmId": "883865",
+      "pos": "Right-Back",
+      "dob": "2003-04-28T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "Algeria",
+        "France"
+      ],
+      "mvRaw": "€1.50m",
+      "marketValueBigInt": "1500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/883865-1741897311.jpg"
+    },
+    {
+      "number": "94",
+      "name": "Ismaïl Diallo",
+      "tmId": "1177290",
+      "pos": "Right-Back",
+      "dob": "2003-08-23T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "France",
+        "Senegal"
+      ],
+      "mvRaw": "€900k",
+      "marketValueBigInt": "900000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1177290-1779284127.JPG"
+    },
+    {
+      "number": "14",
+      "name": "Niko Sigur",
+      "tmId": "1045375",
+      "pos": "Defensive Midfield",
+      "dob": "2003-09-09T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "Canada",
+        "Croatia"
+      ],
+      "mvRaw": "€4.00m",
+      "marketValueBigInt": "4000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1045375-1767281251.jpg"
+    },
+    {
+      "number": "6",
+      "name": "Alexis Vossah",
+      "tmId": "1200427",
+      "pos": "Central Midfield",
+      "dob": "2008-03-11T00:00:00.000Z",
+      "age": 18,
+      "nationality": [
+        "France",
+        "Togo"
+      ],
+      "mvRaw": "€15.00m",
+      "marketValueBigInt": "15000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1200427-1758106573.jpg"
+    },
+    {
+      "number": "23",
+      "name": "Cristian Cásseres Jr.",
+      "tmId": "467632",
+      "pos": "Central Midfield",
+      "dob": "2000-01-20T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "Venezuela"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/467632-1646141354.JPG"
+    },
+    {
+      "number": "18",
+      "name": "Mathis Amougou",
+      "tmId": "1010854",
+      "pos": "Central Midfield",
+      "dob": "2006-01-18T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "France",
+        "Cameroon"
+      ],
+      "mvRaw": "€9.00m",
+      "marketValueBigInt": "9000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1010854-1727721658.jpg"
+    },
+    {
+      "number": "8",
+      "name": "Thomas Jørgensen",
+      "tmId": "953004",
+      "pos": "Central Midfield",
+      "dob": "2005-09-30T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "Denmark"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/953004-1723455000.jpg"
+    },
+    {
+      "number": "17",
+      "name": "Abu Francis",
+      "tmId": "658533",
+      "pos": "Central Midfield",
+      "dob": "2001-04-27T00:00:00.000Z",
+      "age": 25,
+      "nationality": [
+        "Ghana"
+      ],
+      "mvRaw": "€2.00m",
+      "marketValueBigInt": "2000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/658533-1672485121.jpg"
+    },
+    {
+      "number": "31",
+      "name": "Niklas Schmidt",
+      "tmId": "275249",
+      "pos": "Central Midfield",
+      "dob": "1998-03-01T00:00:00.000Z",
+      "age": 28,
+      "nationality": [
+        "Germany"
+      ],
+      "mvRaw": "€1.50m",
+      "marketValueBigInt": "1500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/275249-1660208599.jpg"
+    },
+    {
+      "number": "49",
+      "name": "Aymen Amaaouch",
+      "tmId": "1297670",
+      "pos": "Central Midfield",
+      "dob": "2009-09-30T00:00:00.000Z",
+      "age": 17,
+      "nationality": [
+        "France",
+        "Morocco"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/default.jpg"
+    },
+    {
+      "number": "15",
+      "name": "Aron Dønnum",
+      "tmId": "476836",
+      "pos": "Unknown",
+      "dob": "1998-04-20T00:00:00.000Z",
+      "age": 28,
+      "nationality": [
+        "Norway"
+      ],
+      "mvRaw": "€5.00m",
+      "marketValueBigInt": "5000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/476836-1678012976.jpg"
+    },
+    {
+      "number": "11",
+      "name": "Sion Oppong",
+      "tmId": "1368526",
+      "pos": "Left Winger",
+      "dob": "2007-09-25T00:00:00.000Z",
+      "age": 19,
+      "nationality": [
+        "Sweden",
+        "Ghana"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1368526-1771642129.jpg"
+    },
+    {
+      "number": "37",
+      "name": "Ilyas Azizi",
+      "tmId": "1200417",
+      "pos": "Left Winger",
+      "dob": "2008-04-13T00:00:00.000Z",
+      "age": 18,
+      "nationality": [
+        "France",
+        "Morocco"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1200417-1761139422.jpg"
+    },
+    {
+      "number": "9",
+      "name": "Santiago Hidalgo",
+      "tmId": "989574",
+      "pos": "Centre-Forward",
+      "dob": "2005-02-17T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "Argentina",
+        "Italy"
+      ],
+      "mvRaw": "€6.00m",
+      "marketValueBigInt": "6000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/989574-1720465616.png"
+    },
+    {
+      "number": "20",
+      "name": "Casper Tengstedt",
+      "tmId": "464598",
+      "pos": "Centre-Forward",
+      "dob": "2000-06-01T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "Denmark"
+      ],
+      "mvRaw": "€3.50m",
+      "marketValueBigInt": "3500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/464598-1753199741.jpg"
+    },
+    {
+      "number": "13",
+      "name": "Jacen Russell-Rowe",
+      "tmId": "683625",
+      "pos": "Centre-Forward",
+      "dob": "2002-09-13T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "Canada",
+        "Jamaica"
+      ],
+      "mvRaw": "€3.00m",
+      "marketValueBigInt": "3000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/683625-1740676078.jpg"
+    },
+    {
+      "number": "7",
+      "name": "Julián Vignolo",
+      "tmId": "1234988",
+      "pos": "Centre-Forward",
+      "dob": "2006-12-07T00:00:00.000Z",
+      "age": 19,
+      "nationality": [
+        "Argentina"
+      ],
+      "mvRaw": "€1.50m",
+      "marketValueBigInt": "1500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1234988-1747676987.jpeg"
+    }
+  ],
+  "417": [
+    {
+      "number": "80",
+      "name": "Yehvann Diouf",
+      "tmId": "448632",
+      "pos": "Goalkeeper",
+      "dob": "1999-11-16T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "Senegal",
+        "France"
+      ],
+      "mvRaw": "€7.00m",
+      "marketValueBigInt": "7000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/448632-1756822717.jpg"
+    },
+    {
+      "number": "77",
+      "name": "Teddy Boulhendi",
+      "tmId": "789419",
+      "pos": "Goalkeeper",
+      "dob": "2001-04-09T00:00:00.000Z",
+      "age": 25,
+      "nationality": [
+        "Algeria",
+        "France"
+      ],
+      "mvRaw": "€300k",
+      "marketValueBigInt": "300000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/789419-1756822747.jpg"
+    },
+    {
+      "number": "60",
+      "name": "Martin Ponsot",
+      "tmId": "1297633",
+      "pos": "Goalkeeper",
+      "dob": "2009-01-30T00:00:00.000Z",
+      "age": 17,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1297633-1741787118.jpg"
+    },
+    {
+      "number": "33",
+      "name": "Antoine Mendy",
+      "tmId": "891998",
+      "pos": "Centre-Back",
+      "dob": "2004-05-27T00:00:00.000Z",
+      "age": 22,
+      "nationality": [
+        "Senegal",
+        "France"
+      ],
+      "mvRaw": "€10.00m",
+      "marketValueBigInt": "10000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/891998-1756827019.jpg"
+    },
+    {
+      "number": "55",
+      "name": "Youssouf Ndayishimiye",
+      "tmId": "674612",
+      "pos": "Centre-Back",
+      "dob": "1998-10-27T00:00:00.000Z",
+      "age": 27,
+      "nationality": [
+        "Burundi"
+      ],
+      "mvRaw": "€7.00m",
+      "marketValueBigInt": "7000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/674612-1739970953.jpg"
+    },
+    {
+      "number": "64",
+      "name": "Moïse Bombito",
+      "tmId": "1089202",
+      "pos": "Centre-Back",
+      "dob": "2000-03-30T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "Canada",
+        "DR Congo"
+      ],
+      "mvRaw": "€7.00m",
+      "marketValueBigInt": "7000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1089202-1756826846.jpg"
+    },
+    {
+      "number": "35",
+      "name": "Xavier Mandza",
+      "tmId": "1297638",
+      "pos": "Centre-Back",
+      "dob": "2009-04-06T00:00:00.000Z",
+      "age": 17,
+      "nationality": [
+        "France",
+        "Gabon"
+      ],
+      "mvRaw": "€5.00m",
+      "marketValueBigInt": "5000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1297638-1741654445.png"
+    },
+    {
+      "number": "36",
+      "name": "Alidu Seidu",
+      "tmId": "798404",
+      "pos": "Centre-Back",
+      "dob": "2000-06-04T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "Ghana"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/798404-1679507806.jpg"
+    },
+    {
+      "number": "5",
+      "name": "Mohamed Abdelmonem",
+      "tmId": "566025",
+      "pos": "Centre-Back",
+      "dob": "1999-02-01T00:00:00.000Z",
+      "age": 27,
+      "nationality": [
+        "Egypt"
+      ],
+      "mvRaw": "€2.50m",
+      "marketValueBigInt": "2500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/566025-1739971401.jpg"
+    },
+    {
+      "number": "27",
+      "name": "Niels Nkounkou",
+      "tmId": "591193",
+      "pos": "Left-Back",
+      "dob": "2000-11-01T00:00:00.000Z",
+      "age": 25,
+      "nationality": [
+        "France",
+        "Congo"
+      ],
+      "mvRaw": "€2.60m",
+      "marketValueBigInt": "2600000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/591193-1696509000.jpg"
+    },
+    {
+      "number": "2",
+      "name": "Ali Abdi",
+      "tmId": "211474",
+      "pos": "Left-Back",
+      "dob": "1993-12-20T00:00:00.000Z",
+      "age": 32,
+      "nationality": [
+        "Tunisia"
+      ],
+      "mvRaw": "€2.00m",
+      "marketValueBigInt": "2000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/211474-1756827001.jpg"
+    },
+    {
+      "number": "92",
+      "name": "Jonathan Clauss",
+      "tmId": "175639",
+      "pos": "Right-Back",
+      "dob": "1992-09-25T00:00:00.000Z",
+      "age": 34,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€4.00m",
+      "marketValueBigInt": "4000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/175639-1756827010.jpg"
+    },
+    {
+      "number": "84",
+      "name": "Hamza Koutoune",
+      "tmId": "1134250",
+      "pos": "Right-Back",
+      "dob": "2006-09-17T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "Morocco"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1134250-1756822862.jpg"
+    },
+    {
+      "number": "99",
+      "name": "Salis Abdul Samed",
+      "tmId": "688707",
+      "pos": "Defensive Midfield",
+      "dob": "2000-03-26T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "Ghana",
+        "Cote d'Ivoire"
+      ],
+      "mvRaw": "€4.00m",
+      "marketValueBigInt": "4000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/688707-1756823332.jpg"
+    },
+    {
+      "number": "41",
+      "name": "Everton",
+      "tmId": "1191473",
+      "pos": "Defensive Midfield",
+      "dob": "2007-04-12T00:00:00.000Z",
+      "age": 19,
+      "nationality": [
+        "France",
+        "Brazil"
+      ],
+      "mvRaw": "€2.00m",
+      "marketValueBigInt": "2000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1191473-1741655672.png"
+    },
+    {
+      "number": "19",
+      "name": "Laurent Abergel",
+      "tmId": "238626",
+      "pos": "Defensive Midfield",
+      "dob": "1993-02-01T00:00:00.000Z",
+      "age": 33,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€1.80m",
+      "marketValueBigInt": "1800000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/238626-1704576934.jpg"
+    },
+    {
+      "number": "28",
+      "name": "Axel Witsel",
+      "tmId": "35047",
+      "pos": "Defensive Midfield",
+      "dob": "1989-01-12T00:00:00.000Z",
+      "age": 37,
+      "nationality": [
+        "Belgium",
+        "Martinique"
+      ],
+      "mvRaw": "€1.20m",
+      "marketValueBigInt": "1200000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/35047-1783005892.jpg"
+    },
+    {
+      "number": "34",
+      "name": "Nassim Laarej",
+      "tmId": "1297635",
+      "pos": "Unknown",
+      "dob": "2009-03-22T00:00:00.000Z",
+      "age": 17,
+      "nationality": [
+        "Morocco",
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1297635-1741654695.png"
+    },
+    {
+      "number": "6",
+      "name": "Hicham Boudaoui",
+      "tmId": "560593",
+      "pos": "Central Midfield",
+      "dob": "1999-09-23T00:00:00.000Z",
+      "age": 27,
+      "nationality": [
+        "Algeria"
+      ],
+      "mvRaw": "€12.00m",
+      "marketValueBigInt": "12000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/560593-1756824680.jpg"
+    },
+    {
+      "number": "39",
+      "name": "Djibril Coulibaly",
+      "tmId": "1208968",
+      "pos": "Central Midfield",
+      "dob": "2008-11-18T00:00:00.000Z",
+      "age": 17,
+      "nationality": [
+        "France",
+        "Mali"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1208968-1756823312.jpg"
+    },
+    {
+      "number": "8",
+      "name": "Morgan Sanson",
+      "tmId": "174094",
+      "pos": "Central Midfield",
+      "dob": "1994-08-18T00:00:00.000Z",
+      "age": 32,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/174094-1756824698.jpg"
+    },
+    {
+      "number": "22",
+      "name": "Issiaga Camara",
+      "tmId": "1180835",
+      "pos": "Central Midfield",
+      "dob": "2005-02-02T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "Guinea"
+      ],
+      "mvRaw": "€250k",
+      "marketValueBigInt": "250000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1180835-1732833301.jpg"
+    },
+    {
+      "number": "9",
+      "name": "Mohamed Amoura",
+      "tmId": "746910",
+      "pos": "Left Winger",
+      "dob": "2000-05-09T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "Algeria"
+      ],
+      "mvRaw": "€20.00m",
+      "marketValueBigInt": "20000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/746910-1724771303.jpg"
+    },
+    {
+      "number": "10",
+      "name": "Sofiane Diop",
+      "tmId": "569389",
+      "pos": "Left Winger",
+      "dob": "2000-06-09T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "Morocco",
+        "France"
+      ],
+      "mvRaw": "€15.00m",
+      "marketValueBigInt": "15000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/569389-1756824417.jpg"
+    },
+    {
+      "number": "21",
+      "name": "Isak Jansson",
+      "tmId": "535820",
+      "pos": "Left Winger",
+      "dob": "2002-01-31T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "Sweden"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/535820-1756823293.jpg"
+    },
+    {
+      "number": "7",
+      "name": "Gauthier Hein",
+      "tmId": "344892",
+      "pos": "Right Winger",
+      "dob": "1996-08-07T00:00:00.000Z",
+      "age": 30,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€5.00m",
+      "marketValueBigInt": "5000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/344892-1648068537.jpg"
+    },
+    {
+      "number": "29",
+      "name": "Nathan Ngoumou",
+      "tmId": "629588",
+      "pos": "Right Winger",
+      "dob": "2000-03-14T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "Cameroon",
+        "France"
+      ],
+      "mvRaw": "€3.50m",
+      "marketValueBigInt": "3500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/629588-1760967137.jpg"
+    },
+    {
+      "number": "11",
+      "name": "Elye Wahi",
+      "tmId": "659542",
+      "pos": "Centre-Forward",
+      "dob": "2003-01-02T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "Cote d'Ivoire",
+        "France"
+      ],
+      "mvRaw": "€18.00m",
+      "marketValueBigInt": "18000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/659542-1753984614.jpg"
+    },
+    {
+      "number": "44",
+      "name": "Zoumana Diallo",
+      "tmId": "1004479",
+      "pos": "Centre-Forward",
+      "dob": "2005-02-02T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "France",
+        "Mali"
+      ],
+      "mvRaw": "€800k",
+      "marketValueBigInt": "800000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1004479-1738787947.png"
+    }
+  ],
+  "583": [
+    {
+      "number": "39",
+      "name": "Matvey Safonov",
+      "tmId": "318470",
+      "pos": "Goalkeeper",
+      "dob": "1999-02-25T00:00:00.000Z",
+      "age": 27,
+      "nationality": [
+        "Russia"
+      ],
+      "mvRaw": "€30.00m",
+      "marketValueBigInt": "30000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/318470-1790709013.png"
+    },
+    {
+      "number": "30",
+      "name": "Lucas Chevalier",
+      "tmId": "463600",
+      "pos": "Goalkeeper",
+      "dob": "2001-11-06T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/463600-1708342501.jpg"
+    },
+    {
+      "number": "16",
+      "name": "Alessandro Longoni",
+      "tmId": "1074986",
+      "pos": "Goalkeeper",
+      "dob": "2008-01-31T00:00:00.000Z",
+      "age": 18,
+      "nationality": [
+        "Italy"
+      ],
+      "mvRaw": "€300k",
+      "marketValueBigInt": "300000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1074986-1762506045.jpg"
+    },
+    {
+      "number": "51",
+      "name": "Willian Pacho",
+      "tmId": "661171",
+      "pos": "Centre-Back",
+      "dob": "2001-10-16T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "Ecuador"
+      ],
+      "mvRaw": "€80.00m",
+      "marketValueBigInt": "80000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/661171-1696508666.jpg"
+    },
+    {
+      "number": "6",
+      "name": "Ilya Zabarnyi",
+      "tmId": "659089",
+      "pos": "Centre-Back",
+      "dob": "2002-09-01T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "Ukraine"
+      ],
+      "mvRaw": "€40.00m",
+      "marketValueBigInt": "40000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/659089-1760065378.jpg"
+    },
+    {
+      "number": "5",
+      "name": "Marquinhos",
+      "tmId": "181767",
+      "pos": "Centre-Back",
+      "dob": "1994-05-14T00:00:00.000Z",
+      "age": 32,
+      "nationality": [
+        "Brazil",
+        "Portugal"
+      ],
+      "mvRaw": "€28.00m",
+      "marketValueBigInt": "28000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/181767-1672303747.jpg"
+    },
+    {
+      "number": "4",
+      "name": "Lucas Beraldo",
+      "tmId": "872171",
+      "pos": "Centre-Back",
+      "dob": "2003-11-24T00:00:00.000Z",
+      "age": 22,
+      "nationality": [
+        "Brazil"
+      ],
+      "mvRaw": "€22.00m",
+      "marketValueBigInt": "22000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/872171-1715107660.jpg"
+    },
+    {
+      "number": "25",
+      "name": "Nuno Mendes",
+      "tmId": "616341",
+      "pos": "Left-Back",
+      "dob": "2002-06-19T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "Portugal"
+      ],
+      "mvRaw": "€80.00m",
+      "marketValueBigInt": "80000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/616341-1749417164.jpg"
+    },
+    {
+      "number": "21",
+      "name": "Lucas Hernández",
+      "tmId": "281963",
+      "pos": "Left-Back",
+      "dob": "1996-02-14T00:00:00.000Z",
+      "age": 30,
+      "nationality": [
+        "France",
+        "Spain"
+      ],
+      "mvRaw": "€18.00m",
+      "marketValueBigInt": "18000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/281963-1667830435.jpg"
+    },
+    {
+      "number": "12",
+      "name": "Lucas Digne",
+      "tmId": "126664",
+      "pos": "Left-Back",
+      "dob": "1993-07-20T00:00:00.000Z",
+      "age": 33,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€6.00m",
+      "marketValueBigInt": "6000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/126664-1736160616.jpg"
+    },
+    {
+      "number": "2",
+      "name": "Achraf Hakimi",
+      "tmId": "398073",
+      "pos": "Right-Back",
+      "dob": "1998-11-04T00:00:00.000Z",
+      "age": 27,
+      "nationality": [
+        "Morocco",
+        "Spain"
+      ],
+      "mvRaw": "€80.00m",
+      "marketValueBigInt": "80000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/398073-1672304327.jpg"
+    },
+    {
+      "number": "17",
+      "name": "Vitinha",
+      "tmId": "487469",
+      "pos": "Defensive Midfield",
+      "dob": "2000-02-13T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "Portugal"
+      ],
+      "mvRaw": "€140.00m",
+      "marketValueBigInt": "140000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/487469-1749415169.jpg"
+    },
+    {
+      "number": "87",
+      "name": "João Neves",
+      "tmId": "670681",
+      "pos": "Central Midfield",
+      "dob": "2004-09-27T00:00:00.000Z",
+      "age": 22,
+      "nationality": [
+        "Portugal"
+      ],
+      "mvRaw": "€140.00m",
+      "marketValueBigInt": "140000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/670681-1701295511.jpg"
+    },
+    {
+      "number": "33",
+      "name": "Warren Zaïre-Emery",
+      "tmId": "810092",
+      "pos": "Central Midfield",
+      "dob": "2006-03-08T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "France",
+        "Martinique"
+      ],
+      "mvRaw": "€80.00m",
+      "marketValueBigInt": "80000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/810092-1777411744.jpg"
+    },
+    {
+      "number": "24",
+      "name": "Senny Mayulu",
+      "tmId": "903693",
+      "pos": "Central Midfield",
+      "dob": "2006-05-17T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "France",
+        "DR Congo"
+      ],
+      "mvRaw": "€40.00m",
+      "marketValueBigInt": "40000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/903693-1716562599.jpg"
+    },
+    {
+      "number": "8",
+      "name": "Fabián Ruiz",
+      "tmId": "350219",
+      "pos": "Central Midfield",
+      "dob": "1996-04-03T00:00:00.000Z",
+      "age": 30,
+      "nationality": [
+        "Spain"
+      ],
+      "mvRaw": "€30.00m",
+      "marketValueBigInt": "30000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/350219-1718958379.jpg"
+    },
+    {
+      "number": "27",
+      "name": "Dro Fernández",
+      "tmId": "1071596",
+      "pos": "Attacking Midfield",
+      "dob": "2008-01-12T00:00:00.000Z",
+      "age": 18,
+      "nationality": [
+        "Spain",
+        "Philippines"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1071596-1774274719.jpg"
+    },
+    {
+      "number": "7",
+      "name": "Khvicha Kvaratskhelia",
+      "tmId": "502670",
+      "pos": "Left Winger",
+      "dob": "2001-02-12T00:00:00.000Z",
+      "age": 25,
+      "nationality": [
+        "Georgia"
+      ],
+      "mvRaw": "€140.00m",
+      "marketValueBigInt": "140000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/502670-1777411223.jpg"
+    },
+    {
+      "number": "22",
+      "name": "Mika Godts",
+      "tmId": "748804",
+      "pos": "Left Winger",
+      "dob": "2005-06-07T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "Belgium"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/748804-1745174235.jpg"
+    },
+    {
+      "number": "47",
+      "name": "Quentin Ndjantou",
+      "tmId": "1053208",
+      "pos": "Left Winger",
+      "dob": "2007-07-23T00:00:00.000Z",
+      "age": 19,
+      "nationality": [
+        "France",
+        "Cameroon"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1053208-1759747972.jpg"
+    },
+    {
+      "number": "14",
+      "name": "Désiré Doué",
+      "tmId": "914562",
+      "pos": "Right Winger",
+      "dob": "2005-06-03T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "France",
+        "Cote d'Ivoire"
+      ],
+      "mvRaw": "€120.00m",
+      "marketValueBigInt": "120000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/914562-1667317075.jpg"
+    },
+    {
+      "number": "11",
+      "name": "Maghnes Akliouche",
+      "tmId": "745200",
+      "pos": "Right Winger",
+      "dob": "2002-02-25T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "France",
+        "Algeria"
+      ],
+      "mvRaw": "€50.00m",
+      "marketValueBigInt": "50000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/745200-1717406573.jpg"
+    },
+    {
+      "number": "10",
+      "name": "Ousmane Dembélé",
+      "tmId": "288230",
+      "pos": "Centre-Forward",
+      "dob": "1997-05-15T00:00:00.000Z",
+      "age": 29,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€100.00m",
+      "marketValueBigInt": "100000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/288230-1684148641.jpg"
+    },
+    {
+      "number": "9",
+      "name": "Ferran Torres",
+      "tmId": "398184",
+      "pos": "Centre-Forward",
+      "dob": "2000-02-29T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "Spain"
+      ],
+      "mvRaw": "€55.00m",
+      "marketValueBigInt": "55000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/398184-1779789996.jpg"
+    }
+  ],
+  "667": [
+    {
+      "number": "1",
+      "name": "Filip Jørgensen",
+      "tmId": "585323",
+      "pos": "Goalkeeper",
+      "dob": "2002-04-16T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "Denmark",
+        "Sweden"
+      ],
+      "mvRaw": "€15.00m",
+      "marketValueBigInt": "15000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/585323-1718280485.jpg"
+    },
+    {
+      "number": "12",
+      "name": "Milosz Piekutowski",
+      "tmId": "965043",
+      "pos": "Goalkeeper",
+      "dob": "2006-05-08T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "Poland"
+      ],
+      "mvRaw": "€600k",
+      "marketValueBigInt": "600000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/965043-1760514023.JPG"
+    },
+    {
+      "number": "31",
+      "name": "Karim Coulibaly",
+      "tmId": "1084638",
+      "pos": "Centre-Back",
+      "dob": "2007-05-23T00:00:00.000Z",
+      "age": 19,
+      "nationality": [
+        "Germany",
+        "Cote d'Ivoire"
+      ],
+      "mvRaw": "€28.00m",
+      "marketValueBigInt": "28000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1084638-1756027638.jpg"
+    },
+    {
+      "number": "6",
+      "name": "Ismaël Doukouré",
+      "tmId": "786436",
+      "pos": "Centre-Back",
+      "dob": "2003-07-24T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "France",
+        "Cote d'Ivoire"
+      ],
+      "mvRaw": "€20.00m",
+      "marketValueBigInt": "20000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/786436-1732576094.png"
+    },
+    {
+      "number": "24",
+      "name": "Lucas Høgsberg",
+      "tmId": "926978",
+      "pos": "Centre-Back",
+      "dob": "2006-06-23T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "Denmark"
+      ],
+      "mvRaw": "€18.00m",
+      "marketValueBigInt": "18000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/926978-1738564989.jpg"
+    },
+    {
+      "number": "4",
+      "name": "Jeyland Mitchell",
+      "tmId": "856068",
+      "pos": "Centre-Back",
+      "dob": "2004-09-29T00:00:00.000Z",
+      "age": 22,
+      "nationality": [
+        "Costa Rica"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/856068-1720029351.jpg"
+    },
+    {
+      "number": "36",
+      "name": "Hermann Malonga",
+      "tmId": "1185890",
+      "pos": "Centre-Back",
+      "dob": "2008-01-08T00:00:00.000Z",
+      "age": 18,
+      "nationality": [
+        "France",
+        "Congo"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/default.jpg"
+    },
+    {
+      "number": "36",
+      "name": "Oso",
+      "tmId": "1032280",
+      "pos": "Left-Back",
+      "dob": "2003-07-09T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "Spain",
+        "Argentina"
+      ],
+      "mvRaw": "€10.00m",
+      "marketValueBigInt": "10000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1032280-1774905283.jpg"
+    },
+    {
+      "number": "15",
+      "name": "Mateo Del Blanco",
+      "tmId": "984529",
+      "pos": "Left-Back",
+      "dob": "2003-10-31T00:00:00.000Z",
+      "age": 22,
+      "nationality": [
+        "Argentina",
+        "Spain"
+      ],
+      "mvRaw": "€5.00m",
+      "marketValueBigInt": "5000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/984529-1721144163.png"
+    },
+    {
+      "number": "16",
+      "name": "Genesis Antwi",
+      "tmId": "1045121",
+      "pos": "Right-Back",
+      "dob": "2007-05-11T00:00:00.000Z",
+      "age": 19,
+      "nationality": [
+        "Sweden",
+        "England"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1045121-1746640639.jpg"
+    },
+    {
+      "number": "14",
+      "name": "Dário Essugo",
+      "tmId": "670717",
+      "pos": "Defensive Midfield",
+      "dob": "2005-03-14T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "Portugal",
+        "Angola"
+      ],
+      "mvRaw": "€15.00m",
+      "marketValueBigInt": "15000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/670717-1742314930.jpg"
+    },
+    {
+      "number": "23",
+      "name": "Diogo Sousa",
+      "tmId": "937729",
+      "pos": "Defensive Midfield",
+      "dob": "2006-01-20T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "Portugal"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/937729-1772447527.jpg"
+    },
+    {
+      "number": "8",
+      "name": "Maxi Oyedele",
+      "tmId": "863204",
+      "pos": "Defensive Midfield",
+      "dob": "2004-11-07T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "Poland",
+        "England"
+      ],
+      "mvRaw": "€5.00m",
+      "marketValueBigInt": "5000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/863204-1749544441.png"
+    },
+    {
+      "number": "29",
+      "name": "Samir El Mourabet",
+      "tmId": "1130514",
+      "pos": "Central Midfield",
+      "dob": "2005-10-06T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "Morocco",
+        "France"
+      ],
+      "mvRaw": "€22.00m",
+      "marketValueBigInt": "22000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1130514-1780319759.jpg"
+    },
+    {
+      "number": "21",
+      "name": "Pape Demba Diop",
+      "tmId": "949113",
+      "pos": "Central Midfield",
+      "dob": "2003-09-04T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "Senegal"
+      ],
+      "mvRaw": "€9.00m",
+      "marketValueBigInt": "9000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/949113-1758195720.jpg"
+    },
+    {
+      "number": "10",
+      "name": "Giovanni Reyna",
+      "tmId": "504215",
+      "pos": "Attacking Midfield",
+      "dob": "2002-11-13T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "United States",
+        "Portugal"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/504215-1760967520.jpg"
+    },
+    {
+      "number": "26",
+      "name": "Omari Kellyman",
+      "tmId": "926135",
+      "pos": "Attacking Midfield",
+      "dob": "2005-09-15T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "England",
+        "Northern Ireland"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/926135-1693556357.jpg"
+    },
+    {
+      "number": "45",
+      "name": "Benjamin Brantlind",
+      "tmId": "1172441",
+      "pos": "Attacking Midfield",
+      "dob": "2008-08-15T00:00:00.000Z",
+      "age": 18,
+      "nationality": [
+        "Sweden"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1172441-1723796543.png"
+    },
+    {
+      "number": "20",
+      "name": "Martial Godo",
+      "tmId": "992686",
+      "pos": "Left Winger",
+      "dob": "2003-03-14T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "Cote d'Ivoire",
+        "England"
+      ],
+      "mvRaw": "€22.00m",
+      "marketValueBigInt": "22000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/992686-1726650122.jpg"
+    },
+    {
+      "number": "11",
+      "name": "Sebastian Nanasi",
+      "tmId": "579928",
+      "pos": "Left Winger",
+      "dob": "2002-05-16T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "Sweden",
+        "Hungary"
+      ],
+      "mvRaw": "€15.00m",
+      "marketValueBigInt": "15000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/579928-1732576164.png"
+    },
+    {
+      "number": "19",
+      "name": "Fábio Baldé",
+      "tmId": "910541",
+      "pos": "Left Winger",
+      "dob": "2005-07-20T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "Portugal",
+        "Germany"
+      ],
+      "mvRaw": "€5.00m",
+      "marketValueBigInt": "5000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/910541-1758189846.jpg"
+    },
+    {
+      "number": "80",
+      "name": "Gessime Yassine",
+      "tmId": "1151929",
+      "pos": "Right Winger",
+      "dob": "2005-11-22T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "Morocco",
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1151929-1780320928.jpg"
+    },
+    {
+      "number": "7",
+      "name": "Samuel Amo-Ameyaw",
+      "tmId": "933900",
+      "pos": "Right Winger",
+      "dob": "2006-07-18T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "England",
+        "Ghana"
+      ],
+      "mvRaw": "€8.00m",
+      "marketValueBigInt": "8000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/933900-1750770965.png"
+    },
+    {
+      "number": "34",
+      "name": "Yaya Diémé",
+      "tmId": "1133733",
+      "pos": "Right Winger",
+      "dob": "2007-10-16T00:00:00.000Z",
+      "age": 18,
+      "nationality": [
+        "Senegal"
+      ],
+      "mvRaw": "€300k",
+      "marketValueBigInt": "300000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/default.jpg"
+    },
+    {
+      "number": "9",
+      "name": "Joaquín Panichelli",
+      "tmId": "1064871",
+      "pos": "Centre-Forward",
+      "dob": "2002-10-07T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "Argentina"
+      ],
+      "mvRaw": "€35.00m",
+      "marketValueBigInt": "35000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1064871-1727113388.jpg"
+    },
+    {
+      "number": "40",
+      "name": "Conrad Harder",
+      "tmId": "807386",
+      "pos": "Centre-Forward",
+      "dob": "2005-04-07T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "Denmark"
+      ],
+      "mvRaw": "€17.00m",
+      "marketValueBigInt": "17000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/807386-1785932637.jpg"
+    },
+    {
+      "number": "30",
+      "name": "Jacobo Ortega",
+      "tmId": "1186237",
+      "pos": "Centre-Forward",
+      "dob": "2006-05-29T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "Spain"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1186237-1765440774.jpg"
+    },
+    {
+      "number": "42",
+      "name": "Deivid Washington",
+      "tmId": "1082850",
+      "pos": "Centre-Forward",
+      "dob": "2005-06-05T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "Brazil"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1082850-1682776110.jpg"
+    },
+    {
+      "number": "14",
+      "name": "Sékou Mara",
+      "tmId": "557612",
+      "pos": "Centre-Forward",
+      "dob": "2002-07-30T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "France",
+        "Senegal"
+      ],
+      "mvRaw": "€4.00m",
+      "marketValueBigInt": "4000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/557612-1731603567.png"
+    }
+  ],
+  "738": [
+    {
+      "number": "16",
+      "name": "Arnaud Bodart",
+      "tmId": "417278",
+      "pos": "Goalkeeper",
+      "dob": "1998-03-11T00:00:00.000Z",
+      "age": 28,
+      "nationality": [
+        "Belgium"
+      ],
+      "mvRaw": "€1.50m",
+      "marketValueBigInt": "1500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/417278-1704961747.jpg"
+    },
+    {
+      "number": "77",
+      "name": "Lionel Mpasi-Nzau",
+      "tmId": "164915",
+      "pos": "Goalkeeper",
+      "dob": "1994-08-01T00:00:00.000Z",
+      "age": 32,
+      "nationality": [
+        "DR Congo",
+        "France"
+      ],
+      "mvRaw": "€700k",
+      "marketValueBigInt": "700000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/164915-1666190720.JPG"
+    },
+    {
+      "number": "93",
+      "name": "Gauthier Gallon",
+      "tmId": "193256",
+      "pos": "Goalkeeper",
+      "dob": "1993-04-23T00:00:00.000Z",
+      "age": 33,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€600k",
+      "marketValueBigInt": "600000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/193256-1583139111.jpg"
+    },
+    {
+      "number": "15",
+      "name": "Ayumu Seko",
+      "tmId": "405389",
+      "pos": "Centre-Back",
+      "dob": "2000-06-07T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "Japan"
+      ],
+      "mvRaw": "€5.00m",
+      "marketValueBigInt": "5000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/405389-1781200168.jpg"
+    },
+    {
+      "number": "29",
+      "name": "Stephan Zagadou",
+      "tmId": "1228317",
+      "pos": "Centre-Back",
+      "dob": "2008-10-24T00:00:00.000Z",
+      "age": 17,
+      "nationality": [
+        "France",
+        "Cote d'Ivoire"
+      ],
+      "mvRaw": "€4.00m",
+      "marketValueBigInt": "4000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1228317-1770734950.jpg"
+    },
+    {
+      "number": "5",
+      "name": "Ahmed Touba",
+      "tmId": "325924",
+      "pos": "Centre-Back",
+      "dob": "1998-03-13T00:00:00.000Z",
+      "age": 28,
+      "nationality": [
+        "Algeria",
+        "Belgium"
+      ],
+      "mvRaw": "€2.50m",
+      "marketValueBigInt": "2500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/325924-1785512002.png"
+    },
+    {
+      "number": "23",
+      "name": "Vincent Sasso",
+      "tmId": "122115",
+      "pos": "Centre-Back",
+      "dob": "1991-02-16T00:00:00.000Z",
+      "age": 35,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€150k",
+      "marketValueBigInt": "150000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/122115-1778861464.jpg"
+    },
+    {
+      "number": "27",
+      "name": "Enzo Koffi",
+      "tmId": "1119881",
+      "pos": "Left-Back",
+      "dob": "2006-03-04T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "France",
+        "Cote d'Ivoire"
+      ],
+      "mvRaw": "€1.80m",
+      "marketValueBigInt": "1800000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1119881-1777328098.jpg"
+    },
+    {
+      "number": "12",
+      "name": "Elias Jelert",
+      "tmId": "646478",
+      "pos": "Right-Back",
+      "dob": "2003-06-12T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "Denmark"
+      ],
+      "mvRaw": "€5.00m",
+      "marketValueBigInt": "5000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/646478-1744295625.jpg"
+    },
+    {
+      "number": "32",
+      "name": "Timothée Pembélé",
+      "tmId": "538998",
+      "pos": "Right-Back",
+      "dob": "2002-09-09T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "France",
+        "DR Congo"
+      ],
+      "mvRaw": "€1.80m",
+      "marketValueBigInt": "1800000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/538998-1754900983.jpg"
+    },
+    {
+      "number": "20",
+      "name": "Djibril Ouziad",
+      "tmId": "1524445",
+      "pos": "Right-Back",
+      "dob": "2009-04-27T00:00:00.000Z",
+      "age": 17,
+      "nationality": [
+        "France",
+        "Algeria"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/default.jpg"
+    },
+    {
+      "number": "6",
+      "name": "Junior Mwanga",
+      "tmId": "1011200",
+      "pos": "Defensive Midfield",
+      "dob": "2003-05-11T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "France",
+        "DR Congo"
+      ],
+      "mvRaw": "€6.00m",
+      "marketValueBigInt": "6000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1011200-1732575482.png"
+    },
+    {
+      "number": "78",
+      "name": "Daren Mosengo",
+      "tmId": "1119880",
+      "pos": "Defensive Midfield",
+      "dob": "2006-08-11T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "France",
+        "DR Congo"
+      ],
+      "mvRaw": "€300k",
+      "marketValueBigInt": "300000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1119880-1758624811.jpg"
+    },
+    {
+      "number": "14",
+      "name": "Rassoul Ndiaye",
+      "tmId": "662242",
+      "pos": "Central Midfield",
+      "dob": "2001-12-11T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "Senegal",
+        "France"
+      ],
+      "mvRaw": "€8.00m",
+      "marketValueBigInt": "8000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/662242-1654095080.jpg"
+    },
+    {
+      "number": "26",
+      "name": "Simon Ebonog",
+      "tmId": "770436",
+      "pos": "Central Midfield",
+      "dob": "2004-08-16T00:00:00.000Z",
+      "age": 22,
+      "nationality": [
+        "France",
+        "Cameroon"
+      ],
+      "mvRaw": "€4.50m",
+      "marketValueBigInt": "4500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/770436-1758624584.jpg"
+    },
+    {
+      "number": "7",
+      "name": "Amir Richardson",
+      "tmId": "893675",
+      "pos": "Central Midfield",
+      "dob": "2002-01-24T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "Morocco",
+        "France"
+      ],
+      "mvRaw": "€4.00m",
+      "marketValueBigInt": "4000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/893675-1725529481.jpg"
+    },
+    {
+      "number": "24",
+      "name": "Guy-Noël Zohouri",
+      "tmId": "1119877",
+      "pos": "Central Midfield",
+      "dob": "2007-02-01T00:00:00.000Z",
+      "age": 19,
+      "nationality": [
+        "Cote d'Ivoire",
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/default.jpg"
+    },
+    {
+      "number": "17",
+      "name": "Kaito Mizuta",
+      "tmId": "677794",
+      "pos": "Attacking Midfield",
+      "dob": "2000-04-08T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "Japan"
+      ],
+      "mvRaw": "€600k",
+      "marketValueBigInt": "600000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/677794-1753387895.jpg"
+    },
+    {
+      "number": "44",
+      "name": "Ismaïl Bouneb",
+      "tmId": "986286",
+      "pos": "Attacking Midfield",
+      "dob": "2006-06-07T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "France",
+        "Algeria"
+      ],
+      "mvRaw": "€400k",
+      "marketValueBigInt": "400000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/986286-1712613592.jpg"
+    },
+    {
+      "number": "10",
+      "name": "Felix Mambimbi",
+      "tmId": "507496",
+      "pos": "Left Winger",
+      "dob": "2001-01-18T00:00:00.000Z",
+      "age": 25,
+      "nationality": [
+        "Switzerland",
+        "DR Congo"
+      ],
+      "mvRaw": "€500k",
+      "marketValueBigInt": "500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/507496-1721331170.png"
+    },
+    {
+      "number": "38",
+      "name": "Rayan Fofana",
+      "tmId": "1160814",
+      "pos": "Centre-Forward",
+      "dob": "2006-02-12T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "Cote d'Ivoire",
+        "France"
+      ],
+      "mvRaw": "€8.00m",
+      "marketValueBigInt": "8000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1160814-1758902837.jpg"
+    },
+    {
+      "number": "9",
+      "name": "Josh Maja",
+      "tmId": "453824",
+      "pos": "Centre-Forward",
+      "dob": "1998-12-27T00:00:00.000Z",
+      "age": 27,
+      "nationality": [
+        "Nigeria",
+        "England"
+      ],
+      "mvRaw": "€4.50m",
+      "marketValueBigInt": "4500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/453824-1723562250.jpg"
+    },
+    {
+      "number": "30",
+      "name": "Sota Nakamura",
+      "tmId": "1268075",
+      "pos": "Centre-Forward",
+      "dob": "2002-10-15T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "Japan"
+      ],
+      "mvRaw": "€900k",
+      "marketValueBigInt": "900000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1268075-1770310508.jpg"
+    },
+    {
+      "number": "25",
+      "name": "Mbwana Samatta",
+      "tmId": "182201",
+      "pos": "Centre-Forward",
+      "dob": "1992-12-23T00:00:00.000Z",
+      "age": 33,
+      "nationality": [
+        "Tanzania"
+      ],
+      "mvRaw": "€700k",
+      "marketValueBigInt": "700000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/182201-1727967720.png"
+    },
+    {
+      "number": "",
+      "name": "Elysée Logbo",
+      "tmId": "770407",
+      "pos": "Centre-Forward",
+      "dob": "2004-05-06T00:00:00.000Z",
+      "age": 22,
+      "nationality": [
+        "France",
+        "Cote d'Ivoire"
+      ],
+      "mvRaw": "€200k",
+      "marketValueBigInt": "200000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/770407-1741897086.jpg"
+    },
+    {
+      "number": "19",
+      "name": "Joan Tincrès",
+      "tmId": "975348",
+      "pos": "Centre-Forward",
+      "dob": "2006-06-17T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€100k",
+      "marketValueBigInt": "100000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/975348-1693952904.png"
+    }
+  ],
+  "826": [
+    {
+      "number": "40",
+      "name": "Robin Risser",
+      "tmId": "743515",
+      "pos": "Goalkeeper",
+      "dob": "2004-12-02T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€30.00m",
+      "marketValueBigInt": "30000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/743515-1732575159.png"
+    },
+    {
+      "number": "16",
+      "name": "Mathieu Gorgelin",
+      "tmId": "60543",
+      "pos": "Goalkeeper",
+      "dob": "1990-08-05T00:00:00.000Z",
+      "age": 36,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€200k",
+      "marketValueBigInt": "200000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/60543-1704795204.jpg"
+    },
+    {
+      "number": "1",
+      "name": "Régis Gurtner",
+      "tmId": "39918",
+      "pos": "Goalkeeper",
+      "dob": "1986-12-08T00:00:00.000Z",
+      "age": 39,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€100k",
+      "marketValueBigInt": "100000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/39918-1656081292.jpg"
+    },
+    {
+      "number": "60",
+      "name": "Ilan Jourdren",
+      "tmId": "1200424",
+      "pos": "Goalkeeper",
+      "dob": "2008-07-17T00:00:00.000Z",
+      "age": 18,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1200424-1761139182.jpg"
+    },
+    {
+      "number": "25",
+      "name": "Ismaëlo Ganiou",
+      "tmId": "1020191",
+      "pos": "Centre-Back",
+      "dob": "2005-03-14T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "France",
+        "Burkina Faso"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1020191-1738585625.jpg"
+    },
+    {
+      "number": "6",
+      "name": "Samson Baidoo",
+      "tmId": "655217",
+      "pos": "Centre-Back",
+      "dob": "2004-03-31T00:00:00.000Z",
+      "age": 22,
+      "nationality": [
+        "Austria"
+      ],
+      "mvRaw": "€25.00m",
+      "marketValueBigInt": "25000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/655217-1722523870.png"
+    },
+    {
+      "number": "20",
+      "name": "Jean-Clair Todibo",
+      "tmId": "605184",
+      "pos": "Centre-Back",
+      "dob": "1999-12-30T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "France",
+        "French Guiana"
+      ],
+      "mvRaw": "€22.00m",
+      "marketValueBigInt": "22000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/605184-1699439806.jpg"
+    },
+    {
+      "number": "32",
+      "name": "Kyllian Antonio",
+      "tmId": "1186789",
+      "pos": "Centre-Back",
+      "dob": "2008-01-04T00:00:00.000Z",
+      "age": 18,
+      "nationality": [
+        "France",
+        "Guadeloupe"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1186789-1761139494.jpg"
+    },
+    {
+      "number": "4",
+      "name": "Nidal Celik",
+      "tmId": "819566",
+      "pos": "Centre-Back",
+      "dob": "2006-07-17T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "Bosnia-Herzegovina"
+      ],
+      "mvRaw": "€7.00m",
+      "marketValueBigInt": "7000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/819566-1726634830.jpg"
+    },
+    {
+      "number": "31",
+      "name": "Souleymane Sagnan",
+      "tmId": "1160378",
+      "pos": "Centre-Back",
+      "dob": "2005-05-06T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "Mali",
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1160378-1756720885.jpg"
+    },
+    {
+      "number": "3",
+      "name": "Maik Nawrocki",
+      "tmId": "407745",
+      "pos": "Centre-Back",
+      "dob": "2001-02-07T00:00:00.000Z",
+      "age": 25,
+      "nationality": [
+        "Poland",
+        "Germany"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/407745-1757925129.png"
+    },
+    {
+      "number": "24",
+      "name": "Jonathan Gradit",
+      "tmId": "126557",
+      "pos": "Centre-Back",
+      "dob": "1992-11-24T00:00:00.000Z",
+      "age": 33,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€2.50m",
+      "marketValueBigInt": "2500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/126557-1738580496.jpg"
+    },
+    {
+      "number": "14",
+      "name": "Matthieu Udol",
+      "tmId": "344886",
+      "pos": "Left-Back",
+      "dob": "1996-03-20T00:00:00.000Z",
+      "age": 30,
+      "nationality": [
+        "France",
+        "Guadeloupe"
+      ],
+      "mvRaw": "€8.00m",
+      "marketValueBigInt": "8000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/344886-1789070753.jpg"
+    },
+    {
+      "number": "",
+      "name": "Jhoanner Chávez",
+      "tmId": "713787",
+      "pos": "Left-Back",
+      "dob": "2002-04-25T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "Ecuador"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/713787-1656676313.JPG"
+    },
+    {
+      "number": "23",
+      "name": "Saud Abdulhamid",
+      "tmId": "631927",
+      "pos": "Right-Back",
+      "dob": "1999-07-18T00:00:00.000Z",
+      "age": 27,
+      "nationality": [
+        "Saudi Arabia"
+      ],
+      "mvRaw": "€9.00m",
+      "marketValueBigInt": "9000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/631927-1730124451.jpg"
+    },
+    {
+      "number": "2",
+      "name": "Ruben Aguilar",
+      "tmId": "203746",
+      "pos": "Right-Back",
+      "dob": "1993-04-26T00:00:00.000Z",
+      "age": 33,
+      "nationality": [
+        "France",
+        "Spain"
+      ],
+      "mvRaw": "€2.50m",
+      "marketValueBigInt": "2500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/203746-1614090581.jpg"
+    },
+    {
+      "number": "8",
+      "name": "Yacine Titraoui",
+      "tmId": "748445",
+      "pos": "Central Midfield",
+      "dob": "2003-07-26T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "Algeria"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/748445-1780325822.jpg"
+    },
+    {
+      "number": "5",
+      "name": "Andrija Bulatovic",
+      "tmId": "986291",
+      "pos": "Central Midfield",
+      "dob": "2006-12-27T00:00:00.000Z",
+      "age": 19,
+      "nationality": [
+        "Montenegro"
+      ],
+      "mvRaw": "€8.00m",
+      "marketValueBigInt": "8000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/986291-1789070678.jpg"
+    },
+    {
+      "number": "27",
+      "name": "Michaël Cuisance",
+      "tmId": "344600",
+      "pos": "Central Midfield",
+      "dob": "1999-08-16T00:00:00.000Z",
+      "age": 27,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/344600-1720777671.jpg"
+    },
+    {
+      "number": "21",
+      "name": "Amadou Haidara",
+      "tmId": "402008",
+      "pos": "Central Midfield",
+      "dob": "1998-01-31T00:00:00.000Z",
+      "age": 28,
+      "nationality": [
+        "Mali"
+      ],
+      "mvRaw": "€5.00m",
+      "marketValueBigInt": "5000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/402008-1713945184.jpg"
+    },
+    {
+      "number": "38",
+      "name": "Mezian Mesloub",
+      "tmId": "1297674",
+      "pos": "Attacking Midfield",
+      "dob": "2009-11-08T00:00:00.000Z",
+      "age": 16,
+      "nationality": [
+        "Portugal",
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1297674-1778312570.jpg"
+    },
+    {
+      "number": "9",
+      "name": "Thorgan Hazard",
+      "tmId": "102226",
+      "pos": "Attacking Midfield",
+      "dob": "1993-03-29T00:00:00.000Z",
+      "age": 33,
+      "nationality": [
+        "Belgium"
+      ],
+      "mvRaw": "€2.00m",
+      "marketValueBigInt": "2000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/102226-1699906886.jpg"
+    },
+    {
+      "number": "19",
+      "name": "Abdallah Sima",
+      "tmId": "776798",
+      "pos": "Left Winger",
+      "dob": "2001-06-17T00:00:00.000Z",
+      "age": 25,
+      "nationality": [
+        "Senegal"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/776798-1672669896.jpg"
+    },
+    {
+      "number": "22",
+      "name": "Michal Skoras",
+      "tmId": "393565",
+      "pos": "Left Winger",
+      "dob": "2000-02-15T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "Poland"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/393565-1716985498.jpg"
+    },
+    {
+      "number": "28",
+      "name": "Junior Kadile",
+      "tmId": "585958",
+      "pos": "Left Winger",
+      "dob": "2002-12-16T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "DR Congo",
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/585958-1764076954.jpg"
+    },
+    {
+      "number": "10",
+      "name": "Florian Thauvin",
+      "tmId": "184892",
+      "pos": "Right Winger",
+      "dob": "1993-01-26T00:00:00.000Z",
+      "age": 33,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€5.00m",
+      "marketValueBigInt": "5000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/184892-1759159434.jpg"
+    },
+    {
+      "number": "29",
+      "name": "Franjo Ivanović",
+      "tmId": "548028",
+      "pos": "Centre-Forward",
+      "dob": "2003-10-01T00:00:00.000Z",
+      "age": 22,
+      "nationality": [
+        "Croatia"
+      ],
+      "mvRaw": "€15.00m",
+      "marketValueBigInt": "15000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/548028-1727376769.jpg"
+    },
+    {
+      "number": "11",
+      "name": "Odsonne Édouard",
+      "tmId": "344152",
+      "pos": "Centre-Forward",
+      "dob": "1998-01-16T00:00:00.000Z",
+      "age": 28,
+      "nationality": [
+        "France",
+        "Haiti"
+      ],
+      "mvRaw": "€12.00m",
+      "marketValueBigInt": "12000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/344152-1746645817.jpg"
+    },
+    {
+      "number": "7",
+      "name": "Florian Sotoca",
+      "tmId": "354726",
+      "pos": "Centre-Forward",
+      "dob": "1990-10-25T00:00:00.000Z",
+      "age": 35,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€1.20m",
+      "marketValueBigInt": "1200000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/354726-1701294869.jpg"
+    }
+  ],
+  "1041": [
+    {
+      "number": "1",
+      "name": "Dominik Greif",
+      "tmId": "316884",
+      "pos": "Goalkeeper",
+      "dob": "1997-04-06T00:00:00.000Z",
+      "age": 29,
+      "nationality": [
+        "Slovakia"
+      ],
+      "mvRaw": "€9.00m",
+      "marketValueBigInt": "9000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/316884-1773950159.jpg"
+    },
+    {
+      "number": "40",
+      "name": "Rémy Descamps",
+      "tmId": "282028",
+      "pos": "Goalkeeper",
+      "dob": "1996-06-25T00:00:00.000Z",
+      "age": 30,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€1.50m",
+      "marketValueBigInt": "1500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/282028-1608790532.jpg"
+    },
+    {
+      "number": "25",
+      "name": "Justin Bengui",
+      "tmId": "802986",
+      "pos": "Goalkeeper",
+      "dob": "2005-07-09T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "France",
+        "Angola"
+      ],
+      "mvRaw": "€250k",
+      "marketValueBigInt": "250000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/802986-1756925122.jpg"
+    },
+    {
+      "number": "50",
+      "name": "Lassine Diarra",
+      "tmId": "1071430",
+      "pos": "Goalkeeper",
+      "dob": "2002-11-11T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "Mali"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1071430-1721918092.jpg"
+    },
+    {
+      "number": "19",
+      "name": "Moussa Niakhaté",
+      "tmId": "291200",
+      "pos": "Centre-Back",
+      "dob": "1996-03-08T00:00:00.000Z",
+      "age": 30,
+      "nationality": [
+        "Senegal",
+        "France"
+      ],
+      "mvRaw": "€15.00m",
+      "marketValueBigInt": "15000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/291200-1780384737.jpg"
+    },
+    {
+      "number": "21",
+      "name": "Ruben Kluivert",
+      "tmId": "578421",
+      "pos": "Centre-Back",
+      "dob": "2001-05-21T00:00:00.000Z",
+      "age": 25,
+      "nationality": [
+        "Netherlands",
+        "Suriname"
+      ],
+      "mvRaw": "€8.00m",
+      "marketValueBigInt": "8000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/578421-1605468625.jpg"
+    },
+    {
+      "number": "20",
+      "name": "Felix Bacher",
+      "tmId": "394134",
+      "pos": "Centre-Back",
+      "dob": "2000-10-25T00:00:00.000Z",
+      "age": 25,
+      "nationality": [
+        "Austria"
+      ],
+      "mvRaw": "€6.00m",
+      "marketValueBigInt": "6000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/394134-1724845183.jpg"
+    },
+    {
+      "number": "85",
+      "name": "Noham Kamara",
+      "tmId": "1275040",
+      "pos": "Centre-Back",
+      "dob": "2007-01-22T00:00:00.000Z",
+      "age": 19,
+      "nationality": [
+        "France",
+        "Senegal"
+      ],
+      "mvRaw": "€3.00m",
+      "marketValueBigInt": "3000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1275040-1752476961.jpg"
+    },
+    {
+      "number": "22",
+      "name": "Clinton Mata",
+      "tmId": "187718",
+      "pos": "Centre-Back",
+      "dob": "1992-11-07T00:00:00.000Z",
+      "age": 33,
+      "nationality": [
+        "Angola",
+        "Belgium"
+      ],
+      "mvRaw": "€2.50m",
+      "marketValueBigInt": "2500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/187718-1616529648.jpg"
+    },
+    {
+      "number": "16",
+      "name": "Abner",
+      "tmId": "646402",
+      "pos": "Left-Back",
+      "dob": "2000-05-27T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "Brazil"
+      ],
+      "mvRaw": "€10.00m",
+      "marketValueBigInt": "10000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/646402-1773951778.jpg"
+    },
+    {
+      "number": "3",
+      "name": "Nicolás Tagliafico",
+      "tmId": "131225",
+      "pos": "Left-Back",
+      "dob": "1992-08-31T00:00:00.000Z",
+      "age": 34,
+      "nationality": [
+        "Argentina",
+        "Italy"
+      ],
+      "mvRaw": "€4.00m",
+      "marketValueBigInt": "4000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/131225-1668181437.jpg"
+    },
+    {
+      "number": "76",
+      "name": "Mohamed Ouédraogo",
+      "tmId": "1107570",
+      "pos": "Left-Back",
+      "dob": "2003-01-02T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "Burkina Faso"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1107570-1752849806.jpg"
+    },
+    {
+      "number": "13",
+      "name": "Zachary Athekame",
+      "tmId": "990637",
+      "pos": "Right-Back",
+      "dob": "2004-12-13T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "Switzerland",
+        "Nigeria"
+      ],
+      "mvRaw": "€15.00m",
+      "marketValueBigInt": "15000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/990637-1733948149.jpg"
+    },
+    {
+      "number": "37",
+      "name": "Steeve Kango",
+      "tmId": "1119391",
+      "pos": "Right-Back",
+      "dob": "2006-12-09T00:00:00.000Z",
+      "age": 19,
+      "nationality": [
+        "France",
+        "Algeria"
+      ],
+      "mvRaw": "€1.00m",
+      "marketValueBigInt": "1000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1119391-1773950062.jpg"
+    },
+    {
+      "number": "23",
+      "name": "Tyler Morton",
+      "tmId": "618494",
+      "pos": "Defensive Midfield",
+      "dob": "2002-10-31T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "England"
+      ],
+      "mvRaw": "€30.00m",
+      "marketValueBigInt": "30000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/618494-1719220555.jpg"
+    },
+    {
+      "number": "6",
+      "name": "Tanner Tessmann",
+      "tmId": "670096",
+      "pos": "Defensive Midfield",
+      "dob": "2001-09-24T00:00:00.000Z",
+      "age": 25,
+      "nationality": [
+        "United States"
+      ],
+      "mvRaw": "€10.00m",
+      "marketValueBigInt": "10000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/670096-1722196121.jpg"
+    },
+    {
+      "number": "",
+      "name": "Paul Akouokou",
+      "tmId": "429901",
+      "pos": "Defensive Midfield",
+      "dob": "1997-12-20T00:00:00.000Z",
+      "age": 28,
+      "nationality": [
+        "Cote d'Ivoire"
+      ],
+      "mvRaw": "€400k",
+      "marketValueBigInt": "400000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/429901-1779142558.jpg"
+    },
+    {
+      "number": "2",
+      "name": "Mads Bidstrup",
+      "tmId": "462832",
+      "pos": "Central Midfield",
+      "dob": "2001-02-25T00:00:00.000Z",
+      "age": 25,
+      "nationality": [
+        "Denmark"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/462832-1754993672.png"
+    },
+    {
+      "number": "18",
+      "name": "Khalis Merah",
+      "tmId": "1187942",
+      "pos": "Central Midfield",
+      "dob": "2007-02-24T00:00:00.000Z",
+      "age": 19,
+      "nationality": [
+        "France",
+        "Algeria"
+      ],
+      "mvRaw": "€15.00m",
+      "marketValueBigInt": "15000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1187942-1755626357.jpg"
+    },
+    {
+      "number": "8",
+      "name": "Corentin Tolisso",
+      "tmId": "190393",
+      "pos": "Central Midfield",
+      "dob": "1994-08-03T00:00:00.000Z",
+      "age": 32,
+      "nationality": [
+        "France",
+        "Togo"
+      ],
+      "mvRaw": "€10.00m",
+      "marketValueBigInt": "10000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/190393-1672830594.jpg"
+    },
+    {
+      "number": "10",
+      "name": "Pavel Sulc",
+      "tmId": "500053",
+      "pos": "Attacking Midfield",
+      "dob": "2000-12-29T00:00:00.000Z",
+      "age": 25,
+      "nationality": [
+        "Czech Republic"
+      ],
+      "mvRaw": "€20.00m",
+      "marketValueBigInt": "20000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/500053-1718742395.jpg"
+    },
+    {
+      "number": "99",
+      "name": "Noah Nartey",
+      "tmId": "802515",
+      "pos": "Attacking Midfield",
+      "dob": "2005-10-05T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "Denmark",
+        "Ghana"
+      ],
+      "mvRaw": "€15.00m",
+      "marketValueBigInt": "15000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/802515-1773951622.jpg"
+    },
+    {
+      "number": "11",
+      "name": "Keito Nakamura",
+      "tmId": "405397",
+      "pos": "Left Winger",
+      "dob": "2000-07-28T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "Japan"
+      ],
+      "mvRaw": "€12.00m",
+      "marketValueBigInt": "12000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/405397-1723837290.png"
+    },
+    {
+      "number": "45",
+      "name": "Rémi Himbert",
+      "tmId": "1200423",
+      "pos": "Left Winger",
+      "dob": "2008-02-29T00:00:00.000Z",
+      "age": 18,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1200423-1762881060.jpg"
+    },
+    {
+      "number": "24",
+      "name": "Julien Duranville",
+      "tmId": "819215",
+      "pos": "Left Winger",
+      "dob": "2006-05-05T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "Belgium"
+      ],
+      "mvRaw": "€6.00m",
+      "marketValueBigInt": "6000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/819215-1733829401.jpg"
+    },
+    {
+      "number": "7",
+      "name": "Ernest Nuamah",
+      "tmId": "955070",
+      "pos": "Right Winger",
+      "dob": "2003-11-01T00:00:00.000Z",
+      "age": 22,
+      "nationality": [
+        "Ghana"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/955070-1702991257.jpg"
+    },
+    {
+      "number": "26",
+      "name": "Kaïl Boudache",
+      "tmId": "1097113",
+      "pos": "Right Winger",
+      "dob": "2006-06-15T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "Algeria",
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1097113-1741655048.png"
+    },
+    {
+      "number": "17",
+      "name": "Loïs Openda",
+      "tmId": "368887",
+      "pos": "Centre-Forward",
+      "dob": "2000-02-16T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "Belgium",
+        "Morocco"
+      ],
+      "mvRaw": "€25.00m",
+      "marketValueBigInt": "25000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/368887-1713944805.jpg"
+    },
+    {
+      "number": "32",
+      "name": "Alejandro Gomes Rodríguez",
+      "tmId": "1108478",
+      "pos": "Centre-Forward",
+      "dob": "2008-03-11T00:00:00.000Z",
+      "age": 18,
+      "nationality": [
+        "England",
+        "Venezuela"
+      ],
+      "mvRaw": "€800k",
+      "marketValueBigInt": "800000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1108478-1773276775.jpg"
+    }
+  ],
+  "1082": [
+    {
+      "number": "1",
+      "name": "Berke Özer",
+      "tmId": "361256",
+      "pos": "Goalkeeper",
+      "dob": "2000-05-25T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "Türkiye"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/361256-1773343032.jpg"
+    },
+    {
+      "number": "12",
+      "name": "Orlando Gill",
+      "tmId": "643259",
+      "pos": "Goalkeeper",
+      "dob": "2000-06-11T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "Paraguay"
+      ],
+      "mvRaw": "€7.50m",
+      "marketValueBigInt": "7500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/643259-1749582166.jpg"
+    },
+    {
+      "number": "3",
+      "name": "Nathan Ngoy",
+      "tmId": "548254",
+      "pos": "Centre-Back",
+      "dob": "2003-06-10T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "Belgium",
+        "DR Congo"
+      ],
+      "mvRaw": "€25.00m",
+      "marketValueBigInt": "25000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/548254-1782074523.jpg"
+    },
+    {
+      "number": "4",
+      "name": "Alexsandro",
+      "tmId": "648020",
+      "pos": "Centre-Back",
+      "dob": "1999-08-09T00:00:00.000Z",
+      "age": 27,
+      "nationality": [
+        "Brazil"
+      ],
+      "mvRaw": "€15.00m",
+      "marketValueBigInt": "15000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/648020-1666689768.jpg"
+    },
+    {
+      "number": "26",
+      "name": "Isaac Cossier",
+      "tmId": "1160753",
+      "pos": "Centre-Back",
+      "dob": "2006-11-30T00:00:00.000Z",
+      "age": 19,
+      "nationality": [
+        "France",
+        "Guadeloupe"
+      ],
+      "mvRaw": "€2.50m",
+      "marketValueBigInt": "2500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1160753-1778703023.jpg"
+    },
+    {
+      "number": "23",
+      "name": "Tanguy Nianzou",
+      "tmId": "538996",
+      "pos": "Centre-Back",
+      "dob": "2002-06-07T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "France",
+        "Cote d'Ivoire"
+      ],
+      "mvRaw": "€1.20m",
+      "marketValueBigInt": "1200000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/538996-1681463642.jpg"
+    },
+    {
+      "number": "38",
+      "name": "Maxima Goffi",
+      "tmId": "1306455",
+      "pos": "Centre-Back",
+      "dob": "2008-01-23T00:00:00.000Z",
+      "age": 18,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€1.00m",
+      "marketValueBigInt": "1000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1306455-1772133144.jpg"
+    },
+    {
+      "number": "15",
+      "name": "Romain Perraud",
+      "tmId": "318523",
+      "pos": "Left-Back",
+      "dob": "1997-09-22T00:00:00.000Z",
+      "age": 29,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€7.00m",
+      "marketValueBigInt": "7000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/318523-1784829332.jpeg"
+    },
+    {
+      "number": "24",
+      "name": "Calvin Verdonk",
+      "tmId": "258364",
+      "pos": "Left-Back",
+      "dob": "1997-04-26T00:00:00.000Z",
+      "age": 29,
+      "nationality": [
+        "Indonesia",
+        "Netherlands"
+      ],
+      "mvRaw": "€2.50m",
+      "marketValueBigInt": "2500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/258364-1723716421.jpg"
+    },
+    {
+      "number": "22",
+      "name": "Tiago Santos",
+      "tmId": "816580",
+      "pos": "Right-Back",
+      "dob": "2002-07-23T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "Portugal"
+      ],
+      "mvRaw": "€10.00m",
+      "marketValueBigInt": "10000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/816580-1708342212.jpg"
+    },
+    {
+      "number": "2",
+      "name": "Loun Srdanovic",
+      "tmId": "999886",
+      "pos": "Right-Back",
+      "dob": "2006-08-04T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "Switzerland"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/999886-1684511097.jpg"
+    },
+    {
+      "number": "17",
+      "name": "Ngal'ayel Mukau",
+      "tmId": "1016015",
+      "pos": "Defensive Midfield",
+      "dob": "2004-11-03T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "DR Congo",
+        "Belgium"
+      ],
+      "mvRaw": "€15.00m",
+      "marketValueBigInt": "15000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1016015-1741120243.jpg"
+    },
+    {
+      "number": "6",
+      "name": "Nabil Bentaleb",
+      "tmId": "245537",
+      "pos": "Defensive Midfield",
+      "dob": "1994-11-24T00:00:00.000Z",
+      "age": 31,
+      "nationality": [
+        "Algeria",
+        "France"
+      ],
+      "mvRaw": "€4.50m",
+      "marketValueBigInt": "4500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/245537-1672670443.jpg"
+    },
+    {
+      "number": "21",
+      "name": "Benjamin André",
+      "tmId": "84301",
+      "pos": "Defensive Midfield",
+      "dob": "1990-08-03T00:00:00.000Z",
+      "age": 36,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€3.00m",
+      "marketValueBigInt": "3000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/84301-1666690769.jpg"
+    },
+    {
+      "number": "14",
+      "name": "Maurits Kjærgaard",
+      "tmId": "610405",
+      "pos": "Central Midfield",
+      "dob": "2003-06-26T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "Denmark"
+      ],
+      "mvRaw": "€8.00m",
+      "marketValueBigInt": "8000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/610405-1787150486.png"
+    },
+    {
+      "number": "10",
+      "name": "Hákon Arnar Haraldsson",
+      "tmId": "652275",
+      "pos": "Attacking Midfield",
+      "dob": "2003-04-10T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "Iceland"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/652275-1662491592.jpg"
+    },
+    {
+      "number": "19",
+      "name": "Başar Önal",
+      "tmId": "864112",
+      "pos": "Left Winger",
+      "dob": "2004-07-06T00:00:00.000Z",
+      "age": 22,
+      "nationality": [
+        "Türkiye",
+        "Netherlands"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/864112-1764255727.png"
+    },
+    {
+      "number": "11",
+      "name": "Osame Sahraoui",
+      "tmId": "580657",
+      "pos": "Left Winger",
+      "dob": "2001-06-11T00:00:00.000Z",
+      "age": 25,
+      "nationality": [
+        "Morocco",
+        "Norway"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/580657-1723713882.jpg"
+    },
+    {
+      "number": "35",
+      "name": "Soriba Diaoune",
+      "tmId": "1184007",
+      "pos": "Left Winger",
+      "dob": "2007-08-14T00:00:00.000Z",
+      "age": 19,
+      "nationality": [
+        "France",
+        "Guinea"
+      ],
+      "mvRaw": "€4.00m",
+      "marketValueBigInt": "4000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1184007-1758821688.jpg"
+    },
+    {
+      "number": "",
+      "name": "Tiago Morais",
+      "tmId": "815652",
+      "pos": "Left Winger",
+      "dob": "2003-09-03T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "Portugal"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/815652-1737125350.jpg"
+    },
+    {
+      "number": "18",
+      "name": "Dilane Bakwa",
+      "tmId": "540664",
+      "pos": "Right Winger",
+      "dob": "2002-08-26T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "France",
+        "DR Congo"
+      ],
+      "mvRaw": "€28.00m",
+      "marketValueBigInt": "28000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/540664-1775762611.jpg"
+    },
+    {
+      "number": "8",
+      "name": "Ethan Mbappé",
+      "tmId": "903666",
+      "pos": "Right Winger",
+      "dob": "2006-12-29T00:00:00.000Z",
+      "age": 19,
+      "nationality": [
+        "France",
+        "Cameroon"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/903666-1716562689.jpg"
+    },
+    {
+      "number": "28",
+      "name": "Gaëtan Perrin",
+      "tmId": "353404",
+      "pos": "Right Winger",
+      "dob": "1996-06-07T00:00:00.000Z",
+      "age": 30,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€5.00m",
+      "marketValueBigInt": "5000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/353404-1672330321.jpg"
+    },
+    {
+      "number": "18",
+      "name": "Ayase Ueda",
+      "tmId": "589128",
+      "pos": "Centre-Forward",
+      "dob": "1998-08-28T00:00:00.000Z",
+      "age": 28,
+      "nationality": [
+        "Japan"
+      ],
+      "mvRaw": "€20.00m",
+      "marketValueBigInt": "20000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/589128-1765214070.jpg"
+    },
+    {
+      "number": "29",
+      "name": "Hamza Igamane",
+      "tmId": "885445",
+      "pos": "Centre-Forward",
+      "dob": "2002-11-02T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "Morocco"
+      ],
+      "mvRaw": "€18.00m",
+      "marketValueBigInt": "18000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/885445-1756290289.jpg"
+    },
+    {
+      "number": "9",
+      "name": "Olivier Giroud",
+      "tmId": "82442",
+      "pos": "Centre-Forward",
+      "dob": "1986-09-30T00:00:00.000Z",
+      "age": 40,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€900k",
+      "marketValueBigInt": "900000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/82442-1725258600.jpg"
+    }
+  ],
+  "1095": [
+    {
+      "number": "33",
+      "name": "Patrick Beach",
+      "tmId": "983578",
+      "pos": "Goalkeeper",
+      "dob": "2003-08-06T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "Australia"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/983578-1782480925.jpg"
+    },
+    {
+      "number": "40",
+      "name": "Hillel Konaté",
+      "tmId": "170549",
+      "pos": "Goalkeeper",
+      "dob": "1994-12-28T00:00:00.000Z",
+      "age": 31,
+      "nationality": [
+        "Burkina Faso",
+        "Cote d'Ivoire"
+      ],
+      "mvRaw": "€400k",
+      "marketValueBigInt": "400000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/170549-1726480199.png"
+    },
+    {
+      "number": "1",
+      "name": "Zacharie Boucher",
+      "tmId": "111041",
+      "pos": "Goalkeeper",
+      "dob": "1992-03-07T00:00:00.000Z",
+      "age": 34,
+      "nationality": [
+        "France",
+        "Madagascar"
+      ],
+      "mvRaw": "€100k",
+      "marketValueBigInt": "100000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/111041-1599221369.jpg"
+    },
+    {
+      "number": "4",
+      "name": "Junior Diaz",
+      "tmId": "1009596",
+      "pos": "Centre-Back",
+      "dob": "2003-07-23T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "Cote d'Ivoire",
+        "France"
+      ],
+      "mvRaw": "€6.00m",
+      "marketValueBigInt": "6000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1009596-1693565221.png"
+    },
+    {
+      "number": "5",
+      "name": "Paolo Gozzi",
+      "tmId": "487333",
+      "pos": "Centre-Back",
+      "dob": "2001-04-25T00:00:00.000Z",
+      "age": 25,
+      "nationality": [
+        "Italy",
+        "Nigeria"
+      ],
+      "mvRaw": "€1.20m",
+      "marketValueBigInt": "1200000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/487333-1606986634.jpg"
+    },
+    {
+      "number": "6",
+      "name": "Adrien Monfray",
+      "tmId": "281611",
+      "pos": "Centre-Back",
+      "dob": "1990-12-20T00:00:00.000Z",
+      "age": 35,
+      "nationality": [
+        "France",
+        "Algeria"
+      ],
+      "mvRaw": "€200k",
+      "marketValueBigInt": "200000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/281611-1604253652.jpg"
+    },
+    {
+      "number": "14",
+      "name": "Ismaël Boura",
+      "tmId": "770895",
+      "pos": "Left-Back",
+      "dob": "2000-08-14T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "Comoros",
+        "France"
+      ],
+      "mvRaw": "€4.00m",
+      "marketValueBigInt": "4000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/770895-1598255270.jpg"
+    },
+    {
+      "number": "3",
+      "name": "Anis Ouzenadji",
+      "tmId": "1119845",
+      "pos": "Left-Back",
+      "dob": "2006-11-04T00:00:00.000Z",
+      "age": 19,
+      "nationality": [
+        "France",
+        "Algeria"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1119845-1779447938.jpg"
+    },
+    {
+      "number": "44",
+      "name": "Yvann Titi",
+      "tmId": "986299",
+      "pos": "Right-Back",
+      "dob": "2006-05-05T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "France",
+        "Angola"
+      ],
+      "mvRaw": "€2.50m",
+      "marketValueBigInt": "2500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/986299-1701165883.jpg"
+    },
+    {
+      "number": "2",
+      "name": "Lucas Maronnier",
+      "tmId": "536473",
+      "pos": "Right-Back",
+      "dob": "2000-03-09T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€800k",
+      "marketValueBigInt": "800000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/536473-1727173947.png"
+    },
+    {
+      "number": "31",
+      "name": "Noah Donkor",
+      "tmId": "1119840",
+      "pos": "Right-Back",
+      "dob": "2006-11-25T00:00:00.000Z",
+      "age": 19,
+      "nationality": [
+        "France",
+        "Ghana"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/default.jpg"
+    },
+    {
+      "number": "26",
+      "name": "Alexandre Phliponeau",
+      "tmId": "585951",
+      "pos": "Defensive Midfield",
+      "dob": "2000-01-26T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€350k",
+      "marketValueBigInt": "350000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/585951-1694081193.jpg"
+    },
+    {
+      "number": "35",
+      "name": "Roman Murcy",
+      "tmId": "1174523",
+      "pos": "Defensive Midfield",
+      "dob": "2006-02-23T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "France",
+        "Réunion"
+      ],
+      "mvRaw": "€50k",
+      "marketValueBigInt": "50000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/default.jpg"
+    },
+    {
+      "number": "8",
+      "name": "Mouhamed Diop",
+      "tmId": "933147",
+      "pos": "Central Midfield",
+      "dob": "2000-09-30T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "Senegal"
+      ],
+      "mvRaw": "€4.00m",
+      "marketValueBigInt": "4000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/933147-1658914314.png"
+    },
+    {
+      "number": "17",
+      "name": "Antoine Mille",
+      "tmId": "807653",
+      "pos": "Central Midfield",
+      "dob": "1997-08-14T00:00:00.000Z",
+      "age": 29,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€2.50m",
+      "marketValueBigInt": "2500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/807653-1669302542.png"
+    },
+    {
+      "number": "11",
+      "name": "Iron Gomis",
+      "tmId": "693352",
+      "pos": "Central Midfield",
+      "dob": "1999-11-09T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "France",
+        "Senegal"
+      ],
+      "mvRaw": "€1.40m",
+      "marketValueBigInt": "1400000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/693352-1761023540.png"
+    },
+    {
+      "number": "22",
+      "name": "Hugo Picard",
+      "tmId": "944181",
+      "pos": "Unknown",
+      "dob": "2003-05-09T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€3.00m",
+      "marketValueBigInt": "3000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/944181-1771599963.jpg"
+    },
+    {
+      "number": "29",
+      "name": "Dermane Karim",
+      "tmId": "969447",
+      "pos": "Attacking Midfield",
+      "dob": "2003-12-26T00:00:00.000Z",
+      "age": 22,
+      "nationality": [
+        "Togo"
+      ],
+      "mvRaw": "€2.50m",
+      "marketValueBigInt": "2500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/969447-1713870015.png"
+    },
+    {
+      "number": "36",
+      "name": "Idrissa Soukouna",
+      "tmId": "1364925",
+      "pos": "Attacking Midfield",
+      "dob": "2008-08-10T00:00:00.000Z",
+      "age": 18,
+      "nationality": [
+        "France",
+        "Mali"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/default.jpg"
+    },
+    {
+      "number": "7",
+      "name": "Kandet Diawara",
+      "tmId": "575319",
+      "pos": "Left Winger",
+      "dob": "2000-02-10T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "Guinea",
+        "France"
+      ],
+      "mvRaw": "€1.20m",
+      "marketValueBigInt": "1200000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/575319-1755095069.jpg"
+    },
+    {
+      "number": "10",
+      "name": "Merwan Ifnaoui",
+      "tmId": "976861",
+      "pos": "Right Winger",
+      "dob": "1998-10-22T00:00:00.000Z",
+      "age": 27,
+      "nationality": [
+        "France",
+        "Morocco"
+      ],
+      "mvRaw": "€2.50m",
+      "marketValueBigInt": "2500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/976861-1678227792.jpg"
+    },
+    {
+      "number": "36",
+      "name": "Amadou Diakité",
+      "tmId": "1179193",
+      "pos": "Right Winger",
+      "dob": "2005-05-31T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "France",
+        "Mali"
+      ],
+      "mvRaw": "€50k",
+      "marketValueBigInt": "50000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/default.jpg"
+    },
+    {
+      "number": "9",
+      "name": "Jérémy Le Douaron",
+      "tmId": "737781",
+      "pos": "Centre-Forward",
+      "dob": "1998-04-21T00:00:00.000Z",
+      "age": 28,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€3.00m",
+      "marketValueBigInt": "3000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/737781-1617875994.jpg"
+    },
+    {
+      "number": "23",
+      "name": "Timothé Nkada",
+      "tmId": "522788",
+      "pos": "Centre-Forward",
+      "dob": "1999-07-20T00:00:00.000Z",
+      "age": 27,
+      "nationality": [
+        "France",
+        "Cameroon"
+      ],
+      "mvRaw": "€2.00m",
+      "marketValueBigInt": "2000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/522788-1785412013.jpg"
+    },
+    {
+      "number": "20",
+      "name": "Renaud Ripart",
+      "tmId": "234802",
+      "pos": "Centre-Forward",
+      "dob": "1993-03-14T00:00:00.000Z",
+      "age": 33,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€350k",
+      "marketValueBigInt": "350000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/234802-1626346115.jpg"
+    },
+    {
+      "number": "39",
+      "name": "Yacouba Koné",
+      "tmId": "1523861",
+      "pos": "Centre-Forward",
+      "dob": "2007-06-21T00:00:00.000Z",
+      "age": 19,
+      "nationality": [
+        "Cote d'Ivoire"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/default.jpg"
+    },
+    {
+      "number": "34",
+      "name": "Ibrahim Traoré",
+      "tmId": "1146422",
+      "pos": "Centre-Forward",
+      "dob": "2006-03-12T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "France",
+        "Mali"
+      ],
+      "mvRaw": "€50k",
+      "marketValueBigInt": "50000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/default.jpg"
+    },
+    {
+      "number": "37",
+      "name": "Christ Batola",
+      "tmId": "1337539",
+      "pos": "Centre-Forward",
+      "dob": "2009-06-03T00:00:00.000Z",
+      "age": 17,
+      "nationality": [
+        "France",
+        "Congo"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1337539-1763037599.jpg"
+    }
+  ],
+  "1158": [
+    {
+      "number": "38",
+      "name": "Yvon Mvogo",
+      "tmId": "147051",
+      "pos": "Goalkeeper",
+      "dob": "1994-06-06T00:00:00.000Z",
+      "age": 32,
+      "nationality": [
+        "Switzerland",
+        "Cameroon"
+      ],
+      "mvRaw": "€2.50m",
+      "marketValueBigInt": "2500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/147051-1719215379.jpg"
+    },
+    {
+      "number": "21",
+      "name": "Bingourou Kamara",
+      "tmId": "333175",
+      "pos": "Goalkeeper",
+      "dob": "1996-10-21T00:00:00.000Z",
+      "age": 29,
+      "nationality": [
+        "Senegal",
+        "France"
+      ],
+      "mvRaw": "€600k",
+      "marketValueBigInt": "600000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/333175-1525697908.jpg"
+    },
+    {
+      "number": "1",
+      "name": "Benjamin Leroy",
+      "tmId": "124901",
+      "pos": "Goalkeeper",
+      "dob": "1989-04-07T00:00:00.000Z",
+      "age": 37,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€100k",
+      "marketValueBigInt": "100000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/124901-1525692013.jpg"
+    },
+    {
+      "number": "3",
+      "name": "Montassar Talbi",
+      "tmId": "496706",
+      "pos": "Centre-Back",
+      "dob": "1998-05-26T00:00:00.000Z",
+      "age": 28,
+      "nationality": [
+        "Tunisia",
+        "France"
+      ],
+      "mvRaw": "€8.00m",
+      "marketValueBigInt": "8000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/496706-1781507422.jpg"
+    },
+    {
+      "number": "",
+      "name": "Formose Mendy",
+      "tmId": "649023",
+      "pos": "Centre-Back",
+      "dob": "2001-01-02T00:00:00.000Z",
+      "age": 25,
+      "nationality": [
+        "Senegal",
+        "Guinea-Bissau"
+      ],
+      "mvRaw": "€1.50m",
+      "marketValueBigInt": "1500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/649023-1656082248.jpg"
+    },
+    {
+      "number": "32",
+      "name": "Nathaniel Adjei",
+      "tmId": "646829",
+      "pos": "Centre-Back",
+      "dob": "2002-08-21T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "Ghana"
+      ],
+      "mvRaw": "€1.50m",
+      "marketValueBigInt": "1500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/646829-1706408527.jpg"
+    },
+    {
+      "number": "55",
+      "name": "Nosa Edward Obaretin",
+      "tmId": "704456",
+      "pos": "Centre-Back",
+      "dob": "2003-01-26T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "Italy",
+        "Nigeria"
+      ],
+      "mvRaw": "€1.50m",
+      "marketValueBigInt": "1500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/704456-1698789493.png"
+    },
+    {
+      "number": "95",
+      "name": "Isaak Touré",
+      "tmId": "708678",
+      "pos": "Centre-Back",
+      "dob": "2003-03-28T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "France",
+        "Cote d'Ivoire"
+      ],
+      "mvRaw": "€1.20m",
+      "marketValueBigInt": "1200000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/708678-1645641626.jpg"
+    },
+    {
+      "number": "43",
+      "name": "Arsène Kouassi",
+      "tmId": "1088199",
+      "pos": "Left-Back",
+      "dob": "2004-01-02T00:00:00.000Z",
+      "age": 22,
+      "nationality": [
+        "Burkina Faso",
+        "Cote d'Ivoire"
+      ],
+      "mvRaw": "€15.00m",
+      "marketValueBigInt": "15000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1088199-1741881661.jpg"
+    },
+    {
+      "number": "30",
+      "name": "Srdjan Kuzmic",
+      "tmId": "722375",
+      "pos": "Left-Back",
+      "dob": "2004-01-16T00:00:00.000Z",
+      "age": 22,
+      "nationality": [
+        "Slovenia"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/722375-1750348591.jpg"
+    },
+    {
+      "number": "2",
+      "name": "Alec Georgen",
+      "tmId": "324800",
+      "pos": "Right-Back",
+      "dob": "1998-09-17T00:00:00.000Z",
+      "age": 28,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€1.50m",
+      "marketValueBigInt": "1500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/324800-1778861480.jpg"
+    },
+    {
+      "number": "20",
+      "name": "Dembo Sylla",
+      "tmId": "1049151",
+      "pos": "Right-Back",
+      "dob": "2002-11-10T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "Guinea",
+        "France"
+      ],
+      "mvRaw": "€1.50m",
+      "marketValueBigInt": "1500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1049151-1669831322.jpg"
+    },
+    {
+      "number": "62",
+      "name": "Arthur Avom",
+      "tmId": "1074628",
+      "pos": "Central Midfield",
+      "dob": "2004-12-15T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "Cameroon"
+      ],
+      "mvRaw": "€20.00m",
+      "marketValueBigInt": "20000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1074628-1733314520.jpg"
+    },
+    {
+      "number": "8",
+      "name": "Noah Cadiou",
+      "tmId": "691958",
+      "pos": "Central Midfield",
+      "dob": "1998-10-26T00:00:00.000Z",
+      "age": 27,
+      "nationality": [
+        "Guadeloupe",
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/691958-1669326988.jpg"
+    },
+    {
+      "number": "72",
+      "name": "Noah Mbamba",
+      "tmId": "743395",
+      "pos": "Central Midfield",
+      "dob": "2005-01-05T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "DR Congo",
+        "Belgium"
+      ],
+      "mvRaw": "€2.00m",
+      "marketValueBigInt": "2000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/743395-1689709933.jpg"
+    },
+    {
+      "number": "11",
+      "name": "Théo Le Bris",
+      "tmId": "766412",
+      "pos": "Unknown",
+      "dob": "2002-10-01T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€5.00m",
+      "marketValueBigInt": "5000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/766412-1747252694.png"
+    },
+    {
+      "number": "77",
+      "name": "Panos Katseris",
+      "tmId": "816308",
+      "pos": "Unknown",
+      "dob": "2001-07-05T00:00:00.000Z",
+      "age": 25,
+      "nationality": [
+        "Greece"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/816308-1606484515.jpg"
+    },
+    {
+      "number": "17",
+      "name": "Jean-Victor Makengo",
+      "tmId": "322305",
+      "pos": "Attacking Midfield",
+      "dob": "1998-06-12T00:00:00.000Z",
+      "age": 28,
+      "nationality": [
+        "France",
+        "DR Congo"
+      ],
+      "mvRaw": "€6.00m",
+      "marketValueBigInt": "6000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/322305-1663664657.jpg"
+    },
+    {
+      "number": "33",
+      "name": "Gabin Bernardeau",
+      "tmId": "1254786",
+      "pos": "Attacking Midfield",
+      "dob": "2006-01-24T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€1.20m",
+      "marketValueBigInt": "1200000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1254786-1756822514.jpg"
+    },
+    {
+      "number": "7",
+      "name": "Bandiougou Fadiga",
+      "tmId": "590914",
+      "pos": "Attacking Midfield",
+      "dob": "2001-01-15T00:00:00.000Z",
+      "age": 25,
+      "nationality": [
+        "France",
+        "Mali"
+      ],
+      "mvRaw": "€150k",
+      "marketValueBigInt": "150000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/590914-1601559582.jpg"
+    },
+    {
+      "number": "10",
+      "name": "Isak Jensen",
+      "tmId": "801886",
+      "pos": "Left Winger",
+      "dob": "2003-12-23T00:00:00.000Z",
+      "age": 22,
+      "nationality": [
+        "Denmark"
+      ],
+      "mvRaw": "€5.00m",
+      "marketValueBigInt": "5000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/801886-1753350986.jpg"
+    },
+    {
+      "number": "19",
+      "name": "Souleymane Faye",
+      "tmId": "666971",
+      "pos": "Right Winger",
+      "dob": "2003-02-08T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "Senegal"
+      ],
+      "mvRaw": "€3.00m",
+      "marketValueBigInt": "3000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/666971-1773786729.jpg"
+    },
+    {
+      "number": "18",
+      "name": "Ibrahima Baldé",
+      "tmId": "804884",
+      "pos": "Centre-Forward",
+      "dob": "2003-01-17T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "France",
+        "Senegal"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/804884-1772554718.png"
+    },
+    {
+      "number": "9",
+      "name": "Mohamed Bamba",
+      "tmId": "619461",
+      "pos": "Centre-Forward",
+      "dob": "2001-12-10T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "Cote d'Ivoire",
+        "Guinea"
+      ],
+      "mvRaw": "€2.00m",
+      "marketValueBigInt": "2000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/619461-1706309019.jpg"
+    },
+    {
+      "number": "42",
+      "name": "Mamadou Koné",
+      "tmId": "1459673",
+      "pos": "Centre-Forward",
+      "dob": "2006-11-20T00:00:00.000Z",
+      "age": 19,
+      "nationality": [
+        "Cote d'Ivoire"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1459673-1789380457.jpg"
+    },
+    {
+      "number": "15",
+      "name": "Aiyegun Tosin",
+      "tmId": "239647",
+      "pos": "Centre-Forward",
+      "dob": "1998-06-26T00:00:00.000Z",
+      "age": 28,
+      "nationality": [
+        "Benin",
+        "Nigeria"
+      ],
+      "mvRaw": "€1.80m",
+      "marketValueBigInt": "1800000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/239647-1647955304.jpg"
+    }
+  ],
+  "1164": [
+    {
+      "number": "98",
+      "name": "Nicolas Kocik",
+      "tmId": "357069",
+      "pos": "Goalkeeper",
+      "dob": "1998-08-04T00:00:00.000Z",
+      "age": 28,
+      "nationality": [
+        "France",
+        "Poland"
+      ],
+      "mvRaw": "€1.50m",
+      "marketValueBigInt": "1500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/357069-1774544717.jpg"
+    },
+    {
+      "number": "1",
+      "name": "Ewan Hatfout",
+      "tmId": "725963",
+      "pos": "Goalkeeper",
+      "dob": "2000-04-01T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "France",
+        "Algeria"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/725963-1788970985.jpg"
+    },
+    {
+      "number": "55",
+      "name": "Augustin Delbecque",
+      "tmId": "569359",
+      "pos": "Goalkeeper",
+      "dob": "2002-02-03T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/default.jpg"
+    },
+    {
+      "number": "15",
+      "name": "Noa Boissé",
+      "tmId": "1169041",
+      "pos": "Centre-Back",
+      "dob": "2006-01-20T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1169041-1778702918.jpg"
+    },
+    {
+      "number": "16",
+      "name": "Raúl Torrente",
+      "tmId": "631222",
+      "pos": "Centre-Back",
+      "dob": "2001-09-11T00:00:00.000Z",
+      "age": 25,
+      "nationality": [
+        "Spain"
+      ],
+      "mvRaw": "€2.50m",
+      "marketValueBigInt": "2500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/631222-1644238839.jpg"
+    },
+    {
+      "number": "21",
+      "name": "Théo Eyoum",
+      "tmId": "801762",
+      "pos": "Centre-Back",
+      "dob": "2002-01-07T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/801762-1778702438.jpg"
+    },
+    {
+      "number": "5",
+      "name": "Harold Voyer",
+      "tmId": "344382",
+      "pos": "Centre-Back",
+      "dob": "1997-03-26T00:00:00.000Z",
+      "age": 29,
+      "nationality": [
+        "Martinique",
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/344382-1656068347.jpg"
+    },
+    {
+      "number": "17",
+      "name": "Samuel Yohou",
+      "tmId": "386048",
+      "pos": "Centre-Back",
+      "dob": "1991-08-06T00:00:00.000Z",
+      "age": 35,
+      "nationality": [
+        "France",
+        "Cote d'Ivoire"
+      ],
+      "mvRaw": "€200k",
+      "marketValueBigInt": "200000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/386048-1641905810.png"
+    },
+    {
+      "number": "22",
+      "name": "Lucas Calodat",
+      "tmId": "857653",
+      "pos": "Left-Back",
+      "dob": "2002-02-06T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "France",
+        "Guadeloupe"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/857653-1778703196.jpg"
+    },
+    {
+      "number": "76",
+      "name": "Yasser Larouci",
+      "tmId": "554251",
+      "pos": "Left-Back",
+      "dob": "2001-01-01T00:00:00.000Z",
+      "age": 25,
+      "nationality": [
+        "Algeria",
+        "France"
+      ],
+      "mvRaw": "€1.50m",
+      "marketValueBigInt": "1500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/554251-1762961223.jpg"
+    },
+    {
+      "number": "12",
+      "name": "João Almeida",
+      "tmId": "1092429",
+      "pos": "Left-Back",
+      "dob": "2006-01-16T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "Brazil"
+      ],
+      "mvRaw": "€400k",
+      "marketValueBigInt": "400000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1092429-1739993194.png"
+    },
+    {
+      "number": "18",
+      "name": "Lucas Buades",
+      "tmId": "531960",
+      "pos": "Right-Back",
+      "dob": "1997-12-28T00:00:00.000Z",
+      "age": 28,
+      "nationality": [
+        "France",
+        "Spain"
+      ],
+      "mvRaw": "€1.50m",
+      "marketValueBigInt": "1500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/531960-1732012915.jpg"
+    },
+    {
+      "number": "26",
+      "name": "Rayan Bamba",
+      "tmId": "979760",
+      "pos": "Right-Back",
+      "dob": "2004-05-14T00:00:00.000Z",
+      "age": 22,
+      "nationality": [
+        "France",
+        "Cote d'Ivoire"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/979760-1727207319.png"
+    },
+    {
+      "number": "19",
+      "name": "Djibril Sidibé",
+      "tmId": "161869",
+      "pos": "Right-Back",
+      "dob": "1992-07-29T00:00:00.000Z",
+      "age": 34,
+      "nationality": [
+        "France",
+        "Mali"
+      ],
+      "mvRaw": "€1.00m",
+      "marketValueBigInt": "1000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/161869-1604261378.jpg"
+    },
+    {
+      "number": "29",
+      "name": "Lucas Bretelle",
+      "tmId": "941561",
+      "pos": "Defensive Midfield",
+      "dob": "2002-04-17T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€1.20m",
+      "marketValueBigInt": "1200000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/941561-1753695684.jpg"
+    },
+    {
+      "number": "8",
+      "name": "Alexandre Lauray",
+      "tmId": "666744",
+      "pos": "Defensive Midfield",
+      "dob": "1997-03-18T00:00:00.000Z",
+      "age": 29,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/666744-1789738034.jpg"
+    },
+    {
+      "number": "11",
+      "name": "Adil Bourabaa",
+      "tmId": "1166137",
+      "pos": "Central Midfield",
+      "dob": "2005-03-09T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "Algeria",
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1166137-1788970763.jpg"
+    },
+    {
+      "number": "10",
+      "name": "Jean Vercruysse",
+      "tmId": "626592",
+      "pos": "Central Midfield",
+      "dob": "2000-07-03T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/626592-1749460429.jpg"
+    },
+    {
+      "number": "6",
+      "name": "Edwin Quarshie",
+      "tmId": "590048",
+      "pos": "Central Midfield",
+      "dob": "1995-10-25T00:00:00.000Z",
+      "age": 30,
+      "nationality": [
+        "Central African Republic",
+        "France"
+      ],
+      "mvRaw": "€500k",
+      "marketValueBigInt": "500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/590048-1778702731.jpg"
+    },
+    {
+      "number": "23",
+      "name": "Daouda Traoré",
+      "tmId": "986300",
+      "pos": "Central Midfield",
+      "dob": "2006-07-22T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "France",
+        "Senegal"
+      ],
+      "mvRaw": "€400k",
+      "marketValueBigInt": "400000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/986300-1732010822.jpg"
+    },
+    {
+      "number": "27",
+      "name": "Martin Rossignol",
+      "tmId": "1010671",
+      "pos": "Central Midfield",
+      "dob": "2003-11-03T00:00:00.000Z",
+      "age": 22,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€400k",
+      "marketValueBigInt": "400000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1010671-1778702304.jpg"
+    },
+    {
+      "number": "28",
+      "name": "Erwan Colas",
+      "tmId": "804386",
+      "pos": "Left Winger",
+      "dob": "1997-04-22T00:00:00.000Z",
+      "age": 29,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€600k",
+      "marketValueBigInt": "600000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/804386-1778702145.jpg"
+    },
+    {
+      "number": "7",
+      "name": "Billal Brahimi",
+      "tmId": "543051",
+      "pos": "Right Winger",
+      "dob": "2000-03-14T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "Algeria",
+        "France"
+      ],
+      "mvRaw": "€1.00m",
+      "marketValueBigInt": "1000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/543051-1756806904.jpg"
+    },
+    {
+      "number": "13",
+      "name": "Habib Diallo",
+      "tmId": "344888",
+      "pos": "Centre-Forward",
+      "dob": "1995-06-18T00:00:00.000Z",
+      "age": 31,
+      "nationality": [
+        "Senegal",
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/344888-1618500935.jpg"
+    },
+    {
+      "number": "14",
+      "name": "Louis Mafouta",
+      "tmId": "461790",
+      "pos": "Centre-Forward",
+      "dob": "1994-07-02T00:00:00.000Z",
+      "age": 32,
+      "nationality": [
+        "Central African Republic",
+        "France"
+      ],
+      "mvRaw": "€1.00m",
+      "marketValueBigInt": "1000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/461790-1669738255.jpg"
+    },
+    {
+      "number": "25",
+      "name": "Dame Gueye",
+      "tmId": "422711",
+      "pos": "Centre-Forward",
+      "dob": "1995-08-12T00:00:00.000Z",
+      "age": 31,
+      "nationality": [
+        "Senegal"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/422711-1778702742.jpg"
+    },
+    {
+      "number": "9",
+      "name": "Antoine Rabillard",
+      "tmId": "146373",
+      "pos": "Centre-Forward",
+      "dob": "1995-09-22T00:00:00.000Z",
+      "age": 31,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/146373-1778703088.jpg"
+    },
+    {
+      "number": "20",
+      "name": "William Harhouz",
+      "tmId": "1029482",
+      "pos": "Centre-Forward",
+      "dob": "1999-12-30T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "France",
+        "Algeria"
+      ],
+      "mvRaw": "€400k",
+      "marketValueBigInt": "400000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1029482-1778702744.jpg"
+    },
+    {
+      "number": "99",
+      "name": "Enzo Vagner",
+      "tmId": "1027788",
+      "pos": "Centre-Forward",
+      "dob": "2006-07-28T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "Brazil"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1027788-1787240187.jpg"
+    }
+  ],
+  "1420": [
+    {
+      "number": "1",
+      "name": "Anthony Lopes",
+      "tmId": "60561",
+      "pos": "Goalkeeper",
+      "dob": "1990-10-01T00:00:00.000Z",
+      "age": 35,
+      "nationality": [
+        "Portugal",
+        "France"
+      ],
+      "mvRaw": "€900k",
+      "marketValueBigInt": "900000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/60561-1640775949.jpg"
+    },
+    {
+      "number": "16",
+      "name": "Melvin Zinga",
+      "tmId": "548347",
+      "pos": "Goalkeeper",
+      "dob": "2002-03-16T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "Congo",
+        "France"
+      ],
+      "mvRaw": "€300k",
+      "marketValueBigInt": "300000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/548347-1750955335.png"
+    },
+    {
+      "number": "40",
+      "name": "Oumar Pona",
+      "tmId": "1073176",
+      "pos": "Goalkeeper",
+      "dob": "2006-06-21T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "Mali",
+        "France"
+      ],
+      "mvRaw": "€200k",
+      "marketValueBigInt": "200000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1073176-1750955375.png"
+    },
+    {
+      "number": "4",
+      "name": "Ousmane Camara",
+      "tmId": "804711",
+      "pos": "Centre-Back",
+      "dob": "2003-03-06T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "Mali",
+        "France"
+      ],
+      "mvRaw": "€8.00m",
+      "marketValueBigInt": "8000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/804711-1672669470.jpg"
+    },
+    {
+      "number": "24",
+      "name": "Emmanuel Biumla",
+      "tmId": "1071956",
+      "pos": "Centre-Back",
+      "dob": "2005-05-08T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "France",
+        "Cameroon"
+      ],
+      "mvRaw": "€2.50m",
+      "marketValueBigInt": "2500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1071956-1750955479.png"
+    },
+    {
+      "number": "21",
+      "name": "Jordan Lefort",
+      "tmId": "192492",
+      "pos": "Centre-Back",
+      "dob": "1993-08-09T00:00:00.000Z",
+      "age": 33,
+      "nationality": [
+        "Mauritania",
+        "France"
+      ],
+      "mvRaw": "€1.00m",
+      "marketValueBigInt": "1000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/192492-1750956054.png"
+    },
+    {
+      "number": "17",
+      "name": "Joseph Kalulu",
+      "tmId": "1117092",
+      "pos": "Left-Back",
+      "dob": "2004-11-29T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "France",
+        "DR Congo"
+      ],
+      "mvRaw": "€2.00m",
+      "marketValueBigInt": "2000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1117092-1770714100.jpg"
+    },
+    {
+      "number": "27",
+      "name": "Lilian Raolisoa",
+      "tmId": "829874",
+      "pos": "Right-Back",
+      "dob": "2000-06-16T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "France",
+        "Madagascar"
+      ],
+      "mvRaw": "€4.00m",
+      "marketValueBigInt": "4000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/829874-1750955865.png"
+    },
+    {
+      "number": "20",
+      "name": "Marius Louër",
+      "tmId": "1103652",
+      "pos": "Right-Back",
+      "dob": "2007-03-11T00:00:00.000Z",
+      "age": 19,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€2.00m",
+      "marketValueBigInt": "2000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1103652-1779447824.jpg"
+    },
+    {
+      "number": "2",
+      "name": "Carlens Arcus",
+      "tmId": "371686",
+      "pos": "Right-Back",
+      "dob": "1996-06-28T00:00:00.000Z",
+      "age": 30,
+      "nationality": [
+        "Haiti"
+      ],
+      "mvRaw": "€1.80m",
+      "marketValueBigInt": "1800000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/371686-1750955924.png"
+    },
+    {
+      "number": "14",
+      "name": "Yassin Belkhdim",
+      "tmId": "807688",
+      "pos": "Central Midfield",
+      "dob": "2002-02-14T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "Morocco",
+        "France"
+      ],
+      "mvRaw": "€7.00m",
+      "marketValueBigInt": "7000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/807688-1750956388.png"
+    },
+    {
+      "number": "8",
+      "name": "Branco van den Boomen",
+      "tmId": "203938",
+      "pos": "Central Midfield",
+      "dob": "1995-07-21T00:00:00.000Z",
+      "age": 31,
+      "nationality": [
+        "Netherlands"
+      ],
+      "mvRaw": "€2.50m",
+      "marketValueBigInt": "2500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/203938-1682946572.jpg"
+    },
+    {
+      "number": "93",
+      "name": "Haris Belkebla",
+      "tmId": "138055",
+      "pos": "Central Midfield",
+      "dob": "1994-01-28T00:00:00.000Z",
+      "age": 32,
+      "nationality": [
+        "Algeria",
+        "France"
+      ],
+      "mvRaw": "€1.80m",
+      "marketValueBigInt": "1800000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/138055-1750956421.png"
+    },
+    {
+      "number": "6",
+      "name": "Louis Mouton",
+      "tmId": "904662",
+      "pos": "Attacking Midfield",
+      "dob": "2002-06-03T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€4.00m",
+      "marketValueBigInt": "4000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/904662-1727722197.jpg"
+    },
+    {
+      "number": "36",
+      "name": "Bané Diatta",
+      "tmId": "1382453",
+      "pos": "Attacking Midfield",
+      "dob": "2008-06-27T00:00:00.000Z",
+      "age": 18,
+      "nationality": [
+        "France",
+        "Senegal"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1382453-1789463311.jpg"
+    },
+    {
+      "number": "10",
+      "name": "Amine Sbaï",
+      "tmId": "851220",
+      "pos": "Left Winger",
+      "dob": "2000-11-05T00:00:00.000Z",
+      "age": 25,
+      "nationality": [
+        "Morocco",
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/851220-1759940291.jpg"
+    },
+    {
+      "number": "26",
+      "name": "Anthony Bermont",
+      "tmId": "1088110",
+      "pos": "Left Winger",
+      "dob": "2005-02-10T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1088110-1741877893.jpg"
+    },
+    {
+      "number": "31",
+      "name": "Harouna Djibirin",
+      "tmId": "1133929",
+      "pos": "Right Winger",
+      "dob": "2006-11-05T00:00:00.000Z",
+      "age": 19,
+      "nationality": [
+        "Cameroon"
+      ],
+      "mvRaw": "€1.50m",
+      "marketValueBigInt": "1500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1133929-1770737612.jpg"
+    },
+    {
+      "number": "18",
+      "name": "Jim Allevinah",
+      "tmId": "646733",
+      "pos": "Right Winger",
+      "dob": "1995-02-27T00:00:00.000Z",
+      "age": 31,
+      "nationality": [
+        "Gabon",
+        "France"
+      ],
+      "mvRaw": "€1.00m",
+      "marketValueBigInt": "1000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/646733-1750956955.png"
+    },
+    {
+      "number": "35",
+      "name": "Prosper Peter",
+      "tmId": "1103958",
+      "pos": "Centre-Forward",
+      "dob": "2007-08-09T00:00:00.000Z",
+      "age": 19,
+      "nationality": [
+        "France",
+        "Nigeria"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1103958-1758210995.jpg"
+    },
+    {
+      "number": "19",
+      "name": "Amine El Ouazzani",
+      "tmId": "735051",
+      "pos": "Centre-Forward",
+      "dob": "2001-07-15T00:00:00.000Z",
+      "age": 25,
+      "nationality": [
+        "Morocco",
+        "France"
+      ],
+      "mvRaw": "€2.50m",
+      "marketValueBigInt": "2500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/735051-1669303777.png"
+    },
+    {
+      "number": "17",
+      "name": "Usman Simbakoli",
+      "tmId": "766839",
+      "pos": "Centre-Forward",
+      "dob": "2001-12-12T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "Central African Republic",
+        "France"
+      ],
+      "mvRaw": "€700k",
+      "marketValueBigInt": "700000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/766839-1756929539.jpg"
+    }
+  ],
+  "3911": [
+    {
+      "number": "1",
+      "name": "Egil Selvik",
+      "tmId": "380744",
+      "pos": "Goalkeeper",
+      "dob": "1997-07-30T00:00:00.000Z",
+      "age": 29,
+      "nationality": [
+        "Norway"
+      ],
+      "mvRaw": "€1.50m",
+      "marketValueBigInt": "1500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/380744-1779430706.jpg"
+    },
+    {
+      "number": "30",
+      "name": "Mathieu Patouillet",
+      "tmId": "744934",
+      "pos": "Goalkeeper",
+      "dob": "2004-02-20T00:00:00.000Z",
+      "age": 22,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€600k",
+      "marketValueBigInt": "600000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/744934-1709204342.jpg"
+    },
+    {
+      "number": "49",
+      "name": "Romain Cagnon",
+      "tmId": "272619",
+      "pos": "Goalkeeper",
+      "dob": "1997-05-12T00:00:00.000Z",
+      "age": 29,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/272619-1656590089.jpg"
+    },
+    {
+      "number": "16",
+      "name": "Noé Poillion",
+      "tmId": "1228465",
+      "pos": "Goalkeeper",
+      "dob": "2007-07-22T00:00:00.000Z",
+      "age": 19,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/default.jpg"
+    },
+    {
+      "number": "71",
+      "name": "Raphaël Le Guen",
+      "tmId": "1166473",
+      "pos": "Centre-Back",
+      "dob": "2006-09-01T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1166473-1782137938.jpg"
+    },
+    {
+      "number": "5",
+      "name": "Brendan Chardonnet",
+      "tmId": "250779",
+      "pos": "Centre-Back",
+      "dob": "1994-12-22T00:00:00.000Z",
+      "age": 31,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€4.00m",
+      "marketValueBigInt": "4000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/250779-1582538208.jpg"
+    },
+    {
+      "number": "4",
+      "name": "Gautier Lloris",
+      "tmId": "249636",
+      "pos": "Centre-Back",
+      "dob": "1995-07-18T00:00:00.000Z",
+      "age": 31,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€3.00m",
+      "marketValueBigInt": "3000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/249636-1704795536.jpg"
+    },
+    {
+      "number": "2",
+      "name": "Bradley Locko",
+      "tmId": "805908",
+      "pos": "Left-Back",
+      "dob": "2002-05-06T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "France",
+        "Congo"
+      ],
+      "mvRaw": "€6.00m",
+      "marketValueBigInt": "6000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/805908-1639674661.png"
+    },
+    {
+      "number": "18",
+      "name": "Justin Bourgault",
+      "tmId": "1030153",
+      "pos": "Left-Back",
+      "dob": "2005-09-14T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€1.00m",
+      "marketValueBigInt": "1000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1030153-1727207548.png"
+    },
+    {
+      "number": "77",
+      "name": "Kenny Lala",
+      "tmId": "174196",
+      "pos": "Right-Back",
+      "dob": "1991-10-03T00:00:00.000Z",
+      "age": 34,
+      "nationality": [
+        "Martinique",
+        "France"
+      ],
+      "mvRaw": "€1.50m",
+      "marketValueBigInt": "1500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/174196-1677254936.jpg"
+    },
+    {
+      "number": "12",
+      "name": "Luck Zogbé",
+      "tmId": "1144999",
+      "pos": "Right-Back",
+      "dob": "2005-03-24T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "Cote d'Ivoire"
+      ],
+      "mvRaw": "€1.20m",
+      "marketValueBigInt": "1200000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1144999-1725882803.jpg"
+    },
+    {
+      "number": "13",
+      "name": "Joris Chotard",
+      "tmId": "624037",
+      "pos": "Defensive Midfield",
+      "dob": "2001-09-24T00:00:00.000Z",
+      "age": 25,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€7.00m",
+      "marketValueBigInt": "7000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/624037-1702663463.JPG"
+    },
+    {
+      "number": "6",
+      "name": "Mamady Diambou",
+      "tmId": "671593",
+      "pos": "Defensive Midfield",
+      "dob": "2002-11-11T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "Mali"
+      ],
+      "mvRaw": "€1.50m",
+      "marketValueBigInt": "1500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/671593-1754993738.png"
+    },
+    {
+      "number": "8",
+      "name": "Hugo Magnetti",
+      "tmId": "474662",
+      "pos": "Central Midfield",
+      "dob": "1998-05-30T00:00:00.000Z",
+      "age": 28,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€6.00m",
+      "marketValueBigInt": "6000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/474662-1582538510.jpg"
+    },
+    {
+      "number": "7",
+      "name": "Joseph Nonge",
+      "tmId": "748807",
+      "pos": "Central Midfield",
+      "dob": "2005-05-15T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "Belgium",
+        "DR Congo"
+      ],
+      "mvRaw": "€2.00m",
+      "marketValueBigInt": "2000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/748807-1760088450.png"
+    },
+    {
+      "number": "24",
+      "name": "Lucas Tousart",
+      "tmId": "353948",
+      "pos": "Central Midfield",
+      "dob": "1997-04-29T00:00:00.000Z",
+      "age": 29,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€2.00m",
+      "marketValueBigInt": "2000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/353948-1691614305.jpg"
+    },
+    {
+      "number": "23",
+      "name": "Kamory Doumbia",
+      "tmId": "671594",
+      "pos": "Attacking Midfield",
+      "dob": "2003-02-18T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "Mali"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/671594-1639672362.png"
+    },
+    {
+      "number": "99",
+      "name": "Pathé Mboup",
+      "tmId": "979551",
+      "pos": "Left Winger",
+      "dob": "2003-10-19T00:00:00.000Z",
+      "age": 22,
+      "nationality": [
+        "Senegal"
+      ],
+      "mvRaw": "€2.50m",
+      "marketValueBigInt": "2500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/979551-1709884981.png"
+    },
+    {
+      "number": "10",
+      "name": "Giovani Versini",
+      "tmId": "922685",
+      "pos": "Right Winger",
+      "dob": "2004-03-18T00:00:00.000Z",
+      "age": 22,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€5.00m",
+      "marketValueBigInt": "5000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/922685-1726485886.png"
+    },
+    {
+      "number": "11",
+      "name": "Noah Edjouma",
+      "tmId": "1078326",
+      "pos": "Right Winger",
+      "dob": "2005-10-04T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "France",
+        "Cameroon"
+      ],
+      "mvRaw": "€5.00m",
+      "marketValueBigInt": "5000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1078326-1708556104.jpg"
+    },
+    {
+      "number": "39",
+      "name": "Djylian N'Guessan",
+      "tmId": "1200419",
+      "pos": "Centre-Forward",
+      "dob": "2008-08-30T00:00:00.000Z",
+      "age": 18,
+      "nationality": [
+        "France",
+        "Cote d'Ivoire"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1200419-1789578146.jpg"
+    },
+    {
+      "number": "17",
+      "name": "Mama Baldé",
+      "tmId": "325223",
+      "pos": "Centre-Forward",
+      "dob": "1995-11-06T00:00:00.000Z",
+      "age": 30,
+      "nationality": [
+        "Guinea-Bissau",
+        "Portugal"
+      ],
+      "mvRaw": "€3.00m",
+      "marketValueBigInt": "3000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/325223-1702991373.jpg"
+    },
+    {
+      "number": "19",
+      "name": "Ludovic Ajorque",
+      "tmId": "283994",
+      "pos": "Centre-Forward",
+      "dob": "1994-02-25T00:00:00.000Z",
+      "age": 32,
+      "nationality": [
+        "France",
+        "Réunion"
+      ],
+      "mvRaw": "€3.00m",
+      "marketValueBigInt": "3000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/283994-1692000251.jpg"
+    }
+  ],
+  "10004": [
+    {
+      "number": "16",
+      "name": "Obed Nkambadio",
+      "tmId": "750878",
+      "pos": "Goalkeeper",
+      "dob": "2003-02-07T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "France",
+        "DR Congo"
+      ],
+      "mvRaw": "€5.00m",
+      "marketValueBigInt": "5000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/750878-1750172738.jpg"
+    },
+    {
+      "number": "35",
+      "name": "Kevin Trapp",
+      "tmId": "45672",
+      "pos": "Goalkeeper",
+      "dob": "1990-07-08T00:00:00.000Z",
+      "age": 36,
+      "nationality": [
+        "Germany"
+      ],
+      "mvRaw": "€1.80m",
+      "marketValueBigInt": "1800000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/45672-1724772525.jpg"
+    },
+    {
+      "number": "42",
+      "name": "Diego Coppola",
+      "tmId": "660860",
+      "pos": "Centre-Back",
+      "dob": "2003-12-28T00:00:00.000Z",
+      "age": 22,
+      "nationality": [
+        "Italy",
+        "Netherlands"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/660860-1663671800.jpg"
+    },
+    {
+      "number": "5",
+      "name": "Moustapha Mbow",
+      "tmId": "649026",
+      "pos": "Centre-Back",
+      "dob": "2000-03-08T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "Senegal"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/649026-1779366442.jpg"
+    },
+    {
+      "number": "6",
+      "name": "Otávio",
+      "tmId": "818495",
+      "pos": "Centre-Back",
+      "dob": "2002-04-21T00:00:00.000Z",
+      "age": 24,
+      "nationality": [
+        "Brazil"
+      ],
+      "mvRaw": "€10.00m",
+      "marketValueBigInt": "10000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/818495-1708599170.png"
+    },
+    {
+      "number": "31",
+      "name": "Samir Chergui",
+      "tmId": "668167",
+      "pos": "Centre-Back",
+      "dob": "1999-02-06T00:00:00.000Z",
+      "age": 27,
+      "nationality": [
+        "Algeria",
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/668167-1780326022.jpg"
+    },
+    {
+      "number": "25",
+      "name": "Yoan Koré",
+      "tmId": "914539",
+      "pos": "Centre-Back",
+      "dob": "2004-11-16T00:00:00.000Z",
+      "age": 21,
+      "nationality": [
+        "France",
+        "Cote d'Ivoire"
+      ],
+      "mvRaw": "€600k",
+      "marketValueBigInt": "600000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/914539-1741190379.jpg"
+    },
+    {
+      "number": "19",
+      "name": "Nhoa Sangui",
+      "tmId": "955281",
+      "pos": "Left-Back",
+      "dob": "2006-02-27T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "France",
+        "Congo"
+      ],
+      "mvRaw": "€10.00m",
+      "marketValueBigInt": "10000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/955281-1723838815.png"
+    },
+    {
+      "number": "28",
+      "name": "Thibault De Smet",
+      "tmId": "340177",
+      "pos": "Left-Back",
+      "dob": "1998-06-05T00:00:00.000Z",
+      "age": 28,
+      "nationality": [
+        "Belgium"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/340177-1723835956.png"
+    },
+    {
+      "number": "3",
+      "name": "Emmanuel Mbemba",
+      "tmId": "1185941",
+      "pos": "Left-Back",
+      "dob": "2008-03-20T00:00:00.000Z",
+      "age": 18,
+      "nationality": [
+        "France",
+        "DR Congo"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1185941-1763037372.jpg"
+    },
+    {
+      "number": "17",
+      "name": "Adama Camara",
+      "tmId": "973949",
+      "pos": "Right-Back",
+      "dob": "1996-10-18T00:00:00.000Z",
+      "age": 29,
+      "nationality": [
+        "Mali",
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/973949-1741880935.jpg"
+    },
+    {
+      "number": "14",
+      "name": "Hamari Traoré",
+      "tmId": "297070",
+      "pos": "Right-Back",
+      "dob": "1992-01-27T00:00:00.000Z",
+      "age": 34,
+      "nationality": [
+        "Mali"
+      ],
+      "mvRaw": "€1.50m",
+      "marketValueBigInt": "1500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/297070-1664981394.jpg"
+    },
+    {
+      "number": "21",
+      "name": "Maxime Lopez",
+      "tmId": "290862",
+      "pos": "Defensive Midfield",
+      "dob": "1997-12-04T00:00:00.000Z",
+      "age": 28,
+      "nationality": [
+        "France",
+        "Algeria"
+      ],
+      "mvRaw": "€5.00m",
+      "marketValueBigInt": "5000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/290862-1692883050.jpg"
+    },
+    {
+      "number": "33",
+      "name": "Pierre Lees-Melou",
+      "tmId": "377393",
+      "pos": "Defensive Midfield",
+      "dob": "1993-05-25T00:00:00.000Z",
+      "age": 33,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€4.50m",
+      "marketValueBigInt": "4500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/377393-1710182831.jpg"
+    },
+    {
+      "number": "8",
+      "name": "Patrick Zabi",
+      "tmId": "1363293",
+      "pos": "Central Midfield",
+      "dob": "2006-09-24T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "Cote d'Ivoire"
+      ],
+      "mvRaw": "€20.00m",
+      "marketValueBigInt": "20000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1363293-1756736469.jpg"
+    },
+    {
+      "number": "23",
+      "name": "Rudy Matondo",
+      "tmId": "1241211",
+      "pos": "Central Midfield",
+      "dob": "2008-03-13T00:00:00.000Z",
+      "age": 18,
+      "nationality": [
+        "France",
+        "Congo"
+      ],
+      "mvRaw": "€20.00m",
+      "marketValueBigInt": "20000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/1241211-1750676329.jpg"
+    },
+    {
+      "number": "4",
+      "name": "Vincent Marchetti",
+      "tmId": "374040",
+      "pos": "Central Midfield",
+      "dob": "1997-07-04T00:00:00.000Z",
+      "age": 29,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "€1.50m",
+      "marketValueBigInt": "1500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/374040-1629979268.jpg"
+    },
+    {
+      "number": "7",
+      "name": "Pablo Pagis",
+      "tmId": "810411",
+      "pos": "Left Winger",
+      "dob": "2002-12-29T00:00:00.000Z",
+      "age": 23,
+      "nationality": [
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/810411-1678723431.jpg"
+    },
+    {
+      "number": "27",
+      "name": "Moses Simon",
+      "tmId": "274862",
+      "pos": "Left Winger",
+      "dob": "1995-07-12T00:00:00.000Z",
+      "age": 31,
+      "nationality": [
+        "Nigeria"
+      ],
+      "mvRaw": "€7.00m",
+      "marketValueBigInt": "7000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/274862-1703065226.jpg"
+    },
+    {
+      "number": "10",
+      "name": "Ilan Kebbal",
+      "tmId": "739769",
+      "pos": "Right Winger",
+      "dob": "1998-07-10T00:00:00.000Z",
+      "age": 28,
+      "nationality": [
+        "Algeria",
+        "France"
+      ],
+      "mvRaw": "€12.00m",
+      "marketValueBigInt": "12000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/739769-1762353660.jpg"
+    },
+    {
+      "number": "15",
+      "name": "Luca Koleosho",
+      "tmId": "745461",
+      "pos": "Right Winger",
+      "dob": "2004-09-15T00:00:00.000Z",
+      "age": 22,
+      "nationality": [
+        "Italy",
+        "United States"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/745461-1759159569.jpg"
+    },
+    {
+      "number": "93",
+      "name": "Jonathan Ikoné",
+      "tmId": "324690",
+      "pos": "Right Winger",
+      "dob": "1998-05-02T00:00:00.000Z",
+      "age": 28,
+      "nationality": [
+        "France",
+        "DR Congo"
+      ],
+      "mvRaw": "€4.00m",
+      "marketValueBigInt": "4000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/324690-1697179025.jpg"
+    },
+    {
+      "number": "9",
+      "name": "Lassine Sinayoko",
+      "tmId": "569140",
+      "pos": "Centre-Forward",
+      "dob": "1999-12-08T00:00:00.000Z",
+      "age": 26,
+      "nationality": [
+        "Mali",
+        "France"
+      ],
+      "mvRaw": "",
+      "marketValueBigInt": null,
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/569140-1635851830.jpg"
+    },
+    {
+      "number": "11",
+      "name": "Jean-Philippe Krasso",
+      "tmId": "358515",
+      "pos": "Centre-Forward",
+      "dob": "1997-07-17T00:00:00.000Z",
+      "age": 29,
+      "nationality": [
+        "Cote d'Ivoire",
+        "France"
+      ],
+      "mvRaw": "€3.50m",
+      "marketValueBigInt": "3500000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/358515-1694785707.jpg"
+    },
+    {
+      "number": "18",
+      "name": "Omar Sissoko",
+      "tmId": "1132426",
+      "pos": "Centre-Forward",
+      "dob": "2006-08-18T00:00:00.000Z",
+      "age": 20,
+      "nationality": [
+        "France",
+        "Mali"
+      ],
+      "mvRaw": "€1.00m",
+      "marketValueBigInt": "1000000",
+      "photoUrl": "https://img.a.transfermarkt.technology/portrait/medium/default.jpg"
+    }
+  ]
+}
