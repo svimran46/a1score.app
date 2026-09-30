@@ -27,16 +27,20 @@ async function main() {
   console.log(`Read ${records.length} club records from data/clubs.csv.`);
 
   // 2. Resolve DB connection host
-  const host = "aws-0-ap-northeast-1.pooler.supabase.com";
+  const connStr = process.env.DATABASE_URL || process.env.DIRECT_URL;
+  if (!connStr) {
+    console.error("Missing DATABASE_URL or DIRECT_URL environment variable.");
+    process.exit(1);
+  }
+  const cleanUrl = connStr.replace(/[?&]sslmode=[^&]+/, "");
+  const url = new URL(cleanUrl);
+  const host = url.hostname;
   const ips = await new Promise<string[]>((resolve, reject) => {
     dns.resolve4(host, (err, addresses) => {
       if (err) reject(err);
       else resolve(addresses);
     });
   });
-
-  const connStr = (process.env.DATABASE_URL || "").replace(/[?&]sslmode=[^&]+/, "");
-  const url = new URL(connStr);
 
   const client = new pg.Client({
     host: ips[0],

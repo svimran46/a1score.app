@@ -23,8 +23,10 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-.env*.local
 .env
+.env.*
+!.env.example
+.env*.local
 
 # vercel & cloudflare
 .vercel
@@ -40,6 +42,7 @@ next-env.d.ts
 /prisma/*.db-journal
 
 /scratch
+.freebuff/
 
 # data downloads
 /data/

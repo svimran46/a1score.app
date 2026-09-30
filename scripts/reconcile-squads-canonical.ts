@@ -1,3 +1,4 @@
+import "dotenv/config";
 /**
  * scripts/reconcile-squads-canonical.ts
  *
@@ -23,9 +24,11 @@ import fetch from "node-fetch";
 import { fotmobFetch } from "../src/lib/fotmob/client";
 import { FOTMOB_TEAM_MAPPINGS } from "../src/lib/league-mappings";
 
-const connectionString =
-  process.env.DATABASE_URL ||
-  "postgresql://postgres.qqjpgehtutdmkkkxnefu:Svimran4656%40%23%23@aws-0-ap-northeast-1.pooler.supabase.com:5432/postgres?sslmode=require";
+const connectionString = process.env.DATABASE_URL || process.env.DIRECT_URL;
+if (!connectionString) {
+  console.error("Missing DATABASE_URL or DIRECT_URL environment variable.");
+  process.exit(1);
+}
 
 const TM_HEADERS = {
   "User-Agent":

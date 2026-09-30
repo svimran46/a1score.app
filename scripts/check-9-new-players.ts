@@ -1,8 +1,11 @@
+import "dotenv/config";
 import pg from "pg";
 
-const connectionString =
-  process.env.DATABASE_URL ||
-  "postgresql://postgres.qqjpgehtutdmkkkxnefu:Svimran4656%40%23%23@aws-0-ap-northeast-1.pooler.supabase.com:5432/postgres?sslmode=require";
+const connectionString = process.env.DATABASE_URL || process.env.DIRECT_URL;
+if (!connectionString) {
+  console.error("Missing DATABASE_URL or DIRECT_URL environment variable.");
+  process.exit(1);
+}
 
 const PLAYERS = [
   { name: "Josh Wilson-Esbrand", id: "FM_1187225", club: "Manchester City" },

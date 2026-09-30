@@ -61,7 +61,7 @@ All dynamic pages and API routes enforce `export const runtime = "edge"`. Next.j
 
 ## 3. Data Model & Database Architecture
 
-Managed via **Prisma 5.22.0** on **Supabase PostgreSQL** (`aws-0-ap-northeast-1.pooler.supabase.com:5432/postgres`).
+Managed via **Prisma 5.22.0** on **Supabase PostgreSQL** (configured via `DATABASE_URL`).
 
 ```
 ┌──────────────────┐       1:N       ┌──────────────────────┐
@@ -156,7 +156,7 @@ Managed via **Prisma 5.22.0** on **Supabase PostgreSQL** (`aws-0-ap-northeast-1.
 ## 7. Environment Variables
 
 * **`.env` (Local):**
-  * `DATABASE_URL`: Supabase connection pooler URL (`aws-0-ap-northeast-1.pooler.supabase.com:5432/postgres?sslmode=require`).
+  * `DATABASE_URL`: Supabase connection pooler URL.
   * `DIRECT_URL`: Supabase direct connection URL.
 * **Cloudflare Pages Dashboard:**
   * `DATABASE_URL` (Encrypted secret)
