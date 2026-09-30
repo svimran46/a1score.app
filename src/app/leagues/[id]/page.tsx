@@ -47,9 +47,9 @@ export default async function LeaguePage({ params }: LeaguePageProps) {
     return notFound();
   }
 
-  // 301 redirect legacy CUID or code to canonical slug URL (G1)
+  // 301 redirect any non-canonical slug, legacy CUID, or alias to canonical slug URL (G1)
   const canonicalSlug = getLeagueSlug(league);
-  if (params.id !== canonicalSlug && (params.id === league.id || params.id === league.transfermarktId)) {
+  if (params.id !== canonicalSlug) {
     permanentRedirect(`/leagues/${canonicalSlug}`);
   }
 

@@ -9,12 +9,12 @@ export const revalidate = 86400; // Cache sitemap for 24 hours
 
 const TRACKED_LEAGUES = [
   { name: "Premier League", id: "cmuihndux0003b23fizizm4a0" },
-  { name: "LaLiga", id: "cmuihnet00007b23f2qf4z79i" },
-  { name: "Serie A", id: "cmuihnf000008b23fghk99r1h" },
-  { name: "Bundesliga", id: "cmuihnfps0009b23fe6s9s949" },
-  { name: "Ligue 1", id: "cmuihnggh000ab23ftw5z9a34" },
-  { name: "Liga Portugal", id: "cmuihnh71000bb23f7w76a380" },
-  { name: "Eredivisie", id: "cmuihnhvo000cb23f1m06d5s7" },
+  { name: "LaLiga", id: "cmuihncv70001b23frvqgzdp6" },
+  { name: "Serie A", id: "cmuihnegb0004b23fhslrse6b" },
+  { name: "Bundesliga", id: "cmuihneym0005b23fkpqbo0uj" },
+  { name: "Ligue 1", id: "cmuihnddf0002b23fskdzdx29" },
+  { name: "Liga Portugal", id: "cmuihnfy10007b23f3j6km8jo" },
+  { name: "Eredivisie", id: "cmuihnffm0006b23feq78bq1b" },
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

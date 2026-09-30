@@ -10,6 +10,7 @@ import { PositionalPeers } from "@/components/PositionalPeers";
 import { PlayerIntelligenceRibbon } from "@/components/PlayerIntelligenceRibbon";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
 import { calculateAge, formatCompactEur, formatDate } from "@/lib/utils";
+import { getClubSlug } from "@/lib/slugs";
 import { Calendar, Globe, Ruler, Footprints, TrendingUp } from "lucide-react";
 import { constructMetadata, SITE_URL } from "@/lib/metadata";
 
@@ -165,7 +166,7 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
                 {/* Current Club Link */}
                 {currentClub && (
                   <Link
-                    href={`/clubs/${currentClub.id}`}
+                    href={`/clubs/${getClubSlug(currentClub)}`}
                     className="inline-flex items-center justify-center sm:justify-start gap-2 text-sm text-slate-300 hover:text-white transition-colors group"
                   >
                     <div className="relative w-5 h-5 shrink-0">
@@ -198,11 +199,15 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
                 Estimated Market Value
               </span>
               <span className="text-2xl sm:text-3xl font-black text-amber-400 tracking-tight mt-1 tabular-nums whitespace-nowrap">
-                {latestValuation ? formatCompactEur(latestValuation.valueEur) : player.latestMarketValue ? formatCompactEur(player.latestMarketValue) : "N/A"}
+                {player.latestMarketValue
+                  ? formatCompactEur(player.latestMarketValue)
+                  : latestValuation
+                  ? formatCompactEur(latestValuation.valueEur)
+                  : "N/A"}
               </span>
-              {latestValuation && latestValuation.date && (
+              {(player.latestMarketValue || latestValuation) && (
                 <span className="text-[11px] text-slate-500 mt-0.5 whitespace-nowrap">
-                  Updated {formatDate(latestValuation.date)}
+                  Updated {latestValuation?.date ? formatDate(latestValuation.date) : "September 2026"}
                 </span>
               )}
             </div>

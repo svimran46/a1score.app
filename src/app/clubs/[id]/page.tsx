@@ -2,10 +2,11 @@ import { notFound, permanentRedirect } from "next/navigation";
 import { EntityImage } from "@/components/EntityImage";
 import Link from "next/link";
 import { getClubById, getClubTransfers } from "@/lib/data/clubs";
+import { getLeagueById } from "@/lib/data/leagues";
 import { getFotmobTeamDetails } from "@/lib/fotmob/client";
 import { FOTMOB_TEAM_MAPPINGS } from "@/lib/league-mappings";
 import { formatCompactEur } from "@/lib/utils";
-import { getClubSlug } from "@/lib/slugs";
+import { getClubSlug, getLeagueSlug } from "@/lib/slugs";
 import { Shield, Users, Trophy, Globe, Calendar, Clock } from "lucide-react";
 import { ClubTabsContainer } from "@/components/ClubTabsContainer";
 
@@ -22,6 +23,16 @@ interface ClubPageProps {
 }
 
 export async function generateMetadata({ params }: ClubPageProps): Promise<Metadata> {
+  const league = await getLeagueById(params.id);
+  if (league) {
+    const canonicalSlug = getLeagueSlug(league);
+    return constructMetadata({
+      title: `${league.name} — Standings, Club Valuations & Stats`,
+      description: `${league.name} standings, participating clubs, and squad market valuation analytics on a1score.app.`,
+      path: `/leagues/${canonicalSlug}`,
+    });
+  }
+
   const club = await getClubById(params.id);
   if (!club) {
     return constructMetadata({
@@ -45,15 +56,22 @@ export async function generateMetadata({ params }: ClubPageProps): Promise<Metad
 }
 
 export default async function ClubPage({ params }: ClubPageProps) {
+  // If user requests a league alias or CUID under /clubs (e.g. /clubs/laliga or /clubs/serie-a), redirect to league page
+  const league = await getLeagueById(params.id);
+  if (league) {
+    const canonicalLeagueSlug = getLeagueSlug(league);
+    permanentRedirect(`/leagues/${canonicalLeagueSlug}`);
+  }
+
   const club = await getClubById(params.id);
 
   if (!club) {
     notFound();
   }
 
-  // 301 redirect legacy CUID or numeric ID to canonical slug URL (G1)
+  // 301 redirect any non-canonical slug, legacy CUID, or numeric ID to canonical slug URL (G1)
   const canonicalSlug = getClubSlug(club);
-  if (params.id !== canonicalSlug && (params.id === club.id || params.id === String(club.transfermarktId))) {
+  if (params.id !== canonicalSlug) {
     permanentRedirect(`/clubs/${canonicalSlug}`);
   }
 

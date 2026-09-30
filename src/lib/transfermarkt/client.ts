@@ -368,6 +368,12 @@ export async function tmGetPlayer(slugOrId: string) {
       }
     }
 
+    // Validate that profile was actually parsed and has meaningful data
+    if ((fullName === slugOrId && marketValues.length === 0) || (latestValuation === 0 && marketValues.length === 0)) {
+      console.warn(`[TM Proxy] Incomplete profile/valuation for ${slugOrId}, falling back to DB`);
+      return null;
+    }
+
     // Validate DOB
     const safeDob = dateOfBirth && !isNaN(dateOfBirth.getTime()) ? dateOfBirth : null;
 

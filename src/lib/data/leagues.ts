@@ -57,11 +57,66 @@ export async function getLeagues() {
   }
 }
 
+export const LEAGUE_ALIAS_MAP: Record<string, { cuid: string; tmId: string }> = {
+  // Premier League
+  "premier-league": { cuid: "cmuihndux0003b23fizizm4a0", tmId: "GB1" },
+  "premierleague": { cuid: "cmuihndux0003b23fizizm4a0", tmId: "GB1" },
+  "epl": { cuid: "cmuihndux0003b23fizizm4a0", tmId: "GB1" },
+  "gb1": { cuid: "cmuihndux0003b23fizizm4a0", tmId: "GB1" },
+  // LaLiga
+  "laliga": { cuid: "cmuihncv70001b23frvqgzdp6", tmId: "ES1" },
+  "la-liga": { cuid: "cmuihncv70001b23frvqgzdp6", tmId: "ES1" },
+  "es1": { cuid: "cmuihncv70001b23frvqgzdp6", tmId: "ES1" },
+  "cmuihnet00007b23f2qf4z79i": { cuid: "cmuihncv70001b23frvqgzdp6", tmId: "ES1" },
+  // Serie A
+  "serie-a": { cuid: "cmuihnegb0004b23fhslrse6b", tmId: "IT1" },
+  "seriea": { cuid: "cmuihnegb0004b23fhslrse6b", tmId: "IT1" },
+  "it1": { cuid: "cmuihnegb0004b23fhslrse6b", tmId: "IT1" },
+  "cmuihnf000008b23fghk99r1h": { cuid: "cmuihnegb0004b23fhslrse6b", tmId: "IT1" },
+  // Bundesliga
+  "bundesliga": { cuid: "cmuihneym0005b23fkpqbo0uj", tmId: "L1" },
+  "l1": { cuid: "cmuihneym0005b23fkpqbo0uj", tmId: "L1" },
+  "cmuihnfps0009b23fe6s9s949": { cuid: "cmuihneym0005b23fkpqbo0uj", tmId: "L1" },
+  // Ligue 1
+  "ligue-1": { cuid: "cmuihnddf0002b23fskdzdx29", tmId: "FR1" },
+  "ligue1": { cuid: "cmuihnddf0002b23fskdzdx29", tmId: "FR1" },
+  "fr1": { cuid: "cmuihnddf0002b23fskdzdx29", tmId: "FR1" },
+  "cmuihnggh000ab23ftw5z9a34": { cuid: "cmuihnddf0002b23fskdzdx29", tmId: "FR1" },
+  // Liga Portugal
+  "liga-portugal": { cuid: "cmuihnfy10007b23f3j6km8jo", tmId: "PO1" },
+  "ligaportugal": { cuid: "cmuihnfy10007b23f3j6km8jo", tmId: "PO1" },
+  "primeira-liga": { cuid: "cmuihnfy10007b23f3j6km8jo", tmId: "PO1" },
+  "po1": { cuid: "cmuihnfy10007b23f3j6km8jo", tmId: "PO1" },
+  "cmuihnh71000bb23f7w76a380": { cuid: "cmuihnfy10007b23f3j6km8jo", tmId: "PO1" },
+  // Eredivisie
+  "eredivisie": { cuid: "cmuihnffm0006b23feq78bq1b", tmId: "NL1" },
+  "nl1": { cuid: "cmuihnffm0006b23feq78bq1b", tmId: "NL1" },
+  "cmuihnhvo000cb23f1m06d5s7": { cuid: "cmuihnffm0006b23feq78bq1b", tmId: "NL1" },
+  // Champions League
+  "champions-league": { cuid: "cmuihncd80000b23f6khust90", tmId: "CL" },
+  "ucl": { cuid: "cmuihncd80000b23f6khust90", tmId: "CL" },
+  "cl": { cuid: "cmuihncd80000b23f6khust90", tmId: "CL" },
+};
+
 export async function getLeagueById(idOrSlug: string) {
   try {
     const raw = (idOrSlug || "").trim();
+    const rawLower = raw.toLowerCase().replace(/\s+/g, "-");
     const cuidMatch = raw.match(/c[a-z0-9]{24}/i);
-    const cuid = cuidMatch ? cuidMatch[0] : null;
+    const rawCuid = cuidMatch ? cuidMatch[0] : null;
+
+    // Check alias map for legacy CUIDs, short aliases, or prefix matching
+    const aliasKey = Object.keys(LEAGUE_ALIAS_MAP).find(
+      (k) =>
+        k === rawLower ||
+        (rawCuid && k === rawCuid.toLowerCase()) ||
+        rawLower.startsWith(`${k}-`) ||
+        rawLower === k.replace(/-/g, "")
+    );
+
+    const aliasTarget = aliasKey ? LEAGUE_ALIAS_MAP[aliasKey] : null;
+    const effectiveCuid = aliasTarget ? aliasTarget.cuid : rawCuid;
+    const effectiveTmId = aliasTarget ? aliasTarget.tmId : raw.toUpperCase();
 
     let query = supabase
       .from("League")
@@ -87,13 +142,48 @@ export async function getLeagueById(idOrSlug: string) {
         )
       `);
 
-    if (cuid) {
-      query = query.or(`id.eq.${cuid},transfermarktId.eq.${raw}`);
+    if (effectiveCuid) {
+      query = query.or(`id.eq.${effectiveCuid},transfermarktId.eq.${effectiveTmId},transfermarktId.eq.${raw}`);
     } else {
-      query = query.or(`id.eq.${raw},transfermarktId.eq.${raw}`);
+      query = query.or(`id.eq.${raw},transfermarktId.eq.${effectiveTmId},transfermarktId.eq.${raw}`);
     }
 
-    const { data: league, error } = await query.maybeSingle();
+    let { data: league, error } = await query.maybeSingle();
+
+    // Fallback: search by name ilike if not yet matched
+    if (!league && rawLower.length >= 3) {
+      const cleanTerm = rawLower.replace(/-/g, " ");
+      const { data: fallbackLeague } = await supabase
+        .from("League")
+        .select(`
+          id,
+          name,
+          country,
+          tier,
+          logoUrl,
+          transfermarktId,
+          totalMarketValue,
+          totalPlayers,
+          clubCount,
+          clubs:Club (
+            id,
+            name,
+            logoUrl,
+            country,
+            squadSize,
+            totalMarketValue,
+            lastSeason,
+            transfermarktId
+          )
+        `)
+        .ilike("name", `%${cleanTerm}%`)
+        .limit(1)
+        .maybeSingle();
+
+      if (fallbackLeague) {
+        league = fallbackLeague;
+      }
+    }
 
     if (error || !league) {
       console.error(`Error fetching league ${idOrSlug}:`, error);

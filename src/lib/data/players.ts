@@ -134,7 +134,7 @@ export async function getPlayerBySlugOrId(slugOrId: string) {
   // 1. First, attempt to fetch live profile + valuation graph + transfers via TM proxy
   try {
     const livePlayer = await tmGetPlayer(slugOrId);
-    if (livePlayer) {
+    if (livePlayer && livePlayer.fullName !== slugOrId && (livePlayer.latestMarketValue > 0 || (livePlayer.marketValues && livePlayer.marketValues.length > 0))) {
       if (!livePlayer.seasonStats || livePlayer.seasonStats.length === 0) {
         try {
           const fotmobData = await getFotmobPlayerStats(livePlayer.commonName || livePlayer.fullName);
@@ -286,6 +286,21 @@ export async function getPlayerBySlugOrId(slugOrId: string) {
         valueEur: Number(mv.valueEur) || 0,
       }))
       .sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+    // Ensure sortedMarketValues aligns with authoritative latestMarketValue
+    if (player.latestMarketValue && Number(player.latestMarketValue) > 0) {
+      const currentValNum = Number(player.latestMarketValue);
+      const lastPoint = sortedMarketValues[sortedMarketValues.length - 1];
+      if (!lastPoint || lastPoint.valueEur !== currentValNum) {
+        sortedMarketValues.push({
+          id: `latest-${player.id}`,
+          playerId: player.id,
+          date: new Date().toISOString(),
+          valueEur: currentValNum,
+          clubName: player.currentClub?.name || null,
+        });
+      }
+    }
 
     // Sort transfers chronologically (desc), safely handling null/invalid dates
     const sortedTransfers = (player.transfers || [])

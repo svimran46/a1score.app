@@ -58,6 +58,36 @@ export async function getClubById(idOrSlug: string) {
     const { data, error } = await query.maybeSingle();
     if (!error && data) {
       dbClub = data;
+    } else if (!cuid && raw && raw.length >= 3) {
+      // Fallback: search by name matching cleaned slug (e.g. "barcelona", "real-madrid")
+      const cleanTerm = raw.replace(/-/g, " ").trim();
+      const { data: fallbackClub } = await supabase
+        .from("Club")
+        .select(`
+          *,
+          league:League ( * ),
+          players:Player (
+            id,
+            fullName,
+            commonName,
+            position,
+            subPosition,
+            photoUrl,
+            transfermarktId,
+            nationality,
+            dateOfBirth,
+            latestMarketValue,
+            lastSeason
+          )
+        `)
+        .ilike("name", `%${cleanTerm}%`)
+        .order("totalMarketValue", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (fallbackClub) {
+        dbClub = fallbackClub;
+      }
     }
   } catch (dbErr) {
     console.warn(`[Data Layer] Error resolving club ${idOrSlug} from DB:`, dbErr);

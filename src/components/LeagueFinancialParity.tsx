@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { EntityImage } from "./EntityImage";
 import Link from "next/link";
 import { formatCompactEur } from "@/lib/utils";
+import { getClubSlug } from "@/lib/slugs";
 import {
   Scale,
   TrendingUp,
@@ -266,7 +267,7 @@ export function LeagueFinancialParity({
                         #{index + 1}
                       </span>
                       <Link
-                        href={`/clubs/${club.id}`}
+                        href={`/clubs/${getClubSlug(club)}`}
                         className="flex items-center gap-2.5 min-w-0 group"
                       >
                         <div className="relative w-7 h-7 rounded-lg bg-slate-800 p-1 flex-shrink-0 border border-slate-700/60 overflow-hidden">

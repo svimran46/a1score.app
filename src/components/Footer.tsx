@@ -12,12 +12,12 @@ const exploreLinks = [
 
 const topLeagues = [
   { label: "Premier League", href: "/leagues/premier-league-cmuihndux0003b23fizizm4a0" },
-  { label: "La Liga", href: "/leagues/laliga-cmuihnet00007b23f2qf4z79i" },
-  { label: "Serie A", href: "/leagues/serie-a-cmuihnf000008b23fghk99r1h" },
-  { label: "Bundesliga", href: "/leagues/bundesliga-cmuihnfps0009b23fe6s9s949" },
-  { label: "Ligue 1", href: "/leagues/ligue-1-cmuihnggh000ab23ftw5z9a34" },
-  { label: "Liga Portugal", href: "/leagues/liga-portugal-cmuihnh71000bb23f7w76a380" },
-  { label: "Eredivisie", href: "/leagues/eredivisie-cmuihnhvo000cb23f1m06d5s7" },
+  { label: "La Liga", href: "/leagues/laliga-cmuihncv70001b23frvqgzdp6" },
+  { label: "Serie A", href: "/leagues/serie-a-cmuihnegb0004b23fhslrse6b" },
+  { label: "Bundesliga", href: "/leagues/bundesliga-cmuihneym0005b23fkpqbo0uj" },
+  { label: "Ligue 1", href: "/leagues/ligue-1-cmuihnddf0002b23fskdzdx29" },
+  { label: "Liga Portugal", href: "/leagues/liga-portugal-cmuihnfy10007b23f3j6km8jo" },
+  { label: "Eredivisie", href: "/leagues/eredivisie-cmuihnffm0006b23feq78bq1b" },
 ];
 
 export function Footer() {

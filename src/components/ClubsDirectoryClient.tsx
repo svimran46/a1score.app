@@ -115,6 +115,20 @@ export function ClubsDirectoryClient({ initialClubs }: ClubsDirectoryClientProps
     return Array.from(countries).sort();
   }, [initialClubs]);
 
+  const selectedLeagueValue = useMemo(() => {
+    if (leagueParam === "ALL") return "ALL";
+    const norm = (s: string) => s.toLowerCase().replace(/[\s\-_]+/g, "");
+    const match = availableLeagues.find((l) => norm(l) === norm(leagueParam));
+    return match || leagueParam;
+  }, [leagueParam, availableLeagues]);
+
+  const selectedCountryValue = useMemo(() => {
+    if (countryParam === "ALL") return "ALL";
+    const norm = (s: string) => s.toLowerCase().replace(/[\s\-_]+/g, "");
+    const match = availableCountries.find((c) => norm(c) === norm(countryParam));
+    return match || countryParam;
+  }, [countryParam, availableCountries]);
+
   // Filter & Deterministic Sort
   const filteredClubs = useMemo(() => {
     return initialClubs.filter((c) => {
@@ -127,14 +141,16 @@ export function ClubsDirectoryClient({ initialClubs }: ClubsDirectoryClientProps
         if (!nameMatch && !leagueMatch && !countryMatch) return false;
       }
 
-      // 2. League Filter
+      // 2. League Filter (normalized for whitespace, casing, and dashes)
       if (leagueParam !== "ALL") {
-        if (c.leagueName !== leagueParam) return false;
+        const norm = (s: string) => s.toLowerCase().replace(/[\s\-_]+/g, "");
+        if (norm(c.leagueName || "") !== norm(leagueParam)) return false;
       }
 
-      // 3. Country Filter
+      // 3. Country Filter (normalized)
       if (countryParam !== "ALL") {
-        if (c.country !== countryParam) return false;
+        const norm = (s: string) => s.toLowerCase().replace(/[\s\-_]+/g, "");
+        if (norm(c.country || "") !== norm(countryParam)) return false;
       }
 
       return true;
@@ -241,7 +257,7 @@ export function ClubsDirectoryClient({ initialClubs }: ClubsDirectoryClientProps
             </label>
             <select
               id="clubs-league-filter"
-              value={leagueParam}
+              value={selectedLeagueValue}
               onChange={(e) => updateParams({ league: e.target.value, page: "1" })}
               className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700/80 text-white text-xs font-semibold focus:outline-none focus:border-amber-400 cursor-pointer truncate"
             >
@@ -261,7 +277,7 @@ export function ClubsDirectoryClient({ initialClubs }: ClubsDirectoryClientProps
             </label>
             <select
               id="clubs-country-filter"
-              value={countryParam}
+              value={selectedCountryValue}
               onChange={(e) => updateParams({ country: e.target.value, page: "1" })}
               className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700/80 text-white text-xs font-semibold focus:outline-none focus:border-amber-400 cursor-pointer truncate"
             >
