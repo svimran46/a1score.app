@@ -2,15 +2,20 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 
 function resolveSiteUrl(): string {
-  const envUrl = process.env.SITE_URL || process.env.NEXT_PUBLIC_SITE_URL;
+  const envUrl =
+    process.env.SITE_URL ||
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    process.env.CF_PAGES_URL;
+
   if (envUrl && envUrl.trim() !== "") {
     return envUrl.trim().replace(/\/$/, "");
   }
 
   if (process.env.NODE_ENV === "production") {
-    throw new Error(
-      "Configuration Error: SITE_URL or NEXT_PUBLIC_SITE_URL must be defined in environment variables. Silent fallback to production domain is disabled."
+    console.warn(
+      "[Metadata] Warning: SITE_URL or NEXT_PUBLIC_SITE_URL is not set in environment variables. Falling back to 'https://a1score.app'. Configure this in Cloudflare Pages dashboard settings."
     );
+    return "https://a1score.app";
   }
 
   return "http://localhost:3000";
