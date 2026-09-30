@@ -3,6 +3,7 @@ import { EntityImage } from "./EntityImage";
 import { FotmobMatch } from "@/lib/fotmob/client";
 import { formatCompactEur } from "@/lib/utils";
 import { LiveMinute } from "./LiveMinute";
+import { KickoffTime } from "./KickoffTime";
 
 interface MatchCardProps {
   match: FotmobMatch;
@@ -61,7 +62,15 @@ export function MatchCard({
                   : "bg-slate-800/60 text-slate-300"
               }`}
             >
-              {statusText}
+              {isFinished ? (
+                "FT"
+              ) : match.timeTS ? (
+                <KickoffTime date={match.timeTS} />
+              ) : match.time ? (
+                match.time.includes("UTC") ? match.time : `${match.time} UTC`
+              ) : (
+                "TBD"
+              )}
             </span>
           )}
         </div>

@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import { EntityImage } from "@/components/EntityImage";
 import { LiveMinute } from "@/components/LiveMinute";
+import { KickoffTime } from "@/components/KickoffTime";
 import { formatCompactEur } from "@/lib/utils";
 import { ArrowLeft, Trophy, AlertCircle } from "lucide-react";
 
@@ -161,9 +162,9 @@ export function MatchScorecard({ match, goalHighlight = false }: MatchScorecardP
                 <span className="text-2xl sm:text-4xl font-black text-white tracking-widest block">
                   VS
                 </span>
-                {localKickoffTime && (
+                {matchDate && (
                   <span className="text-xs sm:text-sm font-bold text-slate-300 block">
-                    {localKickoffTime}
+                    <KickoffTime date={matchDate} />
                   </span>
                 )}
                 {countdownStr && (

@@ -2,7 +2,7 @@ import { notFound, permanentRedirect } from "next/navigation";
 import { EntityImage } from "@/components/EntityImage";
 import Link from "next/link";
 import { getLeagueById } from "@/lib/data/leagues";
-import { formatCompactEur } from "@/lib/utils";
+import { formatCompactEur, formatDate } from "@/lib/utils";
 import { getLeagueSlug } from "@/lib/slugs";
 import { Trophy, Clock } from "lucide-react";
 import { LeagueFinancialParity } from "@/components/LeagueFinancialParity";
@@ -112,7 +112,9 @@ export default async function LeaguePage({ params }: LeaguePageProps) {
                 <span>•</span>
                 <span className="flex items-center gap-1 text-slate-500">
                   <Clock className="w-3 h-3" />
-                  Updated {new Date(league.lastUpdated || Date.now()).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                  <time dateTime={league.lastUpdated ? new Date(league.lastUpdated).toISOString() : undefined} suppressHydrationWarning>
+                    Updated {formatDate(league.lastUpdated || "2026-08-01")}
+                  </time>
                 </span>
               </div>
             </div>

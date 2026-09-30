@@ -5,6 +5,8 @@ import { ClubSquadTable, type SquadPlayerRow } from "./ClubSquadTable";
 import { SquadValuationPyramid } from "./SquadValuationPyramid";
 import { ClubTransferLedger } from "./ClubTransferLedger";
 import type { FotmobTeamDetails } from "@/lib/fotmob/client";
+import { formatDate } from "@/lib/utils";
+import { KickoffTime } from "@/components/KickoffTime";
 import {
   Users,
   Layers,
@@ -252,11 +254,9 @@ export function ClubTabsContainer({
                           <span className="text-white font-semibold block">{m.opponent}</span>
                           {m.date && (
                             <span className="text-[10px] text-slate-500">
-                              {new Date(m.date).toLocaleDateString("en-GB", {
-                                day: "numeric",
-                                month: "short",
-                                year: "numeric",
-                              })}
+                              <time dateTime={m.date} suppressHydrationWarning>
+                                {formatDate(m.date)}
+                              </time>
                             </span>
                           )}
                         </div>
@@ -301,15 +301,7 @@ export function ClubTabsContainer({
                   <div className="text-xs text-slate-400 flex items-center gap-1.5">
                     <Calendar className="w-3.5 h-3.5 text-slate-500" />
                     <span>
-                      {new Date(details.nextMatch.date).toLocaleString("en-GB", {
-                        weekday: "short",
-                        day: "numeric",
-                        month: "short",
-                        year: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        timeZoneName: "short",
-                      })}
+                      <KickoffTime date={details.nextMatch.date} includeDate={true} />
                     </span>
                   </div>
                 )}

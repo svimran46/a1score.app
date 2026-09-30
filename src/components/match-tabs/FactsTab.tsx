@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import Link from "next/link";
 import { EntityImage } from "@/components/EntityImage";
+import { KickoffTime } from "@/components/KickoffTime";
 import {
   Calendar,
   MapPin,
@@ -277,15 +278,11 @@ export function FactsTab({ match }: FactsTabProps) {
             <div>
               <p className="text-[10px] uppercase font-bold text-slate-400">Kickoff</p>
               <p className="font-semibold text-white mt-0.5">
-                {general.matchTimeUTCDate
-                  ? new Date(general.matchTimeUTCDate).toLocaleString([], {
-                      weekday: "short",
-                      month: "short",
-                      day: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })
-                  : general.matchTimeUTC || "TBD"}
+                {general.matchTimeUTCDate ? (
+                  <KickoffTime date={general.matchTimeUTCDate} includeDate={true} />
+                ) : (
+                  general.matchTimeUTC || "TBD"
+                )}
               </p>
             </div>
           </div>

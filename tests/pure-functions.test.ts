@@ -193,3 +193,24 @@ test("constructMetadata - enforces canonical and og:url consistency", async () =
   assert.equal(meta.alternates?.canonical, "https://a1score.app/clubs/manchester-city");
   assert.equal((meta.openGraph as any)?.url, "https://a1score.app/clubs/manchester-city");
 });
+
+test("formatKickoff - formats kickoff with explicit timezone label", async () => {
+  const { formatKickoff } = await import("../src/lib/utils");
+  const iso = "2026-10-01T20:00:00Z";
+
+  // UTC timezone
+  const utc = formatKickoff(iso, { tz: "UTC" });
+  assert.match(utc, /20:00\s*(UTC|GMT)/);
+
+  // Custom timezone (e.g. America/New_York)
+  const ny = formatKickoff(iso, { tz: "America/New_York" });
+  assert.match(ny, /16:00\s*(EDT|GMT-4)/);
+
+  // Full date with timezone
+  const fullUtc = formatKickoff(iso, { tz: "UTC", includeDate: true });
+  assert.match(fullUtc, /Oct.*20:00\s*(UTC|GMT)/);
+
+  // Missing or null date
+  assert.equal(formatKickoff(null), "TBD");
+  assert.equal(formatKickoff(undefined), "TBD");
+});

@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { History, Shield, Calendar } from "lucide-react";
 import { EntityImage } from "@/components/EntityImage";
+import { formatDate } from "@/lib/utils";
 
 interface H2HTabProps {
   match: any;
@@ -184,14 +185,6 @@ export function H2HTab({ match }: H2HTabProps) {
 
           <div className="divide-y divide-slate-800/60">
             {pastMatches.map((m: any, idx: number) => {
-              const matchDateStr = m.time?.utcTime
-                ? new Date(m.time.utcTime).toLocaleDateString([], {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                  })
-                : "Past Meeting";
-
               return (
                 <div
                   key={m.matchUrl || idx}
@@ -199,7 +192,13 @@ export function H2HTab({ match }: H2HTabProps) {
                 >
                   <div className="flex items-center gap-2 text-slate-400 text-[11px]">
                     <Calendar className="w-3.5 h-3.5 text-slate-500" />
-                    <span>{matchDateStr}</span>
+                    {m.time?.utcTime ? (
+                      <time dateTime={m.time.utcTime} suppressHydrationWarning>
+                        {formatDate(m.time.utcTime)}
+                      </time>
+                    ) : (
+                      <span>Past Meeting</span>
+                    )}
                     {m.league?.name && (
                       <span className="truncate max-w-[160px] text-slate-500">
                         • {m.league.name}

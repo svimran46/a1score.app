@@ -71,3 +71,45 @@ export function calculateAge(dob: Date | string | null | undefined): number | nu
     return null;
   }
 }
+
+export interface FormatKickoffOptions {
+  tz?: string;
+  includeDate?: boolean;
+}
+
+export function formatKickoff(
+  date: Date | string | number | null | undefined,
+  options: FormatKickoffOptions = {}
+): string {
+  if (!date) return "TBD";
+  const d = typeof date === "number" || typeof date === "string" ? new Date(date) : date;
+  if (!d || isNaN(d.getTime())) return "TBD";
+
+  const tz = options.tz || "UTC";
+
+  try {
+    if (options.includeDate) {
+      return new Intl.DateTimeFormat("en-GB", {
+        weekday: "short",
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: tz,
+        timeZoneName: "short",
+      }).format(d);
+    }
+
+    return new Intl.DateTimeFormat("en-GB", {
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: tz,
+      timeZoneName: "short",
+    }).format(d);
+  } catch {
+    const hours = String(d.getUTCHours()).padStart(2, "0");
+    const mins = String(d.getUTCMinutes()).padStart(2, "0");
+    return `${hours}:${mins} UTC`;
+  }
+}

@@ -67,12 +67,18 @@ export function DateStripCarousel({
               : "bg-slate-900/70 border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800/80"
           }`}
         >
-          <span className="text-[11px] font-bold tracking-tight">
-            {item.weekdayShort}
-          </span>
-          <span className="text-[10px] text-slate-500 font-medium tabular-nums mt-0.5">
-            {item.dayMonth}
-          </span>
+          <time
+            dateTime={`${item.dateStr.slice(0, 4)}-${item.dateStr.slice(4, 6)}-${item.dateStr.slice(6, 8)}`}
+            suppressHydrationWarning
+            className="flex flex-col items-center"
+          >
+            <span className="text-[11px] font-bold tracking-tight">
+              {item.weekdayShort}
+            </span>
+            <span className="text-[10px] text-slate-500 font-medium tabular-nums mt-0.5">
+              {item.dayMonth}
+            </span>
+          </time>
         </Link>
       ))}
     </div>
