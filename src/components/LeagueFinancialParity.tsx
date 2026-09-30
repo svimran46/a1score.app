@@ -13,6 +13,7 @@ import {
   BarChart3,
   Award,
   AlertTriangle,
+  Info,
 } from "lucide-react";
 
 export interface LeagueClubValuation {
@@ -68,9 +69,21 @@ export function LeagueFinancialParity({
     const topClub = sortedByVal[0];
     const lowestClub = sortedByVal[sortedByVal.length - 1];
 
-    // Median Club
-    const midIdx = Math.floor(sortedByVal.length / 2);
-    const medianClub = sortedByVal[midIdx];
+    // Real Mathematical Median Club Value
+    const n = sortedByVal.length;
+    let medianClubValue = 0;
+    let medianDetail = "";
+
+    if (n % 2 === 0) {
+      const c1 = sortedByVal[n / 2 - 1]; // 10th club for n=20
+      const c2 = sortedByVal[n / 2];     // 11th club for n=20
+      medianClubValue = Math.round((c1.totalSquadValue + c2.totalSquadValue) / 2);
+      medianDetail = `average of 10th & 11th: ${c1.name} (${formatCompactEur(c1.totalSquadValue)}) & ${c2.name} (${formatCompactEur(c2.totalSquadValue)})`;
+    } else {
+      const c = sortedByVal[Math.floor(n / 2)];
+      medianClubValue = c.totalSquadValue;
+      medianDetail = `${c.name} (${formatCompactEur(c.totalSquadValue)})`;
+    }
 
     // Top 3 Concentration
     const top3Val = sortedByVal
@@ -79,16 +92,17 @@ export function LeagueFinancialParity({
     const top3Ratio =
       totalLeagueValue > 0 ? Math.round((top3Val / totalLeagueValue) * 100) : 0;
 
-    // Multiplier Disparity Ratio (Top club vs Median club)
+    // Multiplier Disparity Ratio (Top club vs Median club value)
     const medianRatio =
-      medianClub.totalSquadValue > 0
-        ? (topClub.totalSquadValue / medianClub.totalSquadValue).toFixed(1)
+      medianClubValue > 0
+        ? (topClub.totalSquadValue / medianClubValue).toFixed(1)
         : "1.0";
 
     return {
       topClub,
       lowestClub,
-      medianClub,
+      medianClubValue,
+      medianDetail,
       top3Ratio,
       medianRatio,
       sortedClubs: sortedByVal,
@@ -128,7 +142,7 @@ export function LeagueFinancialParity({
     return null;
   }
 
-  const { topClub, medianClub, top3Ratio, medianRatio, sortedClubs } = parityMetrics;
+  const { topClub, lowestClub, medianClubValue, medianDetail, top3Ratio, medianRatio, sortedClubs } = parityMetrics;
 
   return (
     <div className="rounded-3xl glass-panel p-6 sm:p-8 border border-slate-800 space-y-6">
@@ -201,7 +215,7 @@ export function LeagueFinancialParity({
             {medianRatio}x
           </div>
           <p className="text-[10px] text-slate-400 leading-relaxed">
-            {topClub.name} ({formatCompactEur(topClub.totalSquadValue)}) is valued at {medianRatio}x the median squad ({medianClub.name} - {formatCompactEur(medianClub.totalSquadValue)}).
+            {topClub.name} ({formatCompactEur(topClub.totalSquadValue)}) is valued at {medianRatio}x the median club value ({formatCompactEur(medianClubValue)}, {medianDetail}).
           </p>
         </div>
 
@@ -309,6 +323,16 @@ export function LeagueFinancialParity({
         /* Tab 2: Points vs Money Efficiency Index */
         efficiencyMetrics && (
           <div className="space-y-6">
+            {/* Early Season Small Sample Notice (Threshold: 10 matches) */}
+            {standings && standings.length > 0 && standings[0].played < 10 && (
+              <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-300 flex items-center gap-2.5">
+                <Info className="w-4 h-4 shrink-0 text-amber-400" />
+                <span>
+                  <strong>Early season notice (Sample: {standings[0].played} matches played):</strong> Points-to-money efficiency metrics fluctuate heavily in opening rounds. Ranking stabilizes as the campaign progresses past 10 matches.
+                </span>
+              </div>
+            )}
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Overperformers */}
               <div className="p-5 rounded-2xl bg-emerald-500/5 border border-emerald-500/20 space-y-3">

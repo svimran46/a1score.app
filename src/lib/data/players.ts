@@ -7,12 +7,56 @@ import {
 import { getFotmobPlayerStats } from "@/lib/fotmob/client";
 import { sanitizeImageUrl } from "@/lib/image-sanitize";
 
-export async function getMostValuablePlayers(limit = 10, positionFilter?: string) {
+import { getCanonicalPosition } from "@/lib/positions";
+
+export async function getMostValuablePlayers(limit = 40, positionFilter?: string) {
+  // Fetch DB clubs to map TM club IDs to canonical DB club IDs
+  let dbClubsMap = new Map<string, any>();
+  try {
+    const { data: dbClubs } = await supabase.from("Club").select("id, name, transfermarktId, logoUrl");
+    if (dbClubs) {
+      dbClubs.forEach((c) => {
+        if (c.transfermarktId) dbClubsMap.set(c.transfermarktId, c);
+        dbClubsMap.set(c.name.toLowerCase(), c);
+      });
+    }
+  } catch (e) {
+    console.warn("Could not preload DB clubs for player mapping:", e);
+  }
+
   // 1. First, attempt to fetch live worldwide rankings directly via Transfermarkt proxy
   try {
     const liveRanking = await tmGetMostValuablePlayers(limit, positionFilter);
     if (liveRanking && liveRanking.length > 0) {
-      return liveRanking.slice(0, limit);
+      return liveRanking.slice(0, limit).map((p: any) => {
+        const tmClubId = p.currentClub?.transfermarktId || p.currentClub?.id;
+        const matchedClub =
+          (tmClubId && dbClubsMap.get(tmClubId)) ||
+          (p.currentClub?.name && dbClubsMap.get(p.currentClub.name.toLowerCase()));
+
+        const canonicalClubId = matchedClub?.id || p.currentClub?.id || "unknown";
+        const canonicalClubName = matchedClub?.name || p.currentClub?.name || "Unknown Club";
+        const canonicalClubLogo = matchedClub?.logoUrl
+          ? sanitizeImageUrl(matchedClub.logoUrl, "club", matchedClub.id)
+          : p.currentClub?.logoUrl;
+
+        const canonicalPos = getCanonicalPosition(p.position);
+
+        return {
+          ...p,
+          position: canonicalPos.detailed,
+          positionGroup: canonicalPos.group,
+          canonicalPosition: canonicalPos,
+          currentClub: p.currentClub
+            ? {
+                ...p.currentClub,
+                id: canonicalClubId,
+                name: canonicalClubName,
+                logoUrl: canonicalClubLogo,
+              }
+            : null,
+        };
+      });
     }
   } catch (proxyErr) {
     console.warn("[Data Layer] TM Live Proxy unavailable, falling back to DB:", proxyErr);
@@ -33,6 +77,7 @@ export async function getMostValuablePlayers(limit = 10, positionFilter?: string
         nationality,
         dateOfBirth,
         latestMarketValue,
+        lastSeason,
         currentClub:Club (
           id,
           name,
@@ -40,6 +85,7 @@ export async function getMostValuablePlayers(limit = 10, positionFilter?: string
           league:League ( name )
         )
       `)
+      .not("currentClubId", "is", null)
       .order("latestMarketValue", { ascending: false, nullsFirst: false })
       .limit(limit);
 
@@ -58,12 +104,16 @@ export async function getMostValuablePlayers(limit = 10, positionFilter?: string
       const clubRaw = p.currentClub;
       const currentClub = Array.isArray(clubRaw) ? clubRaw[0] || null : clubRaw || null;
       const extId = p.transfermarktId || p.id;
+      const canonicalPos = getCanonicalPosition(p.subPosition || p.position);
       return {
         ...p,
         sourceId: extId,
         slug: `${p.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${extId}`,
         photoUrl: sanitizeImageUrl(p.photoUrl, "player", extId),
         latestMarketValue: p.latestMarketValue ? Number(p.latestMarketValue) : 0,
+        position: canonicalPos.detailed,
+        positionGroup: canonicalPos.group,
+        canonicalPosition: canonicalPos,
         currentClub: currentClub
           ? {
               ...currentClub,

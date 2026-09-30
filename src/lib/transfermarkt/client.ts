@@ -87,89 +87,106 @@ async function tmFetch(path: string, isJson = false, revalidate = 3600): Promise
   return null;
 }
 
+import { getCanonicalPosition } from "@/lib/positions";
+
 /**
  * Fetch top most valuable players worldwide directly from Transfermarkt ranking table
  */
 export async function tmGetMostValuablePlayers(limit = 25, positionFilter?: string) {
   try {
-    const html = await tmFetch("/spieler-statistik/wertvollstespieler/marktwertetop", false, 3600);
-    if (!html) return null;
-
-    const rowRegex = /<tr class="(?:odd|even)">([\s\S]*?<td class="rechts hauptlink">[\s\S]*?<\/tr>)/g;
-    let match;
+    const pagesToFetch = limit > 25 ? [1, 2] : [1];
     const players: any[] = [];
+    const seenIds = new Set<string>();
 
-    while ((match = rowRegex.exec(html)) !== null && players.length < 100) {
-      const row = match[1];
-      const rankMatch = row.match(/^[\s\S]*?<td class="zentriert">(\d+)<\/td>/i);
-      const playerLink = row.match(/href="\/([^\/]+)\/profil\/spieler\/(\d+)"[^>]*>([^<]+)<\/a>/i);
-      const valueMatch =
-        row.match(/class="rechts hauptlink">[\s\S]*?<a[^>]*>([^<]+)<\/a>/i) ||
-        row.match(/class="rechts hauptlink">([^<]+)<\/td>/i);
-      const clubIdMatch = row.match(/href="\/[^\/]+\/startseite\/verein\/(\d+)"/i);
-      const clubNameMatch =
-        row.match(/title="([^"]+)"[^>]*href="\/[^\/]+\/startseite\/verein/i) ||
-        row.match(/href="\/[^\/]+\/startseite\/verein\/[^"]*"[^>]*title="([^"]+)"/i);
-      const photoMatch =
-        row.match(/<img[^>]*data-src="([^"]+)"[^>]*class="[^"]*bilderrahmen/i) ||
-        row.match(/<img[^>]*src="([^"]+)"[^>]*class="[^"]*bilderrahmen/i);
-      const posMatch = row.match(/<tr><td>([^<]+)<\/td><\/tr><\/table>/i);
-      const ageMatch = row.match(/<\/table><\/td><td class="zentriert">(\d+)<\/td>/i);
-      const natRegex = /<img[^>]*class="flaggenrahmen"[^>]*title="([^"]+)"|<img[^>]*title="([^"]+)"[^>]*class="flaggenrahmen"/gi;
-      const nats: string[] = [];
-      let nMatch;
-      while ((nMatch = natRegex.exec(row)) !== null) {
-        const val = (nMatch[1] || nMatch[2])?.trim();
-        if (val && !nats.includes(val)) nats.push(val);
-      }
+    for (const pageNum of pagesToFetch) {
+      const pagePath =
+        pageNum === 1
+          ? "/spieler-statistik/wertvollstespieler/marktwertetop"
+          : `/spieler-statistik/wertvollstespieler/marktwertetop?page=${pageNum}`;
 
-      if (playerLink) {
-        const pId = playerLink[2];
-        const valStr = valueMatch ? valueMatch[1].trim() : "";
-        const valEur = parseEurValue(valStr);
-        const position = posMatch ? posMatch[1].trim() : "Unknown";
-        const clubName = clubNameMatch ? clubNameMatch[1].trim() : "Unknown";
-        const clubId = clubIdMatch ? clubIdMatch[1] : null;
-        const rank = rankMatch ? parseInt(rankMatch[1], 10) : players.length + 1;
-        const age = ageMatch ? parseInt(ageMatch[1], 10) : null;
+      const html = await tmFetch(pagePath, false, 3600);
+      if (!html) continue;
 
-        if (
-          positionFilter &&
-          !position.toLowerCase().includes(positionFilter.toLowerCase())
-        ) {
-          continue;
+      const rowRegex = /<tr class="(?:odd|even)">([\s\S]*?<td class="rechts hauptlink">[\s\S]*?<\/tr>)/g;
+      let match;
+
+      while ((match = rowRegex.exec(html)) !== null && players.length < limit) {
+        const row = match[1];
+        const rankMatch = row.match(/^[\s\S]*?<td class="zentriert">(\d+)<\/td>/i);
+        const playerLink = row.match(/href="\/([^\/]+)\/profil\/spieler\/(\d+)"[^>]*>([^<]+)<\/a>/i);
+        const valueMatch =
+          row.match(/class="rechts hauptlink">[\s\S]*?<a[^>]*>([^<]+)<\/a>/i) ||
+          row.match(/class="rechts hauptlink">([^<]+)<\/td>/i);
+        const clubIdMatch = row.match(/href="\/[^\/]+\/startseite\/verein\/(\d+)"/i);
+        const clubNameMatch =
+          row.match(/title="([^"]+)"[^>]*href="\/[^\/]+\/startseite\/verein/i) ||
+          row.match(/href="\/[^\/]+\/startseite\/verein\/[^"]*"[^>]*title="([^"]+)"/i);
+        const photoMatch =
+          row.match(/<img[^>]*data-src="([^"]+)"[^>]*class="[^"]*bilderrahmen/i) ||
+          row.match(/<img[^>]*src="([^"]+)"[^>]*class="[^"]*bilderrahmen/i);
+        const posMatch = row.match(/<tr><td>([^<]+)<\/td><\/tr><\/table>/i);
+        const ageMatch = row.match(/<\/table><\/td><td class="zentriert">(\d+)<\/td>/i);
+        const natRegex = /<img[^>]*class="flaggenrahmen"[^>]*title="([^"]+)"|<img[^>]*title="([^"]+)"[^>]*class="flaggenrahmen"/gi;
+        const nats: string[] = [];
+        let nMatch;
+        while ((nMatch = natRegex.exec(row)) !== null) {
+          const val = (nMatch[1] || nMatch[2])?.trim();
+          if (val && !nats.includes(val)) nats.push(val);
         }
 
-        players.push({
-          id: pId,
-          sourceId: pId,
-          rank,
-          fullName: playerLink[3].trim(),
-          commonName: playerLink[3].trim(),
-          position,
-          subPosition: null,
-          age,
-          photoUrl: photoMatch ? sanitizeImageUrl(photoMatch[1].replace("small", "medium"), "player", pId) : null,
-          nationality: nats,
-          dateOfBirth: null,
-          latestMarketValue: valEur,
-          currentClub: {
-            id: clubId || "unknown",
-            name: clubName,
-            logoUrl: clubId
-              ? sanitizeImageUrl(`https://img.a.transfermarkt.technology/wappen/tiny/${clubId}.png`, "club", clubId)
-              : null,
-            league: null,
-          },
-          marketValues: [
-            {
-              valueEur: valEur,
-              date: new Date().toISOString(),
-            },
-          ],
-        });
+        if (playerLink && !seenIds.has(playerLink[2])) {
+          const pId = playerLink[2];
+          seenIds.add(pId);
+          const valStr = valueMatch ? valueMatch[1].trim() : "";
+          const valEur = parseEurValue(valStr);
+          const rawPos = posMatch ? posMatch[1].trim() : "Unknown";
+          const canonical = getCanonicalPosition(rawPos);
+          const clubName = clubNameMatch ? clubNameMatch[1].trim() : "Unknown";
+          const clubId = clubIdMatch ? clubIdMatch[1] : null;
+          const rank = rankMatch ? parseInt(rankMatch[1], 10) : players.length + 1;
+          const age = ageMatch ? parseInt(ageMatch[1], 10) : null;
 
-        if (players.length >= limit) break;
+          if (
+            positionFilter &&
+            !rawPos.toLowerCase().includes(positionFilter.toLowerCase()) &&
+            canonical.group !== positionFilter.toUpperCase()
+          ) {
+            continue;
+          }
+
+          players.push({
+            id: pId,
+            sourceId: pId,
+            rank,
+            fullName: playerLink[3].trim(),
+            commonName: playerLink[3].trim(),
+            position: canonical.detailed,
+            subPosition: null,
+            positionGroup: canonical.group,
+            age,
+            photoUrl: photoMatch ? sanitizeImageUrl(photoMatch[1].replace("small", "medium"), "player", pId) : null,
+            nationality: nats,
+            dateOfBirth: null,
+            latestMarketValue: valEur,
+            currentClub: {
+              id: clubId || "unknown",
+              transfermarktId: clubId,
+              name: clubName,
+              logoUrl: clubId
+                ? sanitizeImageUrl(`https://img.a.transfermarkt.technology/wappen/tiny/${clubId}.png`, "club", clubId)
+                : null,
+              league: null,
+            },
+            marketValues: [
+              {
+                valueEur: valEur,
+                date: new Date().toISOString(),
+              },
+            ],
+          });
+
+          if (players.length >= limit) break;
+        }
       }
     }
 
@@ -490,7 +507,8 @@ export async function tmGetClub(clubId: string) {
 
     while ((match = rowRegex.exec(html)) !== null) {
       const row = match[1];
-      const playerLink = row.match(/href="\/([^\/]+)\/profil\/spieler\/(\d+)"[^>]*>([^<]+)<\/a>/i);
+      const playerLink = row.match(/href="\/([^\/]+)\/profil\/spieler\/(\d+)"[^>]*>([\s\S]*?)<\/a>/i);
+      const injuryMatch = row.match(/class="verletzt-table[^"]*"[^>]*title="([^"]+)"|title="([^"]+)"[^>]*class="verletzt-table/i);
       const valueMatch =
         row.match(/class="rechts hauptlink">[\s\S]*?<a[^>]*>([^<]+)<\/a>/i) ||
         row.match(/class="rechts hauptlink">([^<]+)<\/td>/i);
@@ -501,7 +519,9 @@ export async function tmGetClub(clubId: string) {
       const photoMatch =
         row.match(/data-src="([^"]+)"/i) ||
         row.match(/<img[^>]*src="([^"]+)"[^>]*class="[^"]*bilderrahmen/i);
-      const ageMatch = row.match(/<\/table>\s*<\/td>\s*<td class="zentriert">(\d+)<\/td>/i);
+      const ageMatch = row.match(/<\/table>\s*<\/td>\s*<td class="zentriert">.*?\(?(\d{2})\)?<\/td>/i);
+      const dobMatch = row.match(/<td class="zentriert">(\d{2}\/\d{2}\/\d{4})\s*\(\d+\)<\/td>/i);
+      const contractMatch = row.match(/<td class="zentriert">(\d{2}\/\d{2}\/\d{4}|-)<\/td>\s*<td class="rechts hauptlink">/i);
       const natRegex = /<img[^>]*class="flaggenrahmen"[^>]*title="([^"]+)"|<img[^>]*title="([^"]+)"[^>]*class="flaggenrahmen"/gi;
       const nats: string[] = [];
       let nMatch;
@@ -513,16 +533,29 @@ export async function tmGetClub(clubId: string) {
       if (playerLink && !players.some((p) => p.id === playerLink[2])) {
         const valStr = valueMatch ? valueMatch[1].trim() : "";
         const valEur = parseEurValue(valStr);
+        const rawPos = posMatch ? posMatch[1].trim() : "Unknown";
+        const canonical = getCanonicalPosition(rawPos);
+        const age = ageMatch ? parseInt(ageMatch[1], 10) : null;
+        const contractUntil = contractMatch && contractMatch[1] !== "-" ? contractMatch[1] : null;
+        const tier = (valEur > 0 || (age !== null && age >= 20)) ? "first_team" : "academy";
+
+        const cleanFullName = playerLink[3].replace(/<[^>]+>/g, " ").replace(/&nbsp;/g, " ").replace(/\s+/g, " ").trim();
+        const injury = injuryMatch ? (injuryMatch[1] || injuryMatch[2])?.trim() : null;
 
         players.push({
           id: playerLink[2],
           sourceId: playerLink[2],
-          fullName: playerLink[3].trim(),
-          commonName: playerLink[3].trim(),
+          fullName: cleanFullName,
+          commonName: cleanFullName,
           number: numMatch ? parseInt(numMatch[1], 10) : null,
-          position: posMatch ? posMatch[1].trim() : "Unknown",
+          position: canonical.detailed,
+          positionGroup: canonical.group,
           subPosition: null,
-          age: ageMatch ? parseInt(ageMatch[1], 10) : null,
+          age,
+          dateOfBirth: dobMatch ? dobMatch[1] : null,
+          contractUntil,
+          injury,
+          tier,
           nationality: nats,
           photoUrl: photoMatch ? sanitizeImageUrl(photoMatch[1].replace("small", "medium"), "player", playerLink[2]) : null,
           latestMarketValue: valEur,
@@ -536,9 +569,14 @@ export async function tmGetClub(clubId: string) {
       }
     }
 
-    // If total squad value wasn't found in header, sum up players
+    const firstTeamPlayers = players.filter((p) => p.tier === "first_team");
+    if (firstTeamPlayers.length > 40) {
+      console.warn(`[Sanity Guard] Club ${clubName} (${clubId}) first-team roster exceeds 40 players (${firstTeamPlayers.length}).`);
+    }
+
+    // If total squad value wasn't found in header, sum up first team players
     if (totalSquadValue === 0 && players.length > 0) {
-      totalSquadValue = players.reduce((sum, p) => sum + (p.latestMarketValue || 0), 0);
+      totalSquadValue = firstTeamPlayers.reduce((sum, p) => sum + (p.latestMarketValue || 0), 0);
     }
 
     return {

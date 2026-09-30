@@ -4,6 +4,7 @@ import {
   FotmobStandingsRow,
 } from "@/lib/fotmob/client";
 import { sanitizeImageUrl } from "@/lib/image-sanitize";
+import { FOTMOB_TEAM_MAPPINGS } from "@/lib/league-mappings";
 
 export async function getLeagues() {
   try {
@@ -66,7 +67,8 @@ export async function getLeagueById(id: string) {
           country,
           squadSize,
           totalMarketValue,
-          lastSeason
+          lastSeason,
+          transfermarktId
         )
       `)
       .or(`id.eq.${id},transfermarktId.eq.${id}`)
@@ -77,7 +79,7 @@ export async function getLeagueById(id: string) {
       return null;
     }
 
-    // Attempt to fetch official live standings from FotMob
+    // 1. Fetch official standings from FotMob
     let fotmobData: {
       leagueId: number;
       season?: string;
@@ -91,45 +93,83 @@ export async function getLeagueById(id: string) {
       console.warn(`[Data Layer] FotMob standings fetch failed for league ${league.name}:`, e);
     }
 
-    // Season-scoped active clubs: filter by active current season (2025)
-    const rawClubs = league.clubs || [];
-    const seasonScopedClubs = rawClubs.filter((c: any) => c.lastSeason === 2025);
-    const activeClubs = seasonScopedClubs.length > 0 ? seasonScopedClubs : rawClubs;
+    // 2. Fetch global clubs for fallback/promoted club resolution
+    let allClubs = league.clubs || [];
+    try {
+      const { data: globalClubs } = await supabase
+        .from("Club")
+        .select("id, name, logoUrl, country, squadSize, totalMarketValue, lastSeason, transfermarktId");
+      if (globalClubs && globalClubs.length > 0) {
+        allClubs = globalClubs;
+      }
+    } catch (e) {
+      console.warn("Could not fetch global clubs for league enrichment:", e);
+    }
 
-    const officialCount =
-      fotmobData?.teamsCount ||
-      league.clubCount ||
-      activeClubs.length ||
-      0;
-
-    const rankedClubs = activeClubs
-      .map((club: any) => ({
-        id: club.id,
-        name: club.name,
-        logoUrl: sanitizeImageUrl(club.logoUrl, "club", club.id),
-        country: club.country,
-        squadSize: club.squadSize ?? 0,
-        totalSquadValue: club.totalMarketValue ? Number(club.totalMarketValue) : 0,
-        lastSeason: club.lastSeason,
-      }))
-      .sort((a: any, b: any) => b.totalSquadValue - a.totalSquadValue);
-
-    // Merge standings with database squad values
+    // 3. Derive each league's club list and standings directly from the current season standings
     const enrichedStandings = (fotmobData?.standings || []).map((row) => {
-      const matchedClub = rankedClubs.find(
-        (c) =>
-          c.name.toLowerCase() === row.name.toLowerCase() ||
-          c.name.toLowerCase().includes(row.shortName?.toLowerCase() || "") ||
-          row.name.toLowerCase().includes(c.name.toLowerCase())
-      );
+      let matched: any = null;
+
+      // Check explicit mapping table
+      if (FOTMOB_TEAM_MAPPINGS[row.id]) {
+        const target = FOTMOB_TEAM_MAPPINGS[row.id];
+        matched = allClubs.find(
+          (c: any) =>
+            (target.tmId && c.transfermarktId === target.tmId) ||
+            (target.name && c.name.toLowerCase() === target.name.toLowerCase())
+        );
+      }
+
+      // Check fuzzy name matching if not resolved
+      if (!matched) {
+        const cleanT = row.name.toLowerCase().replace(/[^a-z0-9]/g, "");
+        const cleanShort = (row.shortName || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+        matched = allClubs.find((c: any) => {
+          const cleanC = c.name.toLowerCase().replace(/[^a-z0-9]/g, "");
+          return (
+            cleanC === cleanT ||
+            cleanC.includes(cleanT) ||
+            cleanT.includes(cleanC) ||
+            (cleanShort && (cleanC.includes(cleanShort) || cleanShort.includes(cleanC)))
+          );
+        });
+      }
+
+      const squadValue = matched?.totalMarketValue ? Number(matched.totalMarketValue) : 0;
+      const squadSize = matched?.squadSize || 25;
+      const clubId = matched?.id || null;
 
       return {
         ...row,
-        imageUrl: sanitizeImageUrl(row.imageUrl, "club"),
-        clubId: matchedClub?.id || null,
-        totalSquadValue: matchedClub?.totalSquadValue || 0,
+        clubId,
+        totalSquadValue: squadValue,
+        squadSize,
+        imageUrl: matched?.logoUrl
+          ? sanitizeImageUrl(matched.logoUrl, "club", matched.id)
+          : sanitizeImageUrl(row.imageUrl, "club"),
       };
     });
+
+    // 4. Derive active ranked clubs directly from current season standings
+    const derivedClubs = enrichedStandings
+      .filter((s) => s.clubId !== null)
+      .map((s) => {
+        const dbC = allClubs.find((c: any) => c.id === s.clubId);
+        return {
+          id: s.clubId!,
+          name: dbC?.name || s.name,
+          logoUrl: s.imageUrl,
+          country: dbC?.country || league.country,
+          squadSize: s.squadSize || 25,
+          totalSquadValue: s.totalSquadValue,
+          lastSeason: 2026,
+        };
+      })
+      .sort((a, b) => b.totalSquadValue - a.totalSquadValue);
+
+    const officialCount = enrichedStandings.length > 0 ? enrichedStandings.length : league.clubCount || 0;
+    const computedTotalValue = derivedClubs.reduce((sum, c) => sum + c.totalSquadValue, 0);
+    const computedTotalPlayers = derivedClubs.reduce((sum, c) => sum + c.squadSize, 0);
 
     return {
       id: league.id,
@@ -138,12 +178,13 @@ export async function getLeagueById(id: string) {
       tier: league.tier,
       logoUrl: sanitizeImageUrl(league.logoUrl, "league", league.id),
       transfermarktId: league.transfermarktId,
-      totalMarketValue: league.totalMarketValue ? Number(league.totalMarketValue) : 0,
-      totalPlayers: league.totalPlayers ?? 0,
+      totalMarketValue: computedTotalValue > 0 ? computedTotalValue : Number(league.totalMarketValue || 0),
+      totalPlayers: computedTotalPlayers > 0 ? computedTotalPlayers : league.totalPlayers ?? 0,
       clubCount: officialCount,
-      clubs: rankedClubs,
+      clubs: derivedClubs,
       standings: enrichedStandings,
-      season: fotmobData?.season || "2024/2025",
+      season: fotmobData?.season || "2026/2027",
+      lastUpdated: new Date().toISOString(),
     };
   } catch (error) {
     console.error(`Error fetching league ${id}:`, error);

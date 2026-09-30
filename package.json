@@ -13,6 +13,7 @@
     "db:generate": "prisma generate",
     "sync:dataset": "tsx scripts/sync-dataset.ts",
     "data:validate": "tsx scripts/validate-data.ts",
+    "verify:data": "tsx scripts/verify-data-integrity.ts",
     "test": "tsx --test tests/**/*.test.ts"
   },
   "dependencies": {

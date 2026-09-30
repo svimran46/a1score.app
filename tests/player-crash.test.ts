@@ -93,7 +93,7 @@ test("Player Pages Resilience Suite - Top 100 & 50 Random Players", async (t) =>
   let successCount = 0;
   const failures: { slug: string; status: number; reason: string }[] = [];
 
-  for (const player of uniquePlayers.values()) {
+  for (const player of Array.from(uniquePlayers.values())) {
     const extId = player.transfermarktId || player.id;
     const slug = `${player.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${extId}`;
     const path = `/players/${encodeURIComponent(slug)}`;

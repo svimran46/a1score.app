@@ -48,7 +48,8 @@ export default async function MatchDetailsPage({ params }: MatchPageProps) {
     notFound();
   }
 
-  const { general = {}, teams = {}, status = {} } = match;
+  const matchAny = match as any;
+  const { general = {}, teams = {}, status = {} } = matchAny;
   const homeTeam = teams?.home || {};
   const awayTeam = teams?.away || {};
 
