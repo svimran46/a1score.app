@@ -1,0 +1,636 @@
+{
+  "results": [
+    {
+      "Club": "Real Madrid",
+      "TM Target": 27,
+      "Initial DB": 28,
+      "Keep": 27,
+      "ATTACH": 0,
+      "REASSIGN": 0,
+      "CREATE": 0,
+      "DETACH": 1,
+      "Final Count": 27,
+      "Status": "✅ PASS"
+    },
+    {
+      "Club": "FC Barcelona",
+      "TM Target": 27,
+      "Initial DB": 32,
+      "Keep": 27,
+      "ATTACH": 0,
+      "REASSIGN": 0,
+      "CREATE": 0,
+      "DETACH": 5,
+      "Final Count": 27,
+      "Status": "✅ PASS"
+    },
+    {
+      "Club": "Atlético de Madrid",
+      "TM Target": 25,
+      "Initial DB": 22,
+      "Keep": 11,
+      "ATTACH": 9,
+      "REASSIGN": 3,
+      "CREATE": 2,
+      "DETACH": 11,
+      "Final Count": 25,
+      "Status": "✅ PASS"
+    },
+    {
+      "Club": "Villarreal CF",
+      "TM Target": 24,
+      "Initial DB": 29,
+      "Keep": 21,
+      "ATTACH": 1,
+      "REASSIGN": 1,
+      "CREATE": 1,
+      "DETACH": 8,
+      "Final Count": 24,
+      "Status": "✅ PASS"
+    },
+    {
+      "Club": "Real Sociedad",
+      "TM Target": 24,
+      "Initial DB": 37,
+      "Keep": 22,
+      "ATTACH": 2,
+      "REASSIGN": 0,
+      "CREATE": 0,
+      "DETACH": 15,
+      "Final Count": 24,
+      "Status": "✅ PASS"
+    },
+    {
+      "Club": "Real Betis Balompié",
+      "TM Target": 25,
+      "Initial DB": 23,
+      "Keep": 13,
+      "ATTACH": 9,
+      "REASSIGN": 1,
+      "CREATE": 2,
+      "DETACH": 10,
+      "Final Count": 25,
+      "Status": "✅ PASS"
+    },
+    {
+      "Club": "Athletic Bilbao",
+      "TM Target": 26,
+      "Initial DB": 27,
+      "Keep": 14,
+      "ATTACH": 11,
+      "REASSIGN": 0,
+      "CREATE": 1,
+      "DETACH": 13,
+      "Final Count": 26,
+      "Status": "✅ PASS"
+    },
+    {
+      "Club": "Celta de Vigo",
+      "TM Target": 25,
+      "Initial DB": 32,
+      "Keep": 20,
+      "ATTACH": 1,
+      "REASSIGN": 3,
+      "CREATE": 1,
+      "DETACH": 12,
+      "Final Count": 25,
+      "Status": "✅ PASS"
+    },
+    {
+      "Club": "Sevilla FC",
+      "TM Target": 26,
+      "Initial DB": 30,
+      "Keep": 17,
+      "ATTACH": 6,
+      "REASSIGN": 2,
+      "CREATE": 1,
+      "DETACH": 13,
+      "Final Count": 26,
+      "Status": "✅ PASS"
+    },
+    {
+      "Club": "Valencia CF",
+      "TM Target": 29,
+      "Initial DB": 31,
+      "Keep": 19,
+      "ATTACH": 4,
+      "REASSIGN": 3,
+      "CREATE": 3,
+      "DETACH": 12,
+      "Final Count": 29,
+      "Status": "✅ PASS"
+    },
+    {
+      "Club": "RCD Espanyol Barcelona",
+      "TM Target": 25,
+      "Initial DB": 17,
+      "Keep": 12,
+      "ATTACH": 11,
+      "REASSIGN": 1,
+      "CREATE": 1,
+      "DETACH": 5,
+      "Final Count": 25,
+      "Status": "✅ PASS"
+    },
+    {
+      "Club": "Deportivo A Coruña",
+      "TM Target": 27,
+      "Initial DB": 1,
+      "Keep": 1,
+      "ATTACH": 12,
+      "REASSIGN": 2,
+      "CREATE": 12,
+      "DETACH": 0,
+      "Final Count": 27,
+      "Status": "✅ PASS"
+    },
+    {
+      "Club": "Racing Santander",
+      "TM Target": 24,
+      "Initial DB": 0,
+      "Keep": 0,
+      "ATTACH": 13,
+      "REASSIGN": 4,
+      "CREATE": 7,
+      "DETACH": 0,
+      "Final Count": 24,
+      "Status": "✅ PASS"
+    },
+    {
+      "Club": "Getafe CF",
+      "TM Target": 23,
+      "Initial DB": 33,
+      "Keep": 12,
+      "ATTACH": 8,
+      "REASSIGN": 1,
+      "CREATE": 2,
+      "DETACH": 21,
+      "Final Count": 23,
+      "Status": "✅ PASS"
+    },
+    {
+      "Club": "Levante UD",
+      "TM Target": 24,
+      "Initial DB": 15,
+      "Keep": 5,
+      "ATTACH": 13,
+      "REASSIGN": 2,
+      "CREATE": 4,
+      "DETACH": 10,
+      "Final Count": 24,
+      "Status": "✅ PASS"
+    },
+    {
+      "Club": "Rayo Vallecano",
+      "TM Target": 27,
+      "Initial DB": 25,
+      "Keep": 18,
+      "ATTACH": 6,
+      "REASSIGN": 0,
+      "CREATE": 3,
+      "DETACH": 7,
+      "Final Count": 27,
+      "Status": "✅ PASS"
+    },
+    {
+      "Club": "CA Osasuna",
+      "TM Target": 24,
+      "Initial DB": 28,
+      "Keep": 20,
+      "ATTACH": 1,
+      "REASSIGN": 1,
+      "CREATE": 2,
+      "DETACH": 8,
+      "Final Count": 24,
+      "Status": "✅ PASS"
+    },
+    {
+      "Club": "Elche CF",
+      "TM Target": 28,
+      "Initial DB": 24,
+      "Keep": 16,
+      "ATTACH": 5,
+      "REASSIGN": 1,
+      "CREATE": 6,
+      "DETACH": 8,
+      "Final Count": 28,
+      "Status": "✅ PASS"
+    },
+    {
+      "Club": "Deportivo Alavés",
+      "TM Target": 24,
+      "Initial DB": 17,
+      "Keep": 7,
+      "ATTACH": 15,
+      "REASSIGN": 1,
+      "CREATE": 1,
+      "DETACH": 10,
+      "Final Count": 24,
+      "Status": "✅ PASS"
+    },
+    {
+      "Club": "Málaga CF",
+      "TM Target": 28,
+      "Initial DB": 0,
+      "Keep": 0,
+      "ATTACH": 12,
+      "REASSIGN": 0,
+      "CREATE": 16,
+      "DETACH": 0,
+      "Final Count": 28,
+      "Status": "✅ PASS"
+    }
+  ],
+  "toCreateList": [
+    {
+      "club": "Atlético de Madrid",
+      "tmId": "1460961",
+      "name": "Jorge Domínguez",
+      "pos": "Centre-Back"
+    },
+    {
+      "club": "Atlético de Madrid",
+      "tmId": "802046",
+      "name": "Arnau Ortiz",
+      "pos": "Left Winger"
+    },
+    {
+      "club": "Villarreal CF",
+      "tmId": "842420",
+      "name": "Nathan Saliba",
+      "pos": "Central Midfield"
+    },
+    {
+      "club": "Real Betis Balompié",
+      "tmId": "898350",
+      "name": "Facundo Bernal",
+      "pos": "Defensive Midfield"
+    },
+    {
+      "club": "Real Betis Balompié",
+      "tmId": "261503",
+      "name": "Álvaro Fidalgo",
+      "pos": "Central Midfield"
+    },
+    {
+      "club": "Athletic Bilbao",
+      "tmId": "709214",
+      "name": "Beñat Gerenabarrena",
+      "pos": "Central Midfield"
+    },
+    {
+      "club": "Celta de Vigo",
+      "tmId": "532389",
+      "name": "Sebastián Cáceres",
+      "pos": "Centre-Back"
+    },
+    {
+      "club": "Sevilla FC",
+      "tmId": "783373",
+      "name": "Robbie Ure",
+      "pos": "Centre-Forward"
+    },
+    {
+      "club": "Valencia CF",
+      "tmId": "410427",
+      "name": "Aliou Dieng",
+      "pos": "Defensive Midfield"
+    },
+    {
+      "club": "Valencia CF",
+      "tmId": "394236",
+      "name": "Filip Ugrinic",
+      "pos": "Central Midfield"
+    },
+    {
+      "club": "Valencia CF",
+      "tmId": "948169",
+      "name": "Ryunosuke Sato",
+      "pos": "Left Winger"
+    },
+    {
+      "club": "RCD Espanyol Barcelona",
+      "tmId": "371856",
+      "name": "Vanja Drkusic",
+      "pos": "Centre-Back"
+    },
+    {
+      "club": "Deportivo A Coruña",
+      "tmId": "743379",
+      "name": "Lucas Noubi",
+      "pos": "Centre-Back"
+    },
+    {
+      "club": "Deportivo A Coruña",
+      "tmId": "857949",
+      "name": "Dani Barcia",
+      "pos": "Centre-Back"
+    },
+    {
+      "club": "Deportivo A Coruña",
+      "tmId": "1177033",
+      "name": "Bright Ede",
+      "pos": "Centre-Back"
+    },
+    {
+      "club": "Deportivo A Coruña",
+      "tmId": "388542",
+      "name": "Arnau Comas",
+      "pos": "Centre-Back"
+    },
+    {
+      "club": "Deportivo A Coruña",
+      "tmId": "400104",
+      "name": "Miguel Loureiro",
+      "pos": "Right-Back"
+    },
+    {
+      "club": "Deportivo A Coruña",
+      "tmId": "596899",
+      "name": "Riki Rodríguez",
+      "pos": "Central Midfield"
+    },
+    {
+      "club": "Deportivo A Coruña",
+      "tmId": "590687",
+      "name": "Diego Villares",
+      "pos": "Central Midfield"
+    },
+    {
+      "club": "Deportivo A Coruña",
+      "tmId": "1309177",
+      "name": "Noé Carrillo",
+      "pos": "Central Midfield"
+    },
+    {
+      "club": "Deportivo A Coruña",
+      "tmId": "856274",
+      "name": "Jonathan Asp Jensen",
+      "pos": "Attacking Midfield"
+    },
+    {
+      "club": "Deportivo A Coruña",
+      "tmId": "636385",
+      "name": "Yeremay Hernández",
+      "pos": "Left Winger"
+    },
+    {
+      "club": "Deportivo A Coruña",
+      "tmId": "741256",
+      "name": "David Mella",
+      "pos": "Right Winger"
+    },
+    {
+      "club": "Deportivo A Coruña",
+      "tmId": "1299392",
+      "name": "Bil Nsongo",
+      "pos": "Centre-Forward"
+    },
+    {
+      "club": "Racing Santander",
+      "tmId": "1088712",
+      "name": "Simon Eriksson",
+      "pos": "Goalkeeper"
+    },
+    {
+      "club": "Racing Santander",
+      "tmId": "1262996",
+      "name": "Jorge Salinas",
+      "pos": "Left-Back"
+    },
+    {
+      "club": "Racing Santander",
+      "tmId": "636116",
+      "name": "Álvaro Mantilla",
+      "pos": "Right-Back"
+    },
+    {
+      "club": "Racing Santander",
+      "tmId": "933795",
+      "name": "Maguette Gueye",
+      "pos": "Defensive Midfield"
+    },
+    {
+      "club": "Racing Santander",
+      "tmId": "522730",
+      "name": "Íñigo Sainz-Maza",
+      "pos": "Central Midfield"
+    },
+    {
+      "club": "Racing Santander",
+      "tmId": "66106",
+      "name": "Sergio Canales",
+      "pos": "Attacking Midfield"
+    },
+    {
+      "club": "Racing Santander",
+      "tmId": "502682",
+      "name": "Giorgi Guliashvili",
+      "pos": "Left Winger"
+    },
+    {
+      "club": "Getafe CF",
+      "tmId": "741142",
+      "name": "Zaid Romero",
+      "pos": "Centre-Back"
+    },
+    {
+      "club": "Getafe CF",
+      "tmId": "632930",
+      "name": "Francho Serrano",
+      "pos": "Central Midfield"
+    },
+    {
+      "club": "Levante UD",
+      "tmId": "1167696",
+      "name": "Ifeanyi Ndukwe",
+      "pos": "Centre-Back"
+    },
+    {
+      "club": "Levante UD",
+      "tmId": "1476132",
+      "name": "Marc Santos",
+      "pos": "Left-Back"
+    },
+    {
+      "club": "Levante UD",
+      "tmId": "707222",
+      "name": "Enzo Bardeli",
+      "pos": "Central Midfield"
+    },
+    {
+      "club": "Levante UD",
+      "tmId": "1299566",
+      "name": "Yanis Musuayi",
+      "pos": "Centre-Forward"
+    },
+    {
+      "club": "Rayo Vallecano",
+      "tmId": "497663",
+      "name": "Mujaid Sadick",
+      "pos": "Centre-Back"
+    },
+    {
+      "club": "Rayo Vallecano",
+      "tmId": "1368893",
+      "name": "Gnangoro Bouare",
+      "pos": "Central Midfield"
+    },
+    {
+      "club": "Rayo Vallecano",
+      "tmId": "560417",
+      "name": "Alemão",
+      "pos": "Centre-Forward"
+    },
+    {
+      "club": "CA Osasuna",
+      "tmId": "1149188",
+      "name": "Rockson Yeboah",
+      "pos": "Centre-Back"
+    },
+    {
+      "club": "CA Osasuna",
+      "tmId": "628621",
+      "name": "Jonathan Dubasin",
+      "pos": "Right Winger"
+    },
+    {
+      "club": "Elche CF",
+      "tmId": "661136",
+      "name": "Kevin Lomónaco",
+      "pos": "Centre-Back"
+    },
+    {
+      "club": "Elche CF",
+      "tmId": "1060456",
+      "name": "Matia Barzic",
+      "pos": "Centre-Back"
+    },
+    {
+      "club": "Elche CF",
+      "tmId": "919538",
+      "name": "Roy Revivo",
+      "pos": "Left-Back"
+    },
+    {
+      "club": "Elche CF",
+      "tmId": "398163",
+      "name": "Gonzalo Villar",
+      "pos": "Central Midfield"
+    },
+    {
+      "club": "Elche CF",
+      "tmId": "296783",
+      "name": "Ezequiel Ponce",
+      "pos": "Centre-Forward"
+    },
+    {
+      "club": "Elche CF",
+      "tmId": "991773",
+      "name": "Abiel Osorio",
+      "pos": "Centre-Forward"
+    },
+    {
+      "club": "Deportivo Alavés",
+      "tmId": "581326",
+      "name": "Ville Koski",
+      "pos": "Centre-Back"
+    },
+    {
+      "club": "Málaga CF",
+      "tmId": "129478",
+      "name": "Alfonso Herrero",
+      "pos": "Goalkeeper"
+    },
+    {
+      "club": "Málaga CF",
+      "tmId": "1004298",
+      "name": "Carlos López",
+      "pos": "Goalkeeper"
+    },
+    {
+      "club": "Málaga CF",
+      "tmId": "635930",
+      "name": "Diego Murillo",
+      "pos": "Centre-Back"
+    },
+    {
+      "club": "Málaga CF",
+      "tmId": "461843",
+      "name": "Juan Berrocal",
+      "pos": "Centre-Back"
+    },
+    {
+      "club": "Málaga CF",
+      "tmId": "897521",
+      "name": "Ángel Recio",
+      "pos": "Centre-Back"
+    },
+    {
+      "club": "Málaga CF",
+      "tmId": "1064717",
+      "name": "Rafita Garrido",
+      "pos": "Right-Back"
+    },
+    {
+      "club": "Málaga CF",
+      "tmId": "776703",
+      "name": "Carlos Puga",
+      "pos": "Right-Back"
+    },
+    {
+      "club": "Málaga CF",
+      "tmId": "1078436",
+      "name": "Izan Merino",
+      "pos": "Central Midfield"
+    },
+    {
+      "club": "Málaga CF",
+      "tmId": "567222",
+      "name": "Ramón Enríquez",
+      "pos": "Central Midfield"
+    },
+    {
+      "club": "Málaga CF",
+      "tmId": "960562",
+      "name": "Dani Lorenzo",
+      "pos": "Attacking Midfield"
+    },
+    {
+      "club": "Málaga CF",
+      "tmId": "1057394",
+      "name": "Rafa Rodríguez",
+      "pos": "Attacking Midfield"
+    },
+    {
+      "club": "Málaga CF",
+      "tmId": "1109577",
+      "name": "Aarón Ochoa",
+      "pos": "Attacking Midfield"
+    },
+    {
+      "club": "Málaga CF",
+      "tmId": "635939",
+      "name": "David Larrubia",
+      "pos": "Right Winger"
+    },
+    {
+      "club": "Málaga CF",
+      "tmId": "667996",
+      "name": "Haitam Abaida",
+      "pos": "Right Winger"
+    },
+    {
+      "club": "Málaga CF",
+      "tmId": "780817",
+      "name": "Chupe",
+      "pos": "Centre-Forward"
+    },
+    {
+      "club": "Málaga CF",
+      "tmId": "376589",
+      "name": "Eneko Jauregi",
+      "pos": "Centre-Forward"
+    }
+  ]
+}

@@ -1,0 +1,182 @@
+[
+  {
+    "tmId": "418",
+    "tmName": "Real Madrid",
+    "squadUrl": "https://www.transfermarkt.com/real-madrid/startseite/verein/418/saison_id/2026",
+    "dbId": "cmuihq9wg009hh29ermlar2c7",
+    "dbName": "Real Madrid",
+    "dbTmId": "418",
+    "dbLeague": "LaLiga"
+  },
+  {
+    "tmId": "131",
+    "tmName": "FC Barcelona",
+    "squadUrl": "https://www.transfermarkt.com/fc-barcelona/startseite/verein/131/saison_id/2026",
+    "dbId": "cmuihoy3o002vb23f8egwo6vd",
+    "dbName": "FC Barcelona",
+    "dbTmId": "131",
+    "dbLeague": "LaLiga"
+  },
+  {
+    "tmId": "13",
+    "tmName": "Atlético de Madrid",
+    "squadUrl": "https://www.transfermarkt.com/atletico-madrid/startseite/verein/13/saison_id/2026",
+    "dbId": "cmuihotfm002nb23fe7004xbm",
+    "dbName": "Atlético de Madrid",
+    "dbTmId": "13",
+    "dbLeague": "LaLiga"
+  },
+  {
+    "tmId": "1050",
+    "tmName": "Villarreal CF",
+    "squadUrl": "https://www.transfermarkt.com/fc-villarreal/startseite/verein/1050/saison_id/2026",
+    "dbId": "cmuihnwfv0011b23f8wv3zc51",
+    "dbName": "Villarreal CF",
+    "dbTmId": "1050",
+    "dbLeague": "LaLiga"
+  },
+  {
+    "tmId": "681",
+    "tmName": "Real Sociedad",
+    "squadUrl": "https://www.transfermarkt.com/real-sociedad-san-sebastian/startseite/verein/681/saison_id/2026",
+    "dbId": "cmuihqdop00bfh29ezli7oevn",
+    "dbName": "Real Sociedad",
+    "dbTmId": "681",
+    "dbLeague": "LaLiga"
+  },
+  {
+    "tmId": "150",
+    "tmName": "Real Betis Balompié",
+    "squadUrl": "https://www.transfermarkt.com/real-betis-sevilla/startseite/verein/150/saison_id/2026",
+    "dbId": "cmuihpzzw003zh29esiigzvql",
+    "dbName": "Real Betis Balompié",
+    "dbTmId": "150",
+    "dbLeague": "LaLiga"
+  },
+  {
+    "tmId": "621",
+    "tmName": "Athletic Bilbao",
+    "squadUrl": "https://www.transfermarkt.com/athletic-bilbao/startseite/verein/621/saison_id/2026",
+    "dbId": "cmuihqcpi00azh29e0ihjlfsq",
+    "dbName": "Athletic Bilbao",
+    "dbTmId": "621",
+    "dbLeague": "LaLiga"
+  },
+  {
+    "tmId": "940",
+    "tmName": "Celta de Vigo",
+    "squadUrl": "https://www.transfermarkt.com/celta-vigo/startseite/verein/940/saison_id/2026",
+    "dbId": "cmuihqg9e00czh29eqgxwp7l7",
+    "dbName": "Celta de Vigo",
+    "dbTmId": "940",
+    "dbLeague": "LaLiga"
+  },
+  {
+    "tmId": "368",
+    "tmName": "Sevilla FC",
+    "squadUrl": "https://www.transfermarkt.com/fc-sevilla/startseite/verein/368/saison_id/2026",
+    "dbId": "cmuihq7is0085h29ez260bgnc",
+    "dbName": "Sevilla FC",
+    "dbTmId": "368",
+    "dbLeague": "LaLiga"
+  },
+  {
+    "tmId": "1049",
+    "tmName": "Valencia CF",
+    "squadUrl": "https://www.transfermarkt.com/fc-valencia/startseite/verein/1049/saison_id/2026",
+    "dbId": "cmuihnufg000xb23fs4poj6rc",
+    "dbName": "Valencia CF",
+    "dbTmId": "1049",
+    "dbLeague": "LaLiga"
+  },
+  {
+    "tmId": "714",
+    "tmName": "RCD Espanyol Barcelona",
+    "squadUrl": "https://www.transfermarkt.com/espanyol-barcelona/startseite/verein/714/saison_id/2026",
+    "dbId": "cmuihqdqh00bnh29e1s0pnnhq",
+    "dbName": "RCD Espanyol Barcelona",
+    "dbTmId": "714",
+    "dbLeague": "LaLiga"
+  },
+  {
+    "tmId": "897",
+    "tmName": "Deportivo A Coruña",
+    "squadUrl": "https://www.transfermarkt.com/deportivo-la-coruna/startseite/verein/897/saison_id/2026",
+    "dbId": "cmuihqg6y00cvh29elaxzcvzv",
+    "dbName": "Deportivo de La Coruña",
+    "dbTmId": "897",
+    "dbLeague": "LaLiga"
+  },
+  {
+    "tmId": "630",
+    "tmName": "Racing Santander",
+    "squadUrl": "https://www.transfermarkt.com/racing-santander/startseite/verein/630/saison_id/2026",
+    "dbId": "cmundu78o0003zjoefys30gje",
+    "dbName": "Racing Santander",
+    "dbTmId": "630",
+    "dbLeague": "LaLiga"
+  },
+  {
+    "tmId": "3709",
+    "tmName": "Getafe CF",
+    "squadUrl": "https://www.transfermarkt.com/fc-getafe/startseite/verein/3709/saison_id/2026",
+    "dbId": "cmuihq7jc0087h29e9nzoxp6q",
+    "dbName": "Getafe CF",
+    "dbTmId": "3709",
+    "dbLeague": "LaLiga"
+  },
+  {
+    "tmId": "3368",
+    "tmName": "Levante UD",
+    "squadUrl": "https://www.transfermarkt.com/ud-levante/startseite/verein/3368/saison_id/2026",
+    "dbId": "cmuihq6me007nh29ezmai1c1u",
+    "dbName": "Levante UD",
+    "dbTmId": "3368",
+    "dbLeague": "LaLiga"
+  },
+  {
+    "tmId": "367",
+    "tmName": "Rayo Vallecano",
+    "squadUrl": "https://www.transfermarkt.com/rayo-vallecano/startseite/verein/367/saison_id/2026",
+    "dbId": "cmuihq7gc0083h29exnlti38f",
+    "dbName": "Rayo Vallecano",
+    "dbTmId": "367",
+    "dbLeague": "LaLiga"
+  },
+  {
+    "tmId": "331",
+    "tmName": "CA Osasuna",
+    "squadUrl": "https://www.transfermarkt.com/ca-osasuna/startseite/verein/331/saison_id/2026",
+    "dbId": "cmuihq61m0079h29efscx2qh5",
+    "dbName": "CA Osasuna",
+    "dbTmId": "331",
+    "dbLeague": "LaLiga"
+  },
+  {
+    "tmId": "1531",
+    "tmName": "Elche CF",
+    "squadUrl": "https://www.transfermarkt.com/fc-elche/startseite/verein/1531/saison_id/2026",
+    "dbId": "cmuihq03y0041h29ezh2jdh2h",
+    "dbName": "Elche CF",
+    "dbTmId": "1531",
+    "dbLeague": "LaLiga"
+  },
+  {
+    "tmId": "1108",
+    "tmName": "Deportivo Alavés",
+    "squadUrl": "https://www.transfermarkt.com/deportivo-alaves/startseite/verein/1108/saison_id/2026",
+    "dbId": "cmuiho7e5001lb23fhy6pl2ep",
+    "dbName": "Deportivo Alavés",
+    "dbTmId": "1108",
+    "dbLeague": "LaLiga"
+  },
+  {
+    "tmId": "1084",
+    "tmName": "Málaga CF",
+    "squadUrl": "https://www.transfermarkt.com/fc-malaga/startseite/verein/1084/saison_id/2026",
+    "dbId": "cmuiho0ii0019b23fvb7o5lmu",
+    "dbName": "Málaga CF",
+    "dbTmId": "1084",
+    "dbLeague": "LaLiga"
+  }
+]
