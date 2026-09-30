@@ -60,7 +60,7 @@ player,from club,to club,action,will apply yes/no,reason
 "Cassiano Kiala","Unassigned","Bayern Munich","attach","yes","attach to Bayern Munich"
 "Ismael Saibari","PSV Eindhoven","Bayern Munich","reassign","yes","reassign to Bayern Munich"
 "Erblin Osmani","Unassigned","Bayern Munich","attach","yes","attach to Bayern Munich"
-"Bara Ndiaye","Unassigned","Bayern Munich","create new player","yes","create new player in Bayern Munich from target roster"
+"Bara Sapoko Ndiaye","Unassigned","Bayern Munich","attach","yes","attach existing player 'Bara Sapoko Ndiaye' (TM 1497653) to Bayern Munich instead of creating FM_1798782"
 "David Santos Daiber","Unassigned","Bayern Munich","attach","yes","attach to Bayern Munich"
 "Bastian Assomo","Unassigned","Bayern Munich","attach","yes","attach to Bayern Munich"
 "James Trafford","Manchester City","Leeds United","reassign","yes","reassign to Leeds United"
