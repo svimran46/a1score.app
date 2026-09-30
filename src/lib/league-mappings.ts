@@ -217,9 +217,9 @@ export const FOTMOB_TEAM_MAPPINGS: Record<number, { name?: string; tmId?: string
     "clubId": "cmuihqdop00bfh29ezli7oevn"
   },
   "8564": {
-    "name": "Inter Milan",
-    "tmId": "46",
-    "clubId": "cmuihqald009th29eqj2x21un"
+    "name": "AC Milan",
+    "tmId": "5",
+    "clubId": "cmuihqb6900a7h29eb12tdj1t"
   },
   "8581": {
     "name": "Levante UD",
