@@ -431,6 +431,23 @@ export const OFFICIAL_LEAGUE_CLUB_COUNTS: Record<string, number> = {
   PO1: 18,
 };
 
+export interface LeagueLegendItem {
+  title: string;
+  tKey: string;
+  color: string;
+  indices: number[];
+}
+
+export interface LeaguePlayerLeader {
+  id: number;
+  name: string;
+  rank: number;
+  teamId: number;
+  teamName: string;
+  value: number;
+  imageUrl?: string;
+}
+
 export interface FotmobStandingsRow {
   idx: number;
   id: number;
@@ -441,10 +458,25 @@ export interface FotmobStandingsRow {
   draws: number;
   losses: number;
   scoresStr: string;
+  goalsFor: number;
+  goalsAgainst: number;
   goalConDiff: number;
   pts: number;
   qualColor?: string;
   imageUrl: string;
+  form?: Array<{
+    result: string;
+    score: string;
+    opponent: string;
+    isHome: boolean;
+  }>;
+  nextMatch?: {
+    opponent: string;
+    opponentId?: string | number;
+    matchId?: string;
+    date?: string;
+    isHome?: boolean;
+  } | null;
 }
 
 /**
@@ -453,7 +485,11 @@ export interface FotmobStandingsRow {
 export async function getLeagueStandings(leagueIdOrCode: number | string): Promise<{
   leagueId: number;
   season?: string;
+  allAvailableSeasons?: string[];
   teamsCount: number;
+  legend?: LeagueLegendItem[];
+  topScorers?: LeaguePlayerLeader[];
+  topAssists?: LeaguePlayerLeader[];
   standings: FotmobStandingsRow[];
 } | null> {
   let fotmobId: number | undefined;
@@ -480,26 +516,101 @@ export async function getLeagueStandings(leagueIdOrCode: number | string): Promi
     data.table?.[0]?.data?.tables?.[0]?.table?.all ||
     [];
 
-  const standings: FotmobStandingsRow[] = rawTable.map((row: any) => ({
-    idx: row.idx,
-    id: row.id,
-    name: row.name,
-    shortName: row.shortName || row.name,
-    played: row.played ?? 0,
-    wins: row.wins ?? 0,
-    draws: row.draws ?? 0,
-    losses: row.losses ?? 0,
-    scoresStr: row.scoresStr || "0-0",
-    goalConDiff: row.goalConDiff ?? 0,
-    pts: row.pts ?? 0,
-    qualColor: row.qualColor,
-    imageUrl: sanitizeImageUrl(`https://images.fotmob.com/image_resources/logo/teamlogo/${row.id}_small.png`),
-  }));
+  const teamForm = data.table?.[0]?.teamForm || data.overview?.table?.[0]?.teamForm || {};
+  const nextOpponent = data.table?.[0]?.nextOpponent || {};
+  const legend: LeagueLegendItem[] = data.table?.[0]?.data?.legend || [];
+
+  const standings: FotmobStandingsRow[] = rawTable.map((row: any) => {
+    const [gfStr, gaStr] = (row.scoresStr || "0-0").split("-");
+    const goalsFor = Number(gfStr) || 0;
+    const goalsAgainst = Number(gaStr) || 0;
+
+    const rawForm = teamForm[String(row.id)] || [];
+    const form = Array.isArray(rawForm)
+      ? rawForm.slice(-5).map((f: any) => ({
+          result: f.resultString || (f.result === 1 ? "W" : f.result === -1 ? "L" : "D"),
+          score: f.score || `${f.tooltipText?.homeScore ?? 0} - ${f.tooltipText?.awayScore ?? 0}`,
+          opponent:
+            f.tooltipText?.homeTeamId === row.id
+              ? f.tooltipText?.awayTeam || "Opponent"
+              : f.tooltipText?.homeTeam || "Opponent",
+          isHome: f.tooltipText?.homeTeamId === row.id,
+        }))
+      : [];
+
+    const rawNext = nextOpponent[String(row.id)];
+    let nextMatch = null;
+    if (Array.isArray(rawNext) && rawNext.length >= 2) {
+      nextMatch = {
+        opponentId: rawNext[0],
+        opponent: rawNext[1],
+        matchId: rawNext[2],
+        date: rawNext[5],
+        isHome: rawNext[3]?.id === String(row.id),
+      };
+    }
+
+    return {
+      idx: row.idx,
+      id: row.id,
+      name: row.name,
+      shortName: row.shortName || row.name,
+      played: row.played ?? 0,
+      wins: row.wins ?? 0,
+      draws: row.draws ?? 0,
+      losses: row.losses ?? 0,
+      scoresStr: row.scoresStr || "0-0",
+      goalsFor,
+      goalsAgainst,
+      goalConDiff: row.goalConDiff ?? 0,
+      pts: row.pts ?? 0,
+      qualColor: row.qualColor,
+      imageUrl: sanitizeImageUrl(`https://images.fotmob.com/image_resources/logo/teamlogo/${row.id}_small.png`),
+      form,
+      nextMatch,
+    };
+  });
+
+  // Extract Top Scorers and Top Assists from stats.players
+  let topScorers: LeaguePlayerLeader[] = [];
+  let topAssists: LeaguePlayerLeader[] = [];
+
+  if (data.stats?.players) {
+    const goalsStat = data.stats.players.find((p: any) => p.name === "goals");
+    if (goalsStat?.topThree) {
+      topScorers = goalsStat.topThree.map((p: any) => ({
+        id: p.id,
+        name: p.name,
+        rank: p.rank,
+        teamId: p.teamId,
+        teamName: p.teamName,
+        value: p.value ?? p.stat?.value ?? 0,
+        imageUrl: sanitizeImageUrl(`https://images.fotmob.com/image_resources/playerimages/${p.id}.png`),
+      }));
+    }
+
+    const assistStat = data.stats.players.find((p: any) => p.name === "goal_assist");
+    if (assistStat?.topThree) {
+      topAssists = assistStat.topThree.map((p: any) => ({
+        id: p.id,
+        name: p.name,
+        rank: p.rank,
+        teamId: p.teamId,
+        teamName: p.teamName,
+        value: p.value ?? p.stat?.value ?? 0,
+        imageUrl: sanitizeImageUrl(`https://images.fotmob.com/image_resources/playerimages/${p.id}.png`),
+      }));
+    }
+  }
 
   return {
     leagueId: fotmobId,
     season: data.details?.selectedSeason,
+    allAvailableSeasons: data.allAvailableSeasons || [],
     teamsCount: standings.length,
+    legend,
+    topScorers,
+    topAssists,
     standings,
   };
 }

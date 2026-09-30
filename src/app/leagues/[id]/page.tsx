@@ -3,8 +3,10 @@ import { EntityImage } from "@/components/EntityImage";
 import Link from "next/link";
 import { getLeagueById } from "@/lib/data/leagues";
 import { formatCompactEur } from "@/lib/utils";
-import { Trophy, Shield } from "lucide-react";
+import { Trophy, Clock } from "lucide-react";
 import { LeagueFinancialParity } from "@/components/LeagueFinancialParity";
+import { LeagueStandingsTable } from "@/components/LeagueStandingsTable";
+import { LeagueLeaders } from "@/components/LeagueLeaders";
 import { constructMetadata, SITE_URL } from "@/lib/metadata";
 import type { Metadata } from "next";
 
@@ -29,7 +31,7 @@ export async function generateMetadata({ params }: LeaguePageProps): Promise<Met
 
   return constructMetadata({
     title: `${league.name} — Standings, Club Valuations & Stats`,
-    description: `Official ${league.name} standings (${league.season || "2024/2025"}), live table, ${league.clubCount} participating clubs, and squad market valuation analytics on a1score.app.`,
+    description: `${league.name} standings (${league.season || "2026/2027"}), competition table, ${league.clubCount} participating clubs, and squad market valuation analytics on a1score.app.`,
     path: `/leagues/${params.id}`,
     image: league.logoUrl || undefined,
   });
@@ -64,6 +66,7 @@ export default async function LeaguePage({ params }: LeaguePageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+
       {/* League Header */}
       <div className="rounded-3xl glass-panel p-6 sm:p-8 border border-slate-800 bg-slate-900/40">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
@@ -80,9 +83,14 @@ export default async function LeaguePage({ params }: LeaguePageProps) {
                 {league.name}
               </h1>
               <div className="flex items-center gap-2 text-xs text-slate-400 mt-1">
-                <span>{league.clubCount} Official Clubs</span>
+                <span>{league.clubCount} Clubs</span>
                 <span>•</span>
-                <span>Season {league.season || "2024/2025"}</span>
+                <span>Season {league.season || "2026/2027"}</span>
+                <span>•</span>
+                <span className="flex items-center gap-1 text-slate-500">
+                  <Clock className="w-3 h-3" />
+                  Updated {new Date(league.lastUpdated || Date.now()).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                </span>
               </div>
             </div>
           </div>
@@ -106,151 +114,33 @@ export default async function LeaguePage({ params }: LeaguePageProps) {
         leagueName={league.name}
       />
 
-      {/* Standings Table (if available from live data) */}
+      {/* Unified Standings & Squad Valuation Table (F1 & F3) */}
       {hasStandings && (
-        <div className="rounded-2xl glass-panel p-6 border border-slate-800">
-          <div className="flex items-center justify-between pb-4 border-b border-slate-800">
-            <div>
-              <h2 className="text-lg font-bold text-white tracking-tight">Official League Table</h2>
-              <p className="text-xs text-slate-400">Live standings synchronized with squad market values</p>
-            </div>
-            <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold">
-              Season {league.season}
-            </span>
-          </div>
-
-          <div className="mt-4 overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead>
-                <tr className="text-slate-400 uppercase tracking-wider border-b border-slate-800/80">
-                  <th className="pb-3 w-10 text-center font-semibold">#</th>
-                  <th className="pb-3 font-semibold">Club</th>
-                  <th className="pb-3 text-center font-semibold">P</th>
-                  <th className="pb-3 text-center font-semibold">W</th>
-                  <th className="pb-3 text-center font-semibold">D</th>
-                  <th className="pb-3 text-center font-semibold">L</th>
-                  <th className="pb-3 text-center font-semibold">GD</th>
-                  <th className="pb-3 text-right font-semibold">Squad Value</th>
-                  <th className="pb-3 text-right font-bold text-white pr-2">Pts</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-800/50">
-                {league.standings.map((row) => (
-                  <tr key={row.id} className="hover:bg-slate-800/30 transition-colors group">
-                    <td className="py-3 text-center font-bold text-slate-500">
-                      <div className="flex items-center justify-center gap-1.5">
-                        {row.qualColor && (
-                          <span
-                            className="w-1.5 h-3.5 rounded-full"
-                            style={{ backgroundColor: row.qualColor }}
-                          />
-                        )}
-                        <span>{row.idx}</span>
-                      </div>
-                    </td>
-                    <td className="py-3 pr-4">
-                      {row.clubId ? (
-                        <Link href={`/clubs/${row.clubId}`} className="flex items-center gap-3">
-                          <div className="relative w-6 h-6 rounded-md bg-slate-800 p-0.5 flex-shrink-0 overflow-hidden">
-                            <EntityImage
-                              src={row.imageUrl}
-                              alt={row.name}
-                              fill
-                              sizes="24px"
-                              entityType="club"
-                              className="object-contain"
-                            />
-                          </div>
-                          <span className="text-white font-semibold group-hover:text-emerald-400 transition-colors">
-                            {row.name}
-                          </span>
-                        </Link>
-                      ) : (
-                        <div className="flex items-center gap-3">
-                          <div className="relative w-6 h-6 rounded-md bg-slate-800 p-0.5 flex-shrink-0 overflow-hidden">
-                            <EntityImage
-                              src={row.imageUrl}
-                              alt={row.name}
-                              fill
-                              sizes="24px"
-                              entityType="club"
-                              className="object-contain"
-                            />
-                          </div>
-                          <span className="text-white font-semibold">{row.name}</span>
-                        </div>
-                      )}
-                    </td>
-                    <td className="py-3 text-center text-slate-300">{row.played}</td>
-                    <td className="py-3 text-center text-slate-300">{row.wins}</td>
-                    <td className="py-3 text-center text-slate-300">{row.draws}</td>
-                    <td className="py-3 text-center text-slate-300">{row.losses}</td>
-                    <td className="py-3 text-center font-medium text-slate-200">
-                      {row.goalConDiff > 0 ? `+${row.goalConDiff}` : row.goalConDiff}
-                    </td>
-                    <td className="py-3 text-right text-amber-400 font-semibold whitespace-nowrap tabular-nums">
-                      {row.totalSquadValue > 0 ? formatCompactEur(row.totalSquadValue) : "—"}
-                    </td>
-                    <td className="py-3 text-right text-white font-extrabold text-sm pr-2 tabular-nums">
-                      {row.pts}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <LeagueStandingsTable
+          standings={league.standings}
+          leagueName={league.name}
+          season={league.season}
+          legend={league.legend}
+        />
       )}
 
-      {/* Clubs Valuation Ranking Table */}
-      <div className="rounded-2xl glass-panel p-6 border border-slate-800">
-        <div className="flex items-center justify-between pb-4 border-b border-slate-800">
-          <div>
-            <h2 className="text-lg font-bold text-white tracking-tight">Club Valuations Ranking</h2>
-            <p className="text-xs text-slate-400">All participating clubs ranked by cumulative squad market valuation</p>
-          </div>
-        </div>
+      {/* League Leaders & Quick Switcher to Other European Leagues (F5) */}
+      <LeagueLeaders
+        topScorers={league.topScorers || []}
+        topAssists={league.topAssists || []}
+        otherLeagues={league.otherLeagues || []}
+        currentLeagueId={league.id}
+        season={league.season}
+      />
 
-        <div className="mt-4 overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead>
-              <tr className="text-slate-400 uppercase tracking-wider border-b border-slate-800/80">
-                <th className="pb-3 w-12 text-center font-semibold">#</th>
-                <th className="pb-3 font-semibold">Club</th>
-                <th className="pb-3 text-center font-semibold">Squad Size</th>
-                <th className="pb-3 text-right font-semibold">Total Squad Value</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-800/50">
-              {league.clubs.map((club, idx) => (
-                <tr key={club.id} className="hover:bg-slate-800/30 transition-colors group">
-                  <td className="py-3 text-center font-bold text-slate-500">{idx + 1}</td>
-                  <td className="py-3 pr-4">
-                    <Link href={`/clubs/${club.id}`} className="flex items-center gap-3">
-                      <div className="relative w-7 h-7 rounded-lg bg-slate-800 p-1 flex-shrink-0 overflow-hidden">
-                        <EntityImage
-                          src={club.logoUrl}
-                          alt={club.name}
-                          fill
-                          sizes="28px"
-                          entityType="club"
-                          className="object-contain"
-                        />
-                      </div>
-                      <span className="text-white font-semibold group-hover:text-emerald-400 transition-colors">
-                        {club.name}
-                      </span>
-                    </Link>
-                  </td>
-                  <td className="py-3 text-center text-slate-300 tabular-nums">{club.squadSize}</td>
-                  <td className="py-3 text-right text-amber-400 font-extrabold whitespace-nowrap text-sm tabular-nums">
-                    {formatCompactEur(club.totalSquadValue)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      {/* Transparent Data Attribution Footer */}
+      <div className="text-center text-xs text-slate-500 py-2 space-y-1">
+        <p>
+          Data sources: FotMob match engine & Transfermarkt squad market valuations.
+        </p>
+        <p className="text-[11px] text-slate-600">
+          Standings and form reflect the active 2026/2027 domestic season.
+        </p>
       </div>
     </div>
   );

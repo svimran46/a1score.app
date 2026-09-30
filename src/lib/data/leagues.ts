@@ -91,12 +91,7 @@ export async function getLeagueById(id: string) {
     }
 
     // 1. Fetch official standings from FotMob
-    let fotmobData: {
-      leagueId: number;
-      season?: string;
-      teamsCount: number;
-      standings: FotmobStandingsRow[];
-    } | null = null;
+    let fotmobData: Awaited<ReturnType<typeof getLeagueStandings>> = null;
 
     try {
       fotmobData = await getLeagueStandings(league.transfermarktId);
@@ -149,9 +144,12 @@ export async function getLeagueById(id: string) {
       const squadValue = matched?.totalMarketValue ? Number(matched.totalMarketValue) : 0;
       const squadSize = matched?.squadSize || 25;
       const clubId = matched?.id || null;
+      const canonicalName = matched?.name || row.name;
 
       return {
         ...row,
+        name: canonicalName,
+        shortName: row.shortName || canonicalName.replace(/ FC$| AFC$/, ""),
         clubId,
         totalSquadValue: squadValue,
         squadSize,
@@ -182,6 +180,29 @@ export async function getLeagueById(id: string) {
     const computedTotalValue = derivedClubs.reduce((sum, c) => sum + c.totalSquadValue, 0);
     const computedTotalPlayers = derivedClubs.reduce((sum, c) => sum + c.squadSize, 0);
 
+    // 5. Fetch quick-switch navigation for other European leagues
+    let otherLeagues: Array<{ id: string; name: string; country: string; logoUrl: string | null }> = [];
+    try {
+      const { data: allLeaguesList } = await supabase
+        .from("League")
+        .select("id, name, country, logoUrl, transfermarktId, totalMarketValue")
+        .order("totalMarketValue", { ascending: false });
+
+      if (allLeaguesList) {
+        otherLeagues = allLeaguesList
+          .filter((l) => l.id !== league.id && l.transfermarktId !== "CL" && Number(l.totalMarketValue) > 0)
+          .slice(0, 6)
+          .map((l) => ({
+            id: l.id,
+            name: l.name,
+            country: l.country,
+            logoUrl: sanitizeImageUrl(l.logoUrl, "league", l.id),
+          }));
+      }
+    } catch {
+      // non-critical fallback
+    }
+
     return {
       id: league.id,
       name: league.name,
@@ -194,6 +215,11 @@ export async function getLeagueById(id: string) {
       clubCount: officialCount,
       clubs: derivedClubs,
       standings: enrichedStandings,
+      legend: fotmobData?.legend || [],
+      topScorers: fotmobData?.topScorers || [],
+      topAssists: fotmobData?.topAssists || [],
+      allAvailableSeasons: fotmobData?.allAvailableSeasons || [],
+      otherLeagues,
       season: fotmobData?.season || "2026/2027",
       lastUpdated: new Date().toISOString(),
     };
