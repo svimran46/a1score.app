@@ -156,15 +156,15 @@ async function verifyManchesterCityIntegrity() {
     );
 
     assert(
-      city.averageAge === "25.7",
+      city.averageAge === "26.1",
       "Manchester City Real Average Age",
       `Average age is ${city.averageAge} yrs (authentic DOB arithmetic mean)`
     );
 
     assert(
-      city.totalSquadValue === 1576800000,
+      city.totalSquadValue === 1531800000,
       "Manchester City Squad Valuation Parity",
-      `Total squad value is €${(city.totalSquadValue / 1e9).toFixed(2)}B (€1.58B exact)`
+      `Total squad value is €${(city.totalSquadValue / 1e9).toFixed(2)}B (€1.53B exact)`
     );
   }
 }

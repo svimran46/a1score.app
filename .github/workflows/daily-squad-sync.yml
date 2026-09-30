@@ -1,10 +1,21 @@
-name: Daily Squad Reconciliation & Nightly Integrity Check
+name: Squad Reconciliation & Integrity Check
 
 on:
   schedule:
-    # Runs daily at 02:00 UTC (automated nightly sync)
+    # 1. Daily at 02:00 UTC for full 7 leagues reconciliation (Part B Rule 6)
     - cron: '0 2 * * *'
+    # 2. Hourly for top clubs during active transfer windows (Jan, Jun, Jul, Aug)
+    - cron: '0 * * 1,6,7,8 *'
   workflow_dispatch: # Allows manual trigger from GitHub UI
+    inputs:
+      mode:
+        description: 'Reconciliation Scope'
+        required: true
+        default: 'full'
+        type: choice
+        options:
+          - full
+          - top-clubs
 
 jobs:
   squad-sync:
@@ -27,14 +38,24 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
-      - name: Reconcile Squads & Transfers
-        run: npx tsx scripts/reconcile-all-transfers.ts
+      - name: Canonical Squad Reconciliation
+        run: |
+          CURRENT_HOUR=$(date -u +'%H')
+          if [ "${{ github.event.inputs.mode }}" = "top-clubs" ] || ([ "$CURRENT_HOUR" != "02" ] && [ "${{ github.event_name }}" = "schedule" ]); then
+            echo "Running hourly transfer-window sync for top clubs..."
+            npx tsx scripts/reconcile-squads-canonical.ts --top-clubs --apply
+          else
+            echo "Running daily comprehensive 7-leagues squad reconciliation..."
+            npx tsx scripts/reconcile-squads-canonical.ts --apply
+          fi
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
 
-      - name: Nightly Integrity Check
-        run: npx tsx scripts/nightly-integrity-check.ts
+      - name: Data Integrity Suite
+        run: npx tsx scripts/verify-data-integrity.ts
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}

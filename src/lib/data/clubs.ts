@@ -72,9 +72,8 @@ export function extractClubIdentifiers(idOrSlug: string) {
  * - Squad size / player count: count of first team players
  */
 export function computeClubMetrics(rawPlayers: any[]) {
-  const active = (rawPlayers || []).filter(
-    (p: any) => p.lastSeason === null || p.lastSeason >= 2025
-  );
+  // Exclude departed players
+  const active = (rawPlayers || []).filter((p: any) => p.status !== "departed");
 
   const squadWithValues = active.map((p: any) => {
     const extId = p.transfermarktId || p.id || p.sourceId;
@@ -82,7 +81,13 @@ export function computeClubMetrics(rawPlayers: any[]) {
     const birthYear = p.dateOfBirth ? new Date(p.dateOfBirth).getFullYear() : null;
     const age = birthYear ? 2026 - birthYear : (typeof p.age === "number" ? p.age : null);
     const val = p.latestMarketValue ? Number(p.latestMarketValue) : 0;
-    const tier = (val > 0 || (age !== null && age >= 20)) ? "first_team" : "academy";
+    
+    // Explicit status determines tier: first_team, academy, loan_out
+    const tier = p.status === "academy"
+      ? "academy"
+      : p.status === "loan_out"
+      ? "loan_out"
+      : "first_team";
 
     return {
       ...p,
@@ -146,7 +151,8 @@ export async function getClubById(idOrSlug: string) {
           nationality,
           dateOfBirth,
           latestMarketValue,
-          lastSeason
+          lastSeason,
+          status
         )
       `);
 
@@ -180,7 +186,8 @@ export async function getClubById(idOrSlug: string) {
             nationality,
             dateOfBirth,
             latestMarketValue,
-            lastSeason
+            lastSeason,
+            status
           )
         `)
         .ilike("name", `%${cleanTerm}%`)
@@ -311,7 +318,7 @@ export async function getAllClubs() {
         lastSeason,
         transfermarktId,
         league:League ( id, name, country ),
-        players:Player ( latestMarketValue, dateOfBirth, lastSeason )
+        players:Player ( latestMarketValue, dateOfBirth, lastSeason, status )
       `)
       .order("totalMarketValue", { ascending: false, nullsFirst: false })
       .order("name", { ascending: true });

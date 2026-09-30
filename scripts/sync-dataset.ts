@@ -214,15 +214,34 @@ async function syncPlayers(filePath: string) {
     });
   }
 
-  // Insert in chunks of 1000
-  const chunkSize = 1000;
+  // Part B Rule 3: Replace createMany({ skipDuplicates }) with upsert updating currentClubId, value and status
+  const chunkSize = 200;
   for (let i = 0; i < playerRows.length; i += chunkSize) {
     const chunk = playerRows.slice(i, i + chunkSize);
-    await prisma.player.createMany({
-      data: chunk,
-      skipDuplicates: true,
-    });
-    console.log(`Ingested ${Math.min(i + chunkSize, playerRows.length)}/${playerRows.length} players...`);
+    await Promise.all(
+      chunk.map((p) =>
+        prisma.player.upsert({
+          where: { transfermarktId: p.transfermarktId },
+          update: {
+            currentClubId: p.currentClubId,
+            latestMarketValue: p.latestMarketValue,
+            lastSeason: p.lastSeason,
+            status: p.currentClubId ? "first_team" : "departed",
+            position: p.position,
+            subPosition: p.subPosition,
+            heightCm: p.heightCm,
+            photoUrl: p.photoUrl,
+          },
+          create: {
+            ...p,
+            status: p.currentClubId ? "first_team" : "departed",
+          },
+        })
+      )
+    );
+    if ((i + chunkSize) % 1000 === 0 || i + chunkSize >= playerRows.length) {
+      console.log(`Upserted ${Math.min(i + chunkSize, playerRows.length)}/${playerRows.length} players...`);
+    }
   }
 
   console.log(`Finished syncing ${playerRows.length} players.`);
@@ -287,12 +306,18 @@ async function syncTransfers(filePath: string) {
 
   await prisma.transfer.deleteMany();
 
+  // Part B Rule 3: Ignore future-dated records (e.g. synthetic contract expirations)
+  const now = new Date();
   const dataRows: any[] = [];
   for (const r of relevant) {
     const pId = playerMap.get(String(r.player_id));
     if (!pId) continue;
     const date = new Date(r.transfer_date);
     if (isNaN(date.getTime())) continue;
+    if (date > now) {
+      // Future-dated record: skip
+      continue;
+    }
 
     const fee = r.transfer_fee ? BigInt(Math.round(parseFloat(r.transfer_fee))) : null;
 
@@ -302,6 +327,11 @@ async function syncTransfers(filePath: string) {
       fromClubName: r.from_club_name || null,
       toClubName: r.to_club_name || null,
       feeEur: fee,
+      transferType: r.transfer_fee?.toLowerCase()?.includes("loan")
+        ? "loan"
+        : fee === BigInt(0)
+        ? "free"
+        : "permanent",
     });
   }
 

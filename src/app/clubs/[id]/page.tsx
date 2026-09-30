@@ -189,7 +189,7 @@ export default async function ClubPage({ params }: ClubPageProps) {
                 {club.lastSyncedAt && (
                   <span className="flex items-center gap-1 text-slate-400">
                     <Calendar className="w-3.5 h-3.5 text-slate-500" />
-                    Updated {new Date(club.lastSyncedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                    Squad as of {new Date(club.lastSyncedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })} ({club.squadSource || "FotMob + Transfermarkt"})
                   </span>
                 )}
               </div>

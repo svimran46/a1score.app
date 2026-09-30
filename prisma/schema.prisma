@@ -24,6 +24,7 @@ model Player {
   transfermarktId String?              @unique
   latestMarketValue BigInt?
   lastSeason      Int?
+  status          String?              @default("first_team")
   currentClubId   String?
   currentClub     Club?                @relation(fields: [currentClubId], references: [id])
   marketValues    MarketValueHistory[]
@@ -37,6 +38,7 @@ model Player {
   @@index([position])
   @@index([currentClubId])
   @@index([latestMarketValue])
+  @@index([status])
 }
 
 model Club {
@@ -49,6 +51,8 @@ model Club {
   totalMarketValue BigInt? @default(0)
   squadSize       Int?     @default(0)
   lastSeason      Int?
+  lastSyncedAt    DateTime?
+  squadSource     String?  @default("FotMob + Transfermarkt")
   leagueId        String?
   league          League?  @relation(fields: [leagueId], references: [id])
   players         Player[]

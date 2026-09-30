@@ -1,0 +1,399 @@
+{
+  "club": "Manchester City",
+  "transfermarktId": "281",
+  "seasonParameter": "saison_id=2025",
+  "url": "https://www.transfermarkt.com/manchester-city/kader/verein/281/saison_id/2025/plus/1",
+  "fetchedAt": "2026-09-30T08:12:06.617Z",
+  "httpStatus": 200,
+  "playersCount": 43,
+  "players": [
+    {
+      "tmId": "315858",
+      "name": "Gianluigi Donnarumma",
+      "number": "25",
+      "position": "Goalkeeper",
+      "age": 27,
+      "marketValue": "€45.00m",
+      "contractUntil": null
+    },
+    {
+      "tmId": "566799",
+      "name": "James Trafford",
+      "number": "1",
+      "position": "Goalkeeper",
+      "age": 23,
+      "marketValue": "€25.00m",
+      "contractUntil": null
+    },
+    {
+      "tmId": "238223",
+      "name": "Ederson",
+      "number": null,
+      "position": "Goalkeeper",
+      "age": 32,
+      "marketValue": "€10.00m",
+      "contractUntil": null
+    },
+    {
+      "tmId": "85941",
+      "name": "Stefan Ortega",
+      "number": null,
+      "position": "Goalkeeper",
+      "age": 33,
+      "marketValue": "€4.00m",
+      "contractUntil": null
+    },
+    {
+      "tmId": "116648",
+      "name": "Marcus Bettinelli",
+      "number": "13",
+      "position": "Goalkeeper",
+      "age": 34,
+      "marketValue": "€300k",
+      "contractUntil": null
+    },
+    {
+      "tmId": "392757",
+      "name": "Marc Guéhi",
+      "number": "15",
+      "position": "Centre-Back",
+      "age": 25,
+      "marketValue": "€70.00m",
+      "contractUntil": null
+    },
+    {
+      "tmId": "475959",
+      "name": "Josko Gvardiol",
+      "number": "24",
+      "position": "Centre-Back",
+      "age": 24,
+      "marketValue": "€70.00m",
+      "contractUntil": null
+    },
+    {
+      "tmId": "258004",
+      "name": "Rúben Dias",
+      "number": "3",
+      "position": "Centre-Back",
+      "age": 29,
+      "marketValue": "€55.00m",
+      "contractUntil": null
+    },
+    {
+      "tmId": "763079",
+      "name": "Abdukodir Khusanov",
+      "number": "45",
+      "position": "Centre-Back",
+      "age": 22,
+      "marketValue": "€50.00m",
+      "contractUntil": null
+    },
+    {
+      "tmId": "284730",
+      "name": "Manuel Akanji",
+      "number": null,
+      "position": "Centre-Back",
+      "age": 30,
+      "marketValue": "€17.00m",
+      "contractUntil": null
+    },
+    {
+      "tmId": "186590",
+      "name": "John Stones",
+      "number": "5",
+      "position": "Centre-Back",
+      "age": 32,
+      "marketValue": "€12.00m",
+      "contractUntil": null
+    },
+    {
+      "tmId": "177476",
+      "name": "Nathan Aké",
+      "number": "6",
+      "position": "Centre-Back",
+      "age": 31,
+      "marketValue": "€12.00m",
+      "contractUntil": null
+    },
+    {
+      "tmId": "843595",
+      "name": "Max Alleyne",
+      "number": "68",
+      "position": "Centre-Back",
+      "age": 20,
+      "marketValue": "€8.00m",
+      "contractUntil": null
+    },
+    {
+      "tmId": "1049020",
+      "name": "Stephen Mfuni",
+      "number": null,
+      "position": "Centre-Back",
+      "age": 18,
+      "marketValue": "€1.50m",
+      "contractUntil": null
+    },
+    {
+      "tmId": "985535",
+      "name": "Kian Noble",
+      "number": null,
+      "position": "Centre-Back",
+      "age": 19,
+      "marketValue": "-",
+      "contractUntil": null
+    },
+    {
+      "tmId": "1078156",
+      "name": "Kaden Braithwaite",
+      "number": null,
+      "position": "Centre-Back",
+      "age": 18,
+      "marketValue": "-",
+      "contractUntil": null
+    },
+    {
+      "tmId": "743413",
+      "name": "Nico O'Reilly",
+      "number": "33",
+      "position": "Left-Back",
+      "age": 21,
+      "marketValue": "€70.00m",
+      "contractUntil": null
+    },
+    {
+      "tmId": "578391",
+      "name": "Rayan Aït-Nouri",
+      "number": "21",
+      "position": "Left-Back",
+      "age": 25,
+      "marketValue": "€40.00m",
+      "contractUntil": null
+    },
+    {
+      "tmId": "601883",
+      "name": "Matheus Nunes",
+      "number": "27",
+      "position": "Right-Back",
+      "age": 27,
+      "marketValue": "€50.00m",
+      "contractUntil": null
+    },
+    {
+      "tmId": "701057",
+      "name": "Rico Lewis",
+      "number": "82",
+      "position": "Right-Back",
+      "age": 21,
+      "marketValue": "€28.00m",
+      "contractUntil": null
+    },
+    {
+      "tmId": "357565",
+      "name": "Rodri",
+      "number": "16",
+      "position": "Defensive Midfield",
+      "age": 30,
+      "marketValue": "€50.00m",
+      "contractUntil": null
+    },
+    {
+      "tmId": "466805",
+      "name": "Nico González",
+      "number": "14",
+      "position": "Defensive Midfield",
+      "age": 24,
+      "marketValue": "€40.00m",
+      "contractUntil": null
+    },
+    {
+      "tmId": "351749",
+      "name": "Kalvin Phillips",
+      "number": "44",
+      "position": "Defensive Midfield",
+      "age": 30,
+      "marketValue": "€2.50m",
+      "contractUntil": null
+    },
+    {
+      "tmId": "1033103",
+      "name": "Charlie Gray",
+      "number": null,
+      "position": "Defensive Midfield",
+      "age": 20,
+      "marketValue": "-",
+      "contractUntil": null
+    },
+    {
+      "tmId": "460939",
+      "name": "Tijjani Reijnders",
+      "number": "4",
+      "position": "Central Midfield",
+      "age": 27,
+      "marketValue": "€50.00m",
+      "contractUntil": null
+    },
+    {
+      "tmId": "911736",
+      "name": "Sverre Nypan",
+      "number": "41",
+      "position": "Central Midfield",
+      "age": 19,
+      "marketValue": "€13.00m",
+      "contractUntil": null
+    },
+    {
+      "tmId": "51471",
+      "name": "Mateo Kovacic",
+      "number": "8",
+      "position": "Central Midfield",
+      "age": 32,
+      "marketValue": "€10.00m",
+      "contractUntil": null
+    },
+    {
+      "tmId": "53622",
+      "name": "İlkay Gündoğan",
+      "number": null,
+      "position": "Central Midfield",
+      "age": 35,
+      "marketValue": "€2.00m",
+      "contractUntil": null
+    },
+    {
+      "tmId": "961833",
+      "name": "Jaden Heskey",
+      "number": null,
+      "position": "Central Midfield",
+      "age": 20,
+      "marketValue": "€300k",
+      "contractUntil": null
+    },
+    {
+      "tmId": "1263739",
+      "name": "Floyd Samba",
+      "number": null,
+      "position": "Central Midfield",
+      "age": 17,
+      "marketValue": "-",
+      "contractUntil": null
+    },
+    {
+      "tmId": "607223",
+      "name": "Rayan Cherki",
+      "number": "10",
+      "position": "Attacking Midfield",
+      "age": 22,
+      "marketValue": "€90.00m",
+      "contractUntil": null
+    },
+    {
+      "tmId": "406635",
+      "name": "Phil Foden",
+      "number": "47",
+      "position": "Attacking Midfield",
+      "age": 26,
+      "marketValue": "€70.00m",
+      "contractUntil": null
+    },
+    {
+      "tmId": "241641",
+      "name": "Bernardo Silva",
+      "number": "20",
+      "position": "Attacking Midfield",
+      "age": 31,
+      "marketValue": "€22.00m",
+      "contractUntil": null
+    },
+    {
+      "tmId": "1047280",
+      "name": "Divine Mukasa",
+      "number": null,
+      "position": "Attacking Midfield",
+      "age": 18,
+      "marketValue": "€5.00m",
+      "contractUntil": null
+    },
+    {
+      "tmId": "486049",
+      "name": "Jérémy Doku",
+      "number": "11",
+      "position": "Left Winger",
+      "age": 24,
+      "marketValue": "€75.00m",
+      "contractUntil": null
+    },
+    {
+      "tmId": "743591",
+      "name": "Sávio",
+      "number": "26",
+      "position": "Left Winger",
+      "age": 22,
+      "marketValue": "€35.00m",
+      "contractUntil": null
+    },
+    {
+      "tmId": "1056437",
+      "name": "Reigan Heskey",
+      "number": null,
+      "position": "Left Winger",
+      "age": 18,
+      "marketValue": "-",
+      "contractUntil": null
+    },
+    {
+      "tmId": "1210923",
+      "name": "Tyrone Samba",
+      "number": null,
+      "position": "Left Winger",
+      "age": 18,
+      "marketValue": "-",
+      "contractUntil": null
+    },
+    {
+      "tmId": "583255",
+      "name": "Antoine Semenyo",
+      "number": "42",
+      "position": "Right Winger",
+      "age": 26,
+      "marketValue": "€80.00m",
+      "contractUntil": null
+    },
+    {
+      "tmId": "661207",
+      "name": "Oscar Bobb",
+      "number": null,
+      "position": "Right Winger",
+      "age": 22,
+      "marketValue": "€28.00m",
+      "contractUntil": null
+    },
+    {
+      "tmId": "1187640",
+      "name": "Ryan McAidoo",
+      "number": null,
+      "position": "Right Winger",
+      "age": 18,
+      "marketValue": "-",
+      "contractUntil": null
+    },
+    {
+      "tmId": "418560",
+      "name": "Erling Haaland",
+      "number": "9",
+      "position": "Centre-Forward",
+      "age": 25,
+      "marketValue": "€200.00m",
+      "contractUntil": null
+    },
+    {
+      "tmId": "445939",
+      "name": "Omar Marmoush",
+      "number": "7",
+      "position": "Centre-Forward",
+      "age": 27,
+      "marketValue": "€50.00m",
+      "contractUntil": null
+    }
+  ],
+  "rawHtmlSnippet": "<!DOCTYPE html>\n<html lang=\"en\">\n\n<head>\n    \n<script type=\"text/javascript\" data-description=\"sourcepoint stub code\">\n    !function () { var e = function () { var e, t = \"__tcfapiLocator\", a = [], n = window; for (; n;) { try { if (n.frames[t]) { e = n; break } } catch (e) { } if (n === window.top) break; n = n.parent } e || (!function e() { var a = n.document, r = !!n.frames[t]; if (!r) if (a.body) { var i = a.createElement(\"iframe\"); i.style.cssText = \"display:none\", i.name = t, a.body.appendChild(i) } else setTimeout(e, 5); return !r }(), n.__tcfapi = function () { for (var e, t = arguments.length, n = new Array(t), r = 0; r < t; r++)n[r] = arguments[r]; if (!n.length) return a; if (\"setGdprApplies\" === n[0]) n.length > 3 && 2 === parseInt(n[1], 10) && \"boolean\" == typeof n[3] && (e = n[3], \"function\" == typeof n[2] && n[2](\"set\", !0)); else if (\"ping\" === n[0]) { var i = { gdprApplies: e, cmpLoaded: !1, cmpStatus: \"stub\" }; \"function\" == typeof n[2] && n[2](i) } else a.push(n) }, n.addEventListener(\"message\", (function (e) { var t = \"string\" == typeof e.data, a = {}; try { a = t ? JSON.parse(e.data) : e.data } catch (e) { } var n = a.__tcfapiCall; n && window.__tcfapi(n.command, n.version, (function (a, r) { var i = { __tcfapiReturn: { returnValue: a, success: r, callId: n.callId } }; t && (i = JSON.stringify(i)), e.source.postMessage(i, \"*\") }), n.parameter) }), !1)) }; \"undefined\" != typeof module ? module.exports = e : e() }();\n</script>\n<script data-description=\"sourcepoint configuration\">\nwindow._sp_ = {\n    config: {\"accountId\":1254,\"propertyId\":7427,\"gdpr\":{\"consentLanguage\":\"en\",\"targetingParams\":{\"acps\":\"false\"}},\"baseEndpoint\":\"https://cdn.privacy-mgmt.com\",\"isSPA\":true,\"cpPropertyId\":\"7a84b340\"}}\n</script>\n<script src=\"https://cdn.privacy-mgmt.com/wrapperMessagingWithoutDetection.js\" async></script>\n<script type=\"text/javascript\" data-description=\"contentpass integration\">\n    (function() {\n        var cpBaseUrl = 'https://cp.transfermarkt.com';\n        var cpController = cpBaseUrl + '/now.js';\n        var cpPropertyId = '7a84b340';\n\n        !function(C,o,n,t,P,a,s){C['CPObject']=n;C[n]||(C[n]=function(){\n        (C[n].q=C[n].q||[]).push(arguments)});C[n].l=+new Date;a=o.createElement(t);\n        s=o.getElementsByTagName(t)[0];a.src=P;s.parentNode.insertBefore(a,s)}\n        (window,document,'cp','script',cpController);\n\n        !function(C,o,n,t,P){if(!C[n].patched){cp('extension','authenticate');P=C[n].q.push;\n        C[n].q.push=function(a){if(a[0]==='authenticate'){if((o['cookie']||'').indexOf('_cpauthhint=')===-1&&\n        !(C['localStorage']||{})['_cpuser']&&C.location.href.toLowerCase().indexOf('cpauthenticated')===-1){\n        t={isLoggedIn:function(){return false;},hasValidSubscription:function(){return false;}};\n        (typeof a[1]==='function'&&a[1](null,t));C[n].afp=true;P.apply(C[n].q,[['authenticate',null]]);\n        return t;}}P.apply(C[n].q,[a]);}}}\n        (window,document,'cp',false);\n\n        cp('create', cpPropertyId, {\n        baseUrl: cpBaseUrl\n        });\n\n        cp('render', {\n        onFullConsent: function() {\n            console.log('[DEMO] onFullConsent');\n        }\n        })\n    })()\n</script>\n\n<script type=\"text/javascript\" data-description=\"contentpass sourcepoint fast path\">\n(function () {\n    cp('authenticate', function(err, user) {\n        if (err || (!user.isLoggedIn() && !user.hasValidSubscription())) {\n        // console.log('[SPCP] Taking fast path');\n        (function spExecMsg() {\n            if (window._sp_ && window._sp_.executeMessaging) {\n            if (!window._sp_.config.isSPA) {\n                // console.warn('[SPCP] Sourcepoint not in SPA mode!');\n            } else if (window._sp_.version) {\n                // console.log('[SPCP] Sourcepoint already running');\n            } else {\n                // console.log('[SPCP] Starting Sourcepoint');\n                window._sp_.executeMessaging();\n            }\n            } else {\n            // console.log('[SPCP] Sourcepoint not loaded yet. Retrying.');\n            setTimeout(spExecMsg, 10);\n            }\n        })();\n        }\n    });\n    })();\n</script>\n    <meta charset=\"utf-8\" />\n    <link rel=\"shortcut icon\" href=\"/favicon.ico\" type=\"image/x-icon\" />\n    <link rel=\"shortcut icon\" sizes=\"16x16\" href=\"/favicon-16x16.png\">\n    <link rel=\"shortcut icon\" sizes=\"192x192\" href=\"/android-chrome-192x192.png\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=no\" />\n<meta name=\"keywords\" content=\"Manchester City,England\" />\n<meta name=\"description\" content=\"Man City at a glance: The detailed squad overview with all players and data in the season 25/26. \" />\n<meta property=\"og:type\" content=\"article\" />\n<meta property=\"og:image\" content=\"https://tmsi.akamaized.net/tm_logo.png\" />\n<meta property=\"og:description\" content=\"\" />\n<meta property=\"og:title\" content=\"Manchester City - Detailed squad 25/26 (Detailed view)\" />\n<meta property=\"twitter:ti"
+}
