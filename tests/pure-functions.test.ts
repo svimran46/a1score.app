@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { isYouthMove, formatTransferFee } from "../src/lib/transfers";
 import { calculateAge, formatCompactEur, formatEur, formatDate } from "../src/lib/utils";
 import { pureMd5 } from "../src/lib/fotmob/client";
-import { rateLimit } from "../src/lib/rate-limit";
+import { rateLimit, getClientIP } from "../src/lib/rate-limit";
 import cloudflareImageLoader from "../src/lib/image-loader";
 
 test("isYouthMove - detects youth and academy moves correctly", () => {
@@ -117,6 +117,42 @@ test("rateLimit - enforces sliding window rate limits", () => {
   const blocked = rateLimit(testKey, 5, 10_000);
   assert.equal(blocked.success, false);
   assert.equal(blocked.remaining, 0);
+});
+
+test("rateLimit - enforces stricter limits on unknown callers", () => {
+  const unknownKey = "unknown_test_client_abc";
+  // Requests with limit=60 are capped at 10 for unknown keys
+  for (let i = 0; i < 10; i++) {
+    const res = rateLimit(unknownKey, 60, 10_000);
+    assert.equal(res.success, true);
+    assert.equal(res.limit, 10);
+  }
+
+  // 11th request must be blocked under stricter limit
+  const blocked = rateLimit(unknownKey, 60, 10_000);
+  assert.equal(blocked.success, false);
+});
+
+test("getClientIP - extracts client IP or generates partitioned fingerprint without single anonymous bucket", () => {
+  // 1. CF-Connecting-IP
+  const req1 = new Request("http://localhost", {
+    headers: { "cf-connecting-ip": "203.0.113.195" },
+  });
+  assert.equal(getClientIP(req1), "203.0.113.195");
+
+  // 2. X-Forwarded-For
+  const req2 = new Request("http://localhost", {
+    headers: { "x-forwarded-for": "198.51.100.1, 10.0.0.1" },
+  });
+  assert.equal(getClientIP(req2), "198.51.100.1");
+
+  // 3. Fallback without IP headers creates partitioned unknown key, NOT generic "anonymous"
+  const req3 = new Request("http://localhost", {
+    headers: { "user-agent": "Mozilla/5.0 TestBot", "accept-language": "en-US" },
+  });
+  const ip3 = getClientIP(req3);
+  assert.equal(ip3.startsWith("unknown_"), true);
+  assert.notEqual(ip3, "anonymous");
 });
 
 test("cloudflareImageLoader - respects resizing and CDN mirrors", () => {
