@@ -3,8 +3,8 @@ import assert from "node:assert/strict";
 import dotenv from "dotenv";
 import { Pool } from "pg";
 
-// In CI without secrets, do not load local .env
-if (!process.env.CI) {
+// Skip database connection cleanly unless DATABASE_URL is explicitly set or TEST_INTEGRITY=true
+if (!process.env.CI && process.env.TEST_INTEGRITY === "true") {
   dotenv.config();
 }
 

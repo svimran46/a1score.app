@@ -20,7 +20,7 @@
     "check:rls": "tsx scripts/check-rls.ts",
     "test:unit": "tsx --test tests/pure-functions.test.ts tests/positions.test.ts tests/image-proxy.test.ts",
     "test:integrity": "tsx --test tests/integrity.test.ts",
-    "test": "npm run test:unit"
+    "test": "npm run test:unit && npm run test:integrity"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.2",
