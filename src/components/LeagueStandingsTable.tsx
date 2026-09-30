@@ -74,13 +74,13 @@ export function LeagueStandingsTable({
     list.sort((a, b) => {
       let diff = 0;
       if (sortField === "points") {
-        diff = b.pts - a.pts || b.goalConDiff - a.goalConDiff || b.totalSquadValue - a.totalSquadValue;
+        diff = a.idx - b.idx;
       } else if (sortField === "value") {
-        diff = (b.totalSquadValue || 0) - (a.totalSquadValue || 0) || b.pts - a.pts;
+        diff = (b.totalSquadValue || 0) - (a.totalSquadValue || 0) || a.idx - b.idx;
       } else if (sortField === "gd") {
-        diff = b.goalConDiff - a.goalConDiff || b.pts - a.pts;
+        diff = b.goalConDiff - a.goalConDiff || b.pts - a.pts || a.idx - b.idx;
       } else if (sortField === "played") {
-        diff = b.played - a.played || b.pts - a.pts;
+        diff = b.played - a.played || a.idx - b.idx;
       }
       return sortAsc ? -diff : diff;
     });

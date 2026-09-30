@@ -23,10 +23,11 @@ export interface ClubDirectoryItem {
   id: string;
   name: string;
   logoUrl?: string | null;
+  shortName?: string | null;
   country?: string | null;
   leagueName?: string | null;
   leagueId?: string | null;
-  playerCount: number;
+  playerCount: number | null;
   totalSquadValue: number;
   averageAge?: string | null;
   leagueRank?: number | null;
@@ -368,8 +369,8 @@ export function ClubsDirectoryClient({ initialClubs }: ClubsDirectoryClientProps
                   />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h3 className="text-sm font-bold text-white tracking-tight truncate group-hover:text-amber-400 transition-colors">
-                    {club.name}
+                  <h3 className="text-sm font-bold text-white tracking-tight truncate group-hover:text-amber-400 transition-colors" title={club.name}>
+                    {club.shortName || club.name}
                   </h3>
                   <div className="text-[11px] text-slate-400 mt-0.5 truncate flex items-center gap-1.5">
                     <span className="truncate">{club.leagueName || club.country || "Club"}</span>
@@ -387,7 +388,7 @@ export function ClubsDirectoryClient({ initialClubs }: ClubsDirectoryClientProps
                 <div className="flex items-center gap-2 text-slate-400 text-[11px]">
                   <span className="flex items-center gap-1" title="First Team Squad Size">
                     <Users className="w-3 h-3 text-slate-500" />
-                    {club.playerCount} First Team
+                    {club.playerCount ? `${club.playerCount} First Team` : "Squad"}
                   </span>
                   {club.averageAge && (
                     <span className="flex items-center gap-1" title="Average Squad Age">

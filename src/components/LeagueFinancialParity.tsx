@@ -76,10 +76,17 @@ export function LeagueFinancialParity({
     let medianDetail = "";
 
     if (n % 2 === 0) {
-      const c1 = sortedByVal[n / 2 - 1]; // 10th club for n=20
-      const c2 = sortedByVal[n / 2];     // 11th club for n=20
+      const c1 = sortedByVal[n / 2 - 1];
+      const c2 = sortedByVal[n / 2];
       medianClubValue = Math.round((c1.totalSquadValue + c2.totalSquadValue) / 2);
-      medianDetail = `average of 10th & 11th: ${c1.name} (${formatCompactEur(c1.totalSquadValue)}) & ${c2.name} (${formatCompactEur(c2.totalSquadValue)})`;
+      const pos1 = n / 2;
+      const pos2 = n / 2 + 1;
+      const ordinal = (num: number) => {
+        const s = ["th", "st", "nd", "rd"];
+        const v = num % 100;
+        return num + (s[(v - 20) % 10] || s[v] || s[0]);
+      };
+      medianDetail = `average of ${ordinal(pos1)} & ${ordinal(pos2)}: ${c1.name} (${formatCompactEur(c1.totalSquadValue)}) & ${c2.name} (${formatCompactEur(c2.totalSquadValue)})`;
     } else {
       const c = sortedByVal[Math.floor(n / 2)];
       medianClubValue = c.totalSquadValue;

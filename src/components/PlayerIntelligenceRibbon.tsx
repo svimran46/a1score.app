@@ -173,7 +173,7 @@ export function PlayerIntelligenceRibbon({
           <div className="text-[11px] text-slate-500 tabular-nums">
             {peakAnalysis
               ? peakAnalysis.isAtPeak
-                ? `Max recorded €${formatCompactEur(peakAnalysis.peakValue)}`
+                ? `Max recorded ${formatCompactEur(peakAnalysis.peakValue)}`
                 : `-${formatCompactEur(peakAnalysis.delta)} from peak`
               : "Valuation baseline"}
           </div>
@@ -185,12 +185,14 @@ export function PlayerIntelligenceRibbon({
             <Target className="w-3 h-3 text-emerald-400" /> G+A Contributions
           </span>
           <div className="text-base sm:text-lg font-black text-emerald-400 tabular-nums">
-            {seasonTotals ? `${seasonTotals.goals + seasonTotals.assists} Goals & Assists` : "Tracking live"}
+            {seasonTotals && seasonTotals.apps > 0 ? `${seasonTotals.goals + seasonTotals.assists} Goals & Assists` : "No data yet"}
           </div>
           <div className="text-[11px] text-slate-500 tabular-nums">
-            {seasonTotals?.goalContribPer90
-              ? `${seasonTotals.goalContribPer90} per 90 mins`
-              : `${seasonTotals?.apps || 0} appearances`}
+            {seasonTotals && seasonTotals.apps > 0 && seasonTotals.goalContribPer90
+              ? `${seasonTotals.goalContribPer90} per 90 mins • ${seasonTotals.apps} apps`
+              : seasonTotals && seasonTotals.apps > 0
+              ? `${seasonTotals.apps} appearances`
+              : "Season stats pending"}
           </div>
         </div>
 
@@ -203,7 +205,7 @@ export function PlayerIntelligenceRibbon({
             {seasonTotals?.avgRating ? (
               <span className="text-amber-400 font-extrabold">{seasonTotals.avgRating} / 10</span>
             ) : (
-              <span className="text-slate-300">Active</span>
+              <span className="text-slate-400">N/A</span>
             )}
           </div>
           <div className="text-[11px] text-slate-500">

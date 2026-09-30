@@ -31,10 +31,19 @@ export default async function HomePage() {
     getMarketValueMovers(6).catch(() => ({ risers: [], fallers: [] })),
   ]);
 
-  // Extract up to 3 highlighted matches (prioritizing live, then upcoming/recent)
-  const allMatches = (matchesData?.leagues || []).flatMap((l) => l.matches);
+  // Extract up to 3 highlighted matches (prioritizing live, then top-7-league, then rest)
+  const TOP_LEAGUE_IDS = new Set([47, 87, 55, 54, 53, 61, 57]); // PL, LaLiga, Serie A, Bundesliga, Ligue 1, Portugal, Eredivisie
+  const allMatches = (matchesData?.leagues || []).flatMap((l) =>
+    l.matches.map((m: any) => ({ ...m, _leagueId: l.id }))
+  );
   const liveMatches = allMatches.filter((m) => m.isLive);
-  const featuredMatches = (liveMatches.length > 0 ? liveMatches : allMatches).slice(0, 3);
+  const topLeagueMatches = allMatches.filter((m) => TOP_LEAGUE_IDS.has(m._leagueId));
+  const matchPool = liveMatches.length > 0
+    ? liveMatches
+    : topLeagueMatches.length > 0
+    ? topLeagueMatches
+    : allMatches;
+  const featuredMatches = matchPool.slice(0, 3);
 
   // Compute big 5 cumulative value
   const big5Leagues = leagues.filter((l) =>
@@ -95,7 +104,7 @@ export default async function HomePage() {
               <div className="text-base sm:text-xl font-black text-emerald-400 tabular-nums">
                 {totalBig5Valuation > 0 ? formatCompactEur(totalBig5Valuation) : "€35.7B"}
               </div>
-              <div className="text-[11px] text-slate-400">96 Elite Clubs</div>
+              <div className="text-[11px] text-slate-400">{leagues.reduce((sum, l) => sum + (l.clubCount || 0), 0) || 96} top-flight clubs</div>
             </div>
 
             <div className="p-3 sm:p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800/80 flex flex-col justify-between space-y-1">
@@ -150,7 +159,7 @@ export default async function HomePage() {
             <div className="flex items-center justify-between gap-3 pt-1">
               <div>
                 {liveMatches.length > 0 && (
-                  <LiveAutoRefresher intervalMs={5000} label="Live: 5s" />
+                  <LiveAutoRefresher intervalMs={5000} label="Live" />
                 )}
               </div>
               <Link
