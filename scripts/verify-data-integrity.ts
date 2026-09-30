@@ -18,6 +18,9 @@
  *    - /values 301 redirect to /players.
  */
 
+import dotenv from "dotenv";
+dotenv.config();
+
 import { getMostValuablePlayers, getPositionalPeers, getPlayerBySlugOrId } from "../src/lib/data/players";
 import { getClubById, getAllClubs } from "../src/lib/data/clubs";
 import { getLeagueById, getLeagues } from "../src/lib/data/leagues";
@@ -355,6 +358,14 @@ async function main() {
   console.log("===============================================================");
   console.log("   a1score.app — Automated Data Integrity Suite (Round 2)     ");
   console.log("===============================================================");
+
+  if (process.argv.includes("--help") || process.argv.includes("-h")) {
+    console.log("Usage: npx tsx scripts/verify-data-integrity.ts [baseUrl]");
+    console.log("Runs automated data integrity assertions across Supabase tables and rendered pages.");
+    console.log("Options:");
+    console.log("  --help, -h    Show this help message and exit");
+    process.exit(0);
+  }
 
   const startTime = Date.now();
   const baseUrl = process.argv[2];
