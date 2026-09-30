@@ -61,23 +61,26 @@ export function LiveMinute({
 
   // Determine formatted minute string
   const getFormattedMinute = (): string => {
-    if (isFinished) return "Full time";
-    if (isHT) return "Half time";
+    if (isFinished) return "FT";
+    if (isHT) return "HT";
 
     if (seconds > 0) {
       const currentMin = Math.floor(seconds / 60) + 1;
       // Stoppage time handling
       if (currentMin > 90) {
-        return `90+${currentMin - 90}'`;
+        return `Live 90+${currentMin - 90}'`;
       }
       if (currentMin > 45 && seconds < 3600) {
-        return `45+${currentMin - 45}'`;
+        return `Live 45+${currentMin - 45}'`;
       }
-      return `${currentMin}'`;
+      return `Live ${currentMin}'`;
     }
 
     if (cleanShort) {
-      return cleanShort.endsWith("'") ? cleanShort : `${cleanShort}'`;
+      const min = cleanShort.endsWith("'") ? cleanShort : `${cleanShort}'`;
+      if (min.toUpperCase() === "HT" || min.toLowerCase() === "half time") return "HT";
+      if (min.toUpperCase() === "FT" || min.toLowerCase() === "full time") return "FT";
+      return `Live ${min}`;
     }
 
     return "Live";
@@ -86,19 +89,19 @@ export function LiveMinute({
   const displayText = getFormattedMinute();
 
   if (isFinished) {
-    return <span className={`text-slate-400 font-semibold ${className}`}>Full time</span>;
+    return <span className={`text-slate-400 font-semibold ${className}`}>FT</span>;
   }
 
   if (isHT) {
     return (
-      <span className={`inline-flex items-center gap-1.5 font-bold text-emerald-400 ${className}`}>
+      <span className={`inline-flex items-center gap-1.5 font-bold text-amber-400 ${className}`}>
         {showPulsingDot && (
           <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500" />
           </span>
         )}
-        <span>Half time</span>
+        <span>HT</span>
       </span>
     );
   }

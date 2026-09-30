@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getMatchesByDate } from "@/lib/fotmob/client";
+import { getMatchesByDate, TOP_LEAGUE_IDS } from "@/lib/fotmob/client";
 import { MatchCard } from "@/components/MatchCard";
 import { LiveAutoRefresher } from "@/components/LiveAutoRefresher";
 import { DateStripCarousel } from "@/components/DateStripCarousel";
@@ -20,6 +20,7 @@ interface MatchesPageProps {
   searchParams: {
     date?: string;
     filter?: "all" | "live" | "finished" | "upcoming";
+    scope?: "top" | "all";
   };
 }
 
@@ -32,6 +33,7 @@ export default async function MatchesPage({ searchParams }: MatchesPageProps) {
       .replace(/-/g, "");
 
   const activeFilter = searchParams.filter || "all";
+  const activeScope = searchParams.scope === "all" ? "all" : "top";
 
   // Compute prev and next dates
   const y = parseInt(activeDate.slice(0, 4), 10);
@@ -57,7 +59,19 @@ export default async function MatchesPage({ searchParams }: MatchesPageProps) {
 
   const data = await getMatchesByDate(activeDate);
 
-  let leagues = data.leagues;
+  // Filter leagues by scope (top 10 European competitions vs all)
+  const scopedLeagues =
+    activeScope === "all"
+      ? data.leagues
+      : data.leagues.filter((l) => TOP_LEAGUE_IDS.includes(l.id));
+
+  const totalScopedMatches = scopedLeagues.reduce((sum, l) => sum + l.matches.length, 0);
+  const liveScopedMatchesCount = scopedLeagues.reduce(
+    (sum, l) => sum + l.matches.filter((m) => m.isLive).length,
+    0
+  );
+
+  let leagues = scopedLeagues;
 
   if (activeFilter === "live") {
     leagues = leagues
@@ -93,13 +107,13 @@ export default async function MatchesPage({ searchParams }: MatchesPageProps) {
           <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight [text-wrap:balance]">
             Live Match Center
           </h1>
-          {data.liveMatchesCount > 0 && (
+          {liveScopedMatchesCount > 0 && (
             <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 shrink-0">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
               </span>
-              {data.liveMatchesCount} Live Now
+              {liveScopedMatchesCount} Live Now
             </span>
           )}
         </div>
@@ -111,10 +125,34 @@ export default async function MatchesPage({ searchParams }: MatchesPageProps) {
 
         {/* Row 3: Compact Control Bar */}
         <div className="flex flex-wrap items-center justify-between gap-2.5 pt-1">
-          <LiveAutoRefresher intervalMs={5000} label="Live Scores" />
+          <div className="flex flex-wrap items-center gap-2">
+            <LiveAutoRefresher intervalMs={5000} label="Live Scores" />
+            <div className="flex items-center bg-slate-900/90 p-1 rounded-xl border border-slate-800 text-xs">
+              <Link
+                href={`/matches?date=${activeDate}&filter=${activeFilter}&scope=top`}
+                className={`px-3 py-1 rounded-lg font-bold transition-all ${
+                  activeScope === "top"
+                    ? "bg-slate-800 text-white shadow-sm"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                Top Leagues
+              </Link>
+              <Link
+                href={`/matches?date=${activeDate}&filter=${activeFilter}&scope=all`}
+                className={`px-3 py-1 rounded-lg font-bold transition-all ${
+                  activeScope === "all"
+                    ? "bg-slate-800 text-white shadow-sm"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                All Leagues
+              </Link>
+            </div>
+          </div>
           <div className="flex items-center gap-1 sm:gap-2 bg-slate-900/80 p-1 sm:p-1.5 rounded-2xl border border-slate-800">
             <Link
-              href={`/matches?date=${prevDateStr}&filter=${activeFilter}`}
+              href={`/matches?date=${prevDateStr}&filter=${activeFilter}&scope=${activeScope}`}
               className="p-1.5 sm:p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
               title="Previous Day"
             >
@@ -125,7 +163,7 @@ export default async function MatchesPage({ searchParams }: MatchesPageProps) {
               <span>{displayDateStr}</span>
             </div>
             <Link
-              href={`/matches?date=${nextDateStr}&filter=${activeFilter}`}
+              href={`/matches?date=${nextDateStr}&filter=${activeFilter}&scope=${activeScope}`}
               className="p-1.5 sm:p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
               title="Next Day"
             >
@@ -136,22 +174,22 @@ export default async function MatchesPage({ searchParams }: MatchesPageProps) {
       </div>
 
       {/* 7-Day Quick-Jump Date Carousel */}
-      <DateStripCarousel activeDate={activeDate} activeFilter={activeFilter} />
+      <DateStripCarousel activeDate={activeDate} activeFilter={activeFilter} scope={activeScope} />
 
       {/* Filter Tabs with horizontal snap */}
       <div className="flex items-center gap-2 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-1 border-b border-slate-800/80 text-xs">
         <Link
-          href={`/matches?date=${activeDate}&filter=all`}
+          href={`/matches?date=${activeDate}&filter=all&scope=${activeScope}`}
           className={`snap-start shrink-0 px-4 py-2 rounded-xl font-bold whitespace-nowrap transition-all ${
             activeFilter === "all"
               ? "bg-brand-500/20 text-brand-400 border border-brand-500/30"
               : "text-slate-400 hover:text-white hover:bg-slate-800/50"
           }`}
         >
-          All Matches ({data.totalMatches})
+          All Matches ({totalScopedMatches})
         </Link>
         <Link
-          href={`/matches?date=${activeDate}&filter=live`}
+          href={`/matches?date=${activeDate}&filter=live&scope=${activeScope}`}
           className={`snap-start shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-xl font-bold whitespace-nowrap transition-all ${
             activeFilter === "live"
               ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
@@ -159,10 +197,10 @@ export default async function MatchesPage({ searchParams }: MatchesPageProps) {
           }`}
         >
           <Radio className="w-3.5 h-3.5" />
-          Live Now ({data.liveMatchesCount})
+          Live Now ({liveScopedMatchesCount})
         </Link>
         <Link
-          href={`/matches?date=${activeDate}&filter=finished`}
+          href={`/matches?date=${activeDate}&filter=finished&scope=${activeScope}`}
           className={`snap-start shrink-0 px-4 py-2 rounded-xl font-bold whitespace-nowrap transition-all ${
             activeFilter === "finished"
               ? "bg-blue-500/20 text-blue-400 border border-blue-500/30"
@@ -172,7 +210,7 @@ export default async function MatchesPage({ searchParams }: MatchesPageProps) {
           Finished
         </Link>
         <Link
-          href={`/matches?date=${activeDate}&filter=upcoming`}
+          href={`/matches?date=${activeDate}&filter=upcoming&scope=${activeScope}`}
           className={`snap-start shrink-0 px-4 py-2 rounded-xl font-bold whitespace-nowrap transition-all ${
             activeFilter === "upcoming"
               ? "bg-purple-500/20 text-purple-400 border border-purple-500/30"
@@ -224,7 +262,7 @@ export default async function MatchesPage({ searchParams }: MatchesPageProps) {
           </p>
           <div className="pt-2">
             <Link
-              href={`/matches?date=${activeDate}&filter=all`}
+              href={`/matches?date=${activeDate}&filter=all&scope=${activeScope}`}
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs transition-colors"
             >
               View All Matches on this Date

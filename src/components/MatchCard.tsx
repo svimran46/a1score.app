@@ -2,6 +2,7 @@ import Link from "next/link";
 import { EntityImage } from "./EntityImage";
 import { FotmobMatch } from "@/lib/fotmob/client";
 import { formatCompactEur } from "@/lib/utils";
+import { getClubDisplayName } from "@/lib/data/clubs";
 import { LiveMinute } from "./LiveMinute";
 import { KickoffTime } from "./KickoffTime";
 
@@ -18,11 +19,15 @@ export function MatchCard({
 }: MatchCardProps) {
   const isLive = match.isLive;
   const isFinished = match.isFinished;
+  const isHT =
+    match.status.liveTime?.short?.toUpperCase() === "HT" ||
+    match.status.reason?.short?.toUpperCase() === "HT" ||
+    match.status.liveTime?.short?.toLowerCase() === "half time";
 
   // Format kickoff or status
   let statusText = match.time || "TBD";
   if (isLive) {
-    statusText = match.status.liveTime?.short || "LIVE";
+    statusText = isHT ? "HT" : match.status.liveTime?.short || "LIVE";
   } else if (isFinished) {
     statusText = "FT";
   }
@@ -50,6 +55,7 @@ export function MatchCard({
                 shortTime={match.status.liveTime?.short}
                 longTime={match.status.liveTime?.long}
                 isLive={true}
+                isHT={isHT}
                 showPulsingDot={true}
                 className="text-[11px] text-rose-400"
               />
@@ -92,6 +98,7 @@ export function MatchCard({
               />
             </div>
             <span
+              title={match.home.name}
               className={`text-sm truncate font-medium ${
                 isFinished &&
                 match.home.score !== undefined &&
@@ -101,7 +108,7 @@ export function MatchCard({
                   : "text-slate-200"
               }`}
             >
-              {match.home.name}
+              {getClubDisplayName(match.home.name)}
             </span>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
@@ -134,6 +141,7 @@ export function MatchCard({
               />
             </div>
             <span
+              title={match.away.name}
               className={`text-sm truncate font-medium ${
                 isFinished &&
                 match.away.score !== undefined &&
@@ -143,7 +151,7 @@ export function MatchCard({
                   : "text-slate-200"
               }`}
             >
-              {match.away.name}
+              {getClubDisplayName(match.away.name)}
             </span>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">

@@ -6,6 +6,8 @@
  * to provide live scores, fixtures, lineups, and match stats with zero external dependencies.
  */
 
+import { formatKickoff } from "@/lib/utils";
+
 const FOTMOB_BASE = "https://www.fotmob.com";
 
 const FOTMOB_HEADERS = {
@@ -408,6 +410,64 @@ export async function getMatchesByDate(dateStr?: string): Promise<{
     totalMatches,
     liveMatchesCount,
   };
+}
+
+export const TOP_LEAGUE_IDS: number[] = [
+  47, // Premier League
+  87, // LaLiga
+  54, // Bundesliga
+  55, // Serie A
+  53, // Ligue 1
+  61, // Liga Portugal
+  57, // Eredivisie
+  42, // UEFA Champions League
+  73, // UEFA Europa League
+  10216, // UEFA Conference League
+];
+
+export function formatMatchStatus(match: {
+  isLive?: boolean;
+  isFinished?: boolean;
+  isUpcoming?: boolean;
+  time?: string | null;
+  timeTS?: number | string | null;
+  status?: {
+    liveTime?: { short?: string | null; long?: string | null } | null;
+    reason?: { short?: string | null; long?: string | null } | null;
+  } | null;
+}): string {
+  if (match.isFinished) return "FT";
+
+  const liveShort = match.status?.liveTime?.short?.trim() || "";
+  const reasonShort = match.status?.reason?.short?.trim() || "";
+
+  if (
+    liveShort.toUpperCase() === "HT" ||
+    reasonShort.toUpperCase() === "HT" ||
+    liveShort.toLowerCase() === "half time"
+  ) {
+    return "HT";
+  }
+
+  if (match.isLive) {
+    if (liveShort) {
+      const clean = liveShort.replace(/[^\d+’']/g, "");
+      const formattedMin = clean.endsWith("'") ? clean : `${clean}'`;
+      return `Live ${formattedMin}`;
+    }
+    return "Live";
+  }
+
+  // Upcoming: format kickoff time with timezone label
+  if (match.timeTS) {
+    return formatKickoff(match.timeTS, { tz: "UTC" });
+  }
+
+  if (match.time) {
+    return match.time.includes("UTC") ? match.time : `${match.time} UTC`;
+  }
+
+  return "TBD";
 }
 
 export const FOTMOB_LEAGUE_MAP: Record<string, number> = {

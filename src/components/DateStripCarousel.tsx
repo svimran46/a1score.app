@@ -7,11 +7,13 @@ import { Calendar } from "lucide-react";
 interface DateStripCarouselProps {
   activeDate: string; // YYYYMMDD
   activeFilter?: string;
+  scope?: string;
 }
 
 export function DateStripCarousel({
   activeDate,
   activeFilter = "all",
+  scope,
 }: DateStripCarouselProps) {
   // Generate 7 days centered on activeDate
   const days = useMemo(() => {
@@ -60,7 +62,7 @@ export function DateStripCarousel({
       {days.map((item) => (
         <Link
           key={item.dateStr}
-          href={`/matches?date=${item.dateStr}&filter=${activeFilter}`}
+          href={`/matches?date=${item.dateStr}&filter=${activeFilter}${scope ? `&scope=${scope}` : ""}`}
           className={`flex-shrink-0 snap-start flex flex-col items-center justify-center min-w-[76px] px-3 py-2 rounded-2xl border text-xs transition-all ${
             item.isActive
               ? "bg-amber-500/15 border-amber-500/40 text-amber-400 font-bold shadow-md shadow-amber-500/5"
