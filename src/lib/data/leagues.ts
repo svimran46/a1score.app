@@ -2,6 +2,7 @@ import { supabase } from "@/lib/supabase";
 import {
   getLeagueStandings,
   FotmobStandingsRow,
+  OFFICIAL_LEAGUE_CLUB_COUNTS,
 } from "@/lib/fotmob/client";
 import { sanitizeImageUrl } from "@/lib/image-sanitize";
 import { FOTMOB_TEAM_MAPPINGS } from "@/lib/league-mappings";
@@ -30,16 +31,26 @@ export async function getLeagues() {
 
     return leagues
       .filter((l) => l.transfermarktId !== "CL" || Number(l.totalMarketValue) > 0)
-      .map((league) => ({
-        id: league.id,
-        name: league.name,
-        country: league.country,
-        tier: league.tier || 1,
-        logoUrl: sanitizeImageUrl(league.logoUrl, "league", league.id),
-        clubCount: league.clubCount ?? 0,
-        totalPlayers: league.totalPlayers ?? 0,
-        totalMarketValue: league.totalMarketValue ? Number(league.totalMarketValue) : 0,
-      }));
+      .map((league) => {
+        const officialClubCount =
+          (league.transfermarktId && OFFICIAL_LEAGUE_CLUB_COUNTS[league.transfermarktId]) ||
+          league.clubCount ||
+          20;
+        const totalMarketValue = league.totalMarketValue ? Number(league.totalMarketValue) : 0;
+        const avgSquadValue = officialClubCount > 0 ? Math.round(totalMarketValue / officialClubCount) : 0;
+
+        return {
+          id: league.id,
+          name: league.name,
+          country: league.country,
+          tier: league.tier || 1,
+          logoUrl: sanitizeImageUrl(league.logoUrl, "league", league.id),
+          clubCount: officialClubCount,
+          totalPlayers: league.totalPlayers ?? 0,
+          totalMarketValue,
+          avgSquadValue,
+        };
+      });
   } catch (error) {
     console.error("Error fetching leagues:", error);
     return [];
