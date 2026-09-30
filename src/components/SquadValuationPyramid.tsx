@@ -538,14 +538,23 @@ export function SquadValuationPyramid({
             </div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-slate-900/30 border border-slate-800/60 text-[11px] text-slate-400 leading-relaxed">
-            <span className="font-semibold text-slate-300">
-              Editorial Benchmark:
-            </span>{" "}
-            Modern Champions League contenders typically allocate 50–60% of
-            their total squad valuation across Midfield & Attack, reflecting the
-            scarcity premium of dynamic chance-creators and goalscorers.
-          </div>
+          {(() => {
+            const midVal = positionalBreakdown.find((p) => p.key === "mid")?.totalVal || 0;
+            const attVal = positionalBreakdown.find((p) => p.key === "att")?.totalVal || 0;
+            const midAttVal = midVal + attVal;
+            const midAttPct = totalSquadValue > 0 ? ((midAttVal / totalSquadValue) * 100).toFixed(1) : "0";
+            const defGkVal = Math.max(0, totalSquadValue - midAttVal);
+            const defGkPct = totalSquadValue > 0 ? ((defGkVal / totalSquadValue) * 100).toFixed(1) : "0";
+
+            return (
+              <div className="p-4 rounded-2xl bg-slate-900/30 border border-slate-800/60 text-[11px] text-slate-400 leading-relaxed">
+                <span className="font-semibold text-slate-300">
+                  Positional Capital Allocation:
+                </span>{" "}
+                {clubName} allocates {midAttPct}% ({formatCompactEur(midAttVal)}) of senior squad valuation across Midfield &amp; Attack, with {defGkPct}% ({formatCompactEur(defGkVal)}) invested in Defense &amp; Goalkeeping.
+              </div>
+            );
+          })()}
         </div>
       </div>
     </div>

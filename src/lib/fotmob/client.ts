@@ -539,6 +539,129 @@ export async function searchFotmob(query: string) {
   return { players, teams };
 }
 
+export interface FotmobTeamDetails {
+  venue?: {
+    name: string;
+    city?: string;
+    capacity?: number;
+    surface?: string;
+  } | null;
+  manager?: {
+    name: string;
+    season?: string;
+  } | null;
+  recentForm?: Array<{
+    result: string;
+    score: string;
+    opponent: string;
+    date?: string;
+  }>;
+  nextMatch?: {
+    opponent: string;
+    date: string;
+    tournament: string;
+    isHome: boolean;
+  } | null;
+  leagueTable?: {
+    rank: number;
+    pts: number;
+    played: number;
+    wins: number;
+    draws: number;
+    losses: number;
+    gd: number;
+  } | null;
+}
+
+export async function getFotmobTeamDetails(teamId: number): Promise<FotmobTeamDetails | null> {
+  if (!teamId) return null;
+  try {
+    const data = await fotmobFetch<any>(`/api/data/teams?id=${teamId}`, 1800);
+    if (!data) return null;
+
+    // Venue
+    const venueWidget = data.overview?.venue?.widget;
+    const statPairs: any[][] = data.overview?.venue?.statPairs || [];
+    const capacityPair = statPairs.find((p) => p[0] === "Capacity");
+    const surfacePair = statPairs.find((p) => p[0] === "Surface");
+
+    const venue = venueWidget?.name
+      ? {
+          name: venueWidget.name,
+          city: venueWidget.city || undefined,
+          capacity: capacityPair ? Number(capacityPair[1]) : undefined,
+          surface: surfacePair ? String(surfacePair[1]) : undefined,
+        }
+      : null;
+
+    // Manager
+    const coachHist = data.overview?.coachHistory || [];
+    const latestCoach = coachHist[coachHist.length - 1];
+    const manager = latestCoach?.name
+      ? {
+          name: latestCoach.name,
+          season: latestCoach.season,
+        }
+      : null;
+
+    // Recent Form (Last 5)
+    let recentForm: any[] = [];
+    const teamFormObj =
+      data.table?.[0]?.data?.teamForm?.[String(teamId)] ||
+      data.overview?.table?.[0]?.teamForm?.[String(teamId)];
+
+    if (Array.isArray(teamFormObj) && teamFormObj.length > 0) {
+      recentForm = teamFormObj.slice(-5).map((f: any) => ({
+        result: f.resultString || (f.result === 1 ? "W" : f.result === -1 ? "L" : "D"),
+        score: f.score || `${f.tooltipText?.homeScore ?? 0} - ${f.tooltipText?.awayScore ?? 0}`,
+        opponent:
+          f.tooltipText?.homeTeamId === teamId
+            ? f.tooltipText?.awayTeam || "Opponent"
+            : f.tooltipText?.homeTeam || "Opponent",
+        date: f.tooltipText?.utcTime,
+      }));
+    }
+
+    // Next match
+    const nm = data.overview?.nextMatch;
+    const nextMatch = nm
+      ? {
+          opponent: nm.opponent?.name || nm.away?.name || "Opponent",
+          date: nm.status?.utcTime || nm.startDay,
+          tournament: nm.tournament?.name || "League",
+          isHome: nm.home?.id === teamId,
+        }
+      : null;
+
+    // Table info
+    let leagueTable: any = null;
+    const allTeams = data.table?.[0]?.data?.table?.all || [];
+    const ourTeamRow = allTeams.find((r: any) => r.id === teamId);
+    if (ourTeamRow) {
+      leagueTable = {
+        rank: ourTeamRow.idx,
+        pts: ourTeamRow.pts,
+        played: ourTeamRow.played,
+        wins: ourTeamRow.wins,
+        draws: ourTeamRow.draws,
+        losses: ourTeamRow.losses,
+        gd: ourTeamRow.goalConDiff,
+      };
+    }
+
+    return {
+      venue,
+      manager,
+      recentForm,
+      nextMatch,
+      leagueTable,
+    };
+  } catch (err) {
+    console.warn(`[FotMob Client] Failed to fetch team ${teamId}:`, err);
+    return null;
+  }
+}
+
 /**
  * Fetch player performance intelligence and career tournament breakdown
  */
