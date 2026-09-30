@@ -18,7 +18,7 @@
  *    - /values 301 redirect to /players.
  */
 
-import { getMostValuablePlayers, getPositionalPeers } from "../src/lib/data/players";
+import { getMostValuablePlayers, getPositionalPeers, getPlayerBySlugOrId } from "../src/lib/data/players";
 import { getClubById, getAllClubs } from "../src/lib/data/clubs";
 import { getLeagueById, getLeagues } from "../src/lib/data/leagues";
 
@@ -261,6 +261,38 @@ async function verifyReingestedClubsSanity() {
   }
 }
 
+async function verifyPlayerValuationSanityAndIdentity() {
+  console.log("\n--- 6. Verifying Player Valuation Sanity & Distinct Identity Integrity ---");
+  const ethan = await getPlayerBySlugOrId("ethan-mbapp--903666");
+  const kylian = await getPlayerBySlugOrId("kylian-mbapp--342229");
+  const michael = await getPlayerBySlugOrId("michael-olise-566723");
+  const richard = await getPlayerBySlugOrId("richard-olise-868920");
+
+  assert(
+    !!ethan && ethan.latestMarketValue === 12000000,
+    "Ethan Mbappé Valuation Sanity",
+    `Ethan Mbappé valuation is €${((ethan?.latestMarketValue || 0) / 1e6).toFixed(1)}M (expected €12M, never €200M)`
+  );
+
+  assert(
+    !!kylian && kylian.latestMarketValue === 200000000,
+    "Kylian Mbappé Valuation Sanity",
+    `Kylian Mbappé valuation is €${((kylian?.latestMarketValue || 0) / 1e6).toFixed(0)}M (expected €200M)`
+  );
+
+  assert(
+    !!michael && michael.latestMarketValue === 170000000,
+    "Michael Olise Valuation Sanity",
+    `Michael Olise valuation is €${((michael?.latestMarketValue || 0) / 1e6).toFixed(0)}M (expected €170M)`
+  );
+
+  assert(
+    !richard || richard.latestMarketValue === null || Number(richard.latestMarketValue) < 10000000,
+    "Richard Olise Valuation Sanity",
+    `Richard Olise is not corrupted with star valuation (actual: ${richard?.latestMarketValue ?? "null"})`
+  );
+}
+
 async function verifyRenderedPagesAcrossViews(baseUrl: string) {
   console.log(`\n--- 6. Verifying Rendered Output Across Pages at ${baseUrl} (Global Rule 4) ---`);
 
@@ -325,6 +357,7 @@ async function main() {
     await verifyAll7LeaguesStandings();
     await verifyPositionalPeersIntegrity();
     await verifyReingestedClubsSanity();
+    await verifyPlayerValuationSanityAndIdentity();
 
     if (baseUrl) {
       await verifyRenderedPagesAcrossViews(baseUrl);
