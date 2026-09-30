@@ -1,7 +1,7 @@
 import { notFound, permanentRedirect } from "next/navigation";
 import { EntityImage } from "@/components/EntityImage";
 import Link from "next/link";
-import { getClubById, getClubTransfers } from "@/lib/data/clubs";
+import { getClubById, getClubTransfers, getClubDisplayName } from "@/lib/data/clubs";
 import { getLeagueById } from "@/lib/data/leagues";
 import { getFotmobTeamDetails } from "@/lib/fotmob/client";
 import { FOTMOB_TEAM_MAPPINGS } from "@/lib/league-mappings";
@@ -158,8 +158,13 @@ export default async function ClubPage({ params }: ClubPageProps) {
                 Football Club
               </span>
               <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                {club.name}
+                {getClubDisplayName(club)}
               </h1>
+              {club.name && club.name !== getClubDisplayName(club) && (
+                <p className="text-xs text-slate-400 font-medium" title={club.name}>
+                  {club.name}
+                </p>
+              )}
               <div className="flex flex-wrap items-center gap-3 text-xs text-slate-400 mt-1">
                 {club.country && (
                   <span className="flex items-center gap-1">

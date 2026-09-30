@@ -66,7 +66,7 @@ export default async function HomePage() {
             </span>
             <span className="text-slate-600 hidden sm:inline">•</span>
             <span className="text-slate-300 hidden sm:inline whitespace-nowrap">
-              Live Valuation &amp; Match Intelligence
+              Live Valuation & Match Intelligence
             </span>
           </div>
 
@@ -282,7 +282,7 @@ export default async function HomePage() {
             <span>Editorial Transparency</span>
           </div>
           <h3 className="text-lg font-bold text-white tracking-tight">
-            How Valuation Data &amp; Live Match Delivery Are Grounded
+            How Valuation Data & Live Match Delivery Are Grounded
           </h3>
           <p className="text-xs text-slate-400 leading-relaxed">
             Read our methodology on how player valuations, career trajectory graphs, and live match events are sourced and processed with zero fabricated numbers.

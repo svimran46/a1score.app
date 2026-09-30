@@ -5,6 +5,7 @@ import Link from "next/link";
 import { EntityImage } from "@/components/EntityImage";
 import { formatCompactEur } from "@/lib/utils";
 import { getClubSlug } from "@/lib/slugs";
+import { getClubDisplayName } from "@/lib/data/clubs";
 import { ArrowUpDown, Trophy, Calendar, Sparkles } from "lucide-react";
 import type { LeagueLegendItem } from "@/lib/fotmob/client";
 
@@ -267,8 +268,8 @@ export function LeagueStandingsTable({
                             className="object-contain"
                           />
                         </div>
-                        <span className="text-white font-semibold group-hover:text-amber-400 transition-colors truncate max-w-[180px]">
-                          {row.name}
+                        <span className="text-white font-semibold group-hover:text-amber-400 transition-colors truncate max-w-[180px]" title={row.name}>
+                          {getClubDisplayName(row.name)}
                         </span>
                       </Link>
                     ) : (
@@ -283,8 +284,8 @@ export function LeagueStandingsTable({
                             className="object-contain"
                           />
                         </div>
-                        <span className="text-white font-semibold truncate max-w-[180px]">
-                          {row.name}
+                        <span className="text-white font-semibold truncate max-w-[180px]" title={row.name}>
+                          {getClubDisplayName(row.name)}
                         </span>
                       </div>
                     )}

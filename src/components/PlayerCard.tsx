@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { EntityImage } from "./EntityImage";
 import { formatCompactEur } from "@/lib/utils";
+import { getClubDisplayName } from "@/lib/data/clubs";
 
 interface PlayerCardProps {
   player: {
@@ -79,7 +80,7 @@ export function PlayerCard({ player }: PlayerCardProps) {
                     />
                   </div>
                 )}
-                <span className="truncate">{player.currentClub.name}</span>
+                <span className="truncate" title={player.currentClub.name}>{getClubDisplayName(player.currentClub)}</span>
               </div>
             )}
             {player.nationality && player.nationality.length > 0 && (

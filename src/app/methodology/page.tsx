@@ -17,7 +17,7 @@ export default function MethodologyPage() {
       <div className="space-y-3 text-left">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold whitespace-nowrap">
           <ShieldCheck className="w-4 h-4 shrink-0" />
-          Editorial Transparency &amp; Integrity
+          Editorial Transparency & Integrity
         </div>
         <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight [text-wrap:balance]">
           How A1Score Operates
@@ -36,7 +36,7 @@ export default function MethodologyPage() {
           </div>
           <div>
             <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
-              Financial &amp; Valuation Layer
+              Financial & Valuation Layer
             </span>
             <h2 className="text-xl font-bold text-white tracking-tight mt-1 [text-wrap:balance]">
               Valuation Intelligence
@@ -68,7 +68,7 @@ export default function MethodologyPage() {
           </div>
           <div>
             <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
-              Live Pitch &amp; Match Center Layer
+              Live Pitch & Match Center Layer
             </span>
             <h2 className="text-xl font-bold text-white tracking-tight mt-1 [text-wrap:balance]">
               Match Intelligence
@@ -102,7 +102,7 @@ export default function MethodologyPage() {
           </div>
           <div>
             <h3 className="text-base sm:text-lg font-bold text-white tracking-tight [text-wrap:balance]">
-              First-Team Squad &amp; Valuation Methodology
+              First-Team Squad & Valuation Methodology
             </h3>
             <p className="text-xs text-slate-400 [text-wrap:balance]">
               Strict unified definitions governing squad counts, total squad valuations, and average squad age across all platform views
@@ -145,7 +145,7 @@ export default function MethodologyPage() {
           </div>
           <div>
             <h3 className="text-base sm:text-lg font-bold text-white tracking-tight [text-wrap:balance]">
-              Cache Protocols &amp; Refresh Rates
+              Cache Protocols & Refresh Rates
             </h3>
             <p className="text-xs text-slate-400 [text-wrap:balance]">
               How Cloudflare Pages Edge Workers deliver sub-50ms latency across global edge points
@@ -172,7 +172,7 @@ export default function MethodologyPage() {
 
           <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-1.5">
             <span className="text-blue-400 font-bold text-sm">1 Hour (ISR)</span>
-            <h4 className="text-white font-semibold">Valuations &amp; Player Profiles</h4>
+            <h4 className="text-white font-semibold">Valuations & Player Profiles</h4>
             <p className="text-slate-400">
               Market value curve graphs, transfer ledgers, career statistics, and bio details.
             </p>

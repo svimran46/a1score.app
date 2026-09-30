@@ -551,7 +551,7 @@ export function SquadValuationPyramid({
                 <span className="font-semibold text-slate-300">
                   Positional Capital Allocation:
                 </span>{" "}
-                {clubName} allocates {midAttPct}% ({formatCompactEur(midAttVal)}) of senior squad valuation across Midfield &amp; Attack, with {defGkPct}% ({formatCompactEur(defGkVal)}) invested in Defense &amp; Goalkeeping.
+                {clubName} allocates {midAttPct}% ({formatCompactEur(midAttVal)}) of senior squad valuation across Midfield & Attack, with {defGkPct}% ({formatCompactEur(defGkVal)}) invested in Defense & Goalkeeping.
               </div>
             );
           })()}

@@ -55,7 +55,7 @@ export function StatsTab({ match }: StatsTabProps) {
             <div className="flex items-center gap-2">
               <Crosshair className="w-4 h-4 text-emerald-400" />
               <h3 className="text-sm font-bold text-white uppercase tracking-wider">
-                Shot Map &amp; Expected Goals (xG)
+                Shot Map & Expected Goals (xG)
               </h3>
             </div>
             <div className="flex items-center gap-4 text-xs font-mono font-bold">

@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { EntityImage } from "./EntityImage";
 import { formatCompactEur } from "@/lib/utils";
+import { getClubDisplayName } from "@/lib/data/clubs";
 import {
   Search,
   X,
@@ -269,7 +270,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                           {p.currentClub?.name && (
                             <>
                               <span>•</span>
-                              <span>{p.currentClub.name}</span>
+                              <span title={p.currentClub.name}>{getClubDisplayName(p.currentClub.name)}</span>
                             </>
                           )}
                         </div>

@@ -193,7 +193,7 @@ export function MatchCard({
       {/* Footer info */}
       <div className="pt-2 border-t border-slate-800/40 flex items-center justify-between text-[11px] text-slate-500">
         <span className="flex items-center gap-1 font-medium">
-          <span className="text-amber-400">Squad Values</span> &amp; Match Center
+          <span className="text-amber-400">Squad Values</span> & Match Center
         </span>
         <span className="text-amber-400 font-semibold group-hover:translate-x-0.5 transition-transform">
           Details →

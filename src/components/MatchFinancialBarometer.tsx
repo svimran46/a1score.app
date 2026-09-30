@@ -120,7 +120,7 @@ export function MatchFinancialBarometer({
         <div className="flex items-center gap-2">
           <Scale className="w-4 h-4 text-amber-400 shrink-0" />
           <h3 className="text-sm font-bold text-white tracking-tight">
-            Financial Parity &amp; Value-to-Pitch Index
+            Financial Parity & Value-to-Pitch Index
           </h3>
         </div>
         <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">

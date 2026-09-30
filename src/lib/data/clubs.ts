@@ -6,8 +6,53 @@ import { getCanonicalPosition } from "@/lib/positions";
 
 import { FOTMOB_TEAM_MAPPINGS } from "@/lib/league-mappings";
 
-export const CLUB_SHORT_NAMES: Record<string, string> = {
-  "Associazione Sportiva Roma": "AS Roma",
+export const CLUB_DISPLAY_NAMES: Record<string, string> = {
+  // Required standard common names
+  "Associazione Sportiva Roma": "Roma",
+  "AS Roma": "Roma",
+  "Roma": "Roma",
+
+  "Brighton and Hove Albion": "Brighton & Hove Albion",
+  "Brighton & Hove Albion": "Brighton & Hove Albion",
+  "Brighton &amp; Hove Albion": "Brighton & Hove Albion",
+  "Brighton": "Brighton & Hove Albion",
+
+  "Football Club Internazionale Milano": "Inter",
+  "FC Internazionale Milano": "Inter",
+  "Internazionale": "Inter",
+  "Inter Milan": "Inter",
+  "Inter": "Inter",
+
+  "Wolverhampton Wanderers": "Wolves",
+  "Wolverhampton": "Wolves",
+  "Wolves": "Wolves",
+
+  "Tottenham Hotspur": "Spurs",
+  "Tottenham Hotspur FC": "Spurs",
+  "Tottenham": "Spurs",
+  "Spurs": "Spurs",
+
+  "Manchester City": "Man City",
+  "Manchester City FC": "Man City",
+  "Man City": "Man City",
+
+  "Manchester United": "Man Utd",
+  "Manchester United FC": "Man Utd",
+  "Man United": "Man Utd",
+  "Man Utd": "Man Utd",
+
+  "Club Atlético de Madrid": "Atletico Madrid",
+  "Club Atlético de Madrid S.A.D.": "Atletico Madrid",
+  "Atlético de Madrid": "Atletico Madrid",
+  "Atlético Madrid": "Atletico Madrid",
+  "Atletico Madrid": "Atletico Madrid",
+
+  "Paris Saint-Germain": "PSG",
+  "Paris Saint-Germain FC": "PSG",
+  "Paris SG": "PSG",
+  "PSG": "PSG",
+
+  // Additional common short names
   "1. Fußballclub Heidenheim 1846": "1. FC Heidenheim",
   "Bologna Football Club 1909": "Bologna FC",
   "Borussia Mönchengladbach": "M'gladbach",
@@ -16,25 +61,51 @@ export const CLUB_SHORT_NAMES: Record<string, string> = {
   "Desportivo Aves (- 2020)": "Desportivo Aves",
   "Fortuna Sittardia Combinatie": "Fortuna Sittard",
   "Società Sportiva Lazio S.p.A.": "SS Lazio",
+  "Società Sportiva Lazio": "SS Lazio",
   "Thonon Évian Grand Genève FC": "Thonon Évian",
-  "Wolverhampton Wanderers": "Wolves",
-  "Brighton and Hove Albion": "Brighton",
-  "Brighton & Hove Albion": "Brighton",
-  "Manchester City": "Man City",
-  "Manchester United": "Man United",
-  "Paris Saint-Germain": "PSG",
-  "Atlético de Madrid": "Atlético Madrid",
 };
 
-export function getClubShortName(fullName: string): string {
-  if (!fullName) return "";
-  if (CLUB_SHORT_NAMES[fullName]) return CLUB_SHORT_NAMES[fullName];
-  return fullName
+export const CLUB_SHORT_NAMES = CLUB_DISPLAY_NAMES;
+
+export function getClubDisplayName(
+  clubOrName: { name?: string | null; shortName?: string | null } | string | null | undefined
+): string {
+  if (!clubOrName) return "";
+  const rawName =
+    typeof clubOrName === "string"
+      ? clubOrName
+      : clubOrName.shortName || clubOrName.name || "";
+  const trimmed = rawName.trim();
+  if (!trimmed) return "";
+
+  // Exact lookup
+  if (CLUB_DISPLAY_NAMES[trimmed]) return CLUB_DISPLAY_NAMES[trimmed];
+
+  // Case-insensitive lookup
+  const lower = trimmed.toLowerCase();
+  for (const [key, val] of Object.entries(CLUB_DISPLAY_NAMES)) {
+    if (key.toLowerCase() === lower) {
+      return val;
+    }
+  }
+
+  // Unescape any HTML entity artifacts
+  let clean = trimmed.replace(/&amp;/g, "&");
+
+  // Normalized patterns
+  clean = clean
     .replace(/^Associazione Sportiva\s+/i, "AS ")
     .replace(/^Società Sportiva\s+/i, "SS ")
     .replace(/\s+S\.p\.A\.?$/i, "")
-    .replace(/\s+Football Club\s+/i, " FC ")
+    .replace(/\s+S\.A\.D\.?$/i, "")
+    .replace(/\s+Football Club(\s+|$)/i, " FC$1")
     .replace(/^1\.\s*Fußballclub\s+/i, "1. FC ");
+
+  return clean;
+}
+
+export function getClubShortName(fullName: string): string {
+  return getClubDisplayName(fullName);
 }
 
 /**

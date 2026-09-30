@@ -248,7 +248,7 @@ export function LineupTab({ match }: LineupTabProps) {
       <div className="rounded-3xl border border-slate-800 bg-slate-900/60 backdrop-blur-xl p-4 sm:p-6 shadow-xl space-y-4">
         <div className="flex items-center justify-between pb-3 border-b border-slate-800/80">
           <h3 className="text-sm font-bold text-white uppercase tracking-wider">
-            Substitutes &amp; Staff
+            Substitutes & Staff
           </h3>
           <span className="text-[11px] text-slate-400">{currentSubs.length} Available</span>
         </div>

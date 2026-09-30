@@ -123,11 +123,11 @@ export function PlayerIntelligenceRibbon({
         <div className="flex items-center gap-2">
           <Zap className="w-4 h-4 text-amber-400" />
           <h3 className="text-sm font-bold text-white tracking-tight">
-            Valuation Intelligence &amp; Performance Correlation
+            Valuation Intelligence & Performance Correlation
           </h3>
         </div>
         <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">
-          Valuation &amp; form insights
+          Valuation & form insights
         </span>
       </div>
 

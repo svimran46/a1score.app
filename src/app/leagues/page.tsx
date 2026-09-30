@@ -23,7 +23,7 @@ export default async function LeaguesPage() {
       <div>
         <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-2.5 sm:gap-3 [text-wrap:balance]">
           <Trophy className="w-7 h-7 sm:w-8 sm:h-8 text-amber-400 shrink-0" />
-          Competitions &amp; Leagues
+          Competitions & Leagues
         </h1>
         <p className="text-xs sm:text-sm text-slate-400 mt-1 [text-wrap:balance]">
           Comprehensive financial benchmarks, active squad valuations, and domestic standings across Europe&apos;s Top 7 top-flight domestic competitions

@@ -18,7 +18,7 @@
     "reconcile:squads": "tsx scripts/reconcile-all-transfers.ts",
     "export:data": "tsx scripts/export-dataset.ts",
     "check:rls": "tsx scripts/check-rls.ts",
-    "test:unit": "tsx --test tests/pure-functions.test.ts tests/positions.test.ts tests/image-proxy.test.ts tests/navbar-active.test.ts tests/cache.test.ts tests/health.test.ts tests/clubs-squad.test.ts",
+    "test:unit": "tsx --test tests/pure-functions.test.ts tests/positions.test.ts tests/image-proxy.test.ts tests/navbar-active.test.ts tests/cache.test.ts tests/health.test.ts tests/clubs-squad.test.ts tests/club-names.test.ts",
     "test:integrity": "tsx --test tests/integrity.test.ts",
     "test": "npm run test:unit && npm run test:integrity"
   },

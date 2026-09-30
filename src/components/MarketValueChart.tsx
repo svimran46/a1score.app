@@ -154,7 +154,7 @@ export function MarketValueChart({
             )}
           </div>
           <p className="text-xs text-slate-400 mt-1">
-            Valuation trajectory &amp; career peak benchmarks
+            Valuation trajectory & career peak benchmarks
           </p>
         </div>
 

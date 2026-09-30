@@ -6,6 +6,7 @@ import Link from "next/link";
 import { EntityImage } from "./EntityImage";
 import { formatCompactEur } from "@/lib/utils";
 import { getClubSlug } from "@/lib/slugs";
+import { getClubDisplayName } from "@/lib/data/clubs";
 import {
   Search,
   Filter,
@@ -370,8 +371,13 @@ export function ClubsDirectoryClient({ initialClubs }: ClubsDirectoryClientProps
                 </div>
                 <div className="min-w-0 flex-1">
                   <h3 className="text-sm font-bold text-white tracking-tight truncate group-hover:text-amber-400 transition-colors" title={club.name}>
-                    {club.shortName || club.name}
+                    {getClubDisplayName(club)}
                   </h3>
+                  {club.name && club.name !== getClubDisplayName(club) && (
+                    <p className="text-[10px] text-slate-500 truncate" title={club.name}>
+                      {club.name}
+                    </p>
+                  )}
                   <div className="text-[11px] text-slate-400 mt-0.5 truncate flex items-center gap-1.5">
                     <span className="truncate">{club.leagueName || club.country || "Club"}</span>
                     {club.leagueRank && (
