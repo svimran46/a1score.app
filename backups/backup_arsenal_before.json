@@ -1,0 +1,90 @@
+[
+  {
+    "id": "cmuihvwru03vysexpyx8qaql4",
+    "fullName": "Leandro Trossard",
+    "commonName": null,
+    "dateOfBirth": "1994-12-03T16:00:00.000Z",
+    "nationality": [
+      "Belgium"
+    ],
+    "position": "Attack",
+    "subPosition": "Left Winger",
+    "preferredFoot": null,
+    "heightCm": 172,
+    "photoUrl": "https://img.a.transfermarkt.technology/portrait/header/144028-1702412939.jpg?lm=1",
+    "apiFootballId": null,
+    "transfermarktId": "144028",
+    "latestMarketValue": "18000000",
+    "lastSeason": 2026,
+    "status": "first_team",
+    "currentClubId": "cmuiho5do001hb23froc57owj",
+    "createdAt": "2026-09-26T14:38:33.611Z",
+    "updatedAt": "2026-09-26T14:38:33.611Z"
+  },
+  {
+    "id": "cmuihw24k0a6qsexp2t10fjmh",
+    "fullName": "Gabriel Martinelli",
+    "commonName": null,
+    "dateOfBirth": "2001-06-17T16:00:00.000Z",
+    "nationality": [
+      "Brazil"
+    ],
+    "position": "Attack",
+    "subPosition": "Left Winger",
+    "preferredFoot": null,
+    "heightCm": 178,
+    "photoUrl": "https://img.a.transfermarkt.technology/portrait/header/655488-1682689091.jpg?lm=1",
+    "apiFootballId": null,
+    "transfermarktId": "655488",
+    "latestMarketValue": "45000000",
+    "lastSeason": 2026,
+    "status": "first_team",
+    "currentClubId": "cmuiho5do001hb23froc57owj",
+    "createdAt": "2026-09-26T14:38:40.542Z",
+    "updatedAt": "2026-09-26T14:38:40.542Z"
+  },
+  {
+    "id": "cmuihw3el0bc2sexp7tgcux59",
+    "fullName": "Tommy Setford",
+    "commonName": null,
+    "dateOfBirth": "2006-03-12T16:00:00.000Z",
+    "nationality": [
+      "England"
+    ],
+    "position": "Goalkeeper",
+    "subPosition": "Goalkeeper",
+    "preferredFoot": null,
+    "heightCm": 185,
+    "photoUrl": "https://img.a.transfermarkt.technology/portrait/header/848753-1743155873.jpg?lm=1",
+    "apiFootballId": null,
+    "transfermarktId": "848753",
+    "latestMarketValue": "500000",
+    "lastSeason": 2026,
+    "status": "first_team",
+    "currentClubId": "cmuiho5do001hb23froc57owj",
+    "createdAt": "2026-09-26T14:38:42.192Z",
+    "updatedAt": "2026-09-26T14:38:42.192Z"
+  },
+  {
+    "id": "cmuihw3fc0bvvsexpksu1ma1l",
+    "fullName": "Alexéi Rojas",
+    "commonName": null,
+    "dateOfBirth": "2005-09-27T16:00:00.000Z",
+    "nationality": [
+      "Colombia"
+    ],
+    "position": "Goalkeeper",
+    "subPosition": "Goalkeeper",
+    "preferredFoot": null,
+    "heightCm": 187,
+    "photoUrl": "https://img.a.transfermarkt.technology/portrait/header/940915-1636544050.png?lm=1",
+    "apiFootballId": null,
+    "transfermarktId": "940915",
+    "latestMarketValue": "250000",
+    "lastSeason": 2026,
+    "status": "first_team",
+    "currentClubId": "cmuiho5do001hb23froc57owj",
+    "createdAt": "2026-09-26T14:38:42.192Z",
+    "updatedAt": "2026-09-26T14:38:42.192Z"
+  }
+]
