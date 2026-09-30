@@ -14,6 +14,8 @@ export const ALLOWED_IMAGE_HOSTS = [
   "www.transfermarkt.com",
   "transfermarkt.com",
   "tmssl.akamaized.net",
+  "media.api-sports.io",
+  "api-sports.io",
   "qqjpgehtutdmkkkxnefu.supabase.co",
 ] as const;
 

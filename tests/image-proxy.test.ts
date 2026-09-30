@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { validateImageUrl, encodeBase64Url } from "../src/lib/image-sanitize";
+import { validateImageUrl, encodeBase64Url, ALLOWED_IMAGE_HOSTS } from "../src/lib/image-sanitize";
 import { GET } from "../src/app/img/asset/[encoded]/route";
 import { NextRequest } from "next/server";
 
@@ -51,6 +51,31 @@ test("validateImageUrl - allows whitelisted hosts", () => {
 
   const tm = validateImageUrl("https://img.a.transfermarkt.technology/wappen/head/123.png");
   assert.equal(tm.ok, true);
+
+  const apiSports = validateImageUrl("https://media.api-sports.io/football/players/123.png");
+  assert.equal(apiSports.ok, true);
+});
+
+test("ALLOWED_IMAGE_HOSTS contains all known legitimate image hosts across DB, dataset, and src", () => {
+  const knownHosts = [
+    "images.fotmob.com",
+    "img.a.transfermarkt.technology",
+    "www.transfermarkt.co.uk",
+    "www.transfermarkt.com",
+    "tmssl.akamaized.net",
+    "media.api-sports.io",
+    "qqjpgehtutdmkkkxnefu.supabase.co",
+  ];
+
+  for (const host of knownHosts) {
+    const isAllowed = ALLOWED_IMAGE_HOSTS.some(
+      (allowed) => host === allowed || host.endsWith("." + allowed)
+    );
+    assert.equal(isAllowed, true, `Expected host ${host} to be allowed`);
+
+    const result = validateImageUrl(`https://${host}/test.png`);
+    assert.equal(result.ok, true, `Expected URL for ${host} to validate successfully`);
+  }
 });
 
 test("GET /img/asset/[encoded] - returns neutral SVG for non-allowlisted host", async () => {
