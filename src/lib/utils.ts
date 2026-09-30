@@ -27,17 +27,22 @@ export function formatCompactEur(amount: number | bigint | null | undefined): st
   if (typeof num !== "number" || isNaN(num)) return "N/A";
   if (num === 0) return "Free";
   
-  if (num >= 1_000_000_000) {
-    return `€${(num / 1_000_000_000).toFixed(1)}B`;
+  const isNegative = num < 0;
+  const abs = Math.abs(num);
+  const prefix = isNegative ? "-€" : "€";
+
+  if (abs >= 999_950_000) {
+    const val = (abs / 1_000_000_000).toFixed(1);
+    return `${prefix}${val.endsWith('.0') ? val.slice(0, -2) : val}B`;
   }
-  if (num >= 1_000_000) {
-    const val = (num / 1_000_000).toFixed(1);
-    return `€${val.endsWith('.0') ? val.slice(0, -2) : val}M`;
+  if (abs >= 999_500) {
+    const val = (abs / 1_000_000).toFixed(1);
+    return `${prefix}${val.endsWith('.0') ? val.slice(0, -2) : val}M`;
   }
-  if (num >= 1_000) {
-    return `€${(num / 1_000).toFixed(0)}k`;
+  if (abs >= 1_000) {
+    return `${prefix}${(abs / 1_000).toFixed(0)}k`;
   }
-  return `€${num}`;
+  return `${prefix}${abs}`;
 }
 
 export function formatDate(date: Date | string | null | undefined): string {

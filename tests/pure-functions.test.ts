@@ -96,6 +96,16 @@ test("formatCompactEur & formatEur - formats currency without jitter", () => {
   assert.equal(formatCompactEur(500), "€500");
   assert.equal(formatCompactEur(0), "Free");
 
+  // D6: Boundary valuations & Transfermarkt integer benchmark tiers
+  assert.equal(formatCompactEur(999_999), "€1M");
+  assert.equal(formatCompactEur(1_000_000), "€1M");
+  assert.equal(formatCompactEur(999_500_000), "€999.5M");
+  assert.equal(formatCompactEur(1_000_000_000), "€1B");
+  assert.equal(formatCompactEur(1_200_000_000), "€1.2B");
+  assert.equal(formatCompactEur(140_000_000), "€140M");
+  assert.equal(formatCompactEur(120_000_000), "€120M");
+  assert.equal(formatCompactEur(100_000_000), "€100M");
+
   assert.equal(formatEur(1500000), "€1,500,000");
   assert.equal(formatEur(0), "Free");
 });
