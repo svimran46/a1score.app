@@ -29,35 +29,35 @@ interface NavCategory {
   isActive: (pathname: string, filter: string | null) => boolean;
 }
 
-const CATEGORIES: NavCategory[] = [
+export const CATEGORIES: NavCategory[] = [
   {
     name: "Matches",
     shortName: "Matches",
     href: "/matches",
     icon: Radio,
     isLiveMatches: true,
-    isActive: (p) => p === "/matches" || p.startsWith("/match/"),
+    isActive: (p) => p === "/matches" || p.startsWith("/matches/") || p.startsWith("/match/"),
   },
   {
     name: "Players",
     shortName: "Players",
     href: "/players",
     icon: Users,
-    isActive: (p) => p === "/players" || p.startsWith("/player/"),
+    isActive: (p) => p === "/players" || p.startsWith("/players/") || p.startsWith("/player/"),
   },
   {
     name: "Clubs",
     shortName: "Clubs",
     href: "/clubs",
     icon: Shield,
-    isActive: (p) => p === "/clubs" || p.startsWith("/club/"),
+    isActive: (p) => p === "/clubs" || p.startsWith("/clubs/") || p.startsWith("/club/"),
   },
   {
     name: "Leagues",
     shortName: "Leagues",
     href: "/leagues",
     icon: Trophy,
-    isActive: (p) => p === "/leagues" || p.startsWith("/league/"),
+    isActive: (p) => p === "/leagues" || p.startsWith("/leagues/") || p.startsWith("/league/"),
   },
   {
     name: "Market Values",
@@ -71,11 +71,11 @@ const CATEGORIES: NavCategory[] = [
     shortName: "Transfers",
     href: "/transfers",
     icon: ArrowLeftRight,
-    isActive: (p) => p === "/transfers" || p.startsWith("/transfer"),
+    isActive: (p) => p === "/transfers" || p.startsWith("/transfers/") || p.startsWith("/transfer"),
   },
 ];
 
-const DRAWER_ITEMS: Array<{
+export const DRAWER_ITEMS: Array<{
   name: string;
   href: string;
   icon: React.ComponentType<{ className?: string }>;
@@ -93,25 +93,25 @@ const DRAWER_ITEMS: Array<{
     href: "/matches",
     icon: Radio,
     isLiveMatches: true,
-    isActive: (p) => p === "/matches" || p.startsWith("/match/"),
+    isActive: (p) => p === "/matches" || p.startsWith("/matches/") || p.startsWith("/match/"),
   },
   {
     name: "Players",
     href: "/players",
     icon: Users,
-    isActive: (p) => p === "/players" || p.startsWith("/player/"),
+    isActive: (p) => p === "/players" || p.startsWith("/players/") || p.startsWith("/player/"),
   },
   {
     name: "Clubs",
     href: "/clubs",
     icon: Shield,
-    isActive: (p) => p === "/clubs" || p.startsWith("/club/"),
+    isActive: (p) => p === "/clubs" || p.startsWith("/clubs/") || p.startsWith("/club/"),
   },
   {
     name: "Leagues",
     href: "/leagues",
     icon: Trophy,
-    isActive: (p) => p === "/leagues" || p.startsWith("/league/"),
+    isActive: (p) => p === "/leagues" || p.startsWith("/leagues/") || p.startsWith("/league/"),
   },
   {
     name: "Market Values",
@@ -123,13 +123,13 @@ const DRAWER_ITEMS: Array<{
     name: "Transfers",
     href: "/transfers",
     icon: ArrowLeftRight,
-    isActive: (p) => p === "/transfers" || p.startsWith("/transfer"),
+    isActive: (p) => p === "/transfers" || p.startsWith("/transfers/") || p.startsWith("/transfer"),
   },
   {
     name: "Methodology",
     href: "/methodology",
     icon: BookOpen,
-    isActive: (p) => p === "/methodology",
+    isActive: (p) => p === "/methodology" || p.startsWith("/methodology/"),
   },
 ];
 
