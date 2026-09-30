@@ -1,0 +1,182 @@
+[
+  {
+    "tmId": "46",
+    "tmName": "Inter Milan",
+    "squadUrl": "https://www.transfermarkt.com/inter-mailand/startseite/verein/46/saison_id/2026",
+    "dbId": "cmuihqald009th29eqj2x21un",
+    "dbName": "Inter Milan",
+    "dbTmId": "46",
+    "dbLeague": "Serie A"
+  },
+  {
+    "tmId": "506",
+    "tmName": "Juventus FC",
+    "squadUrl": "https://www.transfermarkt.com/juventus-turin/startseite/verein/506/saison_id/2026",
+    "dbId": "cmuihqb7i00a9h29e7t17vakf",
+    "dbName": "Juventus FC",
+    "dbTmId": "506",
+    "dbLeague": "Serie A"
+  },
+  {
+    "tmId": "1047",
+    "tmName": "Como 1907",
+    "squadUrl": "https://www.transfermarkt.com/como-1907/startseite/verein/1047/saison_id/2026",
+    "dbId": "cmuihntg0000vb23fquzb7c6q",
+    "dbName": "Como 1907",
+    "dbTmId": "1047",
+    "dbLeague": "Serie A"
+  },
+  {
+    "tmId": "5",
+    "tmName": "AC Milan",
+    "squadUrl": "https://www.transfermarkt.com/ac-mailand/startseite/verein/5/saison_id/2026",
+    "dbId": "cmuihqb6900a7h29eb12tdj1t",
+    "dbName": "AC Milan",
+    "dbTmId": "5",
+    "dbLeague": "Serie A"
+  },
+  {
+    "tmId": "12",
+    "tmName": "AS Roma",
+    "squadUrl": "https://www.transfermarkt.com/as-rom/startseite/verein/12/saison_id/2026",
+    "dbId": "cmuihoj9l0025b23fj4mplye4",
+    "dbName": "Associazione Sportiva Roma",
+    "dbTmId": "12",
+    "dbLeague": "Serie A"
+  },
+  {
+    "tmId": "800",
+    "tmName": "Atalanta BC",
+    "squadUrl": "https://www.transfermarkt.com/atalanta-bergamo/startseite/verein/800/saison_id/2026",
+    "dbId": "cmuihqf7m00ceh29eo8vo509b",
+    "dbName": "Atalanta BC",
+    "dbTmId": "800",
+    "dbLeague": "Serie A"
+  },
+  {
+    "tmId": "6195",
+    "tmName": "SSC Napoli",
+    "squadUrl": "https://www.transfermarkt.com/ssc-neapel/startseite/verein/6195/saison_id/2026",
+    "dbId": "cmuihqcp500axh29eqi1p52xi",
+    "dbName": "SSC Napoli",
+    "dbTmId": "6195",
+    "dbLeague": "Serie A"
+  },
+  {
+    "tmId": "430",
+    "tmName": "ACF Fiorentina",
+    "squadUrl": "https://www.transfermarkt.com/ac-florenz/startseite/verein/430/saison_id/2026",
+    "dbId": "cmuihqa6q009nh29eeao6masx",
+    "dbName": "ACF Fiorentina",
+    "dbTmId": "430",
+    "dbLeague": "Serie A"
+  },
+  {
+    "tmId": "398",
+    "tmName": "SS Lazio",
+    "squadUrl": "https://www.transfermarkt.com/lazio-rom/startseite/verein/398/saison_id/2026",
+    "dbId": "cmuihq8em008nh29e1swv1hng",
+    "dbName": "Società Sportiva Lazio S.p.A.",
+    "dbTmId": "398",
+    "dbLeague": "Serie A"
+  },
+  {
+    "tmId": "1025",
+    "tmName": "Bologna FC 1909",
+    "squadUrl": "https://www.transfermarkt.com/fc-bologna/startseite/verein/1025/saison_id/2026",
+    "dbId": "cmuihnmx8000jb23fowusi2kw",
+    "dbName": "Bologna Football Club 1909",
+    "dbTmId": "1025",
+    "dbLeague": "Serie A"
+  },
+  {
+    "tmId": "6574",
+    "tmName": "US Sassuolo",
+    "squadUrl": "https://www.transfermarkt.com/us-sassuolo/startseite/verein/6574/saison_id/2026",
+    "dbId": "cmuihqd7y00b9h29e7s5ob4n6",
+    "dbName": "US Sassuolo",
+    "dbTmId": "6574",
+    "dbLeague": "Serie A"
+  },
+  {
+    "tmId": "416",
+    "tmName": "Torino FC",
+    "squadUrl": "https://www.transfermarkt.com/fc-turin/startseite/verein/416/saison_id/2026",
+    "dbId": "cmuihq9hw0099h29erttwt92h",
+    "dbName": "Torino FC",
+    "dbTmId": "416",
+    "dbLeague": "Serie A"
+  },
+  {
+    "tmId": "252",
+    "tmName": "Genoa CFC",
+    "squadUrl": "https://www.transfermarkt.com/genua-cfc/startseite/verein/252/saison_id/2026",
+    "dbId": "cmuihq3ak005th29eolz9qqct",
+    "dbName": "Genoa CFC",
+    "dbTmId": "252",
+    "dbLeague": "Serie A"
+  },
+  {
+    "tmId": "410",
+    "tmName": "Udinese Calcio",
+    "squadUrl": "https://www.transfermarkt.com/udinese-calcio/startseite/verein/410/saison_id/2026",
+    "dbId": "cmuihq93e0093h29eq2t4j538",
+    "dbName": "Udinese Calcio",
+    "dbTmId": "410",
+    "dbLeague": "Serie A"
+  },
+  {
+    "tmId": "130",
+    "tmName": "Parma Calcio 1913",
+    "squadUrl": "https://www.transfermarkt.com/parma-calcio-1913/startseite/verein/130/saison_id/2026",
+    "dbId": "cmuihouiw002pb23fjq3m9qng",
+    "dbName": "Parma Calcio 1913",
+    "dbTmId": "130",
+    "dbLeague": "Serie A"
+  },
+  {
+    "tmId": "1390",
+    "tmName": "Cagliari Calcio",
+    "squadUrl": "https://www.transfermarkt.com/cagliari-calcio/startseite/verein/1390/saison_id/2026",
+    "dbId": "cmuihpy660033h29egvkno1rw",
+    "dbName": "Cagliari Calcio",
+    "dbTmId": "1390",
+    "dbLeague": "Serie A"
+  },
+  {
+    "tmId": "607",
+    "tmName": "Venezia FC",
+    "squadUrl": "https://www.transfermarkt.com/venezia-fc/startseite/verein/607/saison_id/2026",
+    "dbId": "cmuihqc8e00arh29e87zakfd6",
+    "dbName": "Venezia FC",
+    "dbTmId": "607",
+    "dbLeague": "Serie A"
+  },
+  {
+    "tmId": "8970",
+    "tmName": "Frosinone Calcio",
+    "squadUrl": "https://www.transfermarkt.com/frosinone-calcio/startseite/verein/8970/saison_id/2026",
+    "dbId": "cmuihqgcj00d1h29e5nz2aiov",
+    "dbName": "Frosinone Calcio",
+    "dbTmId": "8970",
+    "dbLeague": "Serie A"
+  },
+  {
+    "tmId": "2919",
+    "tmName": "AC Monza",
+    "squadUrl": "https://www.transfermarkt.com/ac-monza/startseite/verein/2919/saison_id/2026",
+    "dbId": "cmuihq4hx006hh29enfwx58cb",
+    "dbName": "AC Monza",
+    "dbTmId": "2919",
+    "dbLeague": "Serie A"
+  },
+  {
+    "tmId": "1005",
+    "tmName": "US Lecce",
+    "squadUrl": "https://www.transfermarkt.com/us-lecce/startseite/verein/1005/saison_id/2026",
+    "dbId": "cmuihnki5000fb23fj5zntsyp",
+    "dbName": "US Lecce",
+    "dbTmId": "1005",
+    "dbLeague": "Serie A"
+  }
+]
