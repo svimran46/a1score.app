@@ -24,7 +24,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import fetch from "node-fetch";
-import { prisma } from "../src/lib/prisma";
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 import { fotmobFetch } from "../src/lib/fotmob/client";
 
 const TM_HEADERS = {

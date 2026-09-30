@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
-import { prisma } from "../src/lib/prisma";
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 
 function normalizeName(str: string | null | undefined): string {
   if (!str) return "";

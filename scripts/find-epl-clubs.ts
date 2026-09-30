@@ -1,4 +1,5 @@
-import { prisma } from "../src/lib/prisma";
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 import { FOTMOB_TEAM_MAPPINGS } from "../src/lib/league-mappings";
 
 const EPL_NAMES = [

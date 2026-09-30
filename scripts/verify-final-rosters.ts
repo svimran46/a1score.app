@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
-import { prisma } from "../src/lib/prisma";
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 
 const TOP_6_CLUBS: Record<string, string> = {
   "cmuihq3vs0069h29ebm5xqhye": "Manchester City",
