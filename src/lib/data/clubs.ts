@@ -61,12 +61,27 @@ export function extractClubIdentifiers(idOrSlug: string) {
   return { raw, cuid: cuid || fotmobCuid, tmId };
 }
 
+export function isFirstTeamPlayer(p: { status?: string | null; tier?: string | null } | null | undefined): boolean {
+  if (!p) return false;
+  if (
+    p.status === "departed" ||
+    p.status === "academy" ||
+    p.status === "loan_out" ||
+    p.tier === "academy" ||
+    p.tier === "loan_out"
+  ) {
+    return false;
+  }
+  return p.status === "first_team" || p.status === "on_loan" || p.tier === "first_team" || p.tier === "on_loan";
+}
+
 /**
  * Canonical function for first-team squad, club total value, average age and player count.
  * Used consistently across club page, /clubs, league pages, /leagues, OG images and JSON-LD.
  * Definition:
- * - Active player: lastSeason === null || lastSeason >= 2025
- * - First team tier: latestMarketValue > 0 OR age >= 20
+ * - Active player: status !== "departed"
+ * - First team tier: isFirstTeamPlayer(p) (status: first_team or on_loan)
+ * - Excludes: departed players, academy/reserve youth, and players loaned out to other clubs
  * - Total squad valuation: sum of first team players' latestMarketValue
  * - Average age: arithmetic mean of first team players with known age/DOB, rounded to 1 decimal
  * - Squad size / player count: count of first team players
@@ -106,7 +121,7 @@ export function computeClubMetrics(rawPlayers: any[]) {
     };
   });
 
-  const firstTeam = squadWithValues.filter((p: any) => p.tier === "first_team" || p.tier === "on_loan");
+  const firstTeam = squadWithValues.filter(isFirstTeamPlayer);
   const academy = squadWithValues.filter((p: any) => p.tier === "academy");
   const squadToUse = firstTeam.length > 0 ? firstTeam : squadWithValues;
 
@@ -312,7 +327,7 @@ export async function getClubById(idOrSlug: string) {
   };
 }
 
-export async function getAllClubs() {
+export async function getAllClubs(options?: { all?: boolean }) {
   try {
     const { data: clubs, error } = await supabase
       .from("Club")
@@ -361,7 +376,7 @@ export async function getAllClubs() {
       // ignore
     }
 
-    return clubs.map((club: any) => {
+    const mappedClubs = clubs.map((club: any) => {
       const metrics = computeClubMetrics(club.players || []);
       const finalSquadVal = metrics.totalSquadValue > 0
         ? metrics.totalSquadValue
@@ -389,6 +404,15 @@ export async function getAllClubs() {
         leagueRank,
       };
     });
+
+    if (options?.all) {
+      return mappedClubs;
+    }
+
+    // Default: Display only clubs with plausible first-team squads (15–45 players)
+    return mappedClubs.filter(
+      (club) => club.playerCount !== null && club.playerCount >= 15 && club.playerCount <= 45
+    );
   } catch (error) {
     console.error("Error fetching all clubs:", error);
     return [];

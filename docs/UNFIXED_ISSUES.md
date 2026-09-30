@@ -71,3 +71,17 @@ The following items are external platform dependencies or administrative tasks t
   3. Update `NEXT_PUBLIC_SUPABASE_ANON_KEY` in Cloudflare Pages environment variables and local `.env`.
   4. Verify that Row Level Security is enabled on all tables following [docs/SUPABASE_RLS.md](file:///c:/Users/User/Documents/antigravity/epic-brahmagupta/docs/SUPABASE_RLS.md) and execute `npx tsx scripts/check-rls.ts`.
 
+### Item 5: Unreconciled Partial Rosters & Incomplete Squad Rows (< 15 Players) [ID: D1]
+* **Category:** Upstream Database Seed Data Completeness
+* **Affected Rows:** 104 clubs in the `Club` table currently possess fewer than 15 active first-team players (e.g., partial rosters: West Ham United [12], Wolverhampton Wanderers [12], Southampton FC [10], VfL Wolfsburg [10], Ajax Amsterdam [11]; and 46 historical/relegated clubs with 0 players).
+* **Suspected Source:** The 114 reconciled top clubs were refreshed with canonical 2026/27 rosters (`squadSource = 'Official Transfermarkt (2026/27 Season)'`), yielding plausible first-team squads strictly between 16 and 35 players. The remaining 104 clubs retain legacy/partial scrape data (`squadSource = 'FotMob + Transfermarkt'` or unpopulated historical seeds) where only top-valued players or incomplete squads were originally imported.
+* **What You Tried:**
+  - Implemented `isFirstTeamPlayer(p)` canonical filtering across the codebase to accurately distinguish first-team and loaned-in players from academy youth, reserves, departed players, and loaned-out players.
+  - Filtered `/clubs` directory via `getAllClubs()` to only surface clubs with plausible first-team rosters (15–45 players).
+  - Preserved raw database integrity without editing player, club, or market-value rows.
+* **Why Blocked:** Strict project rules forbid manually mutating or fabricating database rows directly in production data.
+* **What the Owner Must Do:**
+  1. Run the squad reconciliation scraper (`npm run reconcile:squads` or `scripts/reconcile-squads-canonical.ts`) targeting the 104 remaining clubs.
+  2. Populate their full first-team squads from Transfermarkt 2026/27 data so their active rosters reach the standard 20–35 player range.
+
+
