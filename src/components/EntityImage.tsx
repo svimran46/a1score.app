@@ -69,7 +69,7 @@ export function EntityImage({
   if (!currentSrc || hasError) {
     return (
       <div
-        className={`w-full h-full flex items-center justify-center bg-slate-800/80 border border-slate-700/50 text-slate-400 rounded-lg p-1.5 select-none ${className}`}
+        className={`w-full h-full flex items-center justify-center bg-[var(--color-surface-2)] border border-[var(--color-border)] text-[var(--color-text-secondary)] rounded p-0.5 select-none ${className}`}
         role="img"
         aria-label={alt || `${resolvedType} icon`}
       >

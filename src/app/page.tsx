@@ -5,7 +5,9 @@ import { getMatchesByDate } from "@/lib/fotmob/client";
 import { SectionHeader } from "@/components/SectionHeader";
 import { HomeMatchRow } from "@/components/HomeMatchRow";
 import { HomePlayerRow } from "@/components/HomePlayerRow";
+import { EntityImage } from "@/components/EntityImage";
 import { formatCompactEur } from "@/lib/utils";
+import { getLeagueSlug } from "@/lib/slugs";
 import type { FotmobMatch } from "@/lib/fotmob/client";
 
 export const revalidate = 30;
@@ -156,18 +158,30 @@ export default async function HomePage() {
           {leagues.map((league) => (
             <Link
               key={league.id}
-              href={`/leagues/${league.id}`}
+              href={`/leagues/${getLeagueSlug(league)}`}
               className="h-12 min-h-[48px] px-4 flex items-center justify-between hover:bg-white/[0.02] transition-colors"
               style={{ borderColor: "var(--color-border)" }}
             >
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="relative w-6 h-6 shrink-0 flex items-center justify-center">
+                  <EntityImage
+                    src={league.logoUrl}
+                    alt={league.name}
+                    width={24}
+                    height={24}
+                    entityType="league"
+                    className="object-contain w-6 h-6"
+                  />
+                </div>
+                <span
+                  className="text-[15px] font-medium leading-tight truncate"
+                  style={{ color: "var(--color-text)" }}
+                >
+                  {league.name}
+                </span>
+              </div>
               <span
-                className="text-[15px] font-medium leading-tight"
-                style={{ color: "var(--color-text)" }}
-              >
-                {league.name}
-              </span>
-              <span
-                className="text-[15px] font-semibold tabular-nums leading-tight"
+                className="text-[15px] font-semibold tabular-nums leading-tight shrink-0 pl-3"
                 style={{ color: "var(--color-accent)" }}
               >
                 {formatCompactEur(league.totalMarketValue)}

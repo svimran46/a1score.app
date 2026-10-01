@@ -94,8 +94,19 @@ export default async function LeaguePage({ params }: LeaguePageProps) {
       <div className="rounded-3xl glass-panel p-6 sm:p-8 border border-slate-800 bg-slate-900/40">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div className="flex items-center gap-6">
-            <div className="relative w-20 h-20 rounded-2xl bg-amber-500/10 border border-amber-500/20 p-3 flex items-center justify-center shadow-xl flex-shrink-0">
-              <Trophy className="w-10 h-10 text-amber-400" />
+            <div className="relative w-20 h-20 rounded-2xl bg-[var(--color-surface-2)] border border-[var(--color-border)] p-3 flex items-center justify-center shrink-0 overflow-hidden">
+              {league.logoUrl ? (
+                <EntityImage
+                  src={league.logoUrl}
+                  alt={league.name}
+                  fill
+                  sizes="80px"
+                  entityType="league"
+                  className="object-contain p-1"
+                />
+              ) : (
+                <Trophy className="w-10 h-10 text-[var(--color-accent)]" />
+              )}
             </div>
 
             <div className="space-y-1">
