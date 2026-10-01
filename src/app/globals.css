@@ -1,10 +1,11 @@
+@import "./tokens.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: #080A0E;
-  --foreground: #F8FAFC;
+  --background: #0B0F17;
+  --foreground: #F2F4F8;
   --card-bg: rgba(13, 17, 26, 0.75);
   --card-border: rgba(255, 255, 255, 0.08);
   --card-border-amber: rgba(245, 158, 11, 0.18);

@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const exploreLinks = [
   { label: "Matches", href: "/matches" },
@@ -21,6 +24,9 @@ const topLeagues = [
 ];
 
 export function Footer() {
+  const pathname = usePathname();
+  if (pathname === "/") return null;
+
   const currentYear = new Date().getFullYear();
 
   return (

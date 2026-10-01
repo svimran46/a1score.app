@@ -1,0 +1,32 @@
+/* src/app/tokens.css - Design Tokens for a1score.app */
+
+:root {
+  /* Colors */
+  --token-bg: #0B0F17;
+  --token-surface: #121826;
+  --token-border: rgba(255, 255, 255, 0.06);
+  --token-text: #F2F4F8;
+  --token-text-muted: #8B93A5;
+
+  /* Accents: ONLY gold and green (red only for negative change) */
+  --token-gold: #F5B73B;
+  --token-green: #22C55E;
+  --token-red: #EF4444;
+
+  /* Typography (Inter) - exactly 4 sizes, 3 weights (400, 500, 600) */
+  --type-page-title: 600 20px/1.3 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --type-section-title: 600 17px/1.3 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --type-body: 500 15px/1.4 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --type-body-semibold: 600 15px/1.4 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --type-caption: 400 12px/1.4 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --type-caption-medium: 500 12px/1.4 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Spacing */
+  --space-page: 16px;
+  --space-section: 24px;
+  --space-block: 12px;
+  --space-gap: 8px;
+
+  /* Radius */
+  --radius-card: 12px;
+}
