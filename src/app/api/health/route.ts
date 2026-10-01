@@ -25,16 +25,19 @@ export async function GET(req: NextRequest) {
     "";
 
   let supabaseOk = false;
-  if (supabaseUrl) {
+  let supabaseProbeStatus: number | null = null;
+  if (supabaseUrl && supabaseAnonKey) {
     try {
-      const res = await fetch(`${supabaseUrl}/rest/v1/`, {
-        method: "HEAD",
+      const res = await fetch(`${supabaseUrl}/rest/v1/League?select=id&limit=1`, {
+        method: "GET",
         headers: {
           apikey: supabaseAnonKey,
+          Authorization: `Bearer ${supabaseAnonKey}`,
         },
         signal: AbortSignal.timeout(3000),
       });
-      supabaseOk = res.ok || res.status === 400; // 400 = table required, but connection works
+      supabaseProbeStatus = res.status;
+      supabaseOk = res.ok;
     } catch {
       supabaseOk = false;
     }
@@ -73,7 +76,7 @@ export async function GET(req: NextRequest) {
   }
 
   const isProd = process.env.NODE_ENV === "production";
-  const healthy = supabaseUrl ? supabaseOk : !isProd;
+  const healthy = supabaseAnonKey ? supabaseOk : !isProd;
   const httpStatus = healthy ? 200 : 503;
 
   return NextResponse.json(
@@ -82,8 +85,14 @@ export async function GET(req: NextRequest) {
       timestamp: now,
       version: process.env.NEXT_PUBLIC_APP_VERSION || "dev",
       checks: {
-        supabase: supabaseOk ? "ok" : (supabaseUrl ? "unreachable" : "unconfigured"),
+        supabase: supabaseOk ? "ok" : (supabaseAnonKey ? "unreachable" : "unconfigured"),
         fotmob: skipFotmob ? "skipped" : (fotmobOk ? "ok" : "degraded"),
+      },
+      supabase: {
+        ok: supabaseOk,
+        status: supabaseProbeStatus,
+        keyConfigured: Boolean(supabaseAnonKey),
+        keyLength: supabaseAnonKey.length,
       },
       fotmob: {
         ok: fotmobOk,

@@ -1,27 +1,51 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
-const supabaseUrl =
-  process.env.NEXT_PUBLIC_SUPABASE_URL ||
-  process.env.SUPABASE_URL ||
-  "";
+export const DEFAULT_SUPABASE_URL = "https://qqjpgehtutdmkkkxnefu.supabase.co";
 
-const supabaseAnonKey =
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-  process.env.SUPABASE_ANON_KEY ||
-  "";
+function getCredentials() {
+  const url =
+    process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    process.env.SUPABASE_URL ||
+    DEFAULT_SUPABASE_URL;
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn(
-    "[Supabase] Warning: Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY in environment variables. Please configure these in Cloudflare Pages dashboard settings."
-  );
+  const key =
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+    process.env.SUPABASE_ANON_KEY ||
+    "";
+
+  return { url, key };
 }
 
-// In local development or testing without credentials, provide non-empty values so the client can initialize
-const validUrl = supabaseUrl || "https://placeholder-project.supabase.co";
-const validKey = supabaseAnonKey || "placeholder-anon-key";
+let cachedClient: SupabaseClient | null = null;
+let lastKey = "";
+let lastUrl = "";
 
-export const supabase = createClient(validUrl, validKey, {
-  auth: {
-    persistSession: false,
+export function getSupabase(): SupabaseClient {
+  const { url, key } = getCredentials();
+  const validKey = key || "placeholder-anon-key";
+
+  if (!cachedClient || lastKey !== validKey || lastUrl !== url) {
+    cachedClient = createClient(url, validKey, {
+      auth: {
+        persistSession: false,
+      },
+    });
+    lastKey = validKey;
+    lastUrl = url;
+  }
+
+  return cachedClient;
+}
+
+// Transparent Proxy wrapper so existing calls like `supabase.from(...)` dynamically resolve the active client
+export const supabase = new Proxy({} as SupabaseClient, {
+  get(_target, prop) {
+    const client = getSupabase();
+    const value = (client as any)[prop];
+    if (typeof value === "function") {
+      return value.bind(client);
+    }
+    return value;
   },
 });
+
