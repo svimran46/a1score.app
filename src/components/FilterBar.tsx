@@ -49,10 +49,10 @@ export function FilterButtonAndSheet({
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className={`min-h-[36px] px-3 py-1 flex items-center justify-center gap-1.5 rounded-xl border text-xs font-semibold transition-all shrink-0 active:scale-95 ${
+        className={`min-h-[44px] px-3.5 py-1.5 flex items-center justify-center gap-1.5 rounded-lg border text-[13px] font-medium transition-all shrink-0 active:scale-95 ${
           activeFilterCount > 0
-            ? "bg-amber-500/15 border-amber-500/40 text-amber-400 shadow-sm"
-            : "bg-slate-900 border-slate-800 text-slate-300 hover:text-white hover:border-slate-700"
+            ? "bg-[var(--color-surface-2)] border-[var(--color-accent)] text-[var(--color-accent)]"
+            : "bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-secondary)] hover:text-[var(--color-text)]"
         } ${className}`}
         aria-label={`Open filters. ${activeFilterCount} active filters.`}
         aria-expanded={isOpen}
@@ -60,7 +60,7 @@ export function FilterButtonAndSheet({
         <SlidersHorizontal className="w-3.5 h-3.5 shrink-0" />
         <span>{buttonLabel}</span>
         {activeFilterCount > 0 && (
-          <span className="ml-0.5 inline-flex items-center justify-center px-1.5 py-0.2 text-[10px] font-black rounded-full bg-amber-400 text-slate-950">
+          <span className="ml-0.5 inline-flex items-center justify-center px-1.5 py-0.2 text-[12px] font-semibold rounded-full bg-[var(--color-accent)] text-[#0B0F17]">
             {activeFilterCount}
           </span>
         )}
@@ -71,7 +71,7 @@ export function FilterButtonAndSheet({
         <div className="fixed inset-0 z-50 flex flex-col justify-end">
           {/* Backdrop */}
           <div
-            className="fixed inset-0 bg-black/75 backdrop-blur-sm transition-opacity animate-in fade-in duration-200"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity animate-in fade-in duration-200"
             onClick={() => setIsOpen(false)}
             aria-hidden="true"
           />
@@ -81,20 +81,20 @@ export function FilterButtonAndSheet({
             role="dialog"
             aria-modal="true"
             aria-label="Filter Options"
-            className="relative z-10 w-full max-w-xl mx-auto rounded-t-3xl bg-slate-950 border-t border-slate-800 shadow-2xl flex flex-col max-h-[85dvh] animate-in slide-in-from-bottom duration-200"
+            className="relative z-10 w-full max-w-xl mx-auto rounded-t-2xl bg-[var(--color-surface)] border-t border-[var(--color-border)] flex flex-col max-h-[85dvh] animate-in slide-in-from-bottom duration-200"
             style={{
               paddingBottom: "max(1rem, env(safe-area-inset-bottom))",
             }}
           >
             {/* Grab Handle */}
-            <div className="w-12 h-1.5 bg-slate-700 rounded-full mx-auto mt-3 shrink-0" />
+            <div className="w-12 h-1 bg-[var(--color-surface-2)] rounded-full mx-auto mt-3 shrink-0" />
 
             {/* Header */}
-            <div className="flex items-center justify-between px-5 py-3 border-b border-slate-800/80 shrink-0">
+            <div className="flex items-center justify-between px-5 py-3 border-b border-[var(--color-border)] shrink-0">
               <div className="flex items-center gap-2">
-                <h2 className="text-base font-bold text-white tracking-tight">Filters</h2>
+                <h2 className="text-[16px] font-semibold text-[var(--color-text)]">Filters</h2>
                 {activeFilterCount > 0 && (
-                  <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-amber-400 text-slate-950">
+                  <span className="px-2 py-0.5 rounded-full text-[12px] font-semibold bg-[var(--color-accent)] text-[#0B0F17]">
                     {activeFilterCount} Active
                   </span>
                 )}
@@ -107,7 +107,7 @@ export function FilterButtonAndSheet({
                     onClick={() => {
                       onResetFilters();
                     }}
-                    className="min-h-[44px] px-2 text-xs font-semibold text-amber-400 hover:text-amber-300 transition-colors"
+                    className="min-h-[44px] px-2 text-[13px] font-medium text-[var(--color-accent)] hover:underline transition-colors"
                   >
                     Reset All
                   </button>
@@ -115,7 +115,7 @@ export function FilterButtonAndSheet({
                 <button
                   type="button"
                   onClick={() => setIsOpen(false)}
-                  className="min-h-[44px] min-w-[44px] p-2 rounded-xl text-slate-400 hover:text-white flex items-center justify-center transition-colors"
+                  className="min-h-[44px] min-w-[44px] p-2 rounded-lg text-[var(--color-text-secondary)] hover:text-[var(--color-text)] flex items-center justify-center transition-colors"
                   aria-label="Close filters"
                 >
                   <X className="w-5 h-5" />
@@ -129,11 +129,11 @@ export function FilterButtonAndSheet({
             </div>
 
             {/* Apply Button Footer */}
-            <div className="p-4 border-t border-slate-800/80 bg-slate-950/90 shrink-0">
+            <div className="p-4 border-t border-[var(--color-border)] bg-[var(--color-surface)] shrink-0">
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
-                className="w-full h-11 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-sm flex items-center justify-center transition-colors shadow-lg shadow-amber-500/10 active:scale-[0.99]"
+                className="w-full h-11 rounded-lg bg-[var(--color-accent)] text-[#0B0F17] font-semibold text-[15px] flex items-center justify-center transition-colors active:scale-[0.99]"
               >
                 Apply Filters
               </button>

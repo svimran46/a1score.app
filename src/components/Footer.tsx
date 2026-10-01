@@ -46,10 +46,10 @@ export function Footer() {
               </span>
             </div>
             <p className="text-xs sm:text-sm text-slate-400 leading-relaxed max-w-sm">
-              Independent football intelligence platform synthesizing real-time match events with player market valuations, squad expenditure analytics, and commercial transfer records.
+              Football platform synthesizing real-time match events with player market valuations and transfer records.
             </p>
             <p className="text-[11px] text-slate-500">
-              Data grounded in FotMob match feeds & Transfermarkt market analytics.
+              Data grounded in FotMob match feeds & Transfermarkt market data.
             </p>
           </div>
 
@@ -57,7 +57,7 @@ export function Footer() {
           <nav aria-label="Footer navigation" className="grid grid-cols-2 gap-6 sm:gap-8 lg:gap-16 w-full lg:w-auto">
             {/* Column 1: Explore */}
             <div>
-              <h4 className="font-semibold text-xs sm:text-sm uppercase tracking-wider text-slate-200 h-8 flex items-center">
+              <h4 className="font-semibold text-xs sm:text-sm text-slate-200 h-8 flex items-center">
                 Explore
               </h4>
               <ul className="text-xs sm:text-sm">
@@ -76,8 +76,8 @@ export function Footer() {
 
             {/* Column 2: Top Leagues */}
             <div>
-              <h4 className="font-semibold text-xs sm:text-sm uppercase tracking-wider text-slate-200 h-8 flex items-center">
-                Top Competitions
+              <h4 className="font-semibold text-xs sm:text-sm text-slate-200 h-8 flex items-center">
+                Top competitions
               </h4>
               <ul className="text-xs sm:text-sm">
                 {topLeagues.map((item) => (
@@ -97,7 +97,7 @@ export function Footer() {
 
         {/* Bottom row: (c) 2026 a1score.app, plus real legal links */}
         <div className="pt-4 sm:pt-6 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500">
-          <p>© {currentYear} a1score.app. Independent football intelligence.</p>
+          <p>© {currentYear} a1score.app. All rights reserved.</p>
           <div className="flex items-center gap-4 sm:gap-6 flex-wrap">
             <Link
               href="/methodology"

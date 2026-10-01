@@ -230,7 +230,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
           {/* Loading Indicator */}
           {isLoading && (
             <div className="py-8 text-center text-xs text-slate-400">
-              Searching football intelligence...
+              Searching players, clubs and leagues...
             </div>
           )}
 

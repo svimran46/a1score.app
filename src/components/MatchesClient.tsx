@@ -168,22 +168,22 @@ export function MatchesClient({
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      {/* 1. Page Title (22-24px, never truncated, continuous background) */}
+      {/* 1. Page Title (20/600, continuous background) */}
       <PageHeader
         title="Matches"
-        subtitle="Live match scores, xG disparity & financial rosters"
+        subtitle="Scores and fixtures"
       />
 
       {/* 
-        2. SINGLE DATE BAR (FotMob mobile pattern):
+        2. SINGLE DATE BAR:
         "Today ▾" with prev/next arrows; tap opens calendar sheet; swipe left/right changes day.
       */}
-      <div className="flex items-center justify-between bg-slate-900/90 border border-slate-800 rounded-xl px-2 py-1 max-w-sm mx-auto w-full">
+      <div className="flex items-center justify-between bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl px-2 py-1 max-w-sm mx-auto w-full">
         {/* Previous Day Arrow */}
         <button
           type="button"
           onClick={() => navigateTo(addDaysToDateStr(activeDate, -1))}
-          className="min-h-[38px] min-w-[38px] flex items-center justify-center text-slate-400 hover:text-white rounded-lg active:scale-95 transition-colors"
+          className="min-h-[44px] min-w-[44px] flex items-center justify-center text-[var(--color-text-secondary)] hover:text-[var(--color-text)] rounded-lg active:scale-95 transition-colors"
           aria-label="Previous day"
         >
           <ChevronLeft className="w-5 h-5" />
@@ -193,18 +193,18 @@ export function MatchesClient({
         <button
           type="button"
           onClick={() => setCalendarOpen(true)}
-          className="flex items-center gap-1.5 min-h-[38px] px-3 font-bold text-white text-sm hover:text-amber-400 active:scale-95 transition-colors"
+          className="flex items-center gap-1.5 min-h-[44px] px-3 font-semibold text-[var(--color-text)] text-[15px] hover:text-[var(--color-accent)] active:scale-95 transition-colors"
           aria-label="Open calendar"
         >
           <span>{dateLabel}</span>
-          <ChevronDown className="w-4 h-4 text-slate-400" />
+          <ChevronDown className="w-4 h-4 text-[var(--color-text-secondary)]" />
         </button>
 
         {/* Next Day Arrow */}
         <button
           type="button"
           onClick={() => navigateTo(addDaysToDateStr(activeDate, 1))}
-          className="min-h-[38px] min-w-[38px] flex items-center justify-center text-slate-400 hover:text-white rounded-lg active:scale-95 transition-colors"
+          className="min-h-[44px] min-w-[44px] flex items-center justify-center text-[var(--color-text-secondary)] hover:text-[var(--color-text)] rounded-lg active:scale-95 transition-colors"
           aria-label="Next day"
         >
           <ChevronRight className="w-5 h-5" />
@@ -212,7 +212,7 @@ export function MatchesClient({
       </div>
 
       {/* Single timezone caption under the date bar */}
-      <div className="text-[11px] text-slate-500 text-center font-medium -mt-1">
+      <div className="text-[13px] text-[var(--color-text-secondary)] text-center font-normal -mt-1">
         Times in {tzLabel}
       </div>
 
@@ -221,19 +221,19 @@ export function MatchesClient({
         [Live 2] [Finished 3] [Upcoming 55] [Top leagues / All].
         Toggle behaviour; none selected = all. Counts global.
       */}
-      <div className="sticky top-14 z-20 -mx-4 px-4 py-1.5 bg-slate-950/95 backdrop-blur-md flex items-center justify-between gap-2 overflow-x-auto scrollbar-none edge-fade-x">
-        <div className="flex items-center gap-1.5 shrink-0 text-xs">
+      <div className="sticky top-14 z-20 -mx-4 px-4 py-2 bg-[var(--color-bg)]/95 backdrop-blur-md flex items-center justify-between gap-2 overflow-x-auto scrollbar-none edge-fade-x">
+        <div className="flex items-center gap-1.5 shrink-0 text-[13px]">
           {/* Live Pill */}
           <button
             type="button"
             onClick={() => handleFilterClick("live")}
-            className={`min-h-[34px] px-3 py-1 rounded-xl font-bold flex items-center gap-1.5 border transition-all ${
+            className={`min-h-[44px] px-3.5 py-1.5 rounded-lg font-medium flex items-center gap-1.5 border transition-all ${
               activeFilter === "live"
-                ? "bg-rose-500 text-white border-rose-500 shadow-sm"
-                : "bg-slate-900 border-slate-800 text-slate-300 hover:text-rose-400"
+                ? "bg-[var(--color-surface-2)] text-[var(--color-positive)] border-[var(--color-positive)]"
+                : "bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-secondary)] hover:text-[var(--color-text)]"
             }`}
           >
-            <Radio className="w-3 h-3 text-rose-400 shrink-0" />
+            <Radio className="w-3.5 h-3.5 text-[var(--color-positive)] shrink-0" />
             <span>Live {liveScopedMatchesCount}</span>
           </button>
 
@@ -241,10 +241,10 @@ export function MatchesClient({
           <button
             type="button"
             onClick={() => handleFilterClick("finished")}
-            className={`min-h-[34px] px-3 py-1 rounded-xl font-bold flex items-center gap-1 border transition-all ${
+            className={`min-h-[44px] px-3.5 py-1.5 rounded-lg font-medium flex items-center gap-1 border transition-all ${
               activeFilter === "finished"
-                ? "bg-amber-400 text-slate-950 border-amber-400 shadow-sm"
-                : "bg-slate-900 border-slate-800 text-slate-300 hover:text-white"
+                ? "bg-[var(--color-accent)] text-[#0B0F17] font-semibold border-[var(--color-accent)]"
+                : "bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-secondary)] hover:text-[var(--color-text)]"
             }`}
           >
             <span>Finished {finishedScopedMatchesCount}</span>
@@ -254,10 +254,10 @@ export function MatchesClient({
           <button
             type="button"
             onClick={() => handleFilterClick("upcoming")}
-            className={`min-h-[34px] px-3 py-1 rounded-xl font-bold flex items-center gap-1 border transition-all ${
+            className={`min-h-[44px] px-3.5 py-1.5 rounded-lg font-medium flex items-center gap-1 border transition-all ${
               activeFilter === "upcoming"
-                ? "bg-amber-400 text-slate-950 border-amber-400 shadow-sm"
-                : "bg-slate-900 border-slate-800 text-slate-300 hover:text-white"
+                ? "bg-[var(--color-accent)] text-[#0B0F17] font-semibold border-[var(--color-accent)]"
+                : "bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-secondary)] hover:text-[var(--color-text)]"
             }`}
           >
             <span>Upcoming {upcomingScopedMatchesCount}</span>
@@ -268,10 +268,10 @@ export function MatchesClient({
         <button
           type="button"
           onClick={handleScopeToggle}
-          className={`min-h-[34px] px-3 py-1 rounded-xl font-bold text-xs border shrink-0 transition-all ${
+          className={`min-h-[44px] px-3.5 py-1.5 rounded-lg font-medium text-[13px] border shrink-0 transition-all ${
             activeScope === "all"
-              ? "bg-slate-800 text-white border-slate-700"
-              : "bg-slate-900 text-amber-400 border-slate-800 hover:border-slate-700"
+              ? "bg-[var(--color-surface-2)] text-[var(--color-text)] border-[var(--color-border)]"
+              : "bg-[var(--color-surface-2)] text-[var(--color-accent)] border-[var(--color-accent)] font-semibold"
           }`}
         >
           {activeScope === "top" ? "Top Leagues" : "All Leagues"}
@@ -280,14 +280,14 @@ export function MatchesClient({
 
       {/* 4. Muted caption if auto-switched or no Top-10 fixtures today */}
       {autoSwitched && (
-        <p className="text-[12px] text-slate-400 text-center py-0.5">
+        <p className="text-[13px] text-[var(--color-text-secondary)] text-center py-0.5">
           No Top-10 fixtures today, showing all leagues
         </p>
       )}
 
       {/* 
         5. COLLAPSIBLE LEAGUE GROUPS:
-        Header 44px, crest/flag 20px, "Country - Competition" 14px semibold, chevron, remembers collapsed state.
+        Header 44px, crest/flag 20px, "Country - Competition" 15px font-semibold, chevron, remembers collapsed state.
         Group chip ("Group 2") shown once inside group.
         MatchRow list inside ONE card per league with 1px dividers.
       */}
@@ -305,13 +305,13 @@ export function MatchesClient({
             return (
               <div
                 key={league.id}
-                className="rounded-2xl glass-panel border border-slate-800/80 overflow-hidden"
+                className="rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)] overflow-hidden"
               >
                 {/* League Group Header (44px tall) */}
                 <button
                   type="button"
                   onClick={() => toggleLeagueCollapse(league.id)}
-                  className="w-full h-11 flex items-center justify-between px-3 sm:px-4 bg-slate-900/60 hover:bg-slate-900 transition-colors text-left"
+                  className="w-full h-11 flex items-center justify-between px-3 sm:px-4 bg-[var(--color-surface)] hover:bg-[var(--color-surface-2)] transition-colors text-left"
                   aria-expanded={!isCollapsed}
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
@@ -331,24 +331,24 @@ export function MatchesClient({
                       )}
                     </div>
 
-                    <span className="text-[14px] font-semibold text-white tracking-tight truncate">
+                    <span className="text-[15px] font-semibold text-[var(--color-text)] tracking-tight truncate">
                       {headerTitle}
                     </span>
 
                     {/* Group chip shown once inside the group */}
                     {groupName && (
-                      <span className="text-[10px] font-semibold text-slate-400 bg-slate-800 px-1.5 py-0.2 rounded border border-slate-700/60 shrink-0">
+                      <span className="text-[12px] font-medium text-[var(--color-text-secondary)] bg-[var(--color-surface-2)] px-1.5 py-0.5 rounded border border-[var(--color-border)] shrink-0">
                         {groupName}
                       </span>
                     )}
                   </div>
 
                   <div className="flex items-center gap-2 shrink-0">
-                    <span className="text-[11px] font-semibold text-slate-500">
+                    <span className="text-[13px] font-normal text-[var(--color-text-secondary)] tabular-nums">
                       {league.matches.length}
                     </span>
                     <ChevronDown
-                      className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${
+                      className={`w-4 h-4 text-[var(--color-text-secondary)] transition-transform duration-200 ${
                         isCollapsed ? "-rotate-90" : "rotate-0"
                       }`}
                     />
@@ -357,7 +357,7 @@ export function MatchesClient({
 
                 {/* Match rows list (1px dividers) */}
                 {!isCollapsed && (
-                  <div className="divide-y divide-slate-800/60 border-t border-slate-800/60">
+                  <div className="divide-y divide-[var(--color-border)] border-t border-[var(--color-border)]">
                     {league.matches.map((match: FotmobMatch) => (
                       <MatchRow key={match.id} match={match} />
                     ))}
@@ -367,15 +367,14 @@ export function MatchesClient({
             );
           })
         ) : (
-          <div className="rounded-2xl glass-panel p-10 border border-slate-800 text-center space-y-3">
-            <p className="text-slate-300 text-sm font-semibold">No matches found for this date & filter.</p>
-            <p className="text-slate-500 text-xs">Try selecting another date or switching to All Leagues.</p>
+          <div className="rounded-xl bg-[var(--color-surface)] p-8 border border-[var(--color-border)] text-center space-y-3">
+            <p className="text-[var(--color-text-secondary)] text-[15px]">No matches found for this date & filter.</p>
             <button
               type="button"
               onClick={() => navigateTo(undefined, "all", "all")}
-              className="px-4 py-2 min-h-[40px] rounded-xl bg-amber-400 text-slate-950 text-xs font-bold hover:bg-amber-300 transition-colors"
+              className="px-4 py-2 min-h-[44px] rounded-lg bg-[var(--color-accent)] text-[#0B0F17] text-[13px] font-semibold transition-colors"
             >
-              Show All Matches
+              Show all matches
             </button>
           </div>
         )}
@@ -385,7 +384,7 @@ export function MatchesClient({
       {calendarOpen && (
         <div className="fixed inset-0 z-50 flex flex-col justify-end">
           <div
-            className="fixed inset-0 bg-black/75 backdrop-blur-sm transition-opacity"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
             onClick={() => setCalendarOpen(false)}
             aria-hidden="true"
           />
@@ -394,22 +393,22 @@ export function MatchesClient({
             role="dialog"
             aria-modal="true"
             aria-label="Select match date"
-            className="relative z-10 w-full max-w-md mx-auto rounded-t-3xl bg-slate-950 border-t border-slate-800 p-5 space-y-4 animate-in slide-in-from-bottom duration-200"
+            className="relative z-10 w-full max-w-md mx-auto rounded-t-2xl bg-[var(--color-surface)] border-t border-[var(--color-border)] p-4 space-y-4 animate-in slide-in-from-bottom duration-200"
             style={{
               paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))",
             }}
           >
-            <div className="w-12 h-1.5 bg-slate-700 rounded-full mx-auto -mt-2 mb-3" />
+            <div className="w-12 h-1 bg-[var(--color-surface-2)] rounded-full mx-auto -mt-1 mb-2" />
 
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                <CalendarIcon className="w-4 h-4 text-amber-400" />
-                Select Match Date
+            <div className="flex items-center justify-between border-b border-[var(--color-border)] pb-3">
+              <h3 className="text-[16px] font-semibold text-[var(--color-text)] flex items-center gap-2">
+                <CalendarIcon className="w-4 h-4 text-[var(--color-accent)]" />
+                Select match date
               </h3>
               <button
                 type="button"
                 onClick={() => setCalendarOpen(false)}
-                className="min-h-[40px] min-w-[40px] flex items-center justify-center text-slate-400 hover:text-white"
+                className="min-h-[44px] min-w-[44px] flex items-center justify-center text-[var(--color-text-secondary)] hover:text-[var(--color-text)]"
                 aria-label="Close"
               >
                 <X className="w-5 h-5" />
@@ -433,10 +432,10 @@ export function MatchesClient({
                       navigateTo(targetDate);
                       setCalendarOpen(false);
                     }}
-                    className={`min-h-[44px] rounded-xl text-xs font-bold border transition-colors ${
+                    className={`min-h-[44px] rounded-lg text-[13px] font-medium border transition-colors ${
                       isSelected
-                        ? "bg-amber-400 text-slate-950 border-amber-400"
-                        : "bg-slate-900 text-slate-300 border-slate-800 hover:text-white"
+                        ? "bg-[var(--color-accent)] text-[#0B0F17] font-semibold border-[var(--color-accent)]"
+                        : "bg-[var(--color-surface-2)] text-[var(--color-text-secondary)] border-[var(--color-border)] hover:text-[var(--color-text)]"
                     }`}
                   >
                     {item.label}
@@ -447,8 +446,8 @@ export function MatchesClient({
 
             {/* Native Date Input Picker */}
             <div className="space-y-1.5 pt-2">
-              <label htmlFor="matches-custom-date" className="block text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                Choose Specific Date
+              <label htmlFor="matches-custom-date" className="block text-[13px] font-normal text-[var(--color-text-secondary)]">
+                Choose specific date
               </label>
               <input
                 id="matches-custom-date"
@@ -461,7 +460,7 @@ export function MatchesClient({
                     setCalendarOpen(false);
                   }
                 }}
-                className="w-full min-h-[44px] px-3.5 rounded-xl bg-slate-900 border border-slate-800 text-white text-sm font-semibold focus:outline-none focus:border-amber-400"
+                className="w-full min-h-[44px] px-3.5 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] text-[var(--color-text)] text-[15px] font-normal focus:outline-none focus:border-[var(--color-accent)]"
               />
             </div>
           </div>

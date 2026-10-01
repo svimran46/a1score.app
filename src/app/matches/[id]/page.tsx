@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: MatchPageProps): Promise<Meta
   if (!match) {
     return constructMetadata({
       title: "Match Not Found",
-      description: "The requested football match center could not be located.",
+      description: "The requested football match could not be located.",
       path: `/matches/${params.id}`,
     });
   }
@@ -35,8 +35,8 @@ export async function generateMetadata({ params }: MatchPageProps): Promise<Meta
     : "Upcoming";
 
   return constructMetadata({
-    title: `${home} ${scoreStr} ${away} — Live Match Center (${statusStr})`,
-    description: `Live match intelligence for ${home} ${scoreStr} ${away}. Live scorecard, scorers, confirmed lineups, tactical formations, live match timeline, stats, and squad market valuations on a1score.app.`,
+    title: `${home} ${scoreStr} ${away} — Live Match (${statusStr})`,
+    description: `Live match scores and stats for ${home} ${scoreStr} ${away}. Live scorecard, scorers, confirmed lineups, tactical formations, live match timeline, and squad market valuations on a1score.app.`,
     path: `/matches/${params.id}`,
   });
 }

@@ -36,13 +36,13 @@ export function HomePlayerRow({
   change,
 }: HomePlayerRowProps) {
   const shortClubName = getClubShortName(club);
-  const valueDisplay = marketValue ? formatCompactEur(marketValue) : "—";
+  const valueDisplay = marketValue ? formatCompactEur(marketValue) : "";
 
   let changeFormatted: string | null = null;
   let isPositiveChange = true;
   if (typeof change === "number" && change !== 0) {
     isPositiveChange = change > 0;
-    const sign = change > 0 ? "+" : "-";
+    const sign = change > 0 ? "+" : "−"; // true minus sign \u2212
     const absVal = Math.abs(change);
     const compactStr = formatCompactEur(absVal);
     changeFormatted = `${sign}${compactStr}`;
@@ -51,21 +51,21 @@ export function HomePlayerRow({
   return (
     <Link
       href={`/players/${slug || id}`}
-      className="min-h-[64px] h-[64px] px-3 flex items-center hover:bg-white/[0.02] transition-colors"
+      className="min-h-[64px] h-[64px] px-3 flex items-center hover:bg-[var(--color-surface-2)] transition-colors"
       style={{
         backgroundColor: "transparent",
       }}
     >
-      {/* Rank (20px column, 12px muted) */}
+      {/* Rank (20px column, 13px secondary) */}
       <span
-        className="w-5 min-w-[20px] text-center text-[12px] font-normal shrink-0 mr-2.5"
-        style={{ color: "var(--token-text-muted, #8B93A5)" }}
+        className="w-5 min-w-[20px] text-center text-[13px] font-normal shrink-0 mr-2.5"
+        style={{ color: "var(--color-text-secondary)" }}
       >
         {rank}
       </span>
 
       {/* Photo (40px circle) */}
-      <div className="relative w-10 h-10 rounded-full overflow-hidden shrink-0 mr-3 border border-white/5 bg-slate-800/80">
+      <div className="relative w-10 h-10 rounded-full overflow-hidden shrink-0 mr-3 border border-[var(--color-border)] bg-[var(--color-surface-2)]">
         <EntityImage
           src={photoUrl}
           alt={name}
@@ -75,11 +75,11 @@ export function HomePlayerRow({
         />
       </div>
 
-      {/* Middle Block: Name (15/500, wraps up to 2 lines, no truncation) + Club crest (14px) + short name (12px) */}
+      {/* Middle Block: Name (15/500, wraps up to 2 lines, no truncation) + Club crest (14px) + short name (13px) */}
       <div className="flex-1 min-w-0 pr-2">
         <div
           className="text-[15px] font-medium leading-snug line-clamp-2"
-          style={{ color: "var(--token-text, #F2F4F8)" }}
+          style={{ color: "var(--color-text)" }}
         >
           {name}
         </div>
@@ -96,10 +96,10 @@ export function HomePlayerRow({
             </div>
           )}
           <span
-            className="text-[12px] font-normal leading-none"
-            style={{ color: "var(--token-text-muted, #8B93A5)" }}
+            className="text-[13px] font-normal leading-none"
+            style={{ color: "var(--color-text-secondary)" }}
           >
-            {shortClubName || "—"}
+            {shortClubName || ""}
           </span>
         </div>
       </div>
@@ -108,7 +108,7 @@ export function HomePlayerRow({
       <div className="text-right shrink-0 flex flex-col items-end justify-center">
         <span
           className="text-[15px] font-semibold tabular-nums leading-tight"
-          style={{ color: "var(--token-gold, #F5B73B)" }}
+          style={{ color: "var(--color-accent)" }}
         >
           {valueDisplay}
         </span>
@@ -116,7 +116,7 @@ export function HomePlayerRow({
           <span
             className="text-[12px] font-normal tabular-nums leading-tight mt-0.5"
             style={{
-              color: isPositiveChange ? "var(--token-green, #22C55E)" : "var(--token-red, #EF4444)",
+              color: isPositiveChange ? "var(--color-positive)" : "var(--color-negative)",
             }}
           >
             {changeFormatted}

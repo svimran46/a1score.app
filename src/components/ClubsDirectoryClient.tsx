@@ -148,8 +148,8 @@ export function ClubsDirectoryClient({ initialClubs }: ClubsDirectoryClientProps
       />
 
       {/* 2. One control row: count left, Filters button right (NO in-page search input) */}
-      <div className="flex items-center justify-between text-xs py-0.5">
-        <span className="text-slate-400 font-medium">
+      <div className="flex items-center justify-between text-[13px] py-0.5">
+        <span className="text-[var(--color-text-secondary)] font-normal">
           Showing {filteredClubs.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}–
           {Math.min(currentPage * ITEMS_PER_PAGE, filteredClubs.length)} of {filteredClubs.length}
         </span>
@@ -158,41 +158,41 @@ export function ClubsDirectoryClient({ initialClubs }: ClubsDirectoryClientProps
           activeFilterCount={activeFilterCount}
           onResetFilters={handleClearFilters}
         >
-          <div className="space-y-5">
+          <div className="space-y-4">
             {/* Sort Selector */}
             <div>
-              <label htmlFor="modal-club-sort" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
-                Sort By
+              <label htmlFor="modal-club-sort" className="block text-[13px] font-normal text-[var(--color-text-secondary)] mb-1.5">
+                Sort by
               </label>
               <select
                 id="modal-club-sort"
                 value={sortParam}
                 onChange={(e) => updateParams({ sort: e.target.value, page: "1" })}
-                className="w-full min-h-[44px] px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs font-semibold focus:outline-none focus:border-amber-400 cursor-pointer"
+                className="w-full min-h-[44px] px-3 py-2 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] text-[var(--color-text)] text-[15px] font-normal focus:outline-none focus:border-[var(--color-accent)] cursor-pointer"
               >
-                <option value="val_desc">Squad Value: High to Low</option>
-                <option value="val_asc">Squad Value: Low to High</option>
-                <option value="size_desc">Squad Size: Largest First</option>
-                <option value="size_asc">Squad Size: Smallest First</option>
-                <option value="age_asc">Average Age: Youngest First</option>
-                <option value="age_desc">Average Age: Oldest First</option>
-                <option value="name_asc">Club Name: A to Z</option>
-                <option value="name_desc">Club Name: Z to A</option>
+                <option value="val_desc">Squad value: High to low</option>
+                <option value="val_asc">Squad value: Low to high</option>
+                <option value="size_desc">Squad size: Largest first</option>
+                <option value="size_asc">Squad size: Smallest first</option>
+                <option value="age_asc">Average age: Youngest first</option>
+                <option value="age_desc">Average age: Oldest first</option>
+                <option value="name_asc">Club name: A to Z</option>
+                <option value="name_desc">Club name: Z to A</option>
               </select>
             </div>
 
             {/* Competition / League Filter */}
             <div>
-              <label htmlFor="modal-club-league" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
-                Competition / League
+              <label htmlFor="modal-club-league" className="block text-[13px] font-normal text-[var(--color-text-secondary)] mb-1.5">
+                Competition
               </label>
               <select
                 id="modal-club-league"
                 value={leagueParam}
                 onChange={(e) => updateParams({ league: e.target.value, page: "1" })}
-                className="w-full min-h-[44px] px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs font-semibold focus:outline-none focus:border-amber-400 cursor-pointer truncate"
+                className="w-full min-h-[44px] px-3 py-2 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] text-[var(--color-text)] text-[15px] font-normal focus:outline-none focus:border-[var(--color-accent)] cursor-pointer truncate"
               >
-                <option value="ALL">All Competitions ({initialClubs.length} Clubs)</option>
+                <option value="ALL">All competitions ({initialClubs.length} clubs)</option>
                 {availableLeagues.map((l) => (
                   <option key={l} value={l}>
                     {l}
@@ -203,16 +203,16 @@ export function ClubsDirectoryClient({ initialClubs }: ClubsDirectoryClientProps
 
             {/* Country Filter */}
             <div>
-              <label htmlFor="modal-club-country" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+              <label htmlFor="modal-club-country" className="block text-[13px] font-normal text-[var(--color-text-secondary)] mb-1.5">
                 Country
               </label>
               <select
                 id="modal-club-country"
                 value={countryParam}
                 onChange={(e) => updateParams({ country: e.target.value, page: "1" })}
-                className="w-full min-h-[44px] px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs font-semibold focus:outline-none focus:border-amber-400 cursor-pointer truncate"
+                className="w-full min-h-[44px] px-3 py-2 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] text-[var(--color-text)] text-[15px] font-normal focus:outline-none focus:border-[var(--color-accent)] cursor-pointer truncate"
               >
-                <option value="ALL">All Countries</option>
+                <option value="ALL">All countries</option>
                 {availableCountries.map((c) => (
                   <option key={c} value={c}>
                     {c}
@@ -227,17 +227,17 @@ export function ClubsDirectoryClient({ initialClubs }: ClubsDirectoryClientProps
       {/* 3. Single Card Container with 1px dividers.
           Show the "Squad value" label once in the list header, not on every row. */}
       {paginatedClubs.length > 0 ? (
-        <div className="rounded-2xl glass-panel border border-slate-800/80 overflow-hidden">
+        <div className="rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)] overflow-hidden">
           {/* List Header */}
-          <div className="flex items-center justify-between px-3 sm:px-4 py-2 border-b border-slate-800/60 text-[11px] font-bold uppercase tracking-wider text-slate-500 bg-slate-900/40">
+          <div className="flex items-center justify-between px-3 sm:px-4 py-2 border-b border-[var(--color-border)] text-[13px] font-normal text-[var(--color-text-secondary)] bg-[var(--color-surface-2)]">
             <div className="flex items-center gap-3">
               <span className="w-7 text-center">#</span>
               <span>Club</span>
             </div>
-            <span>Squad Value</span>
+            <span>Squad value</span>
           </div>
 
-          <div className="divide-y divide-slate-800/60">
+          <div className="divide-y divide-[var(--color-border)]">
             {paginatedClubs.map((club, idx) => (
               <ClubRow
                 key={club.id}
@@ -255,31 +255,31 @@ export function ClubsDirectoryClient({ initialClubs }: ClubsDirectoryClientProps
           </div>
         </div>
       ) : (
-        <div className="rounded-2xl glass-panel p-10 border border-slate-800 text-center space-y-3">
-          <p className="text-slate-300 text-sm font-semibold">No clubs match the selected filters.</p>
+        <div className="rounded-xl bg-[var(--color-surface)] p-8 border border-[var(--color-border)] text-center space-y-3">
+          <p className="text-[var(--color-text-secondary)] text-[15px]">No clubs match the selected filters.</p>
           <button
             type="button"
             onClick={handleClearFilters}
-            className="px-4 py-2 min-h-[44px] rounded-xl bg-amber-400 text-slate-950 text-xs font-bold hover:bg-amber-300 transition-colors"
+            className="px-4 py-2 min-h-[44px] rounded-lg bg-[var(--color-accent)] text-[#0B0F17] text-[13px] font-semibold transition-colors"
           >
-            Clear All Filters
+            Clear all filters
           </button>
         </div>
       )}
 
       {/* Pagination Controls */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-between pt-2 border-t border-slate-800/80 text-xs text-slate-400">
+        <div className="flex items-center justify-between pt-2 border-t border-[var(--color-border)] text-[13px] text-[var(--color-text-secondary)]">
           <button
             type="button"
             onClick={() => updateParams({ page: String(currentPage - 1) })}
             disabled={currentPage <= 1}
-            className="flex items-center gap-1 min-h-[40px] px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-white disabled:opacity-40 disabled:cursor-not-allowed hover:border-amber-400 transition-colors"
+            className="flex items-center gap-1 min-h-[44px] px-3.5 py-1.5 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] text-[var(--color-text)] disabled:opacity-40 disabled:cursor-not-allowed hover:border-[var(--color-accent)] transition-colors"
           >
             <ChevronLeft className="w-4 h-4" /> Previous
           </button>
 
-          <span className="font-semibold text-slate-300">
+          <span className="font-normal text-[var(--color-text-secondary)] tabular-nums">
             Page {currentPage} of {totalPages}
           </span>
 
@@ -287,7 +287,7 @@ export function ClubsDirectoryClient({ initialClubs }: ClubsDirectoryClientProps
             type="button"
             onClick={() => updateParams({ page: String(currentPage + 1) })}
             disabled={currentPage >= totalPages}
-            className="flex items-center gap-1 min-h-[40px] px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-white disabled:opacity-40 disabled:cursor-not-allowed hover:border-amber-400 transition-colors"
+            className="flex items-center gap-1 min-h-[44px] px-3.5 py-1.5 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] text-[var(--color-text)] disabled:opacity-40 disabled:cursor-not-allowed hover:border-[var(--color-accent)] transition-colors"
           >
             Next <ChevronRight className="w-4 h-4" />
           </button>

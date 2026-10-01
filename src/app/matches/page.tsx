@@ -6,7 +6,7 @@ export const revalidate = 5; // Ultra-fresh live scores every 5s
 export const runtime = "edge";
 
 export const metadata: Metadata = {
-  title: "Live Match Center — Real-Time Scores, Lineups & Squad Values",
+  title: "Live Matches — Real-Time Scores, Lineups & Squad Values",
   description:
     "Live football scores, real-time match events, confirmed tactical lineups, and squad market values on a1score.app.",
 };

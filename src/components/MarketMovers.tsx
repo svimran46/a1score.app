@@ -41,7 +41,7 @@ export function MarketMovers({ risers, fallers }: MarketMoversProps) {
             Significant valuation shifts across Europe&apos;s top flight competitions vs previous market revision
           </p>
           <p className="text-[10px] text-slate-500 mt-0.5">
-            Note: Updates are issued in periodic league-wide tranches, which can cause clustering from recently updated clubs.
+            Note: Updates are issued in periodic league-wide cycles, which can cause clustering from recently updated clubs.
           </p>
         </div>
 

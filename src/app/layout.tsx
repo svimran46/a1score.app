@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     template: "%s",
   },
   description:
-    "Football intelligence platform combining real-time match center delivery with player market valuations, career trajectories, and squad analytics on a1score.app.",
+    "Football platform combining real-time scores with player market valuations and club records on a1score.app.",
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     siteName: "a1score.app",
     title: "a1score.app — Money meets the pitch",
     description:
-      "Football intelligence: live match centers, player market valuations, career trajectories, and squad analytics.",
+      "Football platform: live scores, player market valuations, and club records.",
     images: [
       {
         url: `${SITE_URL}/og-default.png`,
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "a1score.app — Money meets the pitch",
     description:
-      "Football intelligence: live match centers, player market valuations, career trajectories, and squad analytics.",
+      "Football platform: live scores, player market valuations, and club records.",
     images: [`${SITE_URL}/og-default.png`],
   },
   robots: {
@@ -91,7 +91,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="bg-ink-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-amber-500 selection:text-ink-950 transition-colors duration-200">
+      <body className="min-h-screen flex flex-col font-sans antialiased transition-colors duration-200" style={{ backgroundColor: "var(--color-bg)", color: "var(--color-text)" }}>
         <GridKeyNavigation />
         <Navbar />
         <main className="app-container flex-1 pt-3 pb-20 sm:pb-8 sm:py-6">

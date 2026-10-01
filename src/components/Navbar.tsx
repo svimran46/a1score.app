@@ -355,8 +355,8 @@ function NavbarContent() {
         Auto-hide on scroll-down, show on scroll-up.
       */}
       <header
-        className={`sticky top-0 z-40 w-full bg-slate-950/90 dark:bg-slate-950/90 bg-white/90 backdrop-blur-xl transition-all duration-300 ease-in-out ${
-          isScrolled ? "border-b border-slate-800/80 shadow-md" : "border-b border-transparent"
+        className={`sticky top-0 z-40 w-full bg-[var(--color-bg)]/90 backdrop-blur-xl transition-all duration-300 ease-in-out ${
+          isScrolled ? "border-b border-[var(--color-border)] shadow-sm" : "border-b border-transparent"
         } ${
           showTopBar || drawerOpen || commandPaletteOpen ? "translate-y-0" : "-translate-y-full"
         }`}
@@ -370,20 +370,20 @@ function NavbarContent() {
             <div className="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
               <Link
                 href="/"
-                className="flex items-center gap-2 group flex-shrink-0 min-h-[44px] py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-xl"
+                className="flex items-center gap-2 group flex-shrink-0 min-h-[44px] py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] rounded-xl"
                 aria-label="a1score.app home"
               >
-                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition-transform flex-shrink-0">
-                  <span className="text-white font-black text-base sm:text-lg tracking-tighter">
+                <div
+                  className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+                  style={{ backgroundColor: "var(--color-accent)" }}
+                >
+                  <span className="text-[#0B0F17] font-black text-base sm:text-lg tracking-tighter">
                     A1
                   </span>
                 </div>
                 <div className="flex flex-col md:hidden lg:flex">
-                  <span className="text-base sm:text-lg font-bold tracking-tight text-white flex items-center leading-tight">
-                    a1score<span className="text-brand-400">.app</span>
-                  </span>
-                  <span className="text-[10px] uppercase font-semibold tracking-wider text-slate-400 -mt-0.5 hidden xl:inline">
-                    Football Intelligence
+                  <span className="text-base sm:text-lg font-bold tracking-tight text-[var(--color-text)] flex items-center leading-tight">
+                    a1score<span className="text-[var(--color-accent)]">.app</span>
                   </span>
                 </div>
               </Link>
@@ -410,7 +410,7 @@ function NavbarContent() {
                     <div className="relative flex items-center justify-center flex-shrink-0">
                       <Icon className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                       {cat.isLiveMatches && liveCount !== null && liveCount > 0 && (
-                        <span className="absolute -top-1 -right-1 w-2 h-2 bg-rose-500 rounded-full animate-ping" />
+                        <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full animate-ping" style={{ backgroundColor: "var(--color-positive)" }} />
                       )}
                     </div>
                     {/* Full label on >=1024px, short label on 768-1023px */}
@@ -418,7 +418,7 @@ function NavbarContent() {
                     <span className="lg:hidden">{cat.shortName}</span>
                     {/* Live count badge */}
                     {cat.isLiveMatches && liveCount !== null && liveCount > 0 && (
-                      <span className="ml-0.5 lg:ml-1 inline-flex items-center px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30">
+                      <span className="ml-0.5 lg:ml-1 inline-flex items-center px-1.5 py-0.2 rounded-full text-[10px] font-bold" style={{ backgroundColor: "rgba(34, 197, 94, 0.15)", color: "var(--color-positive)", border: "1px solid rgba(34, 197, 94, 0.3)" }}>
                         {liveCount}
                       </span>
                     )}
@@ -451,11 +451,11 @@ function NavbarContent() {
                 type="button"
                 data-search-trigger="compact"
                 onClick={() => setCommandPaletteOpen(true)}
-                className="lg:hidden min-h-[44px] min-w-[44px] p-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+                className="lg:hidden min-h-[44px] min-w-[44px] p-2.5 rounded-xl text-[var(--color-text-secondary)] hover:text-[var(--color-text)] transition-colors flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
                 aria-label="Search players, clubs, leagues"
                 title="Search (Ctrl+K)"
               >
-                <Search className="w-5 h-5 text-slate-400 hover:text-amber-400 transition-colors" />
+                <Search className="w-5 h-5 text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] transition-colors" />
               </button>
 
               {/* Theme Toggle */}
@@ -466,7 +466,7 @@ function NavbarContent() {
                 ref={menuButtonRef}
                 type="button"
                 onClick={() => setDrawerOpen(true)}
-                className="hidden md:flex xl:hidden min-h-[44px] min-w-[44px] p-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+                className="hidden md:flex xl:hidden min-h-[44px] min-w-[44px] p-2.5 rounded-xl text-[var(--color-text-secondary)] hover:text-[var(--color-text)] transition-colors items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
                 aria-label="Open navigation menu"
                 aria-expanded={drawerOpen}
                 aria-controls="navigation-drawer"
@@ -481,12 +481,12 @@ function NavbarContent() {
       {/* 
         FIXED BOTTOM TAB BAR (mobile < 768px)
         5 items: Home, Matches (live-count badge), Players, Clubs, More (opens drawer).
-        56px + safe-area inset, blurred dark background, active tab in accent colour.
+        56px + safe-area inset, blurred background, active tab in accent colour.
         Hidden while the keyboard is open.
       */}
       <nav
         aria-label="Mobile Bottom Navigation"
-        className={`fixed bottom-0 left-0 right-0 z-40 md:hidden bg-slate-950/90 dark:bg-slate-950/90 bg-white/95 border-t border-slate-800/80 backdrop-blur-xl transition-transform duration-200 ${
+        className={`fixed bottom-0 left-0 right-0 z-40 md:hidden bg-[var(--color-surface)]/95 border-t border-[var(--color-border)] backdrop-blur-xl transition-transform duration-200 ${
           isKeyboardOpen ? "translate-y-full pointer-events-none" : "translate-y-0"
         }`}
         style={{
@@ -497,10 +497,10 @@ function NavbarContent() {
           {/* 1. Home */}
           <Link
             href="/"
-            className={`flex flex-col items-center justify-center min-h-[44px] h-full py-1 text-[10px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
+            className={`flex flex-col items-center justify-center min-h-[44px] h-full py-1 text-[10px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] ${
               isHomeActive
-                ? "text-amber-400 font-semibold"
-                : "text-slate-400 hover:text-slate-200"
+                ? "text-[var(--color-accent)] font-semibold"
+                : "text-[var(--color-text-secondary)] hover:text-[var(--color-text)]"
             }`}
             aria-label="Home"
           >
@@ -511,17 +511,17 @@ function NavbarContent() {
           {/* 2. Matches (live-count badge) */}
           <Link
             href="/matches"
-            className={`flex flex-col items-center justify-center min-h-[44px] h-full py-1 text-[10px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
+            className={`flex flex-col items-center justify-center min-h-[44px] h-full py-1 text-[10px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] ${
               isMatchesActive
-                ? "text-amber-400 font-semibold"
-                : "text-slate-400 hover:text-slate-200"
+                ? "text-[var(--color-accent)] font-semibold"
+                : "text-[var(--color-text-secondary)] hover:text-[var(--color-text)]"
             }`}
             aria-label="Matches"
           >
             <div className="relative flex items-center justify-center">
               <Radio className="w-5 h-5" />
               {liveCount !== null && liveCount > 0 && (
-                <span className="absolute -top-1 -right-2 min-w-[14px] h-3.5 px-1 rounded-full text-[9px] font-bold bg-rose-500 text-white flex items-center justify-center leading-none">
+                <span className="absolute -top-1 -right-2 min-w-[14px] h-3.5 px-1 rounded-full text-[9px] font-bold text-white flex items-center justify-center leading-none" style={{ backgroundColor: "var(--color-positive)" }}>
                   {liveCount}
                 </span>
               )}
@@ -532,10 +532,10 @@ function NavbarContent() {
           {/* 3. Players */}
           <Link
             href="/players"
-            className={`flex flex-col items-center justify-center min-h-[44px] h-full py-1 text-[10px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
+            className={`flex flex-col items-center justify-center min-h-[44px] h-full py-1 text-[10px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] ${
               isPlayersActive
-                ? "text-amber-400 font-semibold"
-                : "text-slate-400 hover:text-slate-200"
+                ? "text-[var(--color-accent)] font-semibold"
+                : "text-[var(--color-text-secondary)] hover:text-[var(--color-text)]"
             }`}
             aria-label="Players"
           >
@@ -546,10 +546,10 @@ function NavbarContent() {
           {/* 4. Clubs */}
           <Link
             href="/clubs"
-            className={`flex flex-col items-center justify-center min-h-[44px] h-full py-1 text-[10px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
+            className={`flex flex-col items-center justify-center min-h-[44px] h-full py-1 text-[10px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] ${
               isClubsActive
-                ? "text-amber-400 font-semibold"
-                : "text-slate-400 hover:text-slate-200"
+                ? "text-[var(--color-accent)] font-semibold"
+                : "text-[var(--color-text-secondary)] hover:text-[var(--color-text)]"
             }`}
             aria-label="Clubs"
           >
@@ -561,10 +561,10 @@ function NavbarContent() {
           <button
             type="button"
             onClick={() => setDrawerOpen(true)}
-            className={`flex flex-col items-center justify-center min-h-[44px] h-full py-1 text-[10px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
+            className={`flex flex-col items-center justify-center min-h-[44px] h-full py-1 text-[10px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] ${
               isMoreActive
-                ? "text-amber-400 font-semibold"
-                : "text-slate-400 hover:text-slate-200"
+                ? "text-[var(--color-accent)] font-semibold"
+                : "text-[var(--color-text-secondary)] hover:text-[var(--color-text)]"
             }`}
             aria-label="More navigation options"
             aria-expanded={drawerOpen}
@@ -598,14 +598,14 @@ function NavbarContent() {
                 <div className="w-6 h-6 flex items-center justify-center shrink-0 relative">
                   <Icon className="w-5 h-5 text-slate-300 group-hover:text-amber-400 group-focus-within:text-amber-400 transition-colors" />
                   {item.isLiveMatches && liveCount !== null && liveCount > 0 && (
-                    <span className="absolute -top-1 -right-1 w-2 h-2 bg-rose-500 rounded-full animate-ping" />
+                    <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full animate-ping" style={{ backgroundColor: "var(--color-positive)" }} />
                   )}
                 </div>
                 <span className="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-150 text-slate-200">
                   {item.name}
                 </span>
                 {item.isLiveMatches && liveCount !== null && liveCount > 0 && (
-                  <span className="ml-auto opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30">
+                  <span className="ml-auto opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 px-1.5 py-0.5 rounded-full text-[10px] font-bold" style={{ backgroundColor: "rgba(34, 197, 94, 0.15)", color: "var(--color-positive)", border: "1px solid rgba(34, 197, 94, 0.3)" }}>
                     {liveCount}
                   </span>
                 )}
@@ -647,8 +647,8 @@ function NavbarContent() {
       >
         {/* Drawer Header: Title + Close Button (48px height) */}
         <div className="h-12 px-4 border-b border-slate-800/80 flex items-center justify-between flex-shrink-0">
-          <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-            Navigation
+          <span className="text-[13px] font-medium text-slate-400">
+            Menu
           </span>
           <button
             ref={closeButtonRef}
@@ -688,7 +688,7 @@ function NavbarContent() {
                   <span>{item.name}</span>
                 </div>
                 {item.isLiveMatches && liveCount !== null && liveCount > 0 && (
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30">
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold" style={{ backgroundColor: "rgba(34, 197, 94, 0.15)", color: "var(--color-positive)", border: "1px solid rgba(34, 197, 94, 0.3)" }}>
                     {liveCount} Live
                   </span>
                 )}

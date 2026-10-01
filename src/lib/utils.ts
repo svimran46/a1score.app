@@ -46,17 +46,44 @@ export function formatCompactEur(amount: number | bigint | null | undefined): st
 }
 
 export function formatDate(date: Date | string | null | undefined): string {
-  if (!date) return "-";
+  if (!date) return "";
   try {
     const d = typeof date === "string" ? new Date(date) : date;
-    if (!d || isNaN(d.getTime())) return "-";
+    if (!d || isNaN(d.getTime())) return "";
     return new Intl.DateTimeFormat("en-GB", {
       day: "numeric",
       month: "short",
       year: "numeric",
     }).format(d);
   } catch {
-    return "-";
+    return "";
+  }
+}
+
+/**
+ * Formats data age: "Updated 5 Jun 2026" or "Updated 4 months ago" if older than 30 days
+ */
+export function formatUpdateAge(date: Date | string | null | undefined): string {
+  if (!date) return "";
+  try {
+    const d = typeof date === "string" ? new Date(date) : date;
+    if (!d || isNaN(d.getTime())) return "";
+
+    const now = new Date();
+    const diffMs = now.getTime() - d.getTime();
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+    if (diffDays <= 30) {
+      return `Updated ${formatDate(d)}`;
+    }
+    const months = Math.max(1, Math.floor(diffDays / 30.44));
+    if (months < 12) {
+      return `Updated ${months} ${months === 1 ? "month" : "months"} ago`;
+    }
+    const years = Math.max(1, Math.floor(diffDays / 365.25));
+    return `Updated ${years} ${years === 1 ? "year" : "years"} ago`;
+  } catch {
+    return "";
   }
 }
 

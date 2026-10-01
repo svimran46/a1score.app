@@ -26,7 +26,7 @@ function getOrdinal(n: number): string {
 }
 
 function formatClubValue(value: number): string {
-  if (!value || value === 0) return "N/A";
+  if (!value || value === 0) return "";
   if (value >= 1_000_000_000) {
     const valInB = value / 1_000_000_000;
     return `€${valInB.toFixed(2)}B`;
@@ -39,9 +39,9 @@ function formatClubValue(value: number): string {
 }
 
 /**
- * Standard ClubRow component (exact 72px tall).
- * [rank by value] [crest 44px] [short name / "LaLiga · 4th"] [value right].
- * "27 players · 25.7 yrs" belongs in club detail page, not in this row.
+ * a1score ClubRow Component (fixed height 64 to 72, dividers only, no border box):
+ * [rank (secondary 13)] [crest 44px] [short name (15/500, no truncate) with meta below (13 secondary)] [value right (15/600 gold)].
+ * Never shows 'N/A'.
  */
 export function ClubRow({
   rank,
@@ -60,50 +60,70 @@ export function ClubRow({
   const href = `/clubs/${slug || getClubSlug({ id, name })}`;
 
   const sublineText = [
-    leagueName || country || "Club",
+    leagueName || country || null,
     leagueRank ? getOrdinal(leagueRank) : null,
   ]
     .filter(Boolean)
     .join(" · ");
 
+  const formattedVal = totalSquadValue ? formatClubValue(totalSquadValue) : null;
+
   return (
     <Link
       href={href}
-      className={`h-[72px] flex items-center gap-3 px-3 sm:px-4 hover:bg-slate-800/40 transition-colors w-full group ${className}`}
+      className={`h-[68px] min-h-[64px] max-h-[72px] flex items-center gap-3 px-3 sm:px-4 hover:bg-white/[0.02] transition-colors w-full ${className}`}
     >
-      {/* Rank (28px wide muted) */}
-      <span className="w-7 text-center text-xs font-semibold text-slate-500 tabular-nums shrink-0">
-        {rank ?? ""}
-      </span>
+      {/* Rank (13px secondary) */}
+      {rank != null && (
+        <span
+          className="w-6 text-center text-[13px] font-normal tabular-nums shrink-0"
+          style={{ color: "var(--color-text-secondary)" }}
+        >
+          {rank}
+        </span>
+      )}
 
       {/* Crest (44px) */}
-      <div className="relative w-11 h-11 rounded-xl bg-slate-900/90 p-1 shrink-0 overflow-hidden border border-slate-800 group-hover:scale-105 transition-transform flex items-center justify-center">
+      <div className="relative w-11 h-11 rounded-lg bg-white/[0.02] p-1 shrink-0 overflow-hidden border border-white/5 flex items-center justify-center">
         <EntityImage
           src={logoUrl}
           alt={name}
-          fill
-          sizes="44px"
+          width={44}
+          height={44}
           entityType="club"
           className="object-contain p-0.5"
         />
       </div>
 
-      {/* Middle: Short Name (16px semibold) & Subline ("LaLiga · 4th") */}
-      <div className="flex-1 min-w-0">
-        <div className="text-[16px] font-semibold text-white truncate leading-tight group-hover:text-amber-400 transition-colors">
+      {/* Middle: Short Name (15/500, wraps up to 2 lines, no ellipsis) & Meta (13 secondary) */}
+      <div className="flex-1 min-w-0 pr-2">
+        <div
+          className="text-[15px] font-medium leading-snug line-clamp-2"
+          style={{ color: "var(--color-text)" }}
+        >
           {clubShortName}
         </div>
-        <div className="text-[13px] text-slate-400 truncate mt-0.5">
-          {sublineText}
-        </div>
+        {sublineText && (
+          <div
+            className="text-[13px] font-normal mt-0.5"
+            style={{ color: "var(--color-text-secondary)" }}
+          >
+            {sublineText}
+          </div>
+        )}
       </div>
 
-      {/* Right: Squad Value (16px bold gold) */}
-      <div className="shrink-0 text-right">
-        <div className="text-[16px] font-bold text-amber-400 tabular-nums whitespace-nowrap">
-          {totalSquadValue ? formatClubValue(totalSquadValue) : "N/A"}
+      {/* Right: Squad Value (15/600 gold) */}
+      {formattedVal && (
+        <div className="shrink-0 text-right">
+          <div
+            className="text-[15px] font-semibold tabular-nums leading-tight"
+            style={{ color: "var(--color-accent)" }}
+          >
+            {formattedVal}
+          </div>
         </div>
-      </div>
+      )}
     </Link>
   );
 }

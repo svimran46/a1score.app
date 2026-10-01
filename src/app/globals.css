@@ -4,25 +4,25 @@
 @tailwind utilities;
 
 :root {
-  --background: #0B0F17;
-  --foreground: #F2F4F8;
-  --card-bg: rgba(13, 17, 26, 0.75);
-  --card-border: rgba(255, 255, 255, 0.08);
-  --card-border-amber: rgba(245, 158, 11, 0.18);
-  --muted-foreground: #94A3B8;
-  --accent-amber: #F59E0B;
-  --accent-pitch: #10B981;
+  --background: var(--color-bg);
+  --foreground: var(--color-text);
+  --card-bg: var(--color-surface);
+  --card-border: var(--color-border);
+  --card-border-amber: var(--color-accent);
+  --muted-foreground: var(--color-text-secondary);
+  --accent-amber: var(--color-accent);
+  --accent-pitch: var(--color-positive);
 }
 
 .light {
-  --background: #F8FAFC;
-  --foreground: #090D16;
-  --card-bg: rgba(255, 255, 255, 0.85);
-  --card-border: rgba(15, 23, 42, 0.1);
-  --card-border-amber: rgba(217, 119, 6, 0.25);
-  --muted-foreground: #64748B;
-  --accent-amber: #D97706;
-  --accent-pitch: #059669;
+  --background: var(--color-bg);
+  --foreground: var(--color-text);
+  --card-bg: var(--color-surface);
+  --card-border: var(--color-border);
+  --card-border-amber: var(--color-accent);
+  --muted-foreground: var(--color-text-secondary);
+  --accent-amber: var(--color-accent);
+  --accent-pitch: var(--color-positive);
 }
 
 @layer base {

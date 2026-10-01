@@ -2,13 +2,13 @@ import Link from "next/link";
 import { getMostValuablePlayers, getMarketValueMovers } from "@/lib/data/players";
 import { getLeagues } from "@/lib/data/leagues";
 import { getMatchesByDate } from "@/lib/fotmob/client";
-import { HomeSectionHeader } from "@/components/HomeSectionHeader";
+import { SectionHeader } from "@/components/SectionHeader";
 import { HomeMatchRow } from "@/components/HomeMatchRow";
 import { HomePlayerRow } from "@/components/HomePlayerRow";
 import { formatCompactEur } from "@/lib/utils";
 import type { FotmobMatch } from "@/lib/fotmob/client";
 
-export const revalidate = 30; // Fresh intelligence and scores
+export const revalidate = 30;
 export const runtime = "edge";
 
 export default async function HomePage() {
@@ -47,18 +47,28 @@ export default async function HomePage() {
     <div className="space-y-6">
       {/* 2. Section "Live now" / "Today" */}
       <section>
-        <HomeSectionHeader
+        <SectionHeader
           title={matchSectionTitle}
           href="/matches"
           actionLabel="All matches"
         />
-        <div className="rounded-[12px] bg-[#121826] border border-white/[0.06] divide-y divide-white/[0.06] overflow-hidden">
+        <div
+          className="rounded-[12px] divide-y overflow-hidden"
+          style={{
+            backgroundColor: "var(--color-surface)",
+            borderColor: "var(--color-border)",
+            borderWidth: "1px",
+          }}
+        >
           {displayedMatches.length > 0 ? (
             displayedMatches.map((match) => (
               <HomeMatchRow key={match.id} match={match} />
             ))
           ) : (
-            <div className="px-3 py-4 text-center text-[12px] font-normal text-[#8B93A5]">
+            <div
+              className="px-3 py-4 text-center text-[13px] font-normal"
+              style={{ color: "var(--color-text-secondary)" }}
+            >
               No fixtures scheduled for today
             </div>
           )}
@@ -67,12 +77,19 @@ export default async function HomePage() {
 
       {/* 3. Section "Most valuable" */}
       <section>
-        <HomeSectionHeader
+        <SectionHeader
           title="Most valuable"
           href="/players"
           actionLabel="See all"
         />
-        <div className="rounded-[12px] bg-[#121826] border border-white/[0.06] divide-y divide-white/[0.06] overflow-hidden">
+        <div
+          className="rounded-[12px] divide-y overflow-hidden"
+          style={{
+            backgroundColor: "var(--color-surface)",
+            borderColor: "var(--color-border)",
+            borderWidth: "1px",
+          }}
+        >
           {valuablePlayers.slice(0, 5).map((player, idx) => (
             <HomePlayerRow
               key={player.id}
@@ -91,12 +108,19 @@ export default async function HomePage() {
       {/* 4. Section "Biggest movers" */}
       {moverList.length > 0 && (
         <section>
-          <HomeSectionHeader
+          <SectionHeader
             title="Biggest movers"
             href="/players?view=movers"
             actionLabel="See all"
           />
-          <div className="rounded-[12px] bg-[#121826] border border-white/[0.06] divide-y divide-white/[0.06] overflow-hidden">
+          <div
+            className="rounded-[12px] divide-y overflow-hidden"
+            style={{
+              backgroundColor: "var(--color-surface)",
+              borderColor: "var(--color-border)",
+              borderWidth: "1px",
+            }}
+          >
             {moverList.map((m, idx) => (
               <HomePlayerRow
                 key={m.id}
@@ -116,22 +140,36 @@ export default async function HomePage() {
 
       {/* 5. Section "Leagues" */}
       <section>
-        <HomeSectionHeader
+        <SectionHeader
           title="Leagues"
           href="/leagues"
           actionLabel="See all"
         />
-        <div className="rounded-[12px] bg-[#121826] border border-white/[0.06] divide-y divide-white/[0.06] overflow-hidden">
+        <div
+          className="rounded-[12px] divide-y overflow-hidden"
+          style={{
+            backgroundColor: "var(--color-surface)",
+            borderColor: "var(--color-border)",
+            borderWidth: "1px",
+          }}
+        >
           {leagues.map((league) => (
             <Link
               key={league.id}
               href={`/leagues/${league.id}`}
-              className="h-12 min-h-[48px] px-3 flex items-center justify-between hover:bg-white/[0.02] transition-colors"
+              className="h-12 min-h-[48px] px-4 flex items-center justify-between hover:bg-white/[0.02] transition-colors"
+              style={{ borderColor: "var(--color-border)" }}
             >
-              <span className="text-[15px] font-medium text-[#F2F4F8] leading-tight">
+              <span
+                className="text-[15px] font-medium leading-tight"
+                style={{ color: "var(--color-text)" }}
+              >
                 {league.name}
               </span>
-              <span className="text-[15px] font-semibold text-[#F5B73B] tabular-nums leading-tight">
+              <span
+                className="text-[15px] font-semibold tabular-nums leading-tight"
+                style={{ color: "var(--color-accent)" }}
+              >
                 {formatCompactEur(league.totalMarketValue)}
               </span>
             </Link>
@@ -140,7 +178,10 @@ export default async function HomePage() {
       </section>
 
       {/* 6. Footer line */}
-      <div className="text-center py-6 text-[12px] font-normal text-[#8B93A5]">
+      <div
+        className="text-center py-6 text-[13px] font-normal"
+        style={{ color: "var(--color-text-secondary)" }}
+      >
         Data from FotMob and Transfermarkt
       </div>
     </div>

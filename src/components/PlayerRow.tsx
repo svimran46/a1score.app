@@ -3,6 +3,7 @@ import Link from "next/link";
 import { EntityImage } from "./EntityImage";
 import { formatCompactEur } from "@/lib/utils";
 import { getClubShortName } from "@/lib/data/clubs";
+import { getPositionAbbreviation } from "@/lib/positions";
 
 export interface PlayerRowProps {
   rank?: number | string;
@@ -17,17 +18,16 @@ export interface PlayerRowProps {
   } | null;
   position?: string | null;
   marketValue?: number | null;
-  change?: number | null; // Net value change e.g. +10_000_000 or -5_000_000
+  change?: number | null;
   className?: string;
 }
 
 /**
- * Standard PlayerRow component (exact 72px tall).
- * [rank 28px muted] [photo 48px round]
- * [name 16px semibold, 1 line / club crest 14px + short name · position, 13px muted]
- * [right: value 16px bold gold, optional change chip below 12px green/red].
- * Position is plain muted text, NOT a pill.
- * Used on Home (Most Valuable + Movers), Players Rankings, and Players Movers.
+ * a1score PlayerRow Component (fixed height 64 to 72, dividers only, no border box):
+ * [rank (secondary 13)] [photo circle] [name (15/500, no truncate) with meta (13 secondary) below] [value right (15/600 gold)].
+ * Meta: club crest 14px + short club name + abbreviated position (RW, CF, CM).
+ * Change: +€30M / −€10M with true minus sign.
+ * Never shows 'N/A'.
  */
 export function PlayerRow({
   rank,
@@ -43,67 +43,92 @@ export function PlayerRow({
 }: PlayerRowProps) {
   const href = slug ? `/players/${slug}` : `/players/${id}`;
   const clubShortName = club ? getClubShortName(club.shortName || club.name || "") : null;
+  const posAbbr = position ? getPositionAbbreviation(position) : null;
+
+  let changeFormatted: string | null = null;
+  let isPositiveChange = true;
+  if (typeof change === "number" && change !== 0) {
+    isPositiveChange = change > 0;
+    const sign = change > 0 ? "+" : "−"; // true minus sign \u2212
+    const absVal = Math.abs(change);
+    changeFormatted = `${sign}${formatCompactEur(absVal)}`;
+  }
 
   return (
     <Link
       href={href}
-      className={`h-[72px] flex items-center gap-3 px-3 sm:px-4 hover:bg-slate-800/40 transition-colors w-full group ${className}`}
+      className={`h-[68px] min-h-[64px] max-h-[72px] flex items-center gap-3 px-3 sm:px-4 hover:bg-white/[0.02] transition-colors w-full ${className}`}
     >
-      {/* Rank (28px wide muted) */}
-      <span className="w-7 text-center text-xs font-semibold text-slate-500 tabular-nums shrink-0">
-        {rank ?? ""}
-      </span>
+      {/* Rank (secondary text 13px) */}
+      {rank != null && (
+        <span
+          className="w-6 text-center text-[13px] font-normal tabular-nums shrink-0"
+          style={{ color: "var(--color-text-secondary)" }}
+        >
+          {rank}
+        </span>
+      )}
 
-      {/* Photo (48px round) */}
-      <div className="relative w-12 h-12 rounded-full overflow-hidden bg-slate-800 shrink-0 border border-slate-700/60 group-hover:scale-105 transition-transform">
+      {/* Photo circle */}
+      <div className="relative w-11 h-11 rounded-full overflow-hidden shrink-0 border border-white/5 bg-slate-800/80">
         <EntityImage
           src={photoUrl}
           alt={name}
-          fill
-          sizes="48px"
+          width={44}
+          height={44}
           entityType="player"
-          className="object-cover"
+          className="object-cover w-full h-full"
         />
       </div>
 
-      {/* Middle: Name (16px semibold) & Subline (13px muted: crest + short name · position) */}
-      <div className="flex-1 min-w-0">
-        <div className="text-[16px] font-semibold text-white truncate leading-tight group-hover:text-amber-400 transition-colors">
+      {/* Middle: Name (15/500, wraps up to 2 lines, no ellipsis) & Meta (13 secondary) */}
+      <div className="flex-1 min-w-0 pr-2">
+        <div
+          className="text-[15px] font-medium leading-snug line-clamp-2"
+          style={{ color: "var(--color-text)" }}
+        >
           {name}
         </div>
-        <div className="text-[13px] text-slate-400 truncate flex items-center gap-1.5 mt-0.5">
+        <div
+          className="text-[13px] font-normal flex items-center gap-1.5 mt-0.5"
+          style={{ color: "var(--color-text-secondary)" }}
+        >
           {club?.logoUrl && (
             <span className="relative w-3.5 h-3.5 shrink-0 inline-block overflow-hidden">
               <EntityImage
                 src={club.logoUrl}
                 alt=""
-                fill
-                sizes="14px"
+                width={14}
+                height={14}
                 entityType="club"
-                className="object-contain"
+                className="object-contain w-3.5 h-3.5"
               />
             </span>
           )}
-          {clubShortName && <span className="truncate">{clubShortName}</span>}
-          {clubShortName && position && <span className="text-slate-600">·</span>}
-          {position && <span className="truncate text-slate-400 font-normal">{position}</span>}
+          {clubShortName && <span>{clubShortName}</span>}
+          {clubShortName && posAbbr && <span>·</span>}
+          {posAbbr && <span>{posAbbr}</span>}
         </div>
       </div>
 
-      {/* Right: Value (16px bold gold) & optional change chip below (12px green/red) */}
-      <div className="shrink-0 text-right">
-        <div className="text-[16px] font-bold text-amber-400 tabular-nums whitespace-nowrap">
-          {marketValue ? formatCompactEur(marketValue) : "N/A"}
-        </div>
-        {change != null && change !== 0 && (
+      {/* Right: Value (15/600 gold) + optional change */}
+      <div className="shrink-0 text-right flex flex-col items-end justify-center">
+        {marketValue != null && (
           <div
-            className={`text-[12px] font-semibold tabular-nums mt-0.5 inline-flex items-center px-1.5 py-0.2 rounded ${
-              change > 0
-                ? "text-emerald-400 bg-emerald-500/10"
-                : "text-rose-400 bg-rose-500/10"
-            }`}
+            className="text-[15px] font-semibold tabular-nums leading-tight"
+            style={{ color: "var(--color-accent)" }}
           >
-            {change > 0 ? `+${formatCompactEur(change)}` : `-${formatCompactEur(Math.abs(change))}`}
+            {formatCompactEur(marketValue)}
+          </div>
+        )}
+        {changeFormatted && (
+          <div
+            className="text-[12px] font-medium tabular-nums mt-0.5 leading-tight"
+            style={{
+              color: isPositiveChange ? "var(--color-positive)" : "var(--color-negative)",
+            }}
+          >
+            {changeFormatted}
           </div>
         )}
       </div>

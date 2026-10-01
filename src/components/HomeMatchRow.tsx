@@ -28,7 +28,7 @@ export function HomeMatchRow({ match }: HomeMatchRowProps) {
     match.status?.scoreStr ||
     (typeof match.home?.score === "number" && typeof match.away?.score === "number"
       ? `${match.home.score} - ${match.away.score}`
-      : "-");
+      : "0 - 0");
 
   const liveMinute =
     match.status?.liveTime?.short ||
@@ -39,7 +39,7 @@ export function HomeMatchRow({ match }: HomeMatchRowProps) {
   return (
     <Link
       href={`/matches/${match.id}`}
-      className="h-[56px] min-h-[56px] max-h-[56px] px-3 flex items-center hover:bg-white/[0.02] transition-colors"
+      className="h-[56px] min-h-[56px] max-h-[56px] px-3 flex items-center hover:bg-[var(--color-surface-2)] transition-colors"
       style={{
         backgroundColor: "transparent",
       }}
@@ -47,8 +47,8 @@ export function HomeMatchRow({ match }: HomeMatchRowProps) {
       {/* Home Team (right-aligned name + crest) */}
       <div className="flex-1 flex items-center justify-end gap-2 min-w-0">
         <span
-          className="text-right text-[15px] font-medium leading-tight text-[#F2F4F8] line-clamp-2"
-          style={{ color: "var(--token-text, #F2F4F8)" }}
+          className="text-right text-[15px] font-medium leading-tight line-clamp-2"
+          style={{ color: "var(--color-text)" }}
         >
           {homeShortName}
         </span>
@@ -74,14 +74,14 @@ export function HomeMatchRow({ match }: HomeMatchRowProps) {
         {isLive ? (
           <>
             <span
-              className="text-[15px] font-semibold text-[#F2F4F8] tabular-nums leading-none"
-              style={{ color: "var(--token-text, #F2F4F8)" }}
+              className="text-[15px] font-semibold tabular-nums leading-none"
+              style={{ color: "var(--color-text)" }}
             >
               {scoreText}
             </span>
             <span
-              className="text-[12px] font-normal text-[#22C55E] leading-none mt-1"
-              style={{ color: "var(--token-green, #22C55E)" }}
+              className="text-[12px] font-normal leading-none mt-1"
+              style={{ color: "var(--color-positive)" }}
             >
               {liveMinute}
             </span>
@@ -89,14 +89,14 @@ export function HomeMatchRow({ match }: HomeMatchRowProps) {
         ) : isFinished ? (
           <>
             <span
-              className="text-[15px] font-semibold text-[#F2F4F8] tabular-nums leading-none"
-              style={{ color: "var(--token-text, #F2F4F8)" }}
+              className="text-[15px] font-semibold tabular-nums leading-none"
+              style={{ color: "var(--color-text)" }}
             >
               {scoreText}
             </span>
             <span
-              className="text-[12px] font-normal text-[#8B93A5] leading-none mt-1"
-              style={{ color: "var(--token-text-muted, #8B93A5)" }}
+              className="text-[12px] font-normal leading-none mt-1"
+              style={{ color: "var(--color-text-secondary)" }}
             >
               FT
             </span>
@@ -128,8 +128,8 @@ export function HomeMatchRow({ match }: HomeMatchRowProps) {
           )}
         </div>
         <span
-          className="text-left text-[15px] font-medium leading-tight text-[#F2F4F8] line-clamp-2"
-          style={{ color: "var(--token-text, #F2F4F8)" }}
+          className="text-left text-[15px] font-medium leading-tight line-clamp-2"
+          style={{ color: "var(--color-text)" }}
         >
           {awayShortName}
         </span>

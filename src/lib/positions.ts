@@ -196,3 +196,27 @@ export function getCanonicalPosition(rawPosition?: string | null): CanonicalPosi
     order: 3,
   };
 }
+
+export function getPositionAbbreviation(rawPosition?: string | null): string {
+  if (!rawPosition) return "";
+  const canon = getCanonicalPosition(rawPosition).detailed;
+  const map: Record<string, string> = {
+    "Goalkeeper": "GK",
+    "Centre-Back": "CB",
+    "Left-Back": "LB",
+    "Right-Back": "RB",
+    "Defender": "DEF",
+    "Defensive Midfield": "DM",
+    "Central Midfield": "CM",
+    "Attacking Midfield": "AM",
+    "Left Midfield": "LM",
+    "Right Midfield": "RM",
+    "Midfield": "MID",
+    "Left Winger": "LW",
+    "Right Winger": "RW",
+    "Second Striker": "SS",
+    "Centre-Forward": "CF",
+    "Forward": "FW",
+  };
+  return map[canon] || canon;
+}

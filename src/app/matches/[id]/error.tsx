@@ -16,44 +16,26 @@ export default function MatchError({
   }, [error]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4 space-y-6">
-      <div className="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center">
-        <Radio className="w-8 h-8 text-amber-400" />
-      </div>
-
-      <div className="space-y-2">
-        <h1 className="text-2xl font-bold text-white">Match Center Unavailable</h1>
-        <p className="text-sm text-slate-400 max-w-md">
-          Something went wrong loading this match center. Please try again or check live fixtures.
+    <div className="flex flex-col items-center justify-center min-h-[50vh] text-center px-4 space-y-4">
+      <div className="space-y-1">
+        <h1 className="text-[20px] font-semibold text-[var(--color-text)]">Match details unavailable</h1>
+        <p className="text-[13px] text-[var(--color-text-secondary)]">
+          Could not load match details. Please try again.
         </p>
-        {error.digest && (
-          <p className="text-[10px] font-mono text-slate-600 mt-2">
-            Error ID: {error.digest}
-          </p>
-        )}
       </div>
 
-      <div className="flex flex-wrap items-center justify-center gap-3">
+      <div className="flex items-center justify-center gap-3">
         <button
           onClick={reset}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 text-ink-950 text-sm font-bold hover:bg-amber-400 transition-colors shadow-sm"
+          className="min-h-[44px] px-5 py-2 rounded-lg bg-[var(--color-accent)] text-[#0B0F17] text-[13px] font-semibold transition-colors"
         >
-          <RefreshCw className="w-4 h-4" />
-          Try Again
+          Retry
         </button>
         <Link
           href="/matches"
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-800 text-amber-400 text-sm font-semibold hover:bg-slate-700 border border-slate-700 transition-colors"
+          className="min-h-[44px] px-4 py-2 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] text-[var(--color-text)] text-[13px] font-medium flex items-center justify-center transition-colors"
         >
-          <Radio className="w-4 h-4" />
-          Live Matches
-        </Link>
-        <Link
-          href="/"
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-900 text-slate-300 text-sm font-semibold hover:bg-slate-800 border border-slate-800 transition-colors"
-        >
-          <Home className="w-4 h-4" />
-          Home
+          All matches
         </Link>
       </div>
     </div>

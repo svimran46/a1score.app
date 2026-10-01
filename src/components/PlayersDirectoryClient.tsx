@@ -190,17 +190,17 @@ export function PlayersDirectoryClient({
       />
 
       {/* 2. Segmented Control under the title [Rankings | Movers] */}
-      <div className="flex items-center p-1 rounded-xl bg-slate-900 border border-slate-800 w-full max-w-xs text-xs font-semibold">
+      <div className="flex items-center p-1 rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)] w-full max-w-xs text-[13px]">
         <button
           type="button"
           onClick={() => {
             setActiveTab("rankings");
             updateParams({ view: "rankings" });
           }}
-          className={`flex-1 min-h-[34px] rounded-lg transition-all text-center ${
+          className={`flex-1 min-h-[44px] rounded-lg transition-all text-center ${
             activeTab === "rankings"
-              ? "bg-amber-400 text-slate-950 font-bold shadow-xs"
-              : "text-slate-400 hover:text-white"
+              ? "bg-[var(--color-surface-2)] text-[var(--color-accent)] font-semibold"
+              : "text-[var(--color-text-secondary)] hover:text-[var(--color-text)]"
           }`}
         >
           Rankings
@@ -211,10 +211,10 @@ export function PlayersDirectoryClient({
             setActiveTab("movers");
             updateParams({ view: "movers" });
           }}
-          className={`flex-1 min-h-[34px] rounded-lg transition-all text-center ${
+          className={`flex-1 min-h-[44px] rounded-lg transition-all text-center ${
             activeTab === "movers"
-              ? "bg-amber-400 text-slate-950 font-bold shadow-xs"
-              : "text-slate-400 hover:text-white"
+              ? "bg-[var(--color-surface-2)] text-[var(--color-accent)] font-semibold"
+              : "text-[var(--color-text-secondary)] hover:text-[var(--color-text)]"
           }`}
         >
           Movers
@@ -224,8 +224,8 @@ export function PlayersDirectoryClient({
       {activeTab === "rankings" ? (
         <>
           {/* 3. One control row: count left, Filters button right (NO in-page search input) */}
-          <div className="flex items-center justify-between text-xs py-0.5">
-            <span className="text-slate-400 font-medium">
+          <div className="flex items-center justify-between text-[13px] py-0.5">
+            <span className="text-[var(--color-text-secondary)] font-normal">
               Showing {filteredPlayers.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}–
               {Math.min(currentPage * ITEMS_PER_PAGE, filteredPlayers.length)} of {filteredPlayers.length}
             </span>
@@ -234,22 +234,22 @@ export function PlayersDirectoryClient({
               activeFilterCount={activeFilterCount}
               onResetFilters={handleClearFilters}
             >
-              <div className="space-y-5">
+              <div className="space-y-4">
                 {/* Sort Selector */}
                 <div>
-                  <label htmlFor="modal-player-sort" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
-                    Sort By
+                  <label htmlFor="modal-player-sort" className="block text-[13px] font-normal text-[var(--color-text-secondary)] mb-1.5">
+                    Sort by
                   </label>
                   <select
                     id="modal-player-sort"
                     value={sortParam}
                     onChange={(e) => updateParams({ sort: e.target.value, page: "1" })}
-                    className="w-full min-h-[44px] px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs font-semibold focus:outline-none focus:border-amber-400 cursor-pointer"
+                    className="w-full min-h-[44px] px-3 py-2 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] text-[var(--color-text)] text-[15px] font-normal focus:outline-none focus:border-[var(--color-accent)] cursor-pointer"
                   >
-                    <option value="val_desc">Market Value: High to Low</option>
-                    <option value="val_asc">Market Value: Low to High</option>
-                    <option value="age_asc">Age: Youngest First</option>
-                    <option value="age_desc">Age: Oldest First</option>
+                    <option value="val_desc">Market value: High to low</option>
+                    <option value="val_asc">Market value: Low to high</option>
+                    <option value="age_asc">Age: Youngest first</option>
+                    <option value="age_desc">Age: Oldest first</option>
                     <option value="name_asc">Name: A to Z</option>
                     <option value="name_desc">Name: Z to A</option>
                   </select>
@@ -257,7 +257,7 @@ export function PlayersDirectoryClient({
 
                 {/* Position Group Tabs */}
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
+                  <label className="block text-[13px] font-normal text-[var(--color-text-secondary)] mb-1.5">
                     Position
                   </label>
                   <div className="grid grid-cols-5 gap-1.5">
@@ -272,10 +272,10 @@ export function PlayersDirectoryClient({
                         key={tab.val}
                         type="button"
                         onClick={() => updateParams({ pos: tab.val, page: "1" })}
-                        className={`min-h-[44px] rounded-xl text-xs font-bold border transition-colors flex items-center justify-center ${
+                        className={`min-h-[44px] rounded-lg text-[13px] font-medium border transition-colors flex items-center justify-center ${
                           posParam === tab.val
-                            ? "bg-amber-400 text-slate-950 border-amber-400"
-                            : "bg-slate-900 text-slate-300 border-slate-800 hover:text-white"
+                            ? "bg-[var(--color-accent)] text-[#0B0F17] font-semibold border-[var(--color-accent)]"
+                            : "bg-[var(--color-surface-2)] text-[var(--color-text-secondary)] border-[var(--color-border)] hover:text-[var(--color-text)]"
                         }`}
                       >
                         {tab.label}
@@ -286,16 +286,16 @@ export function PlayersDirectoryClient({
 
                 {/* League Filter */}
                 <div>
-                  <label htmlFor="modal-player-league" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
-                    Competition / League
+                  <label htmlFor="modal-player-league" className="block text-[13px] font-normal text-[var(--color-text-secondary)] mb-1.5">
+                    Competition
                   </label>
                   <select
                     id="modal-player-league"
                     value={leagueParam}
                     onChange={(e) => updateParams({ league: e.target.value, page: "1" })}
-                    className="w-full min-h-[44px] px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs font-semibold focus:outline-none focus:border-amber-400 cursor-pointer truncate"
+                    className="w-full min-h-[44px] px-3 py-2 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] text-[var(--color-text)] text-[15px] font-normal focus:outline-none focus:border-[var(--color-accent)] cursor-pointer truncate"
                   >
-                    <option value="ALL">All Competitions ({initialPlayers.length} Players)</option>
+                    <option value="ALL">All competitions ({initialPlayers.length} players)</option>
                     {availableLeagues.map((l) => (
                       <option key={l} value={l}>
                         {l}
@@ -306,17 +306,17 @@ export function PlayersDirectoryClient({
 
                 {/* Valuation Filter */}
                 <div>
-                  <label htmlFor="modal-player-val" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
-                    Market Valuation
+                  <label htmlFor="modal-player-val" className="block text-[13px] font-normal text-[var(--color-text-secondary)] mb-1.5">
+                    Market valuation
                   </label>
                   <select
                     id="modal-player-val"
                     value={valParam}
                     onChange={(e) => updateParams({ val: e.target.value, page: "1" })}
-                    className="w-full min-h-[44px] px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs font-semibold focus:outline-none focus:border-amber-400 cursor-pointer"
+                    className="w-full min-h-[44px] px-3 py-2 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] text-[var(--color-text)] text-[15px] font-normal focus:outline-none focus:border-[var(--color-accent)] cursor-pointer"
                   >
-                    <option value="ALL">All Valuations</option>
-                    <option value="150m_plus">€150M+ (Elite Tier)</option>
+                    <option value="ALL">All valuations</option>
+                    <option value="150m_plus">€150M+ (Elite tier)</option>
                     <option value="100m_150m">€100M – €150M</option>
                     <option value="50m_100m">€50M – €100M</option>
                     <option value="under_50m">Under €50M</option>
@@ -325,20 +325,20 @@ export function PlayersDirectoryClient({
 
                 {/* Age Filter */}
                 <div>
-                  <label htmlFor="modal-player-age" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
-                    Age Group
+                  <label htmlFor="modal-player-age" className="block text-[13px] font-normal text-[var(--color-text-secondary)] mb-1.5">
+                    Age group
                   </label>
                   <select
                     id="modal-player-age"
                     value={ageParam}
                     onChange={(e) => updateParams({ age: e.target.value, page: "1" })}
-                    className="w-full min-h-[44px] px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs font-semibold focus:outline-none focus:border-amber-400 cursor-pointer"
+                    className="w-full min-h-[44px] px-3 py-2 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] text-[var(--color-text)] text-[15px] font-normal focus:outline-none focus:border-[var(--color-accent)] cursor-pointer"
                   >
-                    <option value="ALL">All Ages</option>
+                    <option value="ALL">All ages</option>
                     <option value="u21">U21 (Prospects)</option>
-                    <option value="21_25">21–25 yrs (Prime Development)</option>
-                    <option value="26_30">26–30 yrs (Peak Athletic)</option>
-                    <option value="over_30">30+ yrs (Veterans)</option>
+                    <option value="21_25">21–25 yrs</option>
+                    <option value="26_30">26–30 yrs</option>
+                    <option value="over_30">30+ yrs</option>
                   </select>
                 </div>
               </div>
@@ -347,7 +347,7 @@ export function PlayersDirectoryClient({
 
           {/* 4. Single Card Container with 1px dividers. Never nested cards. */}
           {paginatedPlayers.length > 0 ? (
-            <div className="rounded-2xl glass-panel border border-slate-800/80 divide-y divide-slate-800/60 overflow-hidden">
+            <div className="rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)] divide-y divide-[var(--color-border)] overflow-hidden">
               {paginatedPlayers.map((player, idx) => (
                 <PlayerRow
                   key={player.id}
@@ -363,31 +363,31 @@ export function PlayersDirectoryClient({
               ))}
             </div>
           ) : (
-            <div className="rounded-2xl glass-panel p-10 border border-slate-800 text-center space-y-3">
-              <p className="text-slate-300 text-sm font-semibold">No players match the selected filters.</p>
+            <div className="rounded-xl bg-[var(--color-surface)] p-8 border border-[var(--color-border)] text-center space-y-3">
+              <p className="text-[var(--color-text-secondary)] text-[15px]">No players match the selected filters.</p>
               <button
                 type="button"
                 onClick={handleClearFilters}
-                className="px-4 py-2 min-h-[44px] rounded-xl bg-amber-400 text-slate-950 text-xs font-bold hover:bg-amber-300 transition-colors"
+                className="px-4 py-2 min-h-[44px] rounded-lg bg-[var(--color-accent)] text-[#0B0F17] text-[13px] font-semibold transition-colors"
               >
-                Clear All Filters
+                Clear all filters
               </button>
             </div>
           )}
 
           {/* Pagination Controls */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-between pt-2 border-t border-slate-800/80 text-xs text-slate-400">
+            <div className="flex items-center justify-between pt-2 border-t border-[var(--color-border)] text-[13px] text-[var(--color-text-secondary)]">
               <button
                 type="button"
                 onClick={() => updateParams({ page: String(currentPage - 1) })}
                 disabled={currentPage <= 1}
-                className="flex items-center gap-1 min-h-[40px] px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-white disabled:opacity-40 disabled:cursor-not-allowed hover:border-amber-400 transition-colors"
+                className="flex items-center gap-1 min-h-[44px] px-3.5 py-1.5 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] text-[var(--color-text)] disabled:opacity-40 disabled:cursor-not-allowed hover:border-[var(--color-accent)] transition-colors"
               >
                 <ChevronLeft className="w-4 h-4" /> Previous
               </button>
 
-              <span className="font-semibold text-slate-300">
+              <span className="font-normal text-[var(--color-text-secondary)] tabular-nums">
                 Page {currentPage} of {totalPages}
               </span>
 
@@ -395,7 +395,7 @@ export function PlayersDirectoryClient({
                 type="button"
                 onClick={() => updateParams({ page: String(currentPage + 1) })}
                 disabled={currentPage >= totalPages}
-                className="flex items-center gap-1 min-h-[40px] px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-white disabled:opacity-40 disabled:cursor-not-allowed hover:border-amber-400 transition-colors"
+                className="flex items-center gap-1 min-h-[44px] px-3.5 py-1.5 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)] text-[var(--color-text)] disabled:opacity-40 disabled:cursor-not-allowed hover:border-[var(--color-accent)] transition-colors"
               >
                 Next <ChevronRight className="w-4 h-4" />
               </button>
@@ -410,10 +410,10 @@ export function PlayersDirectoryClient({
               <button
                 type="button"
                 onClick={() => setMoversType("risers")}
-                className={`min-h-[34px] px-3 py-1 rounded-xl border text-xs font-bold transition-all ${
+                className={`min-h-[44px] px-3.5 py-1.5 rounded-lg border text-[13px] font-medium transition-all ${
                   moversType === "risers"
-                    ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/40"
-                    : "bg-slate-900 text-slate-400 border-slate-800 hover:text-white"
+                    ? "bg-[var(--color-surface-2)] text-[var(--color-positive)] border-[var(--color-positive)] font-semibold"
+                    : "bg-[var(--color-surface)] text-[var(--color-text-secondary)] border-[var(--color-border)] hover:text-[var(--color-text)]"
                 }`}
               >
                 Top Risers ({movers?.risers.length || 0})
@@ -421,23 +421,23 @@ export function PlayersDirectoryClient({
               <button
                 type="button"
                 onClick={() => setMoversType("fallers")}
-                className={`min-h-[34px] px-3 py-1 rounded-xl border text-xs font-bold transition-all ${
+                className={`min-h-[44px] px-3.5 py-1.5 rounded-lg border text-[13px] font-medium transition-all ${
                   moversType === "fallers"
-                    ? "bg-rose-500/20 text-rose-400 border-rose-500/40"
-                    : "bg-slate-900 text-slate-400 border-slate-800 hover:text-white"
+                    ? "bg-[var(--color-surface-2)] text-[var(--color-negative)] border-[var(--color-negative)] font-semibold"
+                    : "bg-[var(--color-surface)] text-[var(--color-text-secondary)] border-[var(--color-border)] hover:text-[var(--color-text)]"
                 }`}
               >
                 Top Fallers ({movers?.fallers.length || 0})
               </button>
             </div>
-            <span className="text-[12px] text-slate-500 font-medium">
+            <span className="text-[13px] text-[var(--color-text-secondary)] font-normal">
               Data as of {staleDateLabel}
             </span>
           </div>
 
           {/* Movers PlayerRow list in ONE card with 1px dividers */}
           {currentMoversList.length > 0 ? (
-            <div className="rounded-2xl glass-panel border border-slate-800/80 divide-y divide-slate-800/60 overflow-hidden">
+            <div className="rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)] divide-y divide-[var(--color-border)] overflow-hidden">
               {currentMoversList.map((m, idx) => (
                 <PlayerRow
                   key={m.id}
@@ -454,7 +454,7 @@ export function PlayersDirectoryClient({
               ))}
             </div>
           ) : (
-            <div className="rounded-2xl glass-panel p-8 border border-slate-800 text-center text-xs text-slate-400">
+            <div className="rounded-xl bg-[var(--color-surface)] p-8 border border-[var(--color-border)] text-center text-[13px] text-[var(--color-text-secondary)]">
               No valuation movements recorded in the latest update cycle.
             </div>
           )}

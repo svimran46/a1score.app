@@ -111,7 +111,7 @@ export function MatchTabs({ match, isScorecardOutOfView = false }: MatchTabsProp
           <div
             ref={tabListRef}
             role="tablist"
-            aria-label="Match Center Sections"
+            aria-label="Match sections"
             className="flex items-center gap-1 sm:gap-2 overflow-x-auto no-scrollbar scroll-smooth"
           >
             {TABS.map((tab, idx) => {

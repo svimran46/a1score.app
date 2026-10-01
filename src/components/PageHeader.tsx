@@ -8,11 +8,10 @@ interface PageHeaderProps {
 }
 
 /**
- * Standard compact mobile-first page title.
- * - Continuous page background (transparent, no shaded bands or boxed containers).
- * - Single line title: 22-24px, font-bold, never truncated.
- * - Subtitle: optional, 13px muted, single line, hidden on <400px.
- * - Optional actions slot.
+ * a1score PageHeader Component:
+ * - Title: 20/600 (Inter), sentence case, never truncate (wraps up to 2 lines).
+ * - Optional caption: 13/400 secondary text, one line, never ellipsis.
+ * - Max header + title + controls = 120px on mobile.
  */
 export function PageHeader({
   title,
@@ -23,11 +22,17 @@ export function PageHeader({
   return (
     <div className={`w-full flex items-center justify-between gap-3 py-1 sm:py-1.5 ${className}`}>
       <div className="min-w-0 flex-1 flex flex-col justify-center">
-        <h1 className="text-[22px] sm:text-[24px] font-bold tracking-tight text-white leading-tight whitespace-nowrap">
+        <h1
+          className="text-[20px] font-semibold leading-snug line-clamp-2"
+          style={{ color: "var(--color-text)" }}
+        >
           {title}
         </h1>
         {subtitle && (
-          <p className="text-[13px] text-slate-400 truncate leading-snug hidden min-[400px]:block mt-0.5">
+          <p
+            className="text-[13px] font-normal leading-snug hidden min-[400px]:block mt-0.5"
+            style={{ color: "var(--color-text-secondary)" }}
+          >
             {subtitle}
           </p>
         )}

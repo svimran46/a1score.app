@@ -118,7 +118,7 @@ export function MatchScorecard({ match, goalHighlight = false }: MatchScorecardP
         <div className="flex items-center gap-2 text-right min-w-0">
           <Trophy className="w-4 h-4 text-amber-400 shrink-0" />
           <span className="font-bold text-white tracking-tight truncate">
-            {general.leagueName || "Match Center"}
+            {general.leagueName || "Match"}
           </span>
           {general.matchRound && (
             <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700 shrink-0">

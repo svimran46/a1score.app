@@ -10,7 +10,7 @@ export const runtime = "edge";
 export const metadata: Metadata = constructMetadata({
   title: "Top 7 European Football Leagues — Standings & Market Valuations",
   description:
-    "Comprehensive financial analytics, club valuations, and league standings across Europe's top 7 domestic competitions: Premier League, LaLiga, Serie A, Bundesliga, Ligue 1, Liga Portugal, and Eredivisie on a1score.app.",
+    "Club valuations and league standings across Europe's top 7 domestic competitions: Premier League, LaLiga, Serie A, Bundesliga, Ligue 1, Liga Portugal, and Eredivisie on a1score.app.",
   path: "/leagues",
 });
 
