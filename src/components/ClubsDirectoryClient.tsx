@@ -4,20 +4,14 @@ import { useState, useMemo, useEffect, useTransition } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import Link from "next/link";
 import { EntityImage } from "./EntityImage";
+import { PageHeader } from "./PageHeader";
+import { FilterBar } from "./FilterBar";
 import { formatCompactEur } from "@/lib/utils";
 import { getClubSlug } from "@/lib/slugs";
 import { getClubDisplayName } from "@/lib/data/clubs";
 import {
-  Search,
-  Filter,
-  X,
-  Shield,
-  Trophy,
-  Users,
   ChevronLeft,
   ChevronRight,
-  SlidersHorizontal,
-  Calendar,
 } from "lucide-react";
 
 export interface ClubDirectoryItem {
@@ -191,77 +185,73 @@ export function ClubsDirectoryClient({ initialClubs }: ClubsDirectoryClientProps
     return filteredClubs.slice(start, start + ITEMS_PER_PAGE);
   }, [filteredClubs, currentPage]);
 
-  const hasActiveFilters =
-    Boolean(queryParam) ||
-    leagueParam !== "ALL" ||
-    countryParam !== "ALL" ||
-    sortParam !== "val_desc";
+  const activeFilterCount = useMemo(() => {
+    let count = 0;
+    if (queryParam) count++;
+    if (leagueParam !== "ALL") count++;
+    if (countryParam !== "ALL") count++;
+    if (sortParam !== "val_desc") count++;
+    return count;
+  }, [queryParam, leagueParam, countryParam, sortParam]);
 
   return (
-    <div className="space-y-6">
-      {/* Search & Filter Controls Panel */}
-      <div className="rounded-3xl glass-panel p-4 sm:p-6 border border-slate-800 space-y-4">
-        {/* Top: Search bar & Sort selector */}
-        <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
-          <form onSubmit={handleSearchSubmit} className="relative flex-1">
-            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onBlur={() => updateParams({ q: searchQuery, page: "1" })}
-              placeholder="Search by club name, league, or nation..."
-              className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700/80 text-white placeholder-slate-500 text-xs sm:text-sm focus:outline-none focus:border-amber-400/80 transition-colors"
-            />
-            {searchQuery && (
-              <button
-                type="button"
-                onClick={() => {
-                  setSearchQuery("");
-                  updateParams({ q: null, page: "1" });
-                }}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
-                aria-label="Clear search"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            )}
-          </form>
+    <div className="space-y-3 sm:space-y-4">
+      {/* 
+        1. PAGE HEADER (<=72px, one-line title, one-line subtitle, no icon/paragraph)
+      */}
+      <PageHeader
+        title="Football Clubs Directory"
+        subtitle="Ranked by cumulative squad market value & squad metrics"
+      />
 
+      {/* 
+        2. COMPACT STICKY FILTER BAR (<=52px)
+        Search input + "Filters" button opening Bottom Sheet. Never stacks dropdowns inline.
+      */}
+      <FilterBar
+        searchQuery={searchQuery}
+        onSearchChange={(val) => {
+          setSearchQuery(val);
+          updateParams({ q: val || null, page: "1" });
+        }}
+        onSearchSubmit={handleSearchSubmit}
+        placeholder="Search clubs, leagues, or nations..."
+        activeFilterCount={activeFilterCount}
+        onResetFilters={handleClearFilters}
+      >
+        <div className="space-y-4">
           {/* Sort Selector */}
-          <div className="flex items-center gap-2 shrink-0">
-            <SlidersHorizontal className="w-4 h-4 text-slate-400 shrink-0" />
-            <label htmlFor="club-sort-select" className="sr-only">Sort Clubs</label>
+          <div>
+            <label htmlFor="modal-club-sort" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+              Sort By
+            </label>
             <select
-              id="club-sort-select"
+              id="modal-club-sort"
               value={sortParam}
               onChange={(e) => updateParams({ sort: e.target.value, page: "1" })}
-              className="px-3 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700/80 text-white text-xs font-semibold focus:outline-none focus:border-amber-400/80 cursor-pointer"
+              className="w-full min-h-[44px] px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs font-semibold focus:outline-none focus:border-amber-400 cursor-pointer"
             >
               <option value="val_desc">Squad Value: High to Low</option>
               <option value="val_asc">Squad Value: Low to High</option>
-              <option value="size_desc">Squad Size: Largest</option>
-              <option value="size_asc">Squad Size: Smallest</option>
-              <option value="age_asc">Average Age: Youngest</option>
-              <option value="age_desc">Average Age: Oldest</option>
+              <option value="size_desc">Squad Size: Largest First</option>
+              <option value="size_asc">Squad Size: Smallest First</option>
+              <option value="age_asc">Average Age: Youngest First</option>
+              <option value="age_desc">Average Age: Oldest First</option>
               <option value="name_asc">Club Name: A to Z</option>
               <option value="name_desc">Club Name: Z to A</option>
             </select>
           </div>
-        </div>
 
-        {/* Filter Dropdowns */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-800/80">
-          {/* League Filter */}
+          {/* Competition / League Filter */}
           <div>
-            <label htmlFor="clubs-league-filter" className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">
+            <label htmlFor="modal-club-league" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
               Competition / League
             </label>
             <select
-              id="clubs-league-filter"
+              id="modal-club-league"
               value={selectedLeagueValue}
               onChange={(e) => updateParams({ league: e.target.value, page: "1" })}
-              className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700/80 text-white text-xs font-semibold focus:outline-none focus:border-amber-400 cursor-pointer truncate"
+              className="w-full min-h-[44px] px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs font-semibold focus:outline-none focus:border-amber-400 cursor-pointer truncate"
             >
               <option value="ALL">All Competitions ({initialClubs.length} Clubs)</option>
               {availableLeagues.map((l) => (
@@ -274,14 +264,14 @@ export function ClubsDirectoryClient({ initialClubs }: ClubsDirectoryClientProps
 
           {/* Country Filter */}
           <div>
-            <label htmlFor="clubs-country-filter" className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">
+            <label htmlFor="modal-club-country" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
               Country
             </label>
             <select
-              id="clubs-country-filter"
+              id="modal-club-country"
               value={selectedCountryValue}
               onChange={(e) => updateParams({ country: e.target.value, page: "1" })}
-              className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700/80 text-white text-xs font-semibold focus:outline-none focus:border-amber-400 cursor-pointer truncate"
+              className="w-full min-h-[44px] px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs font-semibold focus:outline-none focus:border-amber-400 cursor-pointer truncate"
             >
               <option value="ALL">All Countries</option>
               {availableCountries.map((c) => (
@@ -292,135 +282,77 @@ export function ClubsDirectoryClient({ initialClubs }: ClubsDirectoryClientProps
             </select>
           </div>
         </div>
+      </FilterBar>
 
-        {/* Active Filters Pill Bar */}
-        {hasActiveFilters && (
-          <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-800/80">
-            <span className="text-[11px] text-slate-500">Active filters:</span>
-            {queryParam && (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs">
-                Keyword: &quot;{queryParam}&quot;
-                <button type="button" onClick={() => updateParams({ q: null, page: "1" })}>
-                  <X className="w-3 h-3 hover:text-white" />
-                </button>
-              </span>
-            )}
-            {leagueParam !== "ALL" && (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs">
-                League: {leagueParam}
-                <button type="button" onClick={() => updateParams({ league: null, page: "1" })}>
-                  <X className="w-3 h-3 hover:text-white" />
-                </button>
-              </span>
-            )}
-            {countryParam !== "ALL" && (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs">
-                Country: {countryParam}
-                <button type="button" onClick={() => updateParams({ country: null, page: "1" })}>
-                  <X className="w-3 h-3 hover:text-white" />
-                </button>
-              </span>
-            )}
-            <button
-              type="button"
-              onClick={handleClearFilters}
-              className="text-xs text-rose-400 hover:text-rose-300 underline font-medium ml-1"
-            >
-              Reset all
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* Dynamic Summary Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-2 border-b border-slate-800/80 gap-2">
-        <div className="flex items-center gap-2">
-          <Shield className="w-4 h-4 text-amber-400" />
-          <h2 className="text-base font-bold text-white tracking-tight">
-            {hasActiveFilters
-              ? `Filtered Clubs (${filteredClubs.length} found)`
-              : `All Registered Clubs (${initialClubs.length})`}
-          </h2>
-        </div>
-        <span className="text-xs text-slate-400">
+      {/* 3. Compact Count / Status row */}
+      <div className="flex items-center justify-between px-1 text-xs text-slate-400">
+        <span className="font-semibold text-slate-300">
+          {filteredClubs.length} {filteredClubs.length === 1 ? "club" : "clubs"} found
+        </span>
+        <span>
           Showing {filteredClubs.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}–
-          {Math.min(currentPage * ITEMS_PER_PAGE, filteredClubs.length)} of {filteredClubs.length} clubs
+          {Math.min(currentPage * ITEMS_PER_PAGE, filteredClubs.length)}
         </span>
       </div>
 
-      {/* Clubs Grid */}
+      {/* 4. Clubs Grid */}
       {paginatedClubs.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6 gap-3.5 sm:gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-3">
           {paginatedClubs.map((club) => (
             <Link
               key={club.id}
               href={`/clubs/${getClubSlug(club)}`}
-              className="group rounded-2xl glass-panel glass-panel-hover p-4 border border-slate-800 flex flex-col justify-between gap-3 transition-all"
+              className="group rounded-xl glass-panel glass-panel-hover p-2.5 sm:p-3 border border-slate-800/80 flex items-center justify-between gap-2.5 min-h-[76px] max-h-[92px] transition-all"
             >
-              {/* Top Row: Crest, Name, League */}
-              <div className="flex items-start gap-3 min-w-0">
-                <div className="relative w-12 h-12 rounded-xl bg-slate-800 p-2 shrink-0 overflow-hidden border border-slate-700/60 group-hover:scale-105 transition-transform">
+              {/* Left: Crest + Info */}
+              <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                <div className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-lg bg-slate-900/90 p-1.5 shrink-0 overflow-hidden border border-slate-800 group-hover:scale-105 transition-transform">
                   <EntityImage
                     src={club.logoUrl}
                     alt=""
                     fill
-                    sizes="48px"
+                    sizes="44px"
                     entityType="club"
-                    className="object-contain p-1"
+                    className="object-contain p-0.5"
                   />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h3 className="text-sm font-bold text-white tracking-tight truncate group-hover:text-amber-400 transition-colors" title={club.name}>
+                  <h3 className="text-xs sm:text-sm font-bold text-white tracking-tight truncate group-hover:text-amber-400 transition-colors" title={club.name}>
                     {getClubDisplayName(club)}
                   </h3>
-                  {club.name && club.name !== getClubDisplayName(club) && (
-                    <p className="text-[10px] text-slate-500 truncate" title={club.name}>
-                      {club.name}
-                    </p>
-                  )}
                   <div className="text-[11px] text-slate-400 mt-0.5 truncate flex items-center gap-1.5">
                     <span className="truncate">{club.leagueName || club.country || "Club"}</span>
                     {club.leagueRank && (
-                      <span className="inline-flex items-center px-1.5 py-0.2 rounded bg-slate-800 text-amber-400 font-bold border border-slate-700 text-[10px] shrink-0">
-                        #{club.leagueRank}
+                      <span className="inline-flex items-center px-1.5 py-0.2 rounded bg-slate-800 text-amber-400 font-semibold border border-slate-700/60 text-[10px] shrink-0">
+                        Rank #{club.leagueRank}
                       </span>
                     )}
+                  </div>
+                  <div className="text-[10px] text-slate-500 mt-0.5 flex items-center gap-1.5 truncate">
+                    {club.playerCount ? <span>{club.playerCount} players</span> : null}
+                    {club.averageAge ? <span>• {club.averageAge} yrs</span> : null}
                   </div>
                 </div>
               </div>
 
-              {/* Bottom Row: Detailed Metrics & High-Precision Squad Value */}
-              <div className="pt-2 border-t border-slate-800/60 flex items-center justify-between text-xs">
-                <div className="flex items-center gap-2 text-slate-400 text-[11px]">
-                  <span className="flex items-center gap-1" title="First Team Squad Size">
-                    <Users className="w-3 h-3 text-slate-500" />
-                    {club.playerCount ? `${club.playerCount} First Team` : "Squad"}
-                  </span>
-                  {club.averageAge && (
-                    <span className="flex items-center gap-1" title="Average Squad Age">
-                      • {club.averageAge} yrs
-                    </span>
-                  )}
-                </div>
-
-                <div className="text-right shrink-0">
-                  <span className="text-[9px] text-slate-500 block uppercase font-semibold">Squad Value</span>
-                  <span className="text-xs sm:text-sm font-extrabold text-amber-400 tabular-nums whitespace-nowrap">
-                    {formatDetailedClubValue(club.totalSquadValue)}
-                  </span>
-                </div>
+              {/* Right: Squad Value */}
+              <div className="text-right shrink-0 pl-1">
+                <span className="text-[9px] text-slate-500 block uppercase font-bold tracking-wider">Squad Value</span>
+                <span className="text-xs sm:text-sm font-extrabold text-amber-400 tabular-nums whitespace-nowrap">
+                  {formatDetailedClubValue(club.totalSquadValue)}
+                </span>
               </div>
             </Link>
           ))}
         </div>
       ) : (
-        <div className="rounded-2xl glass-panel p-12 border border-slate-800 text-center space-y-3">
+        <div className="rounded-2xl glass-panel p-10 border border-slate-800 text-center space-y-3">
           <p className="text-slate-300 text-sm font-semibold">No clubs match the selected filters.</p>
           <p className="text-slate-500 text-xs">Try adjusting your search query, country, or league filter.</p>
           <button
             type="button"
             onClick={handleClearFilters}
-            className="px-4 py-2 rounded-xl bg-amber-400 text-slate-950 text-xs font-bold hover:bg-amber-300 transition-colors"
+            className="px-4 py-2 min-h-[44px] rounded-xl bg-amber-400 text-slate-950 text-xs font-bold hover:bg-amber-300 transition-colors"
           >
             Clear All Filters
           </button>

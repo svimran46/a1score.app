@@ -9,10 +9,8 @@ import { LiveAutoRefresher } from "@/components/LiveAutoRefresher";
 import { formatCompactEur } from "@/lib/utils";
 import {
   TrendingUp,
-  Trophy,
   ArrowRight,
   Shield,
-  Zap,
   Radio,
   Coins,
   Scale,
@@ -38,11 +36,12 @@ export default async function HomePage() {
   );
   const liveMatches = allMatches.filter((m) => m.isLive);
   const topLeagueMatches = allMatches.filter((m) => TOP_LEAGUE_IDS.has(m._leagueId));
-  const matchPool = liveMatches.length > 0
-    ? liveMatches
-    : topLeagueMatches.length > 0
-    ? topLeagueMatches
-    : allMatches;
+  const matchPool =
+    liveMatches.length > 0
+      ? liveMatches
+      : topLeagueMatches.length > 0
+      ? topLeagueMatches
+      : allMatches;
   const featuredMatches = matchPool.slice(0, 3);
 
   // Compute cumulative valuation across all tracked domestic top-flight leagues (equals /leagues total)
@@ -50,125 +49,110 @@ export default async function HomePage() {
   const totalTop7Clubs = leagues.reduce((sum, l) => sum + (l.clubCount || 0), 0);
 
   return (
-    <div className="space-y-8 sm:space-y-12">
-      {/* Editorial Hero: Money Meets the Pitch */}
-      <section className="relative overflow-hidden rounded-3xl glass-panel p-5 sm:p-10 lg:p-12 border border-slate-800/80 bg-gradient-to-b from-slate-900/80 via-slate-950/90 to-ink-950">
-        {/* Glow Gradients */}
-        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-amber-500/10 blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-pitch-500/10 blur-3xl pointer-events-none" />
-
-        <div className="relative max-w-4xl space-y-5 sm:space-y-6">
-          {/* Editorial Badge - single line, never wraps on mobile */}
-          <div className="inline-flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20 shadow-sm max-w-full">
-            <Coins className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-            <span className="tracking-wide uppercase text-[10px] sm:text-[11px] font-bold whitespace-nowrap">
-              Money Meets the Pitch
-            </span>
-            <span className="text-slate-600 hidden sm:inline">•</span>
-            <span className="text-slate-300 hidden sm:inline whitespace-nowrap">
-              Live Valuation & Match Intelligence
-            </span>
-          </div>
-
-          <h1 className="text-2xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight font-sans [text-wrap:balance]">
+    <div className="space-y-6 sm:space-y-8">
+      {/* 
+        COMPACT MOBILE-FIRST TOP SECTION
+        1-2 line tagline + desktop-only paragraph + single horizontally scrolling row of 4 compact stat chips (~72px tall).
+        Live Matches starts above the fold on 390x844.
+      */}
+      <section className="space-y-3 pt-1">
+        <div>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-white tracking-tight leading-snug [text-wrap:balance]">
             Where Squad Market Values Meet 90 Minutes on the Pitch.
           </h1>
-
-          <p className="text-slate-300 text-xs sm:text-base lg:text-lg leading-relaxed max-w-2xl">
-            Most platforms do either live scores or player valuations. A1Score unifies both: squad financial parity inside the match center, valuation trajectory curves, and transfer analytics across Europe&apos;s elite competitions.
+          <p className="hidden md:block text-slate-400 text-sm mt-1 max-w-2xl leading-relaxed">
+            Unifying real-time match events with squad financial parity, valuation trajectory curves, and transfer analytics across Europe&apos;s elite football competitions.
           </p>
+        </div>
 
-          {/* Key Intelligence Barometer Metrics - 2x2 grid on mobile, equal heights */}
-          <div className="pt-2 grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 items-stretch">
-            <div className="p-3 sm:p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800/80 flex flex-col justify-between space-y-1">
-              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider flex items-center gap-1">
-                <Coins className="w-3 h-3 text-amber-400 shrink-0" /> Top Player Value
-              </span>
-              <div className="text-base sm:text-xl font-black text-amber-400 tabular-nums">
-                {valuablePlayers[0]?.latestMarketValue
-                  ? formatCompactEur(valuablePlayers[0].latestMarketValue)
-                  : "€200.0M"}
-              </div>
-              <div className="text-[11px] text-slate-400 truncate">
-                {valuablePlayers[0]?.commonName || valuablePlayers[0]?.fullName || "Lamine Yamal"}
-              </div>
+        {/* Horizontally scrolling row of 4 compact stat chips (~72px tall) */}
+        <div
+          className="flex items-center gap-2.5 overflow-x-auto scrollbar-none snap-x snap-mandatory py-1 -mx-4 px-4"
+          style={{
+            WebkitOverflowScrolling: "touch",
+          }}
+        >
+          {/* Chip 1: Top Player Value */}
+          <div className="h-[72px] min-h-[72px] min-w-[150px] shrink-0 snap-start p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 flex flex-col justify-between">
+            <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider flex items-center gap-1">
+              <Coins className="w-3 h-3 text-amber-400 shrink-0" /> Top Player
+            </span>
+            <div className="text-sm font-black text-amber-400 tabular-nums">
+              {valuablePlayers[0]?.latestMarketValue
+                ? formatCompactEur(valuablePlayers[0].latestMarketValue)
+                : "€200.0M"}
             </div>
+            <div className="text-[10px] text-slate-400 truncate">
+              {valuablePlayers[0]?.commonName || valuablePlayers[0]?.fullName || "Lamine Yamal"}
+            </div>
+          </div>
 
-            <div className="p-3 sm:p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800/80 flex flex-col justify-between space-y-1">
-              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider flex items-center gap-1">
-                <Scale className="w-3 h-3 text-emerald-400 shrink-0" /> Top 7 Leagues Value
-              </span>
-              <div className="text-base sm:text-xl font-black text-emerald-400 tabular-nums">
-                {totalTop7Valuation > 0 ? formatCompactEur(totalTop7Valuation) : "€36.3B"}
-              </div>
-              <div className="text-[11px] text-slate-400">{totalTop7Clubs || 132} top-flight clubs</div>
+          {/* Chip 2: Top 7 Leagues Value */}
+          <div className="h-[72px] min-h-[72px] min-w-[150px] shrink-0 snap-start p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 flex flex-col justify-between">
+            <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider flex items-center gap-1">
+              <Scale className="w-3 h-3 text-emerald-400 shrink-0" /> Top 7 Leagues
+            </span>
+            <div className="text-sm font-black text-emerald-400 tabular-nums">
+              {totalTop7Valuation > 0 ? formatCompactEur(totalTop7Valuation) : "€36.3B"}
             </div>
+            <div className="text-[10px] text-slate-400 truncate">
+              {totalTop7Clubs || 132} elite clubs
+            </div>
+          </div>
 
-            <div className="p-3 sm:p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800/80 flex flex-col justify-between space-y-1">
-              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider flex items-center gap-1">
-                <Radio className="w-3 h-3 text-rose-400 shrink-0" /> Live Updates
-              </span>
-              <div className="text-base sm:text-xl font-black text-white tabular-nums">
-                Every 5s
-              </div>
-              <div className="text-[11px] text-slate-400">Match Center live poll</div>
+          {/* Chip 3: Live Updates */}
+          <div className="h-[72px] min-h-[72px] min-w-[150px] shrink-0 snap-start p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 flex flex-col justify-between">
+            <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider flex items-center gap-1">
+              <Radio className="w-3 h-3 text-rose-400 shrink-0" /> Live Poll
+            </span>
+            <div className="text-sm font-black text-white tabular-nums">
+              Every 5s
             </div>
+            <div className="text-[10px] text-slate-400 truncate">
+              Match Center feed
+            </div>
+          </div>
 
-            <div className="p-3 sm:p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800/80 flex flex-col justify-between space-y-1">
-              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider flex items-center gap-1">
-                <BookOpen className="w-3 h-3 text-blue-400 shrink-0" /> Data Quality
-              </span>
-              <div className="text-base sm:text-xl font-black text-white">
-                FotMob & TM
-              </div>
-              <Link href="/methodology" className="text-[11px] text-amber-400 hover:underline">
-                View data sources →
-              </Link>
+          {/* Chip 4: Data Grounding */}
+          <div className="h-[72px] min-h-[72px] min-w-[150px] shrink-0 snap-start p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 flex flex-col justify-between">
+            <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider flex items-center gap-1">
+              <BookOpen className="w-3 h-3 text-blue-400 shrink-0" /> Grounding
+            </span>
+            <div className="text-sm font-black text-white truncate">
+              FotMob & TM
             </div>
+            <Link href="/methodology" className="text-[10px] text-amber-400 hover:underline truncate">
+              17,000+ players →
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Featured Matches Section with Financial Match Center */}
+      {/* Featured / Live Matches Section (Starts Above the Fold) */}
       {featuredMatches.length > 0 && (
-        <section className="space-y-4">
-          {/* Restructured 3-Row Mobile Header (Title row, Subtitle row, Compact Control row) */}
-          <div className="space-y-2">
-            {/* Row 1: Full-width Title + Inline Live Badge */}
-            <div className="flex flex-wrap items-center gap-2">
-              <h2 className="text-lg sm:text-xl font-bold text-white tracking-tight [text-wrap:balance]">
+        <section className="space-y-3">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 min-w-0">
+              <h2 className="text-sm sm:text-base font-bold text-white tracking-tight truncate">
                 {liveMatches.length > 0 ? "Live Matches & Financial Parity" : "Featured Fixtures & Squad Valuations"}
               </h2>
-              {matchesData?.liveMatchesCount && matchesData.liveMatchesCount > 0 ? (
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-pitch-500/10 text-pitch-400 border border-pitch-500/30 shrink-0">
-                  <span className="w-1.5 h-1.5 rounded-full bg-pitch-400 animate-ping" />
-                  {matchesData.liveMatchesCount} Live
+              {liveMatches.length > 0 && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/15 text-rose-400 border border-rose-500/30 shrink-0">
+                  <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-ping" />
+                  {liveMatches.length} Live
                 </span>
-              ) : null}
+              )}
             </div>
 
-            {/* Row 2: Subtitle */}
-            <p className="text-xs text-slate-400">
-              Scores updated every 5s • Comparing squad values on the pitch
-            </p>
-
-            {/* Row 3: Compact Control Bar */}
-            <div className="flex items-center justify-between gap-3 pt-1">
-              <div>
-                {liveMatches.length > 0 && (
-                  <LiveAutoRefresher intervalMs={5000} label="Live" />
-                )}
-              </div>
-              <Link
-                href="/matches"
-                className="text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1 transition-colors"
-              >
-                All Matches ({matchesData?.totalMatches || 0}) <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
+            <Link
+              href="/matches"
+              className="text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1 transition-colors shrink-0"
+            >
+              All Matches <ArrowRight className="w-3 h-3" />
+            </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
             {featuredMatches.map((match) => (
               <MatchCard key={match.id} match={match} />
             ))}
@@ -176,43 +160,51 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* Top 5 Competitions Financial Barometer */}
-      <section className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Trophy className="w-5 h-5 text-amber-400" />
-            <div>
-              <h2 className="text-xl font-bold text-white tracking-tight">Competition Barometer</h2>
-              <p className="text-xs text-slate-400">Domestic top flights ranked by total cumulative squad value</p>
-            </div>
+      {/* Competition Barometer (Horizontal Scroll Carousel with snap & edge fade) */}
+      <section className="space-y-3">
+        <div className="flex items-center justify-between gap-2">
+          <div className="min-w-0">
+            <h2 className="text-sm sm:text-base font-bold text-white tracking-tight truncate">
+              Competition Barometer
+            </h2>
+            <p className="text-[11px] text-slate-400 truncate">
+              European elite leagues ranked by cumulative market valuation
+            </p>
           </div>
+
           <Link
             href="/leagues"
-            className="text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1 transition-colors"
+            className="text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1 transition-colors shrink-0"
           >
-            All Competitions <ArrowRight className="w-3.5 h-3.5" />
+            All Competitions <ArrowRight className="w-3 h-3" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+        {/* Carousel Container: no orphan cards */}
+        <div
+          className="flex items-center gap-3 overflow-x-auto scrollbar-none snap-x snap-mandatory py-1 -mx-4 px-4"
+          style={{
+            WebkitOverflowScrolling: "touch",
+          }}
+        >
           {leagues.length > 0 ? (
-            leagues.slice(0, 5).map((league) => (
+            leagues.slice(0, 7).map((league) => (
               <Link
                 key={league.id}
                 href={`/leagues/${league.id}`}
-                className="rounded-2xl glass-panel glass-panel-hover p-4 border border-slate-800/80 hover:border-amber-500/40 flex flex-col justify-between transition-all"
+                className="min-w-[210px] sm:min-w-[240px] h-[92px] shrink-0 snap-start rounded-2xl glass-panel glass-panel-hover p-3 border border-slate-800/80 hover:border-amber-500/40 flex flex-col justify-between transition-all"
               >
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                  <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">
                     {league.country} • Tier {league.tier || 1}
                   </span>
-                  <h3 className="text-sm font-bold text-white tracking-tight truncate mt-0.5">
+                  <h3 className="text-xs sm:text-sm font-bold text-white tracking-tight truncate mt-0.5">
                     {league.name}
                   </h3>
                 </div>
-                <div className="mt-4 pt-3 border-t border-slate-800/60 flex items-center justify-between text-xs text-slate-400">
-                  <span>{league.clubCount} Clubs</span>
-                  <span className="text-amber-400 font-extrabold tabular-nums">
+                <div className="pt-2 border-t border-slate-800/60 flex items-center justify-between text-xs text-slate-400">
+                  <span className="text-[11px]">{league.clubCount} Clubs</span>
+                  <span className="text-amber-400 font-extrabold tabular-nums text-xs sm:text-sm">
                     {formatCompactEur(league.totalMarketValue)}
                   </span>
                 </div>
@@ -222,17 +214,17 @@ export default async function HomePage() {
             ["Premier League", "La Liga", "Serie A", "Bundesliga", "Ligue 1"].map((name) => (
               <div
                 key={name}
-                className="rounded-2xl glass-panel p-4 border border-slate-800/60 text-slate-400 text-xs"
+                className="min-w-[200px] h-[88px] shrink-0 snap-start rounded-2xl glass-panel p-3 border border-slate-800/60 flex flex-col justify-between text-xs text-slate-400"
               >
                 <div className="font-semibold text-white">{name}</div>
-                <div className="text-[11px] text-slate-500 mt-1">Domestic League</div>
+                <div className="text-[11px] text-slate-500">Domestic League</div>
               </div>
             ))
           )}
         </div>
       </section>
 
-      {/* Market Value Movers (Top Risers & Fallers) */}
+      {/* Market Value Movers (Horizontal Scroll Carousel with snap & edge fade) */}
       {movers && (movers.risers.length > 0 || movers.fallers.length > 0) && (
         <section>
           <MarketMovers risers={movers.risers} fallers={movers.fallers} />
@@ -240,48 +232,45 @@ export default async function HomePage() {
       )}
 
       {/* Most Valuable Players Worldwide */}
-      <section className="space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4">
-          <div className="flex items-center gap-2">
-            <TrendingUp className="w-5 h-5 text-amber-400 shrink-0" />
-            <div>
-              <h2 className="text-xl font-bold text-white tracking-tight">Most Valuable Players</h2>
-              <p className="text-xs text-slate-400">Transfermarkt player market valuations and squad capital analytics</p>
-            </div>
+      <section className="space-y-3">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0">
+            <TrendingUp className="w-4 h-4 text-amber-400 shrink-0" />
+            <h2 className="text-sm sm:text-base font-bold text-white tracking-tight truncate">
+              Most Valuable Players
+            </h2>
           </div>
           <Link
             href="/players"
-            className="text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1 transition-colors self-start sm:self-auto shrink-0"
+            className="text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1 transition-colors shrink-0"
           >
-            View Worldwide Rankings <ArrowRight className="w-3.5 h-3.5" />
+            Rankings <ArrowRight className="w-3 h-3" />
           </Link>
         </div>
 
         {valuablePlayers.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
             {valuablePlayers.map((player) => (
               <PlayerCard key={player.id} player={player} />
             ))}
           </div>
         ) : (
-          <div className="rounded-2xl glass-panel p-8 border border-slate-800 text-center space-y-3">
-            <Shield className="w-8 h-8 text-slate-500 mx-auto" />
-            <h3 className="text-sm font-semibold text-white">Database Connected</h3>
-            <p className="text-xs text-slate-400 max-w-md mx-auto">
-              Run <code className="text-amber-400 bg-slate-900 px-2 py-0.5 rounded">npm run sync:dataset</code> to sync players, valuations, and transfer history.
-            </p>
+          <div className="rounded-2xl glass-panel p-6 border border-slate-800 text-center space-y-2">
+            <Shield className="w-6 h-6 text-slate-500 mx-auto" />
+            <h3 className="text-xs font-semibold text-white">Database Connected</h3>
+            <p className="text-[11px] text-slate-400">Loading top worldwide players...</p>
           </div>
         )}
       </section>
 
       {/* Editorial Methodology Banner */}
-      <section className="rounded-3xl glass-panel p-6 sm:p-8 border border-amber-500/20 bg-gradient-to-r from-amber-500/5 via-slate-900/40 to-slate-950/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-        <div className="space-y-1.5 max-w-xl">
-          <div className="flex items-center gap-2 text-xs font-bold text-amber-400 uppercase tracking-wider">
-            <Sparkles className="w-4 h-4" />
+      <section className="rounded-2xl glass-panel p-4 sm:p-6 border border-amber-500/20 bg-gradient-to-r from-amber-500/5 via-slate-900/40 to-slate-950/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="space-y-1 max-w-xl">
+          <div className="flex items-center gap-1.5 text-[11px] font-bold text-amber-400 uppercase tracking-wider">
+            <Sparkles className="w-3.5 h-3.5 shrink-0" />
             <span>Editorial Transparency</span>
           </div>
-          <h3 className="text-lg font-bold text-white tracking-tight">
+          <h3 className="text-sm sm:text-base font-bold text-white tracking-tight">
             How Valuation Data & Live Match Delivery Are Grounded
           </h3>
           <p className="text-xs text-slate-400 leading-relaxed">
@@ -291,10 +280,10 @@ export default async function HomePage() {
 
         <Link
           href="/methodology"
-          className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-ink-950 font-bold text-xs transition-all flex items-center gap-2 flex-shrink-0 shadow-lg shadow-amber-500/10"
+          className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition-all flex items-center gap-1.5 shrink-0 shadow-md shadow-amber-500/10"
         >
-          <span>Explore Methodology</span>
-          <ArrowRight className="w-4 h-4" />
+          <span>Methodology</span>
+          <ArrowRight className="w-3.5 h-3.5" />
         </Link>
       </section>
     </div>

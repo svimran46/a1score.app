@@ -461,12 +461,12 @@ function NavbarContent() {
               {/* Theme Toggle */}
               <ThemeToggle />
 
-              {/* Hamburger Menu Button (Drawer trigger, visible on <1280px) */}
+              {/* Hamburger Menu Button (Drawer trigger, visible on tablet 768-1279px; mobile uses bottom More tab) */}
               <button
                 ref={menuButtonRef}
                 type="button"
                 onClick={() => setDrawerOpen(true)}
-                className="xl:hidden min-h-[44px] min-w-[44px] p-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+                className="hidden md:flex xl:hidden min-h-[44px] min-w-[44px] p-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
                 aria-label="Open navigation menu"
                 aria-expanded={drawerOpen}
                 aria-controls="navigation-drawer"

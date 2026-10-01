@@ -100,10 +100,10 @@ export function LiveAutoRefresher({
       <span className="text-slate-400 font-medium whitespace-nowrap">
         {enabled ? (
           <>
-            {label}: <span className="text-rose-400 font-bold tabular-nums">{secondsRemaining}s</span>
+            Next update in <span className="text-rose-400 font-bold tabular-nums">{secondsRemaining}s</span>
           </>
         ) : (
-          <span className="text-slate-500">Live Sync Paused</span>
+          <span className="text-slate-500">Updates paused</span>
         )}
       </span>
 
