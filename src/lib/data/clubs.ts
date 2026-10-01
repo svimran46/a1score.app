@@ -65,7 +65,109 @@ export const CLUB_DISPLAY_NAMES: Record<string, string> = {
   "Thonon Évian Grand Genève FC": "Thonon Évian",
 };
 
-export const CLUB_SHORT_NAMES = CLUB_DISPLAY_NAMES;
+export const CLUB_SHORT_NAMES: Record<string, string> = {
+  ...CLUB_DISPLAY_NAMES,
+  "Arsenal Football Club": "Arsenal",
+  "Arsenal FC": "Arsenal",
+  "Arsenal": "Arsenal",
+  "Futbol Club Barcelona": "Barcelona",
+  "FC Barcelona": "Barcelona",
+  "Barcelona": "Barcelona",
+  "Chelsea Football Club": "Chelsea",
+  "Chelsea FC": "Chelsea",
+  "Chelsea": "Chelsea",
+  "Manchester City": "Man City",
+  "Manchester City FC": "Man City",
+  "Man City": "Man City",
+  "Paris Saint-Germain": "PSG",
+  "Paris Saint-Germain FC": "PSG",
+  "Paris SG": "PSG",
+  "PSG": "PSG",
+  "Real Madrid": "Real Madrid",
+  "Real Madrid CF": "Real Madrid",
+  "Real Madrid Club de Fútbol": "Real Madrid",
+  "Liverpool FC": "Liverpool",
+  "Liverpool Football Club": "Liverpool",
+  "Liverpool": "Liverpool",
+  "FC Bayern München": "Bayern Munich",
+  "FC Bayern Munich": "Bayern Munich",
+  "Bayern Munich": "Bayern Munich",
+  "FC Bayern": "Bayern Munich",
+  "Juventus FC": "Juventus",
+  "Juventus Football Club": "Juventus",
+  "Juventus": "Juventus",
+  "AC Milan": "Milan",
+  "Milan": "Milan",
+  "FC Internazionale Milano": "Inter",
+  "Inter Milan": "Inter",
+  "Inter": "Inter",
+  "Borussia Dortmund": "Dortmund",
+  "BVB": "Dortmund",
+  "Aston Villa FC": "Aston Villa",
+  "Aston Villa": "Aston Villa",
+  "Newcastle United FC": "Newcastle",
+  "Newcastle United": "Newcastle",
+  "Newcastle": "Newcastle",
+  "Tottenham Hotspur FC": "Spurs",
+  "Tottenham Hotspur": "Spurs",
+  "Tottenham": "Spurs",
+  "Spurs": "Spurs",
+  "Manchester United FC": "Man Utd",
+  "Manchester United": "Man Utd",
+  "Man United": "Man Utd",
+  "Man Utd": "Man Utd",
+  "Club Atlético de Madrid": "Atletico Madrid",
+  "Atletico Madrid": "Atletico Madrid",
+  "Atlético Madrid": "Atletico Madrid",
+  "Bayer 04 Leverkusen": "Leverkusen",
+  "Bayer Leverkusen": "Leverkusen",
+  "Leverkusen": "Leverkusen",
+  "Sporting CP": "Sporting CP",
+  "Sporting Clube de Portugal": "Sporting CP",
+  "SL Benfica": "Benfica",
+  "Benfica": "Benfica",
+  "FC Porto": "Porto",
+  "Porto": "Porto",
+  "AFC Ajax": "Ajax",
+  "Ajax Amsterdam": "Ajax",
+  "Ajax": "Ajax",
+  "PSV Eindhoven": "PSV",
+  "PSV": "PSV",
+  "Feyenoord Rotterdam": "Feyenoord",
+  "Feyenoord": "Feyenoord",
+  "Sevilla FC": "Sevilla",
+  "Sevilla": "Sevilla",
+  "Villarreal CF": "Villarreal",
+  "Villarreal": "Villarreal",
+  "Valencia CF": "Valencia",
+  "Valencia": "Valencia",
+  "Girona FC": "Girona",
+  "Girona": "Girona",
+  "Real Sociedad": "Real Sociedad",
+  "Real Sociedad de Fútbol": "Real Sociedad",
+  "Athletic Club": "Athletic Club",
+  "Athletic Bilbao": "Athletic Club",
+  "AS Monaco": "Monaco",
+  "Monaco": "Monaco",
+  "Olympique de Marseille": "Marseille",
+  "Marseille": "Marseille",
+  "Olympique Lyonnais": "Lyon",
+  "Lyon": "Lyon",
+  "Lille OSC": "Lille",
+  "Lille": "Lille",
+  "SSC Napoli": "Napoli",
+  "Napoli": "Napoli",
+  "Atalanta BC": "Atalanta",
+  "Atalanta": "Atalanta",
+  "SS Lazio": "Lazio",
+  "Lazio": "Lazio",
+  "ACF Fiorentina": "Fiorentina",
+  "Fiorentina": "Fiorentina",
+  "Torino FC": "Torino",
+  "Torino": "Torino",
+  "Bologna FC 1909": "Bologna",
+  "Bologna": "Bologna",
+};
 
 export function getClubDisplayName(
   clubOrName: { name?: string | null; shortName?: string | null } | string | null | undefined
@@ -74,11 +176,11 @@ export function getClubDisplayName(
   const rawName =
     typeof clubOrName === "string"
       ? clubOrName
-      : clubOrName.shortName || clubOrName.name || "";
+      : clubOrName.name || clubOrName.shortName || "";
   const trimmed = rawName.trim();
   if (!trimmed) return "";
 
-  // Exact lookup
+  // Exact lookup in display names
   if (CLUB_DISPLAY_NAMES[trimmed]) return CLUB_DISPLAY_NAMES[trimmed];
 
   // Case-insensitive lookup
@@ -104,8 +206,45 @@ export function getClubDisplayName(
   return clean;
 }
 
-export function getClubShortName(fullName: string): string {
-  return getClubDisplayName(fullName);
+export function getClubShortName(
+  clubOrName: { name?: string | null; shortName?: string | null } | string | null | undefined
+): string {
+  if (!clubOrName) return "";
+  const rawName =
+    typeof clubOrName === "string"
+      ? clubOrName
+      : clubOrName.shortName || clubOrName.name || "";
+  const trimmed = rawName.trim();
+  if (!trimmed) return "";
+
+  if (CLUB_SHORT_NAMES[trimmed]) return CLUB_SHORT_NAMES[trimmed];
+
+  const lower = trimmed.toLowerCase();
+  for (const [key, val] of Object.entries(CLUB_SHORT_NAMES)) {
+    if (key.toLowerCase() === lower) {
+      return val;
+    }
+  }
+
+  // Get base display name first
+  const disp = getClubDisplayName(clubOrName);
+
+  // Remove FC / CF suffixes and prefixes so no FC suffix variants exist
+  let clean = disp
+    .replace(/^FC\s+/i, "")
+    .replace(/^CF\s+/i, "")
+    .replace(/^AFC\s+/i, "")
+    .replace(/^RCD\s+/i, "")
+    .replace(/^RC\s+/i, "")
+    .replace(/^SSC\s+/i, "")
+    .replace(/^AS\s+/i, "")
+    .replace(/^SS\s+/i, "")
+    .replace(/\s+FC$/i, "")
+    .replace(/\s+CF$/i, "")
+    .replace(/\s+AFC$/i, "")
+    .trim();
+
+  return clean || disp || trimmed;
 }
 
 /**

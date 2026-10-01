@@ -118,3 +118,24 @@ export function formatKickoff(
     return `${hours}:${mins} UTC`;
   }
 }
+
+export function formatKickoffTimeOnly(
+  date: Date | string | number | null | undefined,
+  tz?: string
+): string {
+  if (!date) return "TBD";
+  const d = typeof date === "number" || typeof date === "string" ? new Date(date) : date;
+  if (!d || isNaN(d.getTime())) return "TBD";
+  try {
+    return new Intl.DateTimeFormat("en-GB", {
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: tz || "UTC",
+    }).format(d);
+  } catch {
+    const hours = String(d.getUTCHours()).padStart(2, "0");
+    const mins = String(d.getUTCMinutes()).padStart(2, "0");
+    return `${hours}:${mins}`;
+  }
+}
+

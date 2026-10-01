@@ -305,6 +305,7 @@ export interface FotmobMatch {
   isLive: boolean;
   isFinished: boolean;
   isUpcoming: boolean;
+  round?: string;
 }
 
 export interface FotmobLeagueGroup {
@@ -392,6 +393,7 @@ export async function getMatchesByDate(dateStr?: string): Promise<{
         isLive,
         isFinished,
         isUpcoming,
+        round: m.round || m.roundName || m.stage || undefined,
       };
     });
 

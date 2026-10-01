@@ -1,13 +1,12 @@
 "use client";
 
-import { useState, useMemo, useEffect, useTransition } from "react";
+import { useState, useMemo, useTransition } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { PlayerCard } from "./PlayerCard";
+import { PlayerRow } from "./PlayerRow";
 import { PageHeader } from "./PageHeader";
-import { FilterBar } from "./FilterBar";
-import { MarketMovers } from "./MarketMovers";
+import { FilterButtonAndSheet } from "./FilterBar";
 import type { MarketMover } from "@/lib/data/players";
-import { ChevronLeft, ChevronRight, TrendingUp, SlidersHorizontal, Filter, ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface PlayerItem {
   id: string;
@@ -29,6 +28,7 @@ interface PlayerItem {
   currentClub?: {
     id: string;
     name: string;
+    shortName?: string | null;
     logoUrl?: string | null;
     league?: { name: string } | null;
   } | null;
@@ -52,11 +52,16 @@ export function PlayersDirectoryClient({
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
-  // Collapsible movers state
-  const [showMovers, setShowMovers] = useState(false);
+  // Tab switch: Rankings vs Movers
+  const tabParam = searchParams.get("view") || "rankings";
+  const [activeTab, setActiveTab] = useState<"rankings" | "movers">(
+    tabParam === "movers" ? "movers" : "rankings"
+  );
 
-  // URL state
-  const queryParam = searchParams.get("q") || "";
+  // Movers sub-toggle (risers vs fallers)
+  const [moversType, setMoversType] = useState<"risers" | "fallers">("risers");
+
+  // URL filter params (Note: in-page search input deleted per GLOBAL 1)
   const posParam = searchParams.get("pos") || "ALL";
   const leagueParam = searchParams.get("league") || "ALL";
   const valParam = searchParams.get("val") || "ALL";
@@ -64,14 +69,6 @@ export function PlayersDirectoryClient({
   const sortParam = searchParams.get("sort") || "val_desc";
   const pageParam = parseInt(searchParams.get("page") || "1", 10);
 
-  // Local search input state
-  const [searchQuery, setSearchQuery] = useState(queryParam);
-
-  useEffect(() => {
-    setSearchQuery(queryParam);
-  }, [queryParam]);
-
-  // Helper to update search params
   const updateParams = (newParams: Record<string, string | null>) => {
     const params = new URLSearchParams(searchParams.toString());
     Object.entries(newParams).forEach(([key, val]) => {
@@ -87,19 +84,13 @@ export function PlayersDirectoryClient({
     });
   };
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    updateParams({ q: searchQuery, page: "1" });
-  };
-
   const handleClearFilters = () => {
-    setSearchQuery("");
     startTransition(() => {
       router.push(pathname, { scroll: false });
     });
   };
 
-  // Derive distinct leagues from the dataset
+  // Derive distinct leagues
   const availableLeagues = useMemo(() => {
     const leagues = new Set<string>();
     initialPlayers.forEach((p) => {
@@ -112,30 +103,18 @@ export function PlayersDirectoryClient({
   // Active filters count
   const activeFilterCount = useMemo(() => {
     let count = 0;
-    if (queryParam) count++;
     if (posParam !== "ALL") count++;
     if (leagueParam !== "ALL") count++;
     if (valParam !== "ALL") count++;
     if (ageParam !== "ALL") count++;
     if (sortParam !== "val_desc") count++;
     return count;
-  }, [queryParam, posParam, leagueParam, valParam, ageParam, sortParam]);
+  }, [posParam, leagueParam, valParam, ageParam, sortParam]);
 
   // Filter & Deterministic Sort
   const filteredPlayers = useMemo(() => {
     return initialPlayers
       .filter((p) => {
-        // Search query
-        if (queryParam) {
-          const q = queryParam.toLowerCase();
-          const nameMatch =
-            p.fullName.toLowerCase().includes(q) ||
-            (p.commonName && p.commonName.toLowerCase().includes(q));
-          const clubMatch = p.currentClub?.name.toLowerCase().includes(q);
-          const nationMatch = p.nationality?.some((n) => n.toLowerCase().includes(q));
-          if (!nameMatch && !clubMatch && !nationMatch) return false;
-        }
-
         // Position group
         if (posParam !== "ALL") {
           const grp = p.canonicalPosition?.group || p.positionGroup;
@@ -177,7 +156,7 @@ export function PlayersDirectoryClient({
         if (sortParam === "name_desc") return b.fullName.localeCompare(a.fullName);
         return valB - valA;
       });
-  }, [initialPlayers, queryParam, posParam, leagueParam, valParam, ageParam, sortParam]);
+  }, [initialPlayers, posParam, leagueParam, valParam, ageParam, sortParam]);
 
   // Pagination calculation
   const totalPages = Math.max(1, Math.ceil(filteredPlayers.length / ITEMS_PER_PAGE));
@@ -187,241 +166,300 @@ export function PlayersDirectoryClient({
     return filteredPlayers.slice(start, start + ITEMS_PER_PAGE);
   }, [filteredPlayers, currentPage]);
 
-  const hasMovers = movers && (movers.risers.length > 0 || movers.fallers.length > 0);
+  const currentMoversList = movers ? movers[moversType] : [];
+
+  // Compute movers revision date string (e.g. Jun 2026)
+  const staleDateLabel = useMemo(() => {
+    if (latestRevisionDate) return latestRevisionDate;
+    const rawDate = movers?.risers[0]?.lastUpdated;
+    if (rawDate) {
+      try {
+        const d = new Date(rawDate);
+        return d.toLocaleDateString("en-US", { month: "short", year: "numeric" });
+      } catch {}
+    }
+    return "Jun 2026";
+  }, [movers, latestRevisionDate]);
 
   return (
-    <div className="space-y-3 sm:space-y-4">
-      {/* 
-        1. PAGE HEADER (<=72px, one-line title, one-line subtitle, no icon/paragraph)
-      */}
+    <div className="space-y-2.5 sm:space-y-3">
+      {/* 1. Page Title (22-24px, never truncated, continuous background) */}
       <PageHeader
-        title="Players Directory & Valuations"
-        subtitle={latestRevisionDate ? `Top valuations • ${latestRevisionDate}` : "Top market valuations worldwide"}
-        actions={
-          hasMovers ? (
-            <button
-              type="button"
-              onClick={() => setShowMovers((prev) => !prev)}
-              className={`min-h-[44px] px-3 py-1.5 rounded-xl border text-xs font-bold transition-all flex items-center gap-1.5 shrink-0 active:scale-95 ${
-                showMovers
-                  ? "bg-amber-400 text-slate-950 border-amber-400 shadow-sm"
-                  : "bg-slate-900 border-slate-800 text-slate-300 hover:text-white hover:border-slate-700"
-              }`}
-              aria-label="Toggle market value movers"
-            >
-              <TrendingUp className="w-3.5 h-3.5" />
-              <span>Movers</span>
-              {showMovers ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-            </button>
-          ) : undefined
-        }
+        title="Players"
+        subtitle="Top market valuations worldwide"
       />
 
-      {/* 
-        2. COMPACT STICKY FILTER BAR (<=52px)
-        Search input + "Filters" button opening Bottom Sheet. Never stacks dropdowns inline.
-      */}
-      <FilterBar
-        searchQuery={searchQuery}
-        onSearchChange={(val) => {
-          setSearchQuery(val);
-          updateParams({ q: val || null, page: "1" });
-        }}
-        onSearchSubmit={handleSearchSubmit}
-        placeholder="Search players, clubs, nationalities..."
-        activeFilterCount={activeFilterCount}
-        onResetFilters={handleClearFilters}
-      >
-        {/* Bottom Sheet Filter Content */}
-        <div className="space-y-5">
-          {/* Sort Selector */}
-          <div>
-            <label htmlFor="modal-player-sort" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
-              Sort By
-            </label>
-            <select
-              id="modal-player-sort"
-              value={sortParam}
-              onChange={(e) => updateParams({ sort: e.target.value, page: "1" })}
-              className="w-full min-h-[44px] px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs font-semibold focus:outline-none focus:border-amber-400 cursor-pointer"
-            >
-              <option value="val_desc">Market Value: High to Low</option>
-              <option value="val_asc">Market Value: Low to High</option>
-              <option value="age_asc">Age: Youngest First</option>
-              <option value="age_desc">Age: Oldest First</option>
-              <option value="name_asc">Name: A to Z</option>
-              <option value="name_desc">Name: Z to A</option>
-            </select>
-          </div>
+      {/* 2. Segmented Control under the title [Rankings | Movers] */}
+      <div className="flex items-center p-1 rounded-xl bg-slate-900 border border-slate-800 w-full max-w-xs text-xs font-semibold">
+        <button
+          type="button"
+          onClick={() => {
+            setActiveTab("rankings");
+            updateParams({ view: "rankings" });
+          }}
+          className={`flex-1 min-h-[34px] rounded-lg transition-all text-center ${
+            activeTab === "rankings"
+              ? "bg-amber-400 text-slate-950 font-bold shadow-xs"
+              : "text-slate-400 hover:text-white"
+          }`}
+        >
+          Rankings
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setActiveTab("movers");
+            updateParams({ view: "movers" });
+          }}
+          className={`flex-1 min-h-[34px] rounded-lg transition-all text-center ${
+            activeTab === "movers"
+              ? "bg-amber-400 text-slate-950 font-bold shadow-xs"
+              : "text-slate-400 hover:text-white"
+          }`}
+        >
+          Movers
+        </button>
+      </div>
 
-          {/* Position Group Tabs */}
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
-              Position
-            </label>
-            <div className="grid grid-cols-2 gap-2">
-              {[
-                { key: "ALL", label: "All Positions" },
-                { key: "ATT", label: "Attack (ATT)" },
-                { key: "MID", label: "Midfield (MID)" },
-                { key: "DEF", label: "Defense (DEF)" },
-                { key: "GK", label: "Goalkeepers (GK)" },
-              ].map((tab) => (
-                <button
-                  key={tab.key}
-                  type="button"
-                  onClick={() => updateParams({ pos: tab.key, page: "1" })}
-                  className={`min-h-[44px] px-3 py-2 rounded-xl text-xs font-bold transition-all ${
-                    posParam === tab.key
-                      ? "bg-amber-400 text-slate-950 font-bold shadow-xs"
-                      : "bg-slate-900 text-slate-300 border border-slate-800 hover:border-slate-700"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* League Filter */}
-          <div>
-            <label htmlFor="modal-league-filter" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
-              Competition / League
-            </label>
-            <select
-              id="modal-league-filter"
-              value={leagueParam}
-              onChange={(e) => updateParams({ league: e.target.value, page: "1" })}
-              className="w-full min-h-[44px] px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs font-semibold focus:outline-none focus:border-amber-400 cursor-pointer"
-            >
-              <option value="ALL">All Competitions</option>
-              {availableLeagues.map((l) => (
-                <option key={l} value={l}>
-                  {l}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Valuation Range Filter */}
-          <div>
-            <label htmlFor="modal-val-filter" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
-              Valuation Bracket
-            </label>
-            <select
-              id="modal-val-filter"
-              value={valParam}
-              onChange={(e) => updateParams({ val: e.target.value, page: "1" })}
-              className="w-full min-h-[44px] px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs font-semibold focus:outline-none focus:border-amber-400 cursor-pointer"
-            >
-              <option value="ALL">All Valuations</option>
-              <option value="150m_plus">€150M+ (Elite Tier)</option>
-              <option value="100m_150m">€100M – €150M</option>
-              <option value="50m_100m">€50M – €100M</option>
-              <option value="under_50m">Under €50M</option>
-            </select>
-          </div>
-
-          {/* Age Bracket Filter */}
-          <div>
-            <label htmlFor="modal-age-filter" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
-              Age Bracket
-            </label>
-            <select
-              id="modal-age-filter"
-              value={ageParam}
-              onChange={(e) => updateParams({ age: e.target.value, page: "1" })}
-              className="w-full min-h-[44px] px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs font-semibold focus:outline-none focus:border-amber-400 cursor-pointer"
-            >
-              <option value="ALL">All Ages</option>
-              <option value="u21">U21 (Under 21)</option>
-              <option value="21_25">21–25 Years</option>
-              <option value="26_30">26–30 Years</option>
-              <option value="over_30">30+ Years</option>
-            </select>
-          </div>
-        </div>
-      </FilterBar>
-
-      {/* 
-        COLLAPSIBLE MOVERS SECTION (When toggled open, never blocking directory by default)
-      */}
-      {showMovers && movers && (
-        <div className="px-4 animate-in slide-in-from-top-2 duration-200">
-          <MarketMovers risers={movers.risers} fallers={movers.fallers} />
-        </div>
-      )}
-
-      {/* 
-        3. RANKED DIRECTORY LIST (Starts immediately below header + filter bar)
-        First player card is visible without scrolling on 390x844 viewport.
-      */}
-      <div
-        className="px-4 space-y-3"
-        style={{
-          paddingLeft: "max(1rem, env(safe-area-inset-left))",
-          paddingRight: "max(1rem, env(safe-area-inset-right))",
-        }}
-      >
-        <div className="flex items-center justify-between text-xs text-slate-400 py-1">
-          <span className="font-bold text-white">
-            {activeFilterCount > 0
-              ? `Filtered (${filteredPlayers.length} players)`
-              : `Top ${initialPlayers.length} Worldwide Valuations`}
-          </span>
-          <span className="text-[11px] text-slate-500">
-            Showing {filteredPlayers.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}–
-            {Math.min(currentPage * ITEMS_PER_PAGE, filteredPlayers.length)} of {filteredPlayers.length}
-          </span>
-        </div>
-
-        {paginatedPlayers.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5">
-            {paginatedPlayers.map((player) => (
-              <PlayerCard key={player.id} player={player} />
-            ))}
-          </div>
-        ) : (
-          <div className="rounded-2xl glass-panel max-h-[160px] py-6 px-4 border border-slate-800 text-center flex flex-col items-center justify-center space-y-2">
-            <p className="text-xs font-semibold text-white">No players match the selected filters.</p>
-            <p className="text-[11px] text-slate-400">Try adjusting your search criteria or valuation bracket.</p>
-            <button
-              type="button"
-              onClick={handleClearFilters}
-              className="min-h-[36px] px-3.5 py-1 rounded-xl bg-amber-400 text-slate-950 text-xs font-bold hover:bg-amber-300 transition-colors"
-            >
-              Clear All Filters
-            </button>
-          </div>
-        )}
-
-        {/* Pagination Controls */}
-        {totalPages > 1 && (
-          <div className="flex items-center justify-between pt-3 border-t border-slate-800/80 text-xs text-slate-400">
-            <button
-              type="button"
-              onClick={() => updateParams({ page: String(currentPage - 1) })}
-              disabled={currentPage <= 1}
-              className="min-h-[44px] flex items-center gap-1 px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white disabled:opacity-40 disabled:cursor-not-allowed hover:border-amber-400 transition-colors"
-            >
-              <ChevronLeft className="w-4 h-4" /> Previous
-            </button>
-
+      {activeTab === "rankings" ? (
+        <>
+          {/* 3. One control row: count left, Filters button right (NO in-page search input) */}
+          <div className="flex items-center justify-between text-xs py-0.5">
             <span className="text-slate-400 font-medium">
-              Page {currentPage} of {totalPages}
+              Showing {filteredPlayers.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}–
+              {Math.min(currentPage * ITEMS_PER_PAGE, filteredPlayers.length)} of {filteredPlayers.length}
             </span>
 
-            <button
-              type="button"
-              onClick={() => updateParams({ page: String(currentPage + 1) })}
-              disabled={currentPage >= totalPages}
-              className="min-h-[44px] flex items-center gap-1 px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white disabled:opacity-40 disabled:cursor-not-allowed hover:border-amber-400 transition-colors"
+            <FilterButtonAndSheet
+              activeFilterCount={activeFilterCount}
+              onResetFilters={handleClearFilters}
             >
-              Next <ChevronRight className="w-4 h-4" />
-            </button>
+              <div className="space-y-5">
+                {/* Sort Selector */}
+                <div>
+                  <label htmlFor="modal-player-sort" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                    Sort By
+                  </label>
+                  <select
+                    id="modal-player-sort"
+                    value={sortParam}
+                    onChange={(e) => updateParams({ sort: e.target.value, page: "1" })}
+                    className="w-full min-h-[44px] px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs font-semibold focus:outline-none focus:border-amber-400 cursor-pointer"
+                  >
+                    <option value="val_desc">Market Value: High to Low</option>
+                    <option value="val_asc">Market Value: Low to High</option>
+                    <option value="age_asc">Age: Youngest First</option>
+                    <option value="age_desc">Age: Oldest First</option>
+                    <option value="name_asc">Name: A to Z</option>
+                    <option value="name_desc">Name: Z to A</option>
+                  </select>
+                </div>
+
+                {/* Position Group Tabs */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
+                    Position
+                  </label>
+                  <div className="grid grid-cols-5 gap-1.5">
+                    {[
+                      { label: "All", val: "ALL" },
+                      { label: "ATT", val: "ATT" },
+                      { label: "MID", val: "MID" },
+                      { label: "DEF", val: "DEF" },
+                      { label: "GK", val: "GK" },
+                    ].map((tab) => (
+                      <button
+                        key={tab.val}
+                        type="button"
+                        onClick={() => updateParams({ pos: tab.val, page: "1" })}
+                        className={`min-h-[44px] rounded-xl text-xs font-bold border transition-colors flex items-center justify-center ${
+                          posParam === tab.val
+                            ? "bg-amber-400 text-slate-950 border-amber-400"
+                            : "bg-slate-900 text-slate-300 border-slate-800 hover:text-white"
+                        }`}
+                      >
+                        {tab.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* League Filter */}
+                <div>
+                  <label htmlFor="modal-player-league" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                    Competition / League
+                  </label>
+                  <select
+                    id="modal-player-league"
+                    value={leagueParam}
+                    onChange={(e) => updateParams({ league: e.target.value, page: "1" })}
+                    className="w-full min-h-[44px] px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs font-semibold focus:outline-none focus:border-amber-400 cursor-pointer truncate"
+                  >
+                    <option value="ALL">All Competitions ({initialPlayers.length} Players)</option>
+                    {availableLeagues.map((l) => (
+                      <option key={l} value={l}>
+                        {l}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Valuation Filter */}
+                <div>
+                  <label htmlFor="modal-player-val" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                    Market Valuation
+                  </label>
+                  <select
+                    id="modal-player-val"
+                    value={valParam}
+                    onChange={(e) => updateParams({ val: e.target.value, page: "1" })}
+                    className="w-full min-h-[44px] px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs font-semibold focus:outline-none focus:border-amber-400 cursor-pointer"
+                  >
+                    <option value="ALL">All Valuations</option>
+                    <option value="150m_plus">€150M+ (Elite Tier)</option>
+                    <option value="100m_150m">€100M – €150M</option>
+                    <option value="50m_100m">€50M – €100M</option>
+                    <option value="under_50m">Under €50M</option>
+                  </select>
+                </div>
+
+                {/* Age Filter */}
+                <div>
+                  <label htmlFor="modal-player-age" className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-1.5">
+                    Age Group
+                  </label>
+                  <select
+                    id="modal-player-age"
+                    value={ageParam}
+                    onChange={(e) => updateParams({ age: e.target.value, page: "1" })}
+                    className="w-full min-h-[44px] px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs font-semibold focus:outline-none focus:border-amber-400 cursor-pointer"
+                  >
+                    <option value="ALL">All Ages</option>
+                    <option value="u21">U21 (Prospects)</option>
+                    <option value="21_25">21–25 yrs (Prime Development)</option>
+                    <option value="26_30">26–30 yrs (Peak Athletic)</option>
+                    <option value="over_30">30+ yrs (Veterans)</option>
+                  </select>
+                </div>
+              </div>
+            </FilterButtonAndSheet>
           </div>
-        )}
-      </div>
+
+          {/* 4. Single Card Container with 1px dividers. Never nested cards. */}
+          {paginatedPlayers.length > 0 ? (
+            <div className="rounded-2xl glass-panel border border-slate-800/80 divide-y divide-slate-800/60 overflow-hidden">
+              {paginatedPlayers.map((player, idx) => (
+                <PlayerRow
+                  key={player.id}
+                  rank={(currentPage - 1) * ITEMS_PER_PAGE + idx + 1}
+                  id={player.id}
+                  name={player.fullName}
+                  slug={player.slug}
+                  photoUrl={player.photoUrl}
+                  club={player.currentClub}
+                  position={player.position}
+                  marketValue={player.latestMarketValue}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-2xl glass-panel p-10 border border-slate-800 text-center space-y-3">
+              <p className="text-slate-300 text-sm font-semibold">No players match the selected filters.</p>
+              <button
+                type="button"
+                onClick={handleClearFilters}
+                className="px-4 py-2 min-h-[44px] rounded-xl bg-amber-400 text-slate-950 text-xs font-bold hover:bg-amber-300 transition-colors"
+              >
+                Clear All Filters
+              </button>
+            </div>
+          )}
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between pt-2 border-t border-slate-800/80 text-xs text-slate-400">
+              <button
+                type="button"
+                onClick={() => updateParams({ page: String(currentPage - 1) })}
+                disabled={currentPage <= 1}
+                className="flex items-center gap-1 min-h-[40px] px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-white disabled:opacity-40 disabled:cursor-not-allowed hover:border-amber-400 transition-colors"
+              >
+                <ChevronLeft className="w-4 h-4" /> Previous
+              </button>
+
+              <span className="font-semibold text-slate-300">
+                Page {currentPage} of {totalPages}
+              </span>
+
+              <button
+                type="button"
+                onClick={() => updateParams({ page: String(currentPage + 1) })}
+                disabled={currentPage >= totalPages}
+                className="flex items-center gap-1 min-h-[40px] px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-white disabled:opacity-40 disabled:cursor-not-allowed hover:border-amber-400 transition-colors"
+              >
+                Next <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+        </>
+      ) : (
+        /* Movers Tab: Risers/Fallers pills + one muted line "Data as of Jun 2026" (no card, no note paragraph) */
+        <div className="space-y-2.5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 py-0.5">
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={() => setMoversType("risers")}
+                className={`min-h-[34px] px-3 py-1 rounded-xl border text-xs font-bold transition-all ${
+                  moversType === "risers"
+                    ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/40"
+                    : "bg-slate-900 text-slate-400 border-slate-800 hover:text-white"
+                }`}
+              >
+                Top Risers ({movers?.risers.length || 0})
+              </button>
+              <button
+                type="button"
+                onClick={() => setMoversType("fallers")}
+                className={`min-h-[34px] px-3 py-1 rounded-xl border text-xs font-bold transition-all ${
+                  moversType === "fallers"
+                    ? "bg-rose-500/20 text-rose-400 border-rose-500/40"
+                    : "bg-slate-900 text-slate-400 border-slate-800 hover:text-white"
+                }`}
+              >
+                Top Fallers ({movers?.fallers.length || 0})
+              </button>
+            </div>
+            <span className="text-[12px] text-slate-500 font-medium">
+              Data as of {staleDateLabel}
+            </span>
+          </div>
+
+          {/* Movers PlayerRow list in ONE card with 1px dividers */}
+          {currentMoversList.length > 0 ? (
+            <div className="rounded-2xl glass-panel border border-slate-800/80 divide-y divide-slate-800/60 overflow-hidden">
+              {currentMoversList.map((m, idx) => (
+                <PlayerRow
+                  key={m.id}
+                  rank={idx + 1}
+                  id={m.id}
+                  name={m.fullName}
+                  slug={m.slug}
+                  photoUrl={m.photoUrl}
+                  club={m.currentClub}
+                  position={m.position}
+                  marketValue={m.latestValue}
+                  change={m.diff}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-2xl glass-panel p-8 border border-slate-800 text-center text-xs text-slate-400">
+              No valuation movements recorded in the latest update cycle.
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

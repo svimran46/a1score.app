@@ -8,11 +8,11 @@ interface PageHeaderProps {
 }
 
 /**
- * Standard compact mobile-first page header.
- * - One line title (clamp 22-28px, font-bold/font-black, truncate).
- * - Optional one-line subtitle (max 1 line, truncate).
- * - No icon, no paragraph.
- * - Total height <= 72px.
+ * Standard compact mobile-first page title.
+ * - Continuous page background (transparent, no shaded bands or boxed containers).
+ * - Single line title: 22-24px, font-bold, never truncated.
+ * - Subtitle: optional, 13px muted, single line, hidden on <400px.
+ * - Optional actions slot.
  */
 export function PageHeader({
   title,
@@ -21,19 +21,13 @@ export function PageHeader({
   className = "",
 }: PageHeaderProps) {
   return (
-    <header
-      className={`h-[64px] sm:h-[72px] max-h-[72px] flex items-center justify-between gap-3 px-4 w-full border-b border-slate-800/60 bg-slate-950/40 backdrop-blur-xs ${className}`}
-      style={{
-        paddingLeft: "max(1rem, env(safe-area-inset-left))",
-        paddingRight: "max(1rem, env(safe-area-inset-right))",
-      }}
-    >
+    <div className={`w-full flex items-center justify-between gap-3 py-1 sm:py-1.5 ${className}`}>
       <div className="min-w-0 flex-1 flex flex-col justify-center">
-        <h1 className="text-[22px] sm:text-[26px] md:text-[28px] font-black tracking-tight text-white leading-tight truncate">
+        <h1 className="text-[22px] sm:text-[24px] font-bold tracking-tight text-white leading-tight whitespace-nowrap">
           {title}
         </h1>
         {subtitle && (
-          <p className="text-xs sm:text-sm text-slate-400 truncate leading-snug max-w-full">
+          <p className="text-[13px] text-slate-400 truncate leading-snug hidden min-[400px]:block mt-0.5">
             {subtitle}
           </p>
         )}
@@ -44,6 +38,6 @@ export function PageHeader({
           {actions}
         </div>
       )}
-    </header>
+    </div>
   );
 }
