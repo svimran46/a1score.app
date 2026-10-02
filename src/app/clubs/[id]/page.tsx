@@ -13,7 +13,7 @@ import { ClubTabsContainer } from "@/components/ClubTabsContainer";
 import { ClubHonoursBox } from "@/components/ClubHonoursBox";
 import { RelatedNewsCard } from "@/components/news/RelatedNewsCard";
 import { getRelatedNews } from "@/lib/data/news";
-import { Card, ValuationFreshness, Breadcrumbs } from "@/components/ui";
+import { Card, ValuationFreshness, Breadcrumbs, PageHeader } from "@/components/ui";
 import { FollowButton } from "@/components/watchlist/FollowButton";
 
 import { constructMetadata, SITE_URL } from "@/lib/metadata";
@@ -164,91 +164,72 @@ export default async function ClubPage({ params }: ClubPageProps) {
       <Breadcrumbs items={breadcrumbItems} />
 
       {/* Club Header Card */}
-      <Card className="p-4 sm:p-5">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-4 min-w-0 flex-1">
-            <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[var(--bg-page)] p-2 shrink-0 overflow-hidden flex items-center justify-center">
-              <EntityImage
-                src={club.logoUrl}
-                alt=""
-                fill
-                sizes="80px"
-                entityType="club"
-                className="object-contain p-1"
-              />
-            </div>
-
-            <div className="min-w-0 flex-1">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)] block">
-                Football Club
-              </span>
-              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mt-0.5">
-                <h1 className="text-xl sm:text-2xl font-black text-[var(--text-primary)] tracking-tight">
-                  {getClubDisplayName(club)}
-                </h1>
-                <div className="flex items-center gap-1.5 tabular-nums">
-                  <span className="text-lg sm:text-xl font-black text-[var(--value-text)] tracking-tight">
-                    {formatCompactEur(club.totalSquadValue)}
-                  </span>
-                  <ValuationFreshness
-                    timestamp={club.lastSyncedAt || seniorSquad[0]?.updatedAt || seniorSquad[0]?.marketValues?.[0]?.date}
-                  />
-                </div>
-              </div>
-              {club.name && club.name !== getClubDisplayName(club) && (
-                <p className="text-xs text-[var(--text-muted)] font-medium truncate mt-0.5" title={club.name}>
-                  {club.name}
-                </p>
-              )}
-              <div className="flex flex-wrap items-center gap-2.5 text-xs text-[var(--text-secondary)] mt-1.5">
-                {club.country && (
-                  <span className="flex items-center gap-1">
-                    <Globe className="w-3.5 h-3.5 text-[var(--text-muted)]" />
-                    {club.country}
-                  </span>
-                )}
-                {club.league && (
-                  <Link
-                    href={`/leagues/${club.league.id}`}
-                    className="flex items-center gap-1 font-semibold text-[var(--value-text)] hover:underline transition-colors"
-                  >
-                    <Trophy className="w-3.5 h-3.5" />
-                    {club.league.name}
-                  </Link>
-                )}
-                <span className="flex items-center gap-1">
-                  <Users className="w-3.5 h-3.5 text-[var(--trend-positive)]" />
-                  {seniorSquad.length} Players
-                </span>
-                {club.averageAge && (
-                  <span className="flex items-center gap-1 text-[var(--text-muted)]">
-                    <Clock className="w-3.5 h-3.5" />
-                    {club.averageAge} yrs avg
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Achievements (Honours) + Follow Button */}
-          <div className="flex flex-col sm:items-end gap-2 w-full sm:w-auto shrink-0">
-            {clubHonours && clubHonours.length > 0 && (
-              <ClubHonoursBox honours={clubHonours} clubName={getClubDisplayName(club)} />
-            )}
-            <FollowButton
-              variant="button"
-              id={club.id}
-              type="club"
-              name={club.name || getClubDisplayName(club)}
-              slug={canonicalSlug}
-              clubCrest={club.logoUrl}
-              avatarUrl={club.logoUrl}
-              marketValue={club.totalSquadValue}
-              className="w-full sm:w-auto"
-            />
-          </div>
-        </div>
-      </Card>
+      <PageHeader
+        variant="club"
+        imageUrl={club.logoUrl}
+        imageAlt={club.name}
+        entityType="club"
+        imageShape="rounded"
+        categoryLabel="Football Club"
+        title={getClubDisplayName(club)}
+        subtitle={
+          club.name && club.name !== getClubDisplayName(club) ? club.name : undefined
+        }
+        value={formatCompactEur(club.totalSquadValue)}
+        valueLabel="Total Squad Valuation"
+        freshnessTimestamp={
+          club.lastSyncedAt ||
+          seniorSquad[0]?.updatedAt ||
+          seniorSquad[0]?.marketValues?.[0]?.date
+        }
+        metaItems={[
+          club.country ? (
+            <span key="country" className="flex items-center gap-1">
+              <Globe className="w-3.5 h-3.5 text-[var(--text-muted)]" />
+              {club.country}
+            </span>
+          ) : null,
+          club.league ? (
+            <Link
+              key="league"
+              href={`/leagues/${club.league.id}`}
+              className="flex items-center gap-1 font-semibold text-[var(--value-text)] hover:underline transition-colors"
+            >
+              <Trophy className="w-3.5 h-3.5" />
+              {club.league.name}
+            </Link>
+          ) : null,
+          <span key="squad" className="flex items-center gap-1">
+            <Users className="w-3.5 h-3.5 text-[var(--trend-positive)]" />
+            {seniorSquad.length} Players
+          </span>,
+          club.averageAge ? (
+            <span key="age" className="flex items-center gap-1 text-[var(--text-muted)]">
+              <Clock className="w-3.5 h-3.5" />
+              {club.averageAge} yrs avg
+            </span>
+          ) : null,
+        ].filter(Boolean)}
+        extraContent={
+          clubHonours && clubHonours.length > 0 ? (
+            <ClubHonoursBox honours={clubHonours} clubName={getClubDisplayName(club)} />
+          ) : null
+        }
+        actions={
+          <FollowButton
+            variant="button"
+            id={club.id}
+            type="club"
+            name={club.name || getClubDisplayName(club)}
+            slug={canonicalSlug}
+            clubCrest={club.logoUrl}
+            avatarUrl={club.logoUrl}
+            marketValue={club.totalSquadValue}
+          />
+        }
+        shareTitle={`${getClubDisplayName(club)} squad valuation & transfers | a1score`}
+        shareUrl={`${SITE_URL}/clubs/${canonicalSlug}`}
+      />
 
       {/* Multi-Tab Interactive Interface (Squad, Transfers, Value, Overview, Form) */}
       <ClubTabsContainer

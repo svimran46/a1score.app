@@ -1,15 +1,13 @@
 import { notFound, permanentRedirect } from "next/navigation";
-import { EntityImage } from "@/components/EntityImage";
-import Link from "next/link";
 import { getLeagueById } from "@/lib/data/leagues";
 import { formatCompactEur, formatDate } from "@/lib/utils";
 import { getLeagueSlug, getClubSlug } from "@/lib/slugs";
-import { Trophy, Clock } from "lucide-react";
+
 import { LeagueFinancialParity } from "@/components/LeagueFinancialParity";
 import { LeagueStandingsTable } from "@/components/LeagueStandingsTable";
 import { LeagueLeaders } from "@/components/LeagueLeaders";
 import { constructMetadata, SITE_URL } from "@/lib/metadata";
-import { Breadcrumbs } from "@/components/ui";
+import { Breadcrumbs, PageHeader } from "@/components/ui";
 import type { Metadata } from "next";
 
 export const revalidate = 3600;
@@ -101,56 +99,28 @@ export default async function LeaguePage({ params }: LeaguePageProps) {
       <Breadcrumbs items={breadcrumbItems} />
 
       {/* League Header */}
-      <div className="rounded-3xl glass-panel p-6 sm:p-8 border border-slate-800 bg-slate-900/40">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-          <div className="flex items-center gap-6">
-            <div className="relative w-20 h-20 rounded-2xl bg-[var(--color-surface-2)] border border-[var(--color-border)] p-3 flex items-center justify-center shrink-0 overflow-hidden">
-              {league.logoUrl ? (
-                <EntityImage
-                  src={league.logoUrl}
-                  alt={league.name}
-                  fill
-                  sizes="80px"
-                  entityType="league"
-                  className="object-contain p-1"
-                />
-              ) : (
-                <Trophy className="w-10 h-10 text-[var(--color-accent)]" />
-              )}
-            </div>
-
-            <div className="space-y-1">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                {league.country} • Tier {league.tier || 1}
-              </span>
-              <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                {league.name}
-              </h1>
-              <div className="flex items-center gap-2 text-xs text-slate-400 mt-1">
-                <span>{league.clubCount} Clubs</span>
-                <span>•</span>
-                <span>Season {league.season || "2026/2027"}</span>
-                <span>•</span>
-                <span className="flex items-center gap-1 text-slate-500">
-                  <Clock className="w-3 h-3" />
-                  <time dateTime={league.lastUpdated ? new Date(league.lastUpdated).toISOString() : undefined} suppressHydrationWarning>
-                    Updated {formatDate(league.lastUpdated || "2026-08-01")}
-                  </time>
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className="w-full sm:w-auto p-4 rounded-2xl bg-slate-950/80 border border-slate-800 flex flex-col sm:items-end justify-center">
-            <span className="text-xs text-slate-400 uppercase tracking-wider font-semibold">
-              Total Competition Value
-            </span>
-            <span className="text-2xl sm:text-3xl font-black text-amber-400 tracking-tight mt-1 tabular-nums">
-              {formatCompactEur(totalLeagueValue)}
-            </span>
-          </div>
-        </div>
-      </div>
+      <PageHeader
+        variant="league"
+        imageUrl={league.logoUrl}
+        imageAlt={league.name}
+        entityType="league"
+        imageShape="rounded"
+        categoryLabel={`${league.country} • Tier ${league.tier || 1}`}
+        title={league.name}
+        value={formatCompactEur(totalLeagueValue)}
+        valueLabel="Total Competition Value"
+        metaItems={[
+          <span key="clubs">{league.clubCount} Clubs</span>,
+          <span key="season">Season {league.season || "2026/2027"}</span>,
+          league.lastUpdated ? (
+            <time key="updated" dateTime={new Date(league.lastUpdated).toISOString()} suppressHydrationWarning>
+              Updated {formatDate(league.lastUpdated)}
+            </time>
+          ) : null,
+        ].filter(Boolean)}
+        shareTitle={`${league.name} standings & valuations | a1score`}
+        shareUrl={`${SITE_URL}/leagues/${canonicalSlug}`}
+      />
 
       {/* Financial Parity & Disparity Barometer */}
       <LeagueFinancialParity
@@ -180,11 +150,11 @@ export default async function LeaguePage({ params }: LeaguePageProps) {
       />
 
       {/* Transparent Data Attribution Footer */}
-      <div className="text-center text-xs text-slate-500 py-2 space-y-1">
+      <div className="text-center text-xs text-[var(--text-muted)] py-2 space-y-1">
         <p>
           Data sources: FotMob match engine & Transfermarkt squad market valuations.
         </p>
-        <p className="text-[11px] text-slate-600">
+        <p className="text-[11px] text-[var(--text-muted)] opacity-80">
           Standings and form reflect the active 2026/2027 domestic season.
         </p>
       </div>

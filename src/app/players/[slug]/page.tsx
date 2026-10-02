@@ -6,7 +6,7 @@ import { calculateAge, formatCompactEur, formatDate, formatUpdateAge } from "@/l
 import { getClubShortName } from "@/lib/data/clubs";
 import { getClubSlug, getLeagueSlug } from "@/lib/slugs";
 import { constructMetadata, SITE_URL } from "@/lib/metadata";
-import { Card, ValuationFreshness, Breadcrumbs } from "@/components/ui";
+import { Card, ValuationFreshness, Breadcrumbs, PageHeader } from "@/components/ui";
 import { PlayerTabsContainer } from "@/components/PlayerTabsContainer";
 import { FollowButton } from "@/components/watchlist/FollowButton";
 import { getRelatedNews } from "@/lib/data/news";
@@ -185,108 +185,69 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
       <Breadcrumbs items={breadcrumbItems} />
 
       {/* 1. Header Card */}
-      <Card className="p-4 sm:p-5">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          {/* Avatar + Player Metadata */}
-          <div className="flex items-center gap-4 min-w-0 flex-1">
-            <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden shrink-0 bg-[var(--bg-chip)]">
-              <EntityImage
-                src={player.photoUrl}
-                alt={player.fullName || "Player"}
-                fill
-                sizes="80px"
-                entityType="player"
-                priority
-                className="object-cover"
-              />
-            </div>
-
-            <div className="min-w-0 flex-1">
-              <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wide">
-                <span>{player.position || "Footballer"}</span>
-                {nationalityText && (
-                  <>
-                    <span>•</span>
-                    <span>{nationalityText}</span>
-                  </>
-                )}
-              </div>
-
-              <h1 className="text-xl sm:text-2xl font-black text-[var(--text-primary)] tracking-tight truncate mt-0.5">
-                {player.fullName}
-              </h1>
-
-              <div className="flex items-center gap-2 text-xs sm:text-sm text-[var(--text-secondary)] mt-1 truncate">
-                {currentClub && (
-                  <Link
-                    href={`/clubs/${getClubSlug(currentClub)}`}
-                    className="flex items-center gap-1.5 hover:text-[var(--accent)] transition-colors truncate"
-                  >
-                    {currentClub.logoUrl && (
-                      <span className="relative w-4 h-4 shrink-0 inline-block overflow-hidden">
-                        <EntityImage
-                          src={currentClub.logoUrl}
-                          alt=""
-                          fill
-                          sizes="16px"
-                          entityType="club"
-                          className="object-contain"
-                        />
-                      </span>
-                    )}
-                    <span className="font-semibold">{clubShort}</span>
-                  </Link>
-                )}
-                {currentClub?.league && (
-                  <>
-                    <span>•</span>
-                    <Link
-                      href={`/leagues/${getLeagueSlug(currentClub.league)}`}
-                      className="hover:text-[var(--accent)] transition-colors truncate"
-                    >
-                      {currentClub.league.name}
-                    </Link>
-                  </>
-                )}
-                {age && <span>•</span>}
-                {age && <span>{age} yrs</span>}
-              </div>
-            </div>
-          </div>
-
-          {/* Current Market Value + Follow Button */}
-          <div className="flex flex-col sm:items-end gap-2.5 w-full sm:w-auto shrink-0">
-            {currentVal > 0 && (
-              <div className="w-full sm:w-auto p-3.5 sm:p-4 rounded-2xl bg-[var(--bg-elevated)] flex flex-col sm:items-end justify-center shrink-0">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)]">
-                  Current Market Value
+      <PageHeader
+        variant="player"
+        imageUrl={player.photoUrl}
+        imageAlt={player.fullName || "Player"}
+        entityType="player"
+        imageShape="circle"
+        categoryLabel={player.position || "Footballer"}
+        title={player.fullName}
+        value={currentVal > 0 ? formatCompactEur(currentVal) : null}
+        valueLabel="Current Market Value"
+        valueTrend={changeElement}
+        freshnessTimestamp={latestValuation?.date || player.updatedAt}
+        metaItems={[
+          nationalityText ? <span key="nat">{nationalityText}</span> : null,
+          currentClub ? (
+            <Link
+              key="club"
+              href={`/clubs/${getClubSlug(currentClub)}`}
+              className="flex items-center gap-1.5 hover:text-[var(--accent)] transition-colors truncate"
+            >
+              {currentClub.logoUrl && (
+                <span className="relative w-4 h-4 shrink-0 inline-block overflow-hidden">
+                  <EntityImage
+                    src={currentClub.logoUrl}
+                    alt=""
+                    fill
+                    sizes="16px"
+                    entityType="club"
+                    className="object-contain"
+                  />
                 </span>
-                <div className="text-2xl sm:text-3xl font-black text-[var(--value-text)] tabular-nums tracking-tight mt-0.5">
-                  {formatCompactEur(currentVal)}
-                </div>
-                {changeElement && <div className="mt-1">{changeElement}</div>}
-                <ValuationFreshness
-                  timestamp={latestValuation?.date || player.updatedAt}
-                  className="mt-1"
-                />
-              </div>
-            )}
-            <FollowButton
-              variant="button"
-              id={player.id}
-              type="player"
-              name={player.fullName}
-              slug={params.slug}
-              avatarUrl={player.photoUrl}
-              clubName={clubShort}
-              clubCrest={currentClub?.logoUrl}
-              position={player.position}
-              marketValue={currentVal}
-              className="w-full sm:w-auto"
-            />
-          </div>
-        </div>
-      </Card>
+              )}
+              <span className="font-semibold">{clubShort}</span>
+            </Link>
+          ) : null,
+          currentClub?.league ? (
+            <Link
+              key="league"
+              href={`/leagues/${getLeagueSlug(currentClub.league)}`}
+              className="hover:text-[var(--accent)] transition-colors truncate"
+            >
+              {currentClub.league.name}
+            </Link>
+          ) : null,
+          age ? <span key="age">{age} yrs</span> : null,
+        ].filter(Boolean)}
+        actions={
+          <FollowButton
+            variant="button"
+            id={player.id}
+            type="player"
+            name={player.fullName}
+            slug={params.slug}
+            avatarUrl={player.photoUrl}
+            clubName={clubShort}
+            clubCrest={currentClub?.logoUrl}
+            position={player.position}
+            marketValue={currentVal}
+          />
+        }
+        shareTitle={`${player.fullName} market valuation & stats | a1score`}
+        shareUrl={canonicalUrl}
+      />
 
       {/* 2. Tabs: Overview, Transfers, Value history */}
       <PlayerTabsContainer

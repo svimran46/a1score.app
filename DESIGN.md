@@ -227,3 +227,32 @@ The application enforces strict performance limits across bundle sizes, static a
    ```
    Reports and trace artifacts are generated inside `.lighthouseci/`.
 
+---
+
+## 9. Mobile Page Headers
+
+To ensure high information density, content prominence, and zero viewport waste on mobile devices, entity profiles (Players, Clubs, Leagues) follow strict mobile header rules:
+
+### 1. Height & Visibility Budget
+- **Maximum Vertical Height:** The header card must fit in **at most ~220px of height on a 390px-wide viewport** (e.g. iPhone 12/13/14/15), guaranteeing that the primary interactive tabs and first content rows are immediately visible above the fold without requiring user scrolling.
+- **Scroll Behavior:** The header card scrolls away naturally with the page; navigation and interactive tab bars stick beneath the top navigation bar with `--ease-out` transitions.
+- **Safe-Area Insets:** Respects `env(safe-area-inset-top)` and bottom navigation clearance (`pb-20 sm:pb-0`).
+
+### 2. Information Hierarchy
+- **Visual Anchor (Avatar / Crest):** Maximum 56px dimension on mobile (`w-14 h-14`), expanding to at most 64px (`w-16 h-16`) on desktop. Always uses strict dimensions to guarantee **Zero CLS** (Cumulative Layout Shift) with placeholder skeleton backgrounds (`--bg-chip`).
+- **Entity Name:** Clear bold hierarchy (`--text-primary`), maximum 2 lines (`line-clamp-2`), with graceful ellipsis truncation for long names. Never triggers horizontal overflow or text clipping.
+- **Key Metadata:** One clean, concise horizontal line of secondary context (`--text-secondary`):
+  - *Player:* Position & Nationality • Current Club & League • Age
+  - *Club:* Country • League • Active Squad Size • Avg Age
+  - *League:* Country • Tier • Club Count • Season
+- **Primary Value Signal (Valuation):** Rendered prominently in brand amber (`--value-text`), always using `tabular-nums` figures, accompanied by a directional trend indicator (`--trend-positive` / `--trend-negative`) or freshness badge (`ValuationFreshness`).
+
+### 3. Action Bar Standards
+- **Unified Action Row:** Action controls (Follow button, Share trigger) are consolidated in a single horizontal row on both mobile and desktop.
+- **Minimum Tap Targets:** All interactive buttons guarantee **44px minimum tap targets** (WCAG 2.1 AA requirement).
+- **No Secondary Wrapping:** Actions never wrap into an awkward secondary row on small viewports (down to 320px width).
+
+### 4. Shared Polymorphic Architecture
+- Implemented as a single, reusable `PageHeader` component in `src/components/ui/PageHeader.tsx` supporting `player`, `club`, `league`, and `directory` variants. Duplicate header markup is eliminated.
+
+

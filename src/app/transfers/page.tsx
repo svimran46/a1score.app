@@ -2,8 +2,8 @@ import { supabase } from "@/lib/supabase";
 import { formatCompactEur, formatDate } from "@/lib/utils";
 import { constructMetadata } from "@/lib/metadata";
 import { sanitizeImageUrl } from "@/lib/image-sanitize";
-import { Card, SectionHeader, TransferRow } from "@/components/ui";
-import { ShieldCheck, Flame, ArrowLeftRight } from "lucide-react";
+import { Card, SectionHeader, TransferRow, PageHeader } from "@/components/ui";
+import { ShieldCheck, Flame } from "lucide-react";
 import type { Metadata } from "next";
 
 export const revalidate = 3600;
@@ -91,18 +91,12 @@ export default async function TransfersPage() {
   return (
     <div className="space-y-6 max-w-[720px] mx-auto">
       {/* Page Header */}
-      <div>
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[var(--chip-radius)] bg-[var(--bg-chip)] text-[var(--value-text)] text-xs font-semibold mb-2">
-          <ArrowLeftRight className="w-3.5 h-3.5" />
-          <span>Commercial Ledger Intelligence</span>
-        </div>
-        <h1 className="text-2xl sm:text-3xl font-black text-[var(--text-primary)] tracking-tight">
-          Transfers
-        </h1>
-        <p className="text-xs sm:text-sm text-[var(--text-secondary)] mt-1">
-          Documented player transactions, historical record fees, and commercial market expenditure across global football.
-        </p>
-      </div>
+      <PageHeader
+        variant="directory"
+        categoryLabel="Commercial Ledger Intelligence"
+        title="Transfers"
+        subtitle="Documented player transactions, historical record fees, and commercial market expenditure across global football."
+      />
 
       {/* 1. All-Time Record Transfers */}
       <section className="space-y-2">

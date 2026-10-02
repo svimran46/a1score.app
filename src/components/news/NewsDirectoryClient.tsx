@@ -4,8 +4,8 @@ import React, { useState, useMemo, useTransition } from "react";
 import { NewsItem } from "@/types/news";
 import { NewsCardHero } from "./NewsCardHero";
 import { NewsCardRow } from "./NewsCardRow";
-import { Card, Chip, EmptyState, ErrorState, Skeleton } from "@/components/ui";
-import { Newspaper, RefreshCw } from "lucide-react";
+import { Card, Chip, EmptyState, ErrorState, Skeleton, PageHeader } from "@/components/ui";
+import { RefreshCw } from "lucide-react";
 
 interface NewsDirectoryClientProps {
   initialNews: NewsItem[];
@@ -67,18 +67,12 @@ export function NewsDirectoryClient({ initialNews }: NewsDirectoryClientProps) {
   return (
     <div className="space-y-4 max-w-[720px] mx-auto">
       {/* Header */}
-      <div>
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[var(--chip-radius)] bg-[var(--bg-chip)] text-[var(--accent)] text-xs font-semibold mb-2">
-          <Newspaper className="w-3.5 h-3.5" />
-          <span>Syndicated Coverage</span>
-        </div>
-        <h1 className="text-2xl sm:text-3xl font-black text-[var(--text-primary)] tracking-tight">
-          Football News
-        </h1>
-        <p className="text-xs sm:text-sm text-[var(--text-secondary)] mt-1">
-          Latest breaking reports, valuation analysis, and transfer intelligence across European football.
-        </p>
-      </div>
+      <PageHeader
+        variant="directory"
+        categoryLabel="Syndicated Coverage"
+        title="Football News"
+        subtitle="Latest breaking reports, valuation analysis, and transfer intelligence across European football."
+      />
 
       {/* Filter Chips Bar */}
       <div

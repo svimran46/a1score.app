@@ -11,3 +11,5 @@ export * from "./EmptyState";
 export * from "./ErrorState";
 export * from "./ValuationFreshness";
 export * from "./Breadcrumbs";
+export * from "./ShareButton";
+export * from "./PageHeader";

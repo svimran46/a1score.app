@@ -17,6 +17,7 @@ import {
 import { useWatchlist } from "@/lib/watchlist/useWatchlist";
 import { formatCompactEur } from "@/lib/utils";
 import { NotificationSettingsCard } from "@/components/notifications/NotificationSettingsCard";
+import { PageHeader } from "@/components/ui";
 
 export function WatchlistClient() {
   const {
@@ -51,23 +52,13 @@ export function WatchlistClient() {
   return (
     <div className="space-y-6 max-w-[720px] mx-auto pb-12">
       {/* 1. Header with Title & Clear Action */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2">
-            <Star className="w-5 h-5 text-[var(--accent)] fill-[var(--accent)]" />
-            <h1 className="text-2xl font-black text-[var(--text-primary)] tracking-tight">
-              Watchlist
-            </h1>
-          </div>
-          <p className="text-xs sm:text-sm text-[var(--text-muted)] mt-1">
-            Track market valuations and updates for your favorite players and clubs.
-          </p>
-        </div>
-
-        {/* Clear All Confirmation / Button */}
-        {currentItems.length > 0 && (
-          <div className="shrink-0 flex items-center">
-            {showClearConfirm ? (
+      <PageHeader
+        variant="directory"
+        title="Watchlist"
+        subtitle="Track market valuations and updates for your favorite players and clubs."
+        actions={
+          currentItems.length > 0 ? (
+            showClearConfirm ? (
               <div className="flex items-center gap-2 bg-[var(--bg-elevated)] p-1.5 rounded-xl border border-[var(--divider)]">
                 <span className="text-xs text-[var(--text-muted)] px-1 font-medium">
                   Clear {activeTab}?
@@ -97,10 +88,10 @@ export function WatchlistClient() {
                 <Trash2 className="w-4 h-4" />
                 <span>Clear {activeTab}</span>
               </button>
-            )}
-          </div>
-        )}
-      </div>
+            )
+          ) : undefined
+        }
+      />
 
       {/* Storage Warning Banner (if private mode or blocked storage) */}
       {!isStorageAvailable && (
