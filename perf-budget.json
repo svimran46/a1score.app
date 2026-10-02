@@ -12,7 +12,8 @@
     "/values": { "maxJsKb": 250 },
     "/players/[slug]": { "maxJsKb": 250 },
     "/clubs/[id]": { "maxJsKb": 200 },
-    "/news": { "maxJsKb": 200 }
+    "/news": { "maxJsKb": 200 },
+    "/matches/[id]": { "maxJsKb": 200 }
   },
   "lighthouse": {
     "budgets": [

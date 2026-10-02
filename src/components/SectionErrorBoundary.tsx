@@ -45,17 +45,17 @@ export class SectionErrorBoundary extends Component<Props, State> {
           : "Couldn't load this section");
 
       return (
-        <div className="rounded-2xl glass-panel p-4 sm:p-5 border border-amber-500/20 bg-slate-900/40 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left transition-all">
-          <div className="flex items-center gap-2.5 text-slate-300 text-xs sm:text-sm">
-            <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />
+        <div className="rounded-2xl p-4 sm:p-5 border border-[var(--border-subtle)] bg-[var(--bg-card)] flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left transition-all">
+          <div className="flex items-center gap-2.5 text-[var(--text-secondary)] text-xs sm:text-sm">
+            <AlertCircle className="w-4 h-4 text-[var(--value-text)] shrink-0" />
             <span>{message}</span>
           </div>
           <button
             type="button"
             onClick={this.handleRetry}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 border border-slate-700 transition-colors shadow-sm active:scale-95"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 min-h-[36px] rounded-xl bg-[var(--bg-chip)] hover:bg-[var(--bg-hover)] text-xs font-semibold text-[var(--text-primary)] border border-[var(--border-subtle)] transition-colors shadow-xs active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
           >
-            <RefreshCw className="w-3.5 h-3.5 text-amber-400" />
+            <RefreshCw className="w-3.5 h-3.5 text-[var(--value-text)]" />
             Retry
           </button>
         </div>

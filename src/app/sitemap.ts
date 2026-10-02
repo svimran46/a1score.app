@@ -3,6 +3,7 @@ import { getAllClubs } from "@/lib/data/clubs";
 import { supabase } from "@/lib/supabase";
 import { getEffectiveSiteUrl } from "@/lib/metadata";
 import { getClubSlug, getLeagueSlug } from "@/lib/slugs";
+import { getMatchesByDate } from "@/lib/fotmob/client";
 
 export const runtime = "edge";
 export const revalidate = 86400; // Cache sitemap for 24 hours
@@ -141,5 +142,29 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.warn("[Sitemap] Failed to fetch players for sitemap:", err);
   }
 
-  return [...staticRoutes, ...leagueRoutes, ...clubRoutes, ...playerRoutes];
+  // 5. Finished Matches (only include verified finished fixtures)
+  let matchRoutes: MetadataRoute.Sitemap = [];
+  try {
+    const yesterday = new Date(Date.now() - 86400000)
+      .toISOString()
+      .slice(0, 10)
+      .replace(/-/g, "");
+    const res = await getMatchesByDate(yesterday).catch(() => null);
+    if (res && Array.isArray(res.leagues)) {
+      const finished = res.leagues
+        .flatMap((l) => l.matches || [])
+        .filter((m) => m && m.id && m.isFinished);
+
+      matchRoutes = finished.slice(0, 100).map((m) => ({
+        url: `${baseUrl}/matches/${m.id}`,
+        lastModified: now,
+        changeFrequency: "monthly",
+        priority: 0.6,
+      }));
+    }
+  } catch (err) {
+    console.warn("[Sitemap] Failed to fetch finished matches for sitemap:", err);
+  }
+
+  return [...staticRoutes, ...leagueRoutes, ...clubRoutes, ...playerRoutes, ...matchRoutes];
 }

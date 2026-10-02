@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { BarChart2, Target, Crosshair } from "lucide-react";
-import { EntityImage } from "@/components/EntityImage";
+import React, { useState } from "react";
+import { BarChart2, Crosshair } from "lucide-react";
+import { Chip } from "@/components/ui";
 
 interface StatsTabProps {
   match: any;
@@ -27,13 +27,13 @@ export function StatsTab({ match }: StatsTabProps) {
 
   if (!hasStats && shots.length === 0) {
     return (
-      <div className="rounded-3xl border border-slate-800 bg-slate-900/60 backdrop-blur-xl p-8 sm:p-12 text-center space-y-3 shadow-xl">
-        <BarChart2 className="w-10 h-10 text-slate-500 mx-auto" />
-        <h4 className="text-base font-bold text-white">No Match Statistics Recorded</h4>
-        <p className="text-xs sm:text-sm text-slate-400 max-w-md mx-auto leading-relaxed">
+      <div className="rounded-[var(--card-radius)] border border-[var(--border-subtle)] bg-[var(--bg-card)] p-8 sm:p-12 text-center space-y-3 shadow-xs">
+        <BarChart2 className="w-10 h-10 text-[var(--text-muted)] mx-auto" />
+        <h4 className="text-base font-bold text-[var(--text-primary)]">No Match Statistics Available</h4>
+        <p className="text-xs sm:text-sm text-[var(--text-muted)] max-w-md mx-auto leading-relaxed">
           {status?.isUpcoming
-            ? "Detailed match statistics will begin tracking live once the match kicks off."
-            : "No match statistical data is available for this fixture."}
+            ? "Detailed match statistics (possession, shots, passes, and xG) will track live once the fixture begins."
+            : "Detailed statistical metrics are not recorded for this fixture."}
         </p>
       </div>
     );
@@ -47,18 +47,18 @@ export function StatsTab({ match }: StatsTabProps) {
   const awayXG = awayShots.reduce((acc: number, s: any) => acc + (s.expectedGoals || 0), 0);
 
   return (
-    <div className="space-y-6 sm:space-y-8">
+    <div className="space-y-4 sm:space-y-6">
       {/* 1. Shot Map & Expected Goals (xG) Summary (if available) */}
       {shots.length > 0 && (
-        <div className="rounded-3xl border border-slate-800 bg-slate-900/60 backdrop-blur-xl p-4 sm:p-6 shadow-xl space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-800/80">
+        <div className="rounded-[var(--card-radius)] border border-[var(--border-subtle)] bg-[var(--bg-card)] p-4 sm:p-6 shadow-xs space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-[var(--divider)] flex-wrap gap-2">
             <div className="flex items-center gap-2">
               <Crosshair className="w-4 h-4 text-emerald-400" />
-              <h3 className="text-sm font-bold text-white uppercase tracking-wider">
+              <h3 className="text-xs sm:text-sm font-bold text-[var(--text-primary)] uppercase tracking-wider">
                 Shot Map & Expected Goals (xG)
               </h3>
             </div>
-            <div className="flex items-center gap-4 text-xs font-mono font-bold">
+            <div className="flex items-center gap-4 text-xs font-mono font-bold tabular-nums">
               <span className="text-emerald-400">
                 {homeTeam?.name}: {homeXG.toFixed(2)} xG
               </span>
@@ -78,12 +78,10 @@ export function StatsTab({ match }: StatsTabProps) {
             {/* Shots Points */}
             {shots.map((shot: any, idx: number) => {
               const isHome = shot.teamId === homeTeam?.id;
-              // Map x (0-105) and y (0-68) to pitch percentages
               const posX = Math.min(Math.max((shot.y / 68) * 100, 5), 95);
               const posY = Math.min(Math.max(((105 - shot.x) / 105) * 100 * 1.8, 5), 90);
 
               const isGoal = shot.eventType === "Goal";
-              const xgSize = Math.max(Math.min((shot.expectedGoals || 0.1) * 32, 24), 8);
 
               return (
                 <div
@@ -93,163 +91,132 @@ export function StatsTab({ match }: StatsTabProps) {
                   )} xG (${shot.eventType})`}
                   className={`absolute -translate-x-1/2 -translate-y-1/2 rounded-full flex items-center justify-center transition-transform hover:scale-125 cursor-pointer shadow-md ${
                     isGoal
-                      ? "ring-2 ring-emerald-400 bg-emerald-400 text-slate-950 font-black"
+                      ? "ring-2 ring-emerald-400 bg-emerald-400 text-slate-950 font-black w-6 h-6 text-xs"
                       : isHome
-                      ? "bg-emerald-500/80 border border-white/60"
-                      : "bg-blue-500/80 border border-white/60"
+                      ? "bg-emerald-500/80 border border-white/60 w-4 h-4"
+                      : "bg-blue-500/80 border border-white/60 w-4 h-4"
                   }`}
-                  style={{
-                    left: `${posX}%`,
-                    top: `${posY}%`,
-                    width: `${xgSize}px`,
-                    height: `${xgSize}px`,
-                  }}
+                  style={{ left: `${posX}%`, top: `${posY}%` }}
                 >
-                  {isGoal && <span className="text-[9px]">⚽</span>}
+                  {isGoal && "⚽"}
                 </div>
               );
             })}
           </div>
-
-          {/* Legend */}
-          <div className="flex flex-wrap items-center justify-center gap-4 text-[11px] text-slate-400 pt-1">
-            <span className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
-              Goal
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-              {homeTeam?.name || "Home"} Shot
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-blue-500" />
-              {awayTeam?.name || "Away"} Shot
-            </span>
-            <span className="text-[10px] text-slate-500 italic">
-              • Circle size proportional to expected goal probability (xG)
-            </span>
-          </div>
         </div>
       )}
 
-      {/* 2. Stat Categories Filter Pills */}
-      {statGroups.length > 1 && (
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
-          <button
-            type="button"
-            onClick={() => setActiveCategory("all")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
-              activeCategory === "all"
-                ? "bg-amber-500/15 text-amber-400 border border-amber-500/30 shadow-sm"
-                : "bg-slate-900/60 text-slate-400 hover:text-white border border-slate-800"
-            }`}
-          >
-            All Stats
-          </button>
-          {statGroups.map((group) => (
-            <button
-              key={group.key}
-              type="button"
-              onClick={() => setActiveCategory(group.key)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
-                activeCategory === group.key
-                  ? "bg-amber-500/15 text-amber-400 border border-amber-500/30 shadow-sm"
-                  : "bg-slate-900/60 text-slate-400 hover:text-white border border-slate-800"
-              }`}
-            >
-              {group.title}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {/* 3. Paired Stat Bars */}
-      <div className="space-y-6">
-        {displayedGroups.map((group) => (
-          <div
-            key={group.key}
-            className="rounded-3xl border border-slate-800 bg-slate-900/60 backdrop-blur-xl p-4 sm:p-6 shadow-xl space-y-4"
-          >
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800/80">
-              <h3 className="text-sm font-bold text-white uppercase tracking-wider">
-                {group.title}
+      {/* 2. Grouped Match Statistics (Paired Bars with Explicit Numbers) */}
+      {hasStats && (
+        <div className="rounded-[var(--card-radius)] border border-[var(--border-subtle)] bg-[var(--bg-card)] p-4 sm:p-6 shadow-xs space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[var(--divider)]">
+            <div className="flex items-center gap-2">
+              <BarChart2 className="w-4 h-4 text-[var(--value-text)]" />
+              <h3 className="text-xs sm:text-sm font-bold text-[var(--text-primary)] uppercase tracking-wider">
+                Head-to-Head Match Stats
               </h3>
-              <div className="flex items-center gap-4 text-xs font-bold">
-                <span className="text-slate-300">{homeTeam?.name}</span>
-                <span className="text-slate-500">vs</span>
-                <span className="text-slate-300">{awayTeam?.name}</span>
-              </div>
             </div>
 
-            <div className="space-y-4 pt-1">
-              {(group.stats || []).map((stat: any, idx: number) => {
-                const homeVal = Number(stat.stats?.[0]) || 0;
-                const awayVal = Number(stat.stats?.[1]) || 0;
-                const total = homeVal + awayVal;
-
-                // Neutral bar when 0 vs 0 (no fake 50/50)
-                const isZeroZero = total === 0;
-                const homePct = total > 0 ? Math.round((homeVal / total) * 100) : 0;
-                const awayPct = total > 0 ? 100 - homePct : 0;
-
-                const isHomeLeading = homeVal > awayVal;
-                const isAwayLeading = awayVal > homeVal;
-
-                return (
-                  <div key={idx} className="space-y-1.5 text-xs sm:text-sm">
-                    {/* Stat labels */}
-                    <div className="flex items-center justify-between font-bold tabular-nums">
-                      <span
-                        className={
-                          isHomeLeading
-                            ? "text-emerald-400 font-extrabold text-sm sm:text-base"
-                            : "text-slate-300"
-                        }
-                      >
-                        {stat.stats?.[0]}
-                      </span>
-                      <span className="text-slate-400 text-xs font-semibold uppercase tracking-wider text-center max-w-[200px] truncate">
-                        {stat.title}
-                      </span>
-                      <span
-                        className={
-                          isAwayLeading
-                            ? "text-emerald-400 font-extrabold text-sm sm:text-base"
-                            : "text-slate-300"
-                        }
-                      >
-                        {stat.stats?.[1]}
-                      </span>
-                    </div>
-
-                    {/* Proportional paired bar */}
-                    <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden flex">
-                      {isZeroZero ? (
-                        <div className="w-full h-full bg-slate-800" title="0 - 0" />
-                      ) : (
-                        <>
-                          <div
-                            className={`h-full transition-all duration-300 ${
-                              isHomeLeading ? "bg-emerald-500" : "bg-slate-600"
-                            }`}
-                            style={{ width: `${homePct}%` }}
-                          />
-                          <div
-                            className={`h-full transition-all duration-300 ${
-                              isAwayLeading ? "bg-blue-500" : "bg-slate-700"
-                            }`}
-                            style={{ width: `${awayPct}%` }}
-                          />
-                        </>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
+            {/* Category Filter Chips */}
+            <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+              <Chip
+                active={activeCategory === "all"}
+                onClick={() => setActiveCategory("all")}
+                className="text-xs min-h-[36px]"
+              >
+                All Stats
+              </Chip>
+              {statGroups.map((g) => (
+                <Chip
+                  key={g.key}
+                  active={activeCategory === g.key}
+                  onClick={() => setActiveCategory(g.key)}
+                  className="text-xs min-h-[36px]"
+                >
+                  {g.title}
+                </Chip>
+              ))}
             </div>
           </div>
-        ))}
-      </div>
+
+          {/* Stats Groups */}
+          <div className="space-y-6 pt-1">
+            {displayedGroups.map((group) => (
+              <div key={group.key} className="space-y-3">
+                <h4 className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider">
+                  {group.title}
+                </h4>
+
+                <div className="space-y-3">
+                  {group.stats.map((stat: any, idx: number) => {
+                    const rawHome = stat.stats?.[0] ?? stat.home ?? stat.homeValue;
+                    const rawAway = stat.stats?.[1] ?? stat.away ?? stat.awayValue;
+
+                    // Parse numerical values for bar ratios
+                    const homeNum = parseFloat(String(rawHome).replace(/[^0-9.]/g, "")) || 0;
+                    const awayNum = parseFloat(String(rawAway).replace(/[^0-9.]/g, "")) || 0;
+                    const total = homeNum + awayNum;
+
+                    const homePct = total > 0 ? Math.round((homeNum / total) * 100) : 50;
+                    const awayPct = total > 0 ? 100 - homePct : 50;
+
+                    const isHomeSuperior = homeNum > awayNum;
+                    const isAwaySuperior = awayNum > homeNum;
+
+                    return (
+                      <div
+                        key={idx}
+                        className="p-3 rounded-2xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] space-y-2 text-xs sm:text-sm"
+                      >
+                        {/* Numbers row (never color alone: exact numbers prominent on both sides) */}
+                        <div className="flex items-center justify-between font-bold">
+                          <span
+                            className={`tabular-nums font-mono text-sm sm:text-base ${
+                              isHomeSuperior ? "text-emerald-400 font-extrabold" : "text-[var(--text-primary)]"
+                            }`}
+                          >
+                            {rawHome ?? "0"}
+                          </span>
+                          <span className="text-[var(--text-muted)] text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-center px-2">
+                            {stat.title}
+                          </span>
+                          <span
+                            className={`tabular-nums font-mono text-sm sm:text-base ${
+                              isAwaySuperior ? "text-blue-400 font-extrabold" : "text-[var(--text-primary)]"
+                            }`}
+                          >
+                            {rawAway ?? "0"}
+                          </span>
+                        </div>
+
+                        {/* Paired comparison bar */}
+                        <div className="w-full h-2 rounded-full bg-[var(--bg-chip)] overflow-hidden flex">
+                          {total === 0 ? (
+                            <div className="w-full h-full bg-[var(--bg-chip)]" />
+                          ) : (
+                            <>
+                              <div
+                                className="h-full bg-emerald-500 transition-all duration-300"
+                                style={{ width: `${homePct}%` }}
+                                title={`${homeTeam?.name || "Home"}: ${homePct}%`}
+                              />
+                              <div
+                                className="h-full bg-blue-500 transition-all duration-300"
+                                style={{ width: `${awayPct}%` }}
+                                title={`${awayTeam?.name || "Away"}: ${awayPct}%`}
+                              />
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

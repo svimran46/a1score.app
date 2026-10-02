@@ -10,7 +10,7 @@ interface MatchCenterClientProps {
 }
 
 export function MatchCenterClient({ initialMatch }: MatchCenterClientProps) {
-  const { data: match, goalHighlight } = useMatchSync(initialMatch.id, initialMatch);
+  const { data: match, goalHighlight, lastUpdatedTime } = useMatchSync(initialMatch.id, initialMatch);
 
   const [isScorecardOutOfView, setIsScorecardOutOfView] = useState(false);
   const scorecardRef = useRef<HTMLDivElement>(null);
@@ -38,7 +38,11 @@ export function MatchCenterClient({ initialMatch }: MatchCenterClientProps) {
     <div className="w-full space-y-6">
       {/* Main Scorecard */}
       <div ref={scorecardRef}>
-        <MatchScorecard match={match} goalHighlight={goalHighlight} />
+        <MatchScorecard
+          match={match}
+          goalHighlight={goalHighlight}
+          lastUpdatedTime={lastUpdatedTime}
+        />
       </div>
 
       {/* Tabs System (Sticky bar + tabs, Facts, Lineup, Table, Stats, H2H, Values) */}

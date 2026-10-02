@@ -22,16 +22,16 @@ export function StickyMatchBar({ match, isVisible }: StickyMatchBarProps) {
 
   return (
     <div
-      className="w-full bg-slate-950/95 border-b border-slate-800/80 backdrop-blur-xl py-2 px-3 transition-all duration-200 shadow-md animate-in fade-in slide-in-from-top-2"
+      className="w-full bg-[var(--bg-page)]/95 border-b border-[var(--divider)] backdrop-blur-md py-2 px-3 transition-all duration-200 shadow-xs animate-in fade-in slide-in-from-top-2"
       aria-label="Compact Live Score"
     >
       <div className="max-w-4xl mx-auto flex items-center justify-between gap-2">
         {/* Home Team Compact */}
         <div className="flex items-center gap-2 min-w-0 flex-1 justify-end">
-          <span className="text-xs sm:text-sm font-bold text-white truncate text-right">
+          <span className="text-xs sm:text-sm font-bold text-[var(--text-primary)] truncate text-right">
             {homeTeam?.name || "Home"}
           </span>
-          <div className="w-6 h-6 rounded-lg bg-slate-800 p-0.5 shrink-0 flex items-center justify-center">
+          <div className="w-6 h-6 rounded-lg bg-[var(--bg-chip)] p-0.5 shrink-0 flex items-center justify-center border border-[var(--border-subtle)]">
             <EntityImage
               src={homeTeam?.imageUrl}
               alt={homeTeam?.name || "Home"}
@@ -44,23 +44,23 @@ export function StickyMatchBar({ match, isVisible }: StickyMatchBarProps) {
         </div>
 
         {/* Score & Live Status */}
-        <div className="flex items-center gap-2 px-3 py-1 rounded-xl bg-slate-900 border border-slate-800 shrink-0 tabular-nums">
+        <div className="flex items-center gap-2 px-3 py-1 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] shrink-0 tabular-nums">
           {isUpcoming ? (
-            <span className="text-xs font-bold text-slate-300">VS</span>
+            <span className="text-xs font-bold text-[var(--text-secondary)]">VS</span>
           ) : (
             <div className="flex items-center gap-1.5 font-black text-sm sm:text-base">
-              <span className={isLive ? "text-emerald-400" : "text-white"}>
+              <span className={isLive ? "text-[var(--value-text)]" : "text-[var(--text-primary)]"}>
                 {homeTeam?.score ?? 0}
               </span>
-              <span className="text-slate-600">-</span>
-              <span className={isLive ? "text-emerald-400" : "text-white"}>
+              <span className="text-[var(--text-muted)]">-</span>
+              <span className={isLive ? "text-[var(--value-text)]" : "text-[var(--text-primary)]"}>
                 {awayTeam?.score ?? 0}
               </span>
             </div>
           )}
 
           {isLive && (
-            <div className="border-l border-slate-700/80 pl-2">
+            <div className="border-l border-[var(--divider)] pl-2">
               <LiveMinute
                 shortTime={status?.liveTime?.short}
                 longTime={status?.liveTime?.long}
@@ -73,7 +73,7 @@ export function StickyMatchBar({ match, isVisible }: StickyMatchBarProps) {
             </div>
           )}
           {isFinished && (
-            <span className="text-[11px] text-slate-400 font-medium border-l border-slate-700/80 pl-2">
+            <span className="text-[11px] text-[var(--text-muted)] font-medium border-l border-[var(--divider)] pl-2">
               FT
             </span>
           )}
@@ -81,7 +81,7 @@ export function StickyMatchBar({ match, isVisible }: StickyMatchBarProps) {
 
         {/* Away Team Compact */}
         <div className="flex items-center gap-2 min-w-0 flex-1 justify-start">
-          <div className="w-6 h-6 rounded-lg bg-slate-800 p-0.5 shrink-0 flex items-center justify-center">
+          <div className="w-6 h-6 rounded-lg bg-[var(--bg-chip)] p-0.5 shrink-0 flex items-center justify-center border border-[var(--border-subtle)]">
             <EntityImage
               src={awayTeam?.imageUrl}
               alt={awayTeam?.name || "Away"}
@@ -91,7 +91,7 @@ export function StickyMatchBar({ match, isVisible }: StickyMatchBarProps) {
               className="object-contain"
             />
           </div>
-          <span className="text-xs sm:text-sm font-bold text-white truncate text-left">
+          <span className="text-xs sm:text-sm font-bold text-[var(--text-primary)] truncate text-left">
             {awayTeam?.name || "Away"}
           </span>
         </div>

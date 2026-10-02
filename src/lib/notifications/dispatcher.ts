@@ -194,7 +194,7 @@ export async function dispatchValuationAlerts(
   }
 
   // 6. Anonymous operational logging (zero PII)
-  console.log(
+  console.info(
     `[Push Dispatch] Sent: ${result.sentCount} | Failed: ${result.failedCount} | Expired: ${result.expiredCount} | Rate-limited: ${result.skippedRateLimitCount}`
   );
 

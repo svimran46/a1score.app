@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Image, { ImageProps, StaticImageData } from "next/image";
 import { User, Shield, Trophy } from "lucide-react";
 
