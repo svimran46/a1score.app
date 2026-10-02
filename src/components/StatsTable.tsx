@@ -1,3 +1,5 @@
+import { Card } from "@/components/ui";
+
 interface SeasonStatItem {
   id: string;
   season: string;
@@ -24,48 +26,50 @@ export function StatsTable({ stats }: StatsTableProps) {
   const hasRating = stats.some((s) => typeof s.rating === "number" && s.rating > 0);
 
   return (
-    <div className="rounded-2xl glass-panel p-6 border border-slate-800">
-      <div className="flex items-center justify-between pb-4 border-b border-slate-800">
-        <div>
-          <h3 className="text-base font-bold text-white tracking-tight">Career & Season Statistics</h3>
-          <p className="text-xs text-slate-400 mt-0.5">Comprehensive competition breakdowns and match performance</p>
-        </div>
+    <Card className="p-4 sm:p-5 overflow-hidden">
+      <div className="pb-3 border-b border-[var(--divider)]">
+        <h3 className="text-sm sm:text-base font-bold text-[var(--text-primary)] tracking-tight">
+          Career & Season Statistics
+        </h3>
+        <p className="text-xs text-[var(--text-muted)] mt-0.5">
+          Competition breakdowns and performance records
+        </p>
       </div>
 
-      <div className="mt-4 overflow-x-auto">
+      <div className="mt-3 overflow-x-auto">
         <table className="w-full text-left text-xs tabular-nums">
           <thead>
-            <tr className="text-slate-400 uppercase tracking-wider border-b border-slate-800/80">
-              <th className="pb-3 font-semibold">Season</th>
-              <th className="pb-3 font-semibold">Competition</th>
-              <th className="pb-3 font-semibold">Club</th>
-              <th className="pb-3 text-center font-semibold">Apps</th>
-              <th className="pb-3 text-center font-semibold text-emerald-400">Goals</th>
-              <th className="pb-3 text-center font-semibold text-blue-400">Assists</th>
+            <tr className="text-[var(--text-muted)] uppercase tracking-wider border-b border-[var(--divider)] text-[11px] font-bold">
+              <th className="pb-2.5 font-bold">Season</th>
+              <th className="pb-2.5 font-bold">Competition</th>
+              <th className="pb-2.5 font-bold">Club</th>
+              <th className="pb-2.5 text-center font-bold">Apps</th>
+              <th className="pb-2.5 text-center font-bold text-[var(--trend-positive)]">Goals</th>
+              <th className="pb-2.5 text-center font-bold text-[var(--accent)]">Assists</th>
               {hasRating ? (
-                <th className="pb-3 text-center font-semibold text-amber-400">Rating</th>
+                <th className="pb-2.5 text-center font-bold text-[var(--value-text)]">Rating</th>
               ) : (
                 <>
-                  <th className="pb-3 text-center font-semibold text-amber-400">YC</th>
-                  <th className="pb-3 text-center font-semibold text-red-400">RC</th>
+                  <th className="pb-2.5 text-center font-bold text-[var(--value-text)]">YC</th>
+                  <th className="pb-2.5 text-center font-bold text-[var(--trend-negative)]">RC</th>
                 </>
               )}
-              <th className="pb-3 text-right font-semibold">Mins</th>
+              <th className="pb-2.5 text-right font-bold">Mins</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-800/50">
+          <tbody className="divide-y divide-[var(--divider)]">
             {stats.map((s) => (
-              <tr key={s.id} className="hover:bg-slate-800/30 transition-colors">
-                <td className="py-2.5 text-white font-medium whitespace-nowrap">{s.season}</td>
-                <td className="py-2.5 text-slate-300 truncate max-w-[140px]">{s.competition}</td>
-                <td className="py-2.5 text-slate-300 truncate max-w-[130px]">{s.clubName}</td>
-                <td className="py-2.5 text-center text-slate-200 font-semibold">{s.appearances ?? "-"}</td>
-                <td className="py-2.5 text-center text-emerald-400 font-bold">{s.goals ?? 0}</td>
-                <td className="py-2.5 text-center text-blue-400 font-bold">{s.assists ?? 0}</td>
+              <tr key={s.id} className="hover:bg-[var(--bg-hover)] transition-colors">
+                <td className="py-2.5 text-[var(--text-primary)] font-medium whitespace-nowrap">{s.season}</td>
+                <td className="py-2.5 text-[var(--text-secondary)] truncate max-w-[140px]">{s.competition}</td>
+                <td className="py-2.5 text-[var(--text-secondary)] truncate max-w-[130px]">{s.clubName}</td>
+                <td className="py-2.5 text-center text-[var(--text-primary)] font-semibold">{s.appearances ?? "-"}</td>
+                <td className="py-2.5 text-center text-[var(--trend-positive)] font-bold">{s.goals ?? 0}</td>
+                <td className="py-2.5 text-center text-[var(--accent)] font-bold">{s.assists ?? 0}</td>
                 {hasRating ? (
                   <td className="py-2.5 text-center">
                     {s.rating ? (
-                      <span className="px-2 py-0.5 rounded font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20">
+                      <span className="px-2 py-0.5 rounded-lg font-bold text-[var(--value-text)] bg-[var(--bg-chip)]">
                         {s.rating.toFixed(2)}
                       </span>
                     ) : (
@@ -74,11 +78,11 @@ export function StatsTable({ stats }: StatsTableProps) {
                   </td>
                 ) : (
                   <>
-                    <td className="py-2.5 text-center text-amber-400">{s.yellowCards ?? 0}</td>
-                    <td className="py-2.5 text-center text-red-400">{s.redCards ?? 0}</td>
+                    <td className="py-2.5 text-center text-[var(--value-text)] font-semibold">{s.yellowCards ?? 0}</td>
+                    <td className="py-2.5 text-center text-[var(--trend-negative)] font-semibold">{s.redCards ?? 0}</td>
                   </>
                 )}
-                <td className="py-2.5 text-right text-slate-400 whitespace-nowrap">
+                <td className="py-2.5 text-right text-[var(--text-muted)] whitespace-nowrap">
                   {s.minutesPlayed ? `${s.minutesPlayed}'` : "-"}
                 </td>
               </tr>
@@ -86,6 +90,6 @@ export function StatsTable({ stats }: StatsTableProps) {
           </tbody>
         </table>
       </div>
-    </div>
+    </Card>
   );
 }

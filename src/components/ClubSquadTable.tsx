@@ -3,16 +3,14 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { EntityImage } from "./EntityImage";
-import { formatCompactEur, formatEur } from "@/lib/utils";
+import { formatCompactEur } from "@/lib/utils";
+import { Card } from "@/components/ui";
 import {
   ChevronDown,
   ChevronUp,
   ArrowUpDown,
   AlertTriangle,
   Users,
-  Shield,
-  Clock,
-  Calendar,
 } from "lucide-react";
 
 export interface SquadPlayerRow {
@@ -127,35 +125,35 @@ export function ClubSquadTable({
   }, [activeList, sortField, sortDir]);
 
   const positionMetadata = [
-    { key: "GK", label: "Goalkeepers", short: "GK", badgeColor: "bg-amber-500/10 text-amber-400 border-amber-500/20" },
-    { key: "DEF", label: "Defenders", short: "DEF", badgeColor: "bg-blue-500/10 text-blue-400 border-blue-500/20" },
-    { key: "MID", label: "Midfielders", short: "MID", badgeColor: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" },
-    { key: "ATT", label: "Forwards & Attackers", short: "ATT", badgeColor: "bg-rose-500/10 text-rose-400 border-rose-500/20" },
+    { key: "GK", label: "Goalkeepers", short: "GK", badgeBg: "bg-[var(--bg-chip)] text-[var(--value-text)]" },
+    { key: "DEF", label: "Defenders", short: "DEF", badgeBg: "bg-[var(--bg-chip)] text-[var(--accent)]" },
+    { key: "MID", label: "Midfielders", short: "MID", badgeBg: "bg-[var(--bg-chip)] text-[var(--trend-positive)]" },
+    { key: "ATT", label: "Forwards & Attackers", short: "ATT", badgeBg: "bg-[var(--bg-chip)] text-[var(--trend-negative)]" },
   ];
 
   return (
-    <div className="rounded-3xl glass-panel p-4 sm:p-7 border border-slate-800 space-y-6">
+    <Card className="p-4 sm:p-5 space-y-4 overflow-hidden">
       {/* Header & Tier Switcher */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-[var(--divider)] gap-3">
         <div>
-          <h2 className="text-lg font-bold text-white tracking-tight flex items-center gap-2">
-            <Users className="w-5 h-5 text-amber-400" />
+          <h2 className="text-base font-bold text-[var(--text-primary)] tracking-tight flex items-center gap-2">
+            <Users className="w-4 h-4 text-[var(--value-text)]" />
             Squad Roster & Market Valuations
           </h2>
-          <p className="text-xs text-slate-400 mt-0.5">
-            Registered senior squad grouped by tactical role. Click any column header to sort.
+          <p className="text-xs text-[var(--text-muted)] mt-0.5">
+            Registered senior squad grouped by position. Click column headers to sort.
           </p>
         </div>
 
         {/* Tier Tabs (First Team vs Academy) */}
-        <div className="flex items-center bg-slate-900/90 p-1 rounded-2xl border border-slate-800 text-xs font-bold shrink-0 self-start sm:self-auto">
+        <div className="flex items-center bg-[var(--bg-page)] p-1 rounded-xl text-xs font-bold shrink-0 self-start sm:self-auto">
           <button
             type="button"
             onClick={() => setSelectedTier("first_team")}
-            className={`px-3.5 py-1.5 rounded-xl transition-all ${
+            className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
               selectedTier === "first_team"
-                ? "bg-amber-400 text-slate-950 font-bold shadow-sm"
-                : "text-slate-400 hover:text-white"
+                ? "bg-[var(--accent)] text-[var(--accent-contrast)] shadow-xs"
+                : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
             }`}
           >
             First Team ({firstTeamPlayers.length > 0 ? firstTeamPlayers.length : activeList.length})
@@ -164,20 +162,20 @@ export function ClubSquadTable({
             <button
               type="button"
               onClick={() => setSelectedTier("academy")}
-              className={`px-3.5 py-1.5 rounded-xl transition-all ${
+              className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
                 selectedTier === "academy"
-                  ? "bg-amber-400 text-slate-950 font-bold shadow-sm"
-                  : "text-slate-400 hover:text-white"
+                  ? "bg-[var(--accent)] text-[var(--accent-contrast)] shadow-xs"
+                  : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
               }`}
             >
-              Academy / Reserves ({academyPlayers.length})
+              Academy ({academyPlayers.length})
             </button>
           )}
         </div>
       </div>
 
       {/* Position Group Tables */}
-      <div className="space-y-6">
+      <div className="space-y-4">
         {positionMetadata.map((meta) => {
           const list = groupedPlayers[meta.key as "GK" | "DEF" | "MID" | "ATT"] || [];
           const isCollapsed = collapsedGroups[meta.key];
@@ -188,95 +186,86 @@ export function ClubSquadTable({
           return (
             <div
               key={meta.key}
-              className="rounded-2xl border border-slate-800/90 bg-slate-900/30 overflow-hidden transition-all"
+              className="rounded-xl bg-[var(--bg-elevated)] overflow-hidden transition-all"
             >
               {/* Group Accordion Header */}
               <button
                 type="button"
                 onClick={() => toggleGroup(meta.key)}
-                className="w-full px-4 sm:px-6 py-3.5 bg-slate-900/60 hover:bg-slate-850/80 flex items-center justify-between transition-colors cursor-pointer"
+                className="w-full px-3 sm:px-4 py-2.5 flex items-center justify-between hover:bg-[var(--bg-hover)] transition-colors cursor-pointer select-none"
                 aria-expanded={!isCollapsed}
               >
-                <div className="flex items-center gap-3">
-                  <span className={`px-2.5 py-0.5 rounded-md text-[11px] font-black border uppercase tracking-wider ${meta.badgeColor}`}>
+                <div className="flex items-center gap-2.5">
+                  <span className={`px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider ${meta.badgeBg}`}>
                     {meta.short}
                   </span>
-                  <span className="text-sm font-bold text-white tracking-tight">
+                  <span className="text-sm font-bold text-[var(--text-primary)] tracking-tight">
                     {meta.label}
                   </span>
-                  <span className="text-xs text-slate-400">
-                    ({list.length} {list.length === 1 ? "player" : "players"})
+                  <span className="text-xs text-[var(--text-muted)]">
+                    ({list.length})
                   </span>
                 </div>
 
-                <div className="flex items-center gap-4">
-                  <span className="text-xs sm:text-sm font-extrabold text-amber-400 tabular-nums">
+                <div className="flex items-center gap-3">
+                  <span className="text-xs sm:text-sm font-bold text-[var(--value-text)] tabular-nums">
                     {formatCompactEur(subtotalVal)}
                   </span>
                   {isCollapsed ? (
-                    <ChevronDown className="w-4 h-4 text-slate-400" />
+                    <ChevronDown className="w-4 h-4 text-[var(--text-muted)]" />
                   ) : (
-                    <ChevronUp className="w-4 h-4 text-slate-400" />
+                    <ChevronUp className="w-4 h-4 text-[var(--text-muted)]" />
                   )}
                 </div>
               </button>
 
               {/* Group Table */}
               {!isCollapsed && (
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto border-t border-[var(--divider)]">
                   <table className="w-full text-left text-xs border-collapse">
                     <thead>
-                      <tr className="text-slate-400 uppercase tracking-wider text-[10px] font-semibold border-b border-slate-800/80 bg-slate-950/40">
-                        <th className="py-2.5 px-3 sm:px-4 w-12 text-center">
+                      <tr className="text-[var(--text-muted)] uppercase tracking-wider text-[10px] font-bold border-b border-[var(--divider)] bg-[var(--bg-page)]/40">
+                        <th className="py-2 px-3 w-10 text-center">
                           <button
                             type="button"
                             onClick={() => handleSort("number")}
-                            className="flex items-center justify-center gap-1 hover:text-white"
+                            className="flex items-center justify-center gap-0.5 hover:text-[var(--text-primary)]"
                           >
                             #
                           </button>
                         </th>
-                        <th className="py-2.5 px-3 font-semibold">
+                        <th className="py-2 px-3 font-bold">
                           <button
                             type="button"
                             onClick={() => handleSort("name")}
-                            className="flex items-center gap-1 hover:text-white"
+                            className="flex items-center gap-1 hover:text-[var(--text-primary)]"
                           >
                             Player <ArrowUpDown className="w-3 h-3 opacity-60" />
                           </button>
                         </th>
-                        <th className="py-2.5 px-3 font-semibold text-center w-16">
+                        <th className="py-2 px-3 font-bold text-center w-14">
                           <button
                             type="button"
                             onClick={() => handleSort("age")}
-                            className="flex items-center justify-center gap-1 hover:text-white mx-auto"
+                            className="flex items-center justify-center gap-1 hover:text-[var(--text-primary)] mx-auto"
                           >
                             Age <ArrowUpDown className="w-3 h-3 opacity-60" />
                           </button>
                         </th>
-                        <th className="py-2.5 px-3 font-semibold">Position</th>
-                        <th className="py-2.5 px-3 font-semibold">Nationality</th>
-                        <th className="py-2.5 px-3 font-semibold">
-                          <button
-                            type="button"
-                            onClick={() => handleSort("contract")}
-                            className="flex items-center gap-1 hover:text-white"
-                          >
-                            Contract Until <ArrowUpDown className="w-3 h-3 opacity-60" />
-                          </button>
-                        </th>
-                        <th className="py-2.5 px-3 sm:px-4 text-right font-semibold">
+                        <th className="py-2 px-3 font-bold">Position</th>
+                        <th className="py-2 px-3 font-bold">Nationality</th>
+                        <th className="py-2 px-3 sm:px-4 text-right font-bold">
                           <button
                             type="button"
                             onClick={() => handleSort("value")}
-                            className="flex items-center justify-end gap-1 hover:text-white ml-auto"
+                            className="flex items-center justify-end gap-1 hover:text-[var(--text-primary)] ml-auto"
                           >
                             Market Value <ArrowUpDown className="w-3 h-3 opacity-60" />
                           </button>
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-800/40">
+                    <tbody className="divide-y divide-[var(--divider)]">
                       {list.map((player) => {
                         const extId = player.sourceId || player.id;
                         const slug =
@@ -286,35 +275,35 @@ export function ClubSquadTable({
                         return (
                           <tr
                             key={player.id}
-                            className="hover:bg-slate-800/40 transition-colors group"
+                            className="hover:bg-[var(--bg-hover)] transition-colors group"
                           >
                             {/* Shirt Number */}
-                            <td className="py-3 px-3 sm:px-4 text-center font-bold text-slate-400 tabular-nums">
-                              {player.number ? player.number : "N/A"}
+                            <td className="py-2.5 px-3 text-center font-bold text-[var(--text-muted)] tabular-nums">
+                              {player.number ? player.number : "—"}
                             </td>
 
                             {/* Player Info (Name + Photo + Injury) */}
-                            <td className="py-3 px-3">
+                            <td className="py-2.5 px-3">
                               <Link
                                 href={`/players/${slug}`}
-                                className="flex items-center gap-3 min-w-0"
+                                className="flex items-center gap-2.5 min-w-0"
                               >
-                                <div className="relative w-8 h-8 rounded-lg bg-slate-800 overflow-hidden shrink-0 border border-slate-700/60">
+                                <div className="relative w-7 h-7 rounded-lg bg-[var(--bg-page)] overflow-hidden shrink-0">
                                   <EntityImage
                                     src={player.photoUrl}
                                     alt=""
                                     fill
-                                    sizes="32px"
+                                    sizes="28px"
                                     entityType="player"
                                     className="object-cover"
                                   />
                                 </div>
                                 <div className="min-w-0 flex-1">
-                                  <span className="text-white font-semibold group-hover:text-amber-400 transition-colors truncate block">
+                                  <span className="text-[var(--text-primary)] font-semibold group-hover:text-[var(--accent)] transition-colors truncate block">
                                     {player.commonName || player.fullName}
                                   </span>
                                   {player.injury && (
-                                    <span className="inline-flex items-center gap-1 text-[10px] text-rose-400 mt-0.5">
+                                    <span className="inline-flex items-center gap-1 text-[10px] text-[var(--trend-negative)] mt-0.5">
                                       <AlertTriangle className="w-3 h-3" />
                                       {player.injury}
                                     </span>
@@ -324,34 +313,29 @@ export function ClubSquadTable({
                             </td>
 
                             {/* Age */}
-                            <td className="py-3 px-3 text-center text-slate-300 tabular-nums">
-                              {player.age ? player.age : "N/A"}
+                            <td className="py-2.5 px-3 text-center text-[var(--text-secondary)] tabular-nums">
+                              {player.age ? player.age : "—"}
                             </td>
 
                             {/* Detailed Position */}
-                            <td className="py-3 px-3 text-slate-300">
-                              <span className="px-2 py-0.5 rounded bg-slate-800 text-[11px] font-medium border border-slate-700/60 whitespace-nowrap">
+                            <td className="py-2.5 px-3 text-[var(--text-secondary)]">
+                              <span className="px-2 py-0.5 rounded-md bg-[var(--bg-chip)] text-[11px] font-medium whitespace-nowrap">
                                 {player.position}
                               </span>
                             </td>
 
                             {/* Nationality */}
-                            <td className="py-3 px-3 text-slate-300 truncate max-w-[120px]">
+                            <td className="py-2.5 px-3 text-[var(--text-secondary)] truncate max-w-[120px]">
                               {player.nationality && player.nationality.length > 0
                                 ? player.nationality.join(", ")
-                                : "N/A"}
-                            </td>
-
-                            {/* Contract Expiry */}
-                            <td className="py-3 px-3 text-slate-400 tabular-nums whitespace-nowrap">
-                              {player.contractUntil ? player.contractUntil : "N/A"}
+                                : "—"}
                             </td>
 
                             {/* Market Value */}
-                            <td className="py-3 px-3 sm:px-4 text-right text-amber-400 font-extrabold whitespace-nowrap text-sm tabular-nums">
+                            <td className="py-2.5 px-3 sm:px-4 text-right text-[var(--value-text)] font-bold whitespace-nowrap text-sm tabular-nums">
                               {player.latestMarketValue && player.latestMarketValue > 0
                                 ? formatCompactEur(player.latestMarketValue)
-                                : "N/A"}
+                                : "—"}
                             </td>
                           </tr>
                         );
@@ -364,6 +348,6 @@ export function ClubSquadTable({
           );
         })}
       </div>
-    </div>
+    </Card>
   );
 }

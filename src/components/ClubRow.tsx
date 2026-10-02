@@ -12,10 +12,13 @@ export interface ClubRowProps {
   shortName?: string | null;
   slug?: string | null;
   logoUrl?: string | null;
+  crestUrl?: string | null;
   leagueName?: string | null;
   country?: string | null;
   leagueRank?: number | null;
   totalSquadValue?: number | null;
+  squadValue?: number | null;
+  playerCount?: number | null;
   className?: string;
 }
 
@@ -25,23 +28,9 @@ function getOrdinal(n: number): string {
   return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }
 
-function formatClubValue(value: number): string {
-  if (!value || value === 0) return "";
-  if (value >= 1_000_000_000) {
-    const valInB = value / 1_000_000_000;
-    return `€${valInB.toFixed(2)}B`;
-  }
-  if (value >= 1_000_000) {
-    const valInM = value / 1_000_000;
-    return `€${valInM.toFixed(1)}M`;
-  }
-  return formatCompactEur(value);
-}
-
 /**
- * a1score ClubRow Component (fixed height 64 to 72, dividers only, no border box):
- * [rank (secondary 13)] [crest 44px] [short name (15/500, no truncate) with meta below (13 secondary)] [value right (15/600 gold)].
- * Never shows 'N/A'.
+ * a1score ClubRow Component:
+ * crest | club name over league (muted) | squad value (amber, tabular-nums, right)
  */
 export function ClubRow({
   rank,
@@ -50,14 +39,19 @@ export function ClubRow({
   shortName,
   slug,
   logoUrl,
+  crestUrl,
   leagueName,
   country,
   leagueRank,
   totalSquadValue,
+  squadValue,
+  playerCount,
   className = "",
 }: ClubRowProps) {
   const clubShortName = getClubShortName(shortName || name);
   const href = `/clubs/${slug || getClubSlug({ id, name })}`;
+  const effectiveLogo = logoUrl || crestUrl;
+  const effectiveValue = totalSquadValue ?? squadValue;
 
   const sublineText = [
     leagueName || country || null,
@@ -66,64 +60,58 @@ export function ClubRow({
     .filter(Boolean)
     .join(" · ");
 
-  const formattedVal = totalSquadValue ? formatClubValue(totalSquadValue) : null;
-
   return (
     <Link
       href={href}
-      className={`h-[68px] min-h-[64px] max-h-[72px] flex items-center gap-3 px-3 sm:px-4 hover:bg-white/[0.02] transition-colors w-full ${className}`}
+      className={`group flex items-center justify-between gap-3 px-3 sm:px-4 h-[var(--row-height)] min-h-[64px] rounded-xl hover:bg-[var(--bg-hover)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] w-full select-none ${className}`}
     >
       {/* Rank (13px secondary) */}
       {rank != null && (
-        <span
-          className="w-6 text-center text-[13px] font-normal tabular-nums shrink-0"
-          style={{ color: "var(--color-text-secondary)" }}
-        >
+        <span className="w-6 text-center text-xs sm:text-sm font-bold text-[var(--text-muted)] shrink-0 tabular-nums">
           {rank}
         </span>
       )}
 
-      {/* Crest (44px) */}
-      <div className="relative w-11 h-11 rounded-lg bg-white/[0.02] p-1 shrink-0 overflow-hidden border border-white/5 flex items-center justify-center">
+      {/* Crest (40px) */}
+      <div className="w-10 h-10 rounded-xl bg-[var(--bg-chip)] p-1 shrink-0 overflow-hidden flex items-center justify-center relative">
         <EntityImage
-          src={logoUrl}
+          src={effectiveLogo}
           alt={name}
-          width={44}
-          height={44}
+          width={36}
+          height={36}
           entityType="club"
           className="object-contain p-0.5"
         />
       </div>
 
-      {/* Middle: Short Name (15/500, wraps up to 2 lines, no ellipsis) & Meta (13 secondary) */}
+      {/* Middle: Short Name & Meta */}
       <div className="flex-1 min-w-0 pr-2">
-        <div
-          className="text-[15px] font-medium leading-snug line-clamp-2"
-          style={{ color: "var(--color-text)" }}
-        >
+        <div className="text-sm font-semibold text-[var(--text-primary)] group-hover:text-[var(--accent)] truncate transition-colors leading-tight">
           {clubShortName}
         </div>
         {sublineText && (
-          <div
-            className="text-[13px] font-normal mt-0.5"
-            style={{ color: "var(--color-text-secondary)" }}
-          >
+          <div className="text-xs text-[var(--text-muted)] truncate mt-0.5">
             {sublineText}
           </div>
         )}
       </div>
 
-      {/* Right: Squad Value (15/600 gold) */}
-      {formattedVal && (
-        <div className="shrink-0 text-right">
-          <div
-            className="text-[15px] font-semibold tabular-nums leading-tight"
-            style={{ color: "var(--color-accent)" }}
-          >
-            {formattedVal}
-          </div>
+      {/* Player Count (optional) */}
+      {playerCount != null && (
+        <div className="hidden sm:block text-xs text-[var(--text-muted)] shrink-0 px-2 tabular-nums">
+          {playerCount} players
         </div>
       )}
+
+      {/* Right: Squad Value */}
+      <div className="text-right shrink-0">
+        <div className="text-sm sm:text-base font-bold text-[var(--value-text)] tabular-nums leading-tight">
+          {effectiveValue ? formatCompactEur(effectiveValue) : "—"}
+        </div>
+        <div className="text-[10px] text-[var(--text-muted)] uppercase font-semibold leading-tight mt-0.5">
+          Squad Value
+        </div>
+      </div>
     </Link>
   );
 }

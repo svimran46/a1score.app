@@ -5,13 +5,12 @@ import { EntityImage } from "./EntityImage";
 import Link from "next/link";
 import { formatCompactEur } from "@/lib/utils";
 import { formatTransferFee } from "@/lib/transfers";
+import { Card } from "@/components/ui";
 import {
   ArrowDownLeft,
   ArrowUpRight,
   ArrowLeftRight,
-  Calendar,
   Building2,
-  User,
   ShieldCheck,
 } from "lucide-react";
 
@@ -70,74 +69,74 @@ export function ClubTransferLedger({
   };
 
   return (
-    <div className="rounded-3xl glass-panel p-6 sm:p-8 border border-slate-800 space-y-6">
+    <Card className="p-4 sm:p-5 space-y-4 overflow-hidden">
       {/* Header and Filter Switcher */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400">
-            <ArrowLeftRight className="w-5 h-5" />
-          </div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[var(--divider)]">
+        <div className="flex items-center gap-2.5">
+          <ArrowLeftRight className="w-4 h-4 text-[var(--value-text)]" />
           <div>
-            <h3 className="text-lg font-bold text-white tracking-tight">
+            <h3 className="text-sm sm:text-base font-bold text-[var(--text-primary)] tracking-tight">
               Transfer Flow & Record Ledger
             </h3>
-            <p className="text-xs text-slate-400">
-              Documented historical commercial market fees for {clubName}
+            <p className="text-xs text-[var(--text-muted)] mt-0.5">
+              Documented commercial market fees for {clubName}
             </p>
           </div>
         </div>
 
         {/* Tab Buttons */}
-        <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-slate-900 border border-slate-800 self-start sm:self-auto">
+        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[var(--bg-page)] self-start sm:self-auto text-xs font-bold">
           <button
+            type="button"
             onClick={() => setActiveTab("arrivals")}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
               activeTab === "arrivals"
-                ? "bg-amber-400 text-slate-950 shadow-md shadow-amber-400/20"
-                : "text-slate-400 hover:text-white"
+                ? "bg-[var(--accent)] text-[var(--accent-contrast)] shadow-xs"
+                : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
             }`}
           >
             <ArrowDownLeft className="w-3.5 h-3.5" />
-            Record Signings ({recordArrivals.length})
+            Signings ({recordArrivals.length})
           </button>
           <button
+            type="button"
             onClick={() => setActiveTab("departures")}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
               activeTab === "departures"
-                ? "bg-emerald-400 text-slate-950 shadow-md shadow-emerald-400/20"
-                : "text-slate-400 hover:text-white"
+                ? "bg-[var(--accent)] text-[var(--accent-contrast)] shadow-xs"
+                : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
             }`}
           >
             <ArrowUpRight className="w-3.5 h-3.5" />
-            Record Sales ({recordDepartures.length})
+            Sales ({recordDepartures.length})
           </button>
         </div>
       </div>
 
       {/* Quick Summary Pill Bar */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-        <div className="p-3 rounded-2xl bg-slate-900/60 border border-slate-800/80 flex items-center justify-between">
-          <span className="text-slate-400 font-medium flex items-center gap-1.5">
-            <ArrowDownLeft className="w-4 h-4 text-amber-400" />
-            Top 5 Inbound Investment
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+        <div className="p-2.5 rounded-xl bg-[var(--bg-elevated)] flex items-center justify-between">
+          <span className="text-[var(--text-secondary)] font-medium flex items-center gap-1.5">
+            <ArrowDownLeft className="w-3.5 h-3.5 text-[var(--value-text)]" />
+            Top Inbound Investment
           </span>
-          <span className="font-black text-amber-400 tabular-nums">
+          <span className="font-bold text-[var(--value-text)] tabular-nums">
             {formatCompactEur(totalArrivalsSpend)}
           </span>
         </div>
-        <div className="p-3 rounded-2xl bg-slate-900/60 border border-slate-800/80 flex items-center justify-between">
-          <span className="text-slate-400 font-medium flex items-center gap-1.5">
-            <ArrowUpRight className="w-4 h-4 text-emerald-400" />
-            Top 5 Outbound Realized
+        <div className="p-2.5 rounded-xl bg-[var(--bg-elevated)] flex items-center justify-between">
+          <span className="text-[var(--text-secondary)] font-medium flex items-center gap-1.5">
+            <ArrowUpRight className="w-3.5 h-3.5 text-[var(--trend-positive)]" />
+            Top Outbound Realized
           </span>
-          <span className="font-black text-emerald-400 tabular-nums">
+          <span className="font-bold text-[var(--trend-positive)] tabular-nums">
             {formatCompactEur(totalDeparturesIncome)}
           </span>
         </div>
       </div>
 
       {/* Mobile Stacked Cards (<md) */}
-      <div className="md:hidden space-y-3">
+      <div className="md:hidden space-y-2">
         {activeList.map((t, index) => {
           const p = t.player;
           const extId = p ? (p.sourceId || p.externalId || p.id) : null;
@@ -150,43 +149,43 @@ export function ClubTransferLedger({
           return (
             <div
               key={t.id}
-              className="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800/80 space-y-2.5 text-xs"
+              className="p-3 rounded-xl bg-[var(--bg-elevated)] space-y-2 text-xs"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="w-5 text-center font-bold text-slate-500 tabular-nums">
+                  <span className="w-5 text-center font-bold text-[var(--text-muted)] tabular-nums">
                     #{index + 1}
                   </span>
                   {p && slug ? (
                     <Link href={`/players/${slug}`} className="flex items-center gap-2 group">
-                      <div className="relative w-7 h-7 rounded-lg bg-slate-800 overflow-hidden shrink-0 border border-slate-700/60">
+                      <div className="relative w-6 h-6 rounded-lg bg-[var(--bg-page)] overflow-hidden shrink-0">
                         <EntityImage
                           src={p.photoUrl}
                           alt={p.fullName}
                           fill
-                          sizes="28px"
+                          sizes="24px"
                           entityType="player"
                           className="object-cover"
                         />
                       </div>
-                      <span className="text-white font-bold group-hover:text-amber-400 transition-colors truncate max-w-[150px]">
+                      <span className="text-[var(--text-primary)] font-bold group-hover:text-[var(--accent)] transition-colors truncate max-w-[150px]">
                         {p.commonName || p.fullName}
                       </span>
                     </Link>
                   ) : (
-                    <span className="text-slate-300 font-medium">Unknown Player</span>
+                    <span className="text-[var(--text-secondary)] font-medium">Unknown Player</span>
                   )}
                 </div>
 
-                <span className="px-2 py-0.5 rounded bg-slate-800 text-[10px] font-semibold text-slate-300 border border-slate-700/60">
+                <span className="px-2 py-0.5 rounded bg-[var(--bg-chip)] text-[10px] font-semibold text-[var(--text-secondary)]">
                   {p?.position || "Player"}
                 </span>
               </div>
 
-              <div className="flex items-center justify-between gap-2 pt-1 border-t border-slate-800/60 text-slate-300">
+              <div className="flex items-center justify-between gap-2 pt-1 border-t border-[var(--divider)] text-[var(--text-secondary)]">
                 <div className="flex items-center gap-1.5 truncate flex-1 min-w-0">
-                  <Building2 className="w-3.5 h-3.5 text-slate-500 shrink-0" />
-                  <span className="truncate text-slate-400">
+                  <Building2 className="w-3.5 h-3.5 text-[var(--text-muted)] shrink-0" />
+                  <span className="truncate text-[var(--text-muted)]">
                     {counterparty || "Direct / Open Market"}
                   </span>
                 </div>
@@ -196,9 +195,9 @@ export function ClubTransferLedger({
                     className={`font-black tabular-nums whitespace-nowrap text-sm ${
                       feeInfo.isAmount
                         ? activeTab === "arrivals"
-                          ? "text-amber-400"
-                          : "text-emerald-400"
-                        : "text-slate-400 text-xs font-semibold"
+                          ? "text-[var(--value-text)]"
+                          : "text-[var(--trend-positive)]"
+                        : "text-[var(--text-muted)] text-xs font-semibold"
                     }`}
                   >
                     {feeInfo.label}
@@ -214,18 +213,18 @@ export function ClubTransferLedger({
       <div className="hidden md:block overflow-x-auto">
         <table className="w-full text-left text-xs">
           <thead>
-            <tr className="text-slate-400 uppercase tracking-wider border-b border-slate-800/80">
-              <th className="pb-3 w-8 font-semibold text-center sticky left-0 bg-slate-900/95 z-10">#</th>
-              <th className="pb-3 font-semibold sticky left-8 bg-slate-900/95 z-10 pr-4">Player</th>
-              <th className="pb-3 font-semibold">Position</th>
-              <th className="pb-3 font-semibold">
+            <tr className="text-[var(--text-muted)] uppercase tracking-wider border-b border-[var(--divider)] text-[10px] font-bold">
+              <th className="pb-2.5 w-8 font-bold text-center sticky left-0 bg-[var(--bg-card)] z-10">#</th>
+              <th className="pb-2.5 font-bold sticky left-8 bg-[var(--bg-card)] z-10 pr-4">Player</th>
+              <th className="pb-2.5 font-bold">Position</th>
+              <th className="pb-2.5 font-bold">
                 {activeTab === "arrivals" ? "Signed From" : "Sold To"}
               </th>
-              <th className="pb-3 font-semibold">Date</th>
-              <th className="pb-3 text-right font-semibold">Fee</th>
+              <th className="pb-2.5 font-bold">Date</th>
+              <th className="pb-2.5 text-right font-bold">Fee</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-800/50">
+          <tbody className="divide-y divide-[var(--divider)]">
             {activeList.map((t, index) => {
               const p = t.player;
               const extId = p ? (p.sourceId || p.externalId || p.id) : null;
@@ -239,54 +238,54 @@ export function ClubTransferLedger({
               return (
                 <tr
                   key={t.id}
-                  className="hover:bg-slate-800/30 transition-colors group"
+                  className="hover:bg-[var(--bg-hover)] transition-colors group"
                 >
-                  <td className="py-3 text-center font-bold text-slate-500 tabular-nums sticky left-0 bg-slate-900/95 z-10">
+                  <td className="py-2.5 text-center font-bold text-[var(--text-muted)] tabular-nums sticky left-0 bg-[var(--bg-card)] z-10">
                     {index + 1}
                   </td>
-                  <td className="py-3 pr-4 sticky left-8 bg-slate-900/95 z-10">
+                  <td className="py-2.5 pr-4 sticky left-8 bg-[var(--bg-card)] z-10">
                     {p && slug ? (
                       <Link
                         href={`/players/${slug}`}
-                        className="flex items-center gap-3"
+                        className="flex items-center gap-2.5"
                       >
-                        <div className="relative w-8 h-8 rounded-lg bg-slate-800 overflow-hidden flex-shrink-0 border border-slate-700/60">
+                        <div className="relative w-7 h-7 rounded-lg bg-[var(--bg-page)] overflow-hidden shrink-0">
                           <EntityImage
                             src={p.photoUrl}
                             alt={p.fullName}
                             fill
-                            sizes="32px"
+                            sizes="28px"
                             entityType="player"
                             className="object-cover"
                           />
                         </div>
-                        <span className="text-white font-semibold group-hover:text-amber-400 transition-colors whitespace-nowrap">
+                        <span className="text-[var(--text-primary)] font-semibold group-hover:text-[var(--accent)] transition-colors whitespace-nowrap">
                           {p.commonName || p.fullName}
                         </span>
                       </Link>
                     ) : (
-                      <span className="text-slate-300 font-medium">
+                      <span className="text-[var(--text-secondary)] font-medium">
                         Unknown Player
                       </span>
                     )}
                   </td>
-                  <td className="py-3 text-slate-300">
-                    <span className="px-2 py-0.5 rounded bg-slate-800 text-[11px] font-medium border border-slate-700/60 whitespace-nowrap">
+                  <td className="py-2.5 text-[var(--text-secondary)]">
+                    <span className="px-2 py-0.5 rounded-md bg-[var(--bg-chip)] text-[11px] font-medium whitespace-nowrap">
                       {p?.position || "Player"}
                     </span>
                   </td>
-                  <td className="py-3 text-slate-300">
+                  <td className="py-2.5 text-[var(--text-secondary)]">
                     <div className="flex items-center gap-1.5">
-                      <Building2 className="w-3.5 h-3.5 text-slate-500 flex-shrink-0" />
+                      <Building2 className="w-3.5 h-3.5 text-[var(--text-muted)] shrink-0" />
                       <span className="truncate max-w-[140px] sm:max-w-none">
                         {counterparty || "Direct / Open Market"}
                       </span>
                     </div>
                   </td>
-                  <td className="py-3 text-slate-400 tabular-nums whitespace-nowrap">
+                  <td className="py-2.5 text-[var(--text-muted)] tabular-nums whitespace-nowrap">
                     {formatDate(t.date)}
                   </td>
-                  <td className="py-3 text-right font-extrabold whitespace-nowrap text-sm tabular-nums">
+                  <td className="py-2.5 text-right font-bold whitespace-nowrap text-sm tabular-nums">
                     {(() => {
                       const feeInfo = formatTransferFee(t.feeEur, t.transferType);
                       return (
@@ -294,9 +293,9 @@ export function ClubTransferLedger({
                           className={
                             feeInfo.isAmount
                               ? activeTab === "arrivals"
-                                ? "text-amber-400"
-                                : "text-emerald-400"
-                              : "text-slate-400 text-xs font-semibold px-2 py-0.5 rounded bg-slate-800/80 border border-slate-700/50"
+                                ? "text-[var(--value-text)]"
+                                : "text-[var(--trend-positive)]"
+                              : "text-[var(--text-muted)] text-xs font-semibold px-2 py-0.5 rounded bg-[var(--bg-chip)]"
                           }
                         >
                           {feeInfo.label}
@@ -311,13 +310,13 @@ export function ClubTransferLedger({
         </table>
       </div>
 
-      <div className="flex items-center justify-between text-[11px] text-slate-500 pt-2 border-t border-slate-800/60">
+      <div className="flex items-center justify-between text-[11px] text-[var(--text-muted)] pt-2 border-t border-[var(--divider)]">
         <span className="flex items-center gap-1">
-          <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
+          <ShieldCheck className="w-3.5 h-3.5 text-[var(--value-text)]" />
           Documented Commercial Ledger
         </span>
         <span>Excludes internal youth academy progressions</span>
       </div>
-    </div>
+    </Card>
   );
 }

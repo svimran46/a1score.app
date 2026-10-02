@@ -1,11 +1,9 @@
 import { supabase } from "@/lib/supabase";
-import { EntityImage } from "@/components/EntityImage";
-import Link from "next/link";
 import { formatCompactEur, formatDate } from "@/lib/utils";
-import { formatTransferFee } from "@/lib/transfers";
-import { ArrowLeftRight, Building2, TrendingUp, ShieldCheck, Flame } from "lucide-react";
 import { constructMetadata } from "@/lib/metadata";
 import { sanitizeImageUrl } from "@/lib/image-sanitize";
+import { Card, SectionHeader, TransferRow } from "@/components/ui";
+import { ShieldCheck, Flame, ArrowLeftRight } from "lucide-react";
 import type { Metadata } from "next";
 
 export const revalidate = 3600;
@@ -91,199 +89,79 @@ export default async function TransfersPage() {
   const latestTransfers = cleanTransfers(latestRes.data || []);
 
   return (
-    <div className="space-y-10">
-      {/* Header */}
+    <div className="space-y-6 max-w-[720px] mx-auto">
+      {/* Page Header */}
       <div>
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold mb-3">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[var(--chip-radius)] bg-[var(--bg-chip)] text-[var(--value-text)] text-xs font-semibold mb-2">
           <ArrowLeftRight className="w-3.5 h-3.5" />
-          Commercial Ledger Intelligence
+          <span>Commercial Ledger Intelligence</span>
         </div>
-        <h1 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
-          Commercial Transfer Hub
+        <h1 className="text-2xl sm:text-3xl font-black text-[var(--text-primary)] tracking-tight">
+          Transfers
         </h1>
-        <p className="text-sm text-slate-400 mt-1 max-w-2xl">
+        <p className="text-xs sm:text-sm text-[var(--text-secondary)] mt-1">
           Documented player transactions, historical record fees, and commercial market expenditure across global football.
         </p>
       </div>
 
-      {/* Record Transfers Section */}
-      <section className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Flame className="w-5 h-5 text-amber-400" />
-            <h2 className="text-lg sm:text-xl font-bold text-white tracking-tight">
-              All-Time Record Transfers
-            </h2>
+      {/* 1. All-Time Record Transfers */}
+      <section className="space-y-2">
+        <SectionHeader
+          title="All-Time Record Transfers"
+          action={<span className="text-xs text-[var(--text-muted)] font-medium">Top 20 Documented Fees</span>}
+        />
+        <Card className="p-1 overflow-hidden">
+          <div className="divide-y divide-[var(--divider)]">
+            {recordTransfers.map((t) => (
+              <TransferRow
+                key={t.id}
+                id={t.id}
+                playerName={t.player?.commonName || t.player?.fullName || "Player"}
+                playerSlug={t.player?.slug}
+                playerAvatar={t.player?.photoUrl}
+                playerPosition={t.player?.position}
+                fromClubName={t.fromClubName}
+                toClubName={t.toClubName}
+                fee={t.feeEur}
+                transferType={t.transferType}
+                date={formatDate(t.date)}
+              />
+            ))}
           </div>
-          <span className="text-xs text-slate-500 font-medium">Top 20 Documented Fees</span>
-        </div>
-
-        <div className="rounded-2xl glass-panel border border-slate-800 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs tabular-nums">
-              <thead>
-                <tr className="text-slate-400 uppercase tracking-wider border-b border-slate-800/80 bg-slate-900/60">
-                  <th className="py-3 px-4 font-semibold">Rank</th>
-                  <th className="py-3 px-4 font-semibold">Player</th>
-                  <th className="py-3 px-4 font-semibold">From</th>
-                  <th className="py-3 px-4 font-semibold">To</th>
-                  <th className="py-3 px-4 font-semibold">Date</th>
-                  <th className="py-3 px-4 text-right font-semibold">Fee</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-800/50">
-                {recordTransfers.map((t, idx) => {
-                  const p = t.player;
-                  const feeInfo = formatTransferFee(t.feeEur, t.transferType);
-                  const extId = p ? (p.sourceId || (p as any).externalId || (p as any)[["transfer", "marktId"].join("")] || p.id) : "";
-                  const playerSlug = p?.fullName
-                    ? `${p.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${extId}`
-                    : null;
-
-                  return (
-                    <tr key={t.id} className="hover:bg-slate-800/30 transition-colors">
-                      <td className="py-3 px-4 text-slate-500 font-bold">#{idx + 1}</td>
-                      <td className="py-3 px-4">
-                        <div className="flex items-center gap-2.5">
-                          <div className="relative w-7 h-7 rounded-lg bg-slate-800 overflow-hidden flex-shrink-0 border border-slate-700/60">
-                            <EntityImage
-                              src={p?.photoUrl}
-                              alt={p?.fullName || "Player"}
-                              fill
-                              sizes="28px"
-                              entityType="player"
-                              className="object-cover"
-                            />
-                          </div>
-                          {playerSlug ? (
-                            <Link
-                              href={`/players/${playerSlug}`}
-                              className="text-white font-semibold hover:text-amber-400 transition-colors"
-                            >
-                              {p?.commonName || p?.fullName}
-                            </Link>
-                          ) : (
-                            <span className="text-white font-semibold">
-                              {p?.commonName || p?.fullName || "Player"}
-                            </span>
-                          )}
-                        </div>
-                      </td>
-                      <td className="py-3 px-4 text-slate-300 truncate max-w-[130px]">
-                        {t.fromClubName || "Open Market"}
-                      </td>
-                      <td className="py-3 px-4 text-slate-300 truncate max-w-[130px] font-medium text-white">
-                        {t.toClubName || "Open Market"}
-                      </td>
-                      <td className="py-3 px-4 text-slate-400 whitespace-nowrap">
-                        {formatDate(t.date)}
-                      </td>
-                      <td className="py-3 px-4 text-right font-extrabold text-amber-400 text-sm whitespace-nowrap">
-                        {feeInfo.label}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </div>
+        </Card>
       </section>
 
-      {/* Latest Commercial Moves */}
-      <section className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <ArrowLeftRight className="w-5 h-5 text-emerald-400" />
-            <h2 className="text-lg sm:text-xl font-bold text-white tracking-tight">
-              Recent Market Activity
-            </h2>
+      {/* 2. Recent Market Activity */}
+      <section className="space-y-2">
+        <SectionHeader
+          title="Recent Market Activity"
+          action={<span className="text-xs text-[var(--text-muted)] font-medium">Documented Commercial Moves</span>}
+        />
+        <Card className="p-1 overflow-hidden">
+          <div className="divide-y divide-[var(--divider)]">
+            {latestTransfers.map((t) => (
+              <TransferRow
+                key={t.id}
+                id={t.id}
+                playerName={t.player?.commonName || t.player?.fullName || "Player"}
+                playerSlug={t.player?.slug}
+                playerAvatar={t.player?.photoUrl}
+                playerPosition={t.player?.position}
+                fromClubName={t.fromClubName}
+                toClubName={t.toClubName}
+                fee={t.feeEur}
+                transferType={t.transferType}
+                date={formatDate(t.date)}
+              />
+            ))}
           </div>
-          <span className="text-xs text-slate-500 font-medium">Documented Commercial Moves</span>
-        </div>
-
-        <div className="rounded-2xl glass-panel border border-slate-800 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs tabular-nums">
-              <thead>
-                <tr className="text-slate-400 uppercase tracking-wider border-b border-slate-800/80 bg-slate-900/60">
-                  <th className="py-3 px-4 font-semibold">Player</th>
-                  <th className="py-3 px-4 font-semibold">From</th>
-                  <th className="py-3 px-4 font-semibold">To</th>
-                  <th className="py-3 px-4 font-semibold">Date</th>
-                  <th className="py-3 px-4 text-right font-semibold">Fee / Agreement</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-800/50">
-                {latestTransfers.map((t) => {
-                  const p = t.player;
-                  const feeInfo = formatTransferFee(t.feeEur, t.transferType);
-                  const extId = p ? (p.sourceId || (p as any).externalId || (p as any)[["transfer", "marktId"].join("")] || p.id) : "";
-                  const playerSlug = p?.fullName
-                    ? `${p.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${extId}`
-                    : null;
-
-                  return (
-                    <tr key={t.id} className="hover:bg-slate-800/30 transition-colors">
-                      <td className="py-3 px-4">
-                        <div className="flex items-center gap-2.5">
-                          <div className="relative w-7 h-7 rounded-lg bg-slate-800 overflow-hidden flex-shrink-0 border border-slate-700/60">
-                            <EntityImage
-                              src={p?.photoUrl}
-                              alt={p?.fullName || "Player"}
-                              fill
-                              sizes="28px"
-                              entityType="player"
-                              className="object-cover"
-                            />
-                          </div>
-                          {playerSlug ? (
-                            <Link
-                              href={`/players/${playerSlug}`}
-                              className="text-white font-semibold hover:text-amber-400 transition-colors"
-                            >
-                              {p?.commonName || p?.fullName}
-                            </Link>
-                          ) : (
-                            <span className="text-white font-semibold">
-                              {p?.commonName || p?.fullName || "Player"}
-                            </span>
-                          )}
-                        </div>
-                      </td>
-                      <td className="py-3 px-4 text-slate-300 truncate max-w-[130px]">
-                        {t.fromClubName || "Open Market"}
-                      </td>
-                      <td className="py-3 px-4 text-slate-300 truncate max-w-[130px] font-medium text-white">
-                        {t.toClubName || "Open Market"}
-                      </td>
-                      <td className="py-3 px-4 text-slate-400 whitespace-nowrap">
-                        {formatDate(t.date)}
-                      </td>
-                      <td className="py-3 px-4 text-right font-extrabold whitespace-nowrap">
-                        <span
-                          className={
-                            feeInfo.isAmount
-                              ? "text-amber-400"
-                              : "text-slate-400 text-[11px] font-semibold px-2 py-0.5 rounded bg-slate-800 border border-slate-700/50"
-                          }
-                        >
-                          {feeInfo.label}
-                        </span>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </div>
+        </Card>
       </section>
 
       {/* Verification Footnote */}
-      <div className="pt-4 border-t border-slate-800/80 text-[11px] text-slate-500 leading-relaxed flex items-center justify-between">
+      <div className="pt-3 border-t border-[var(--divider)] text-[11px] text-[var(--text-muted)] leading-relaxed flex items-center justify-between">
         <span className="flex items-center gap-1.5">
-          <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
+          <ShieldCheck className="w-3.5 h-3.5 text-[var(--value-text)]" />
           Documented Commercial Ledger
         </span>
         <span>Excludes internal youth academy progressions</span>

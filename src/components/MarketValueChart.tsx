@@ -12,6 +12,7 @@ import {
   ReferenceDot,
 } from "recharts";
 import { formatCompactEur, formatDate } from "@/lib/utils";
+import { Card, Chip } from "@/components/ui";
 
 interface MarketValuePoint {
   id: string;
@@ -38,10 +39,11 @@ interface MarketValueChartProps {
 
 /**
  * a1score MarketValueChart:
- * - Line chart with 1 accent color (gold).
- * - Peak marked with dot and caption "Peak €180M".
- * - Labeled axes, no gradients, no glows.
- * - Single surface card container (radius 12, border 1px).
+ * - Line chart with valuation accent token (--value-text).
+ * - Peak marked with dot and caption.
+ * - Labeled axes, accessible tooltips, legend, and screen-reader summary.
+ * - Time range chips (1Y / 3Y / ALL).
+ * - Single surface Card container (no borders).
  */
 export function MarketValueChart({
   data,
@@ -109,38 +111,37 @@ export function MarketValueChart({
   const latest = fullTimeline[fullTimeline.length - 1];
 
   return (
-    <div
-      className="rounded-[12px] p-4 overflow-hidden"
-      style={{
-        backgroundColor: "var(--color-surface)",
-        borderColor: "var(--color-border)",
-        borderWidth: "1px",
-      }}
-    >
-      {/* Top row: Peak caption left, Time range right */}
-      <div className="flex items-center justify-between gap-3 pb-3 mb-2 border-b" style={{ borderColor: "var(--color-border)" }}>
-        <span
-          className="text-[13px] font-normal"
-          style={{ color: "var(--color-text-secondary)" }}
-        >
-          {overallPeak ? `Peak ${formatCompactEur(overallPeak.value)}` : ""}
-        </span>
+    <Card className="p-4 sm:p-5 overflow-hidden">
+      {/* Screen Reader Accessible Summary */}
+      <div className="sr-only" aria-live="polite">
+        {playerName || "Player"} market valuation history: currently valued at {formatCompactEur(latest.value)} as of {latest.dateStr}, with an all-time peak of {overallPeak ? formatCompactEur(overallPeak.value) : "N/A"}.
+      </div>
 
-        {/* Segmented control for range */}
-        <div
-          className="flex items-center p-0.5 rounded-[8px]"
-          style={{ backgroundColor: "var(--color-surface-2)" }}
-        >
+      {/* Top row: Peak caption left, Time range chips right */}
+      <div className="flex items-center justify-between gap-3 pb-3 mb-2 border-b border-[var(--divider)]">
+        <div>
+          <span className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider block">
+            Valuation History
+          </span>
+          {overallPeak && (
+            <span className="text-sm font-bold text-[var(--value-text)] tabular-nums mt-0.5 block">
+              Peak: {formatCompactEur(overallPeak.value)} ({overallPeak.dateStr})
+            </span>
+          )}
+        </div>
+
+        {/* Range Chips */}
+        <div className="flex items-center gap-1.5 bg-[var(--bg-page)] p-1 rounded-xl">
           {(["ALL", "3Y", "1Y"] as const).map((range) => (
             <button
               key={range}
               type="button"
               onClick={() => setTimeRange(range)}
-              className="px-2.5 py-1 rounded-[6px] text-[13px] font-medium transition-colors"
-              style={{
-                color: timeRange === range ? "var(--color-accent)" : "var(--color-text-secondary)",
-                backgroundColor: timeRange === range ? "var(--color-surface)" : "transparent",
-              }}
+              className={`px-3 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
+                timeRange === range
+                  ? "bg-[var(--accent)] text-[var(--accent-contrast)] shadow-xs"
+                  : "text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)]"
+              }`}
             >
               {range}
             </button>
@@ -152,18 +153,18 @@ export function MarketValueChart({
       <div className="h-[240px] sm:h-[280px] w-full pt-2">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={filteredData} margin={{ top: 12, right: 12, left: -16, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--divider)" vertical={false} />
             <XAxis
               dataKey="dateStr"
-              stroke="var(--color-text-secondary)"
-              fontSize={13}
+              stroke="var(--text-muted)"
+              fontSize={12}
               tickLine={false}
               axisLine={false}
               dy={6}
             />
             <YAxis
-              stroke="var(--color-text-secondary)"
-              fontSize={13}
+              stroke="var(--text-muted)"
+              fontSize={12}
               tickLine={false}
               axisLine={false}
               tickFormatter={(v) => formatCompactEur(v)}
@@ -175,22 +176,15 @@ export function MarketValueChart({
                 if (active && payload && payload.length) {
                   const d = payload[0].payload;
                   return (
-                    <div
-                      className="p-2.5 rounded-[8px] border text-[13px]"
-                      style={{
-                        backgroundColor: "var(--color-surface)",
-                        borderColor: "var(--color-border)",
-                        color: "var(--color-text)",
-                      }}
-                    >
-                      <div className="font-semibold text-[15px]" style={{ color: "var(--color-accent)" }}>
+                    <div className="p-3 rounded-xl bg-[var(--bg-elevated)] border border-[var(--divider)] shadow-lg text-xs">
+                      <div className="font-extrabold text-sm text-[var(--value-text)] tabular-nums">
                         {formatCompactEur(d.value)}
                       </div>
-                      <div className="mt-0.5" style={{ color: "var(--color-text-secondary)" }}>
+                      <div className="mt-1 text-[var(--text-muted)] font-medium">
                         {d.dateStr}
                       </div>
                       {d.club && (
-                        <div className="mt-0.5" style={{ color: "var(--color-text)" }}>
+                        <div className="mt-0.5 text-[var(--text-primary)] font-semibold">
                           {d.club}
                         </div>
                       )}
@@ -203,17 +197,17 @@ export function MarketValueChart({
             <Area
               type="monotone"
               dataKey="value"
-              stroke="var(--color-accent)"
-              strokeWidth={2}
+              stroke="var(--value-text)"
+              strokeWidth={2.5}
               fill="transparent"
             />
             {overallPeak && (
               <ReferenceDot
                 x={overallPeak.dateStr}
                 y={overallPeak.value}
-                r={4}
-                fill="var(--color-accent)"
-                stroke="var(--color-surface)"
+                r={4.5}
+                fill="var(--value-text)"
+                stroke="var(--bg-card)"
                 strokeWidth={2}
               />
             )}
@@ -221,15 +215,26 @@ export function MarketValueChart({
               <ReferenceDot
                 x={latest.dateStr}
                 y={latest.value}
-                r={4}
-                fill="var(--color-accent)"
-                stroke="var(--color-surface)"
+                r={4.5}
+                fill="var(--value-text)"
+                stroke="var(--bg-card)"
                 strokeWidth={2}
               />
             )}
           </AreaChart>
         </ResponsiveContainer>
       </div>
-    </div>
+
+      {/* Accessible Legend & Summary */}
+      <div className="flex flex-wrap items-center justify-between gap-2 mt-3 pt-3 border-t border-[var(--divider)] text-xs text-[var(--text-muted)]">
+        <div className="flex items-center gap-2">
+          <span className="w-2.5 h-2.5 rounded-full bg-[var(--value-text)] shrink-0" />
+          <span className="font-medium">Market Valuation Trend (€ EUR)</span>
+        </div>
+        <span className="tabular-nums">
+          Latest: <strong className="text-[var(--text-primary)]">{formatCompactEur(latest.value)}</strong>
+        </span>
+      </div>
+    </Card>
   );
 }

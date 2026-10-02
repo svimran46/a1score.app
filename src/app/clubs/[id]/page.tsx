@@ -7,9 +7,10 @@ import { getFotmobTeamDetails } from "@/lib/fotmob/client";
 import { FOTMOB_TEAM_MAPPINGS } from "@/lib/league-mappings";
 import { formatCompactEur } from "@/lib/utils";
 import { getClubSlug, getLeagueSlug } from "@/lib/slugs";
-import { Shield, Users, Trophy, Globe, Calendar, Clock } from "lucide-react";
+import { Users, Trophy, Globe, Clock } from "lucide-react";
 import { ClubTabsContainer } from "@/components/ClubTabsContainer";
 import { ClubHonoursStatStrip } from "@/components/ClubHonoursStatStrip";
+import { Card } from "@/components/ui";
 
 import { constructMetadata, SITE_URL } from "@/lib/metadata";
 import type { Metadata } from "next";
@@ -70,7 +71,7 @@ export default async function ClubPage({ params }: ClubPageProps) {
     notFound();
   }
 
-  // 301 redirect any non-canonical slug, legacy CUID, or numeric ID to canonical slug URL (G1)
+  // 301 redirect any non-canonical slug, legacy CUID, or numeric ID to canonical slug URL
   const canonicalSlug = getClubSlug(club);
   if (params.id !== canonicalSlug) {
     permanentRedirect(`/clubs/${canonicalSlug}`);
@@ -130,7 +131,7 @@ export default async function ClubPage({ params }: ClubPageProps) {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4 max-w-[720px] mx-auto">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -140,87 +141,82 @@ export default async function ClubPage({ params }: ClubPageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
-      {/* Club Header */}
-      <div className="rounded-3xl glass-panel p-6 sm:p-8 border border-slate-800 bg-slate-900/40">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-          <div className="flex items-center gap-6">
-            <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-slate-800 p-2 border border-slate-700/80 shadow-xl flex-shrink-0 overflow-hidden">
+      {/* Club Header Card */}
+      <Card className="p-4 sm:p-5">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-4 min-w-0 flex-1">
+            <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[var(--bg-page)] p-2 shrink-0 overflow-hidden flex items-center justify-center">
               <EntityImage
                 src={club.logoUrl}
                 alt=""
                 fill
-                sizes="96px"
+                sizes="80px"
                 entityType="club"
-                className="object-contain p-2"
+                className="object-contain p-1"
               />
             </div>
 
-            <div className="space-y-1">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+            <div className="min-w-0 flex-1">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)] block">
                 Football Club
               </span>
-              <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+              <h1 className="text-xl sm:text-2xl font-black text-[var(--text-primary)] tracking-tight truncate mt-0.5">
                 {getClubDisplayName(club)}
               </h1>
               {club.name && club.name !== getClubDisplayName(club) && (
-                <p className="text-xs text-slate-400 font-medium" title={club.name}>
+                <p className="text-xs text-[var(--text-muted)] font-medium truncate" title={club.name}>
                   {club.name}
                 </p>
               )}
-              <div className="flex flex-wrap items-center gap-3 text-xs text-slate-400 mt-1">
+              <div className="flex flex-wrap items-center gap-2.5 text-xs text-[var(--text-secondary)] mt-1">
                 {club.country && (
                   <span className="flex items-center gap-1">
-                    <Globe className="w-3.5 h-3.5 text-slate-500" />
+                    <Globe className="w-3.5 h-3.5 text-[var(--text-muted)]" />
                     {club.country}
                   </span>
                 )}
                 {club.league && (
                   <Link
                     href={`/leagues/${club.league.id}`}
-                    className="flex items-center gap-1 hover:text-white transition-colors"
+                    className="flex items-center gap-1 font-semibold text-[var(--value-text)] hover:underline transition-colors"
                   >
-                    <Trophy className="w-3.5 h-3.5 text-amber-400" />
+                    <Trophy className="w-3.5 h-3.5" />
                     {club.league.name}
                   </Link>
                 )}
                 <span className="flex items-center gap-1">
-                  <Users className="w-3.5 h-3.5 text-emerald-400" />
-                  {seniorSquad.length} First Team Players
+                  <Users className="w-3.5 h-3.5 text-[var(--trend-positive)]" />
+                  {seniorSquad.length} Players
                 </span>
                 {club.averageAge && (
-                  <span className="flex items-center gap-1 text-slate-400">
-                    <Clock className="w-3.5 h-3.5 text-blue-400" />
+                  <span className="flex items-center gap-1 text-[var(--text-muted)]">
+                    <Clock className="w-3.5 h-3.5" />
                     {club.averageAge} yrs avg
-                  </span>
-                )}
-                {club.lastSyncedAt && (
-                  <span className="flex items-center gap-1 text-slate-400">
-                    <Calendar className="w-3.5 h-3.5 text-slate-500" />
-                    Squad as of {new Date(club.lastSyncedAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })} ({club.squadSource || "FotMob + Transfermarkt"})
                   </span>
                 )}
               </div>
             </div>
           </div>
 
-          <div className="w-full sm:w-auto p-4 rounded-2xl bg-slate-950/80 border border-amber-500/20 shadow-lg shadow-amber-500/5 flex flex-col sm:items-end justify-center">
-            <span className="text-xs text-slate-400 uppercase tracking-wider font-semibold">
+          {/* Squad Market Value in Amber */}
+          <div className="w-full sm:w-auto p-3.5 sm:p-4 rounded-2xl bg-[var(--bg-elevated)] flex flex-col sm:items-end justify-center shrink-0">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)]">
               Total Squad Valuation
             </span>
-            <span className="text-2xl sm:text-3xl font-black text-amber-400 tracking-tight mt-1 tabular-nums">
+            <span className="text-2xl sm:text-3xl font-black text-[var(--value-text)] tracking-tight mt-0.5 tabular-nums">
               {formatCompactEur(club.totalSquadValue)}
             </span>
-            <span className="text-[10px] text-slate-500 mt-0.5">
+            <span className="text-[10px] text-[var(--text-muted)] mt-0.5">
               Based on senior first-team roster
             </span>
           </div>
         </div>
-      </div>
+      </Card>
 
       {/* Honours StatStrip (rendered only if club has titles > 0) */}
       <ClubHonoursStatStrip honours={clubHonours} clubName={getClubDisplayName(club)} />
 
-      {/* Multi-Tab Interactive Interface (Squad, Stadium & Manager, Form, Transfers, Pyramid) */}
+      {/* Multi-Tab Interactive Interface (Squad, Transfers, Value, Overview, Form) */}
       <ClubTabsContainer
         clubName={club.name}
         totalSquadValue={club.totalSquadValue}

@@ -4,6 +4,7 @@ import { EntityImage } from "./EntityImage";
 import { formatCompactEur } from "@/lib/utils";
 import { getClubShortName } from "@/lib/data/clubs";
 import { getPositionAbbreviation } from "@/lib/positions";
+import { TrendingUp, TrendingDown } from "lucide-react";
 
 export interface PlayerRowProps {
   rank?: number | string;
@@ -11,23 +12,29 @@ export interface PlayerRowProps {
   name: string;
   slug?: string | null;
   photoUrl?: string | null;
+  avatarUrl?: string | null;
   club?: {
     name?: string | null;
     shortName?: string | null;
     logoUrl?: string | null;
   } | null;
+  clubName?: string | null;
+  clubCrest?: string | null;
   position?: string | null;
+  age?: number | null;
+  nationality?: string | string[] | null;
   marketValue?: number | null;
   change?: number | null;
+  trendPercentage?: number | null;
+  trendDiff?: number | null;
   className?: string;
 }
 
 /**
- * a1score PlayerRow Component (fixed height 64 to 72, dividers only, no border box):
- * [rank (secondary 13)] [photo circle] [name (15/500, no truncate) with meta (13 secondary) below] [value right (15/600 gold)].
- * Meta: club crest 14px + short club name + abbreviated position (RW, CF, CM).
- * Change: +€30M / −€10M with true minus sign.
- * Never shows 'N/A'.
+ * a1score PlayerRow Component (valuation-first, height --row-height):
+ * rank (24px, muted) | avatar 40px round | name (600) over club crest + club (muted, text-sm) | ... | value (amber, tabular-nums, right-aligned, 700) + trend arrow with %
+ * - Trend uses arrow + number, never color alone.
+ * - On mobile, hide secondary columns but always keep name, club, and value.
  */
 export function PlayerRow({
   rank,
@@ -35,100 +42,118 @@ export function PlayerRow({
   name,
   slug,
   photoUrl,
+  avatarUrl,
   club,
+  clubName,
+  clubCrest,
   position,
+  age,
+  nationality,
   marketValue,
   change,
+  trendPercentage,
+  trendDiff,
   className = "",
 }: PlayerRowProps) {
   const href = slug ? `/players/${slug}` : `/players/${id}`;
-  const clubShortName = club ? getClubShortName(club.shortName || club.name || "") : null;
+  const effectivePhoto = photoUrl || avatarUrl;
+  const effectiveClubName = club ? getClubShortName(club.shortName || club.name || "") : clubName ? getClubShortName(clubName) : null;
+  const effectiveClubLogo = club?.logoUrl || clubCrest;
   const posAbbr = position ? getPositionAbbreviation(position) : null;
 
-  let changeFormatted: string | null = null;
-  let isPositiveChange = true;
-  if (typeof change === "number" && change !== 0) {
-    isPositiveChange = change > 0;
-    const sign = change > 0 ? "+" : "−"; // true minus sign \u2212
-    const absVal = Math.abs(change);
-    changeFormatted = `${sign}${formatCompactEur(absVal)}`;
-  }
+  const diffVal = trendDiff ?? change;
+  const hasTrend = typeof trendPercentage === "number" || (typeof diffVal === "number" && diffVal !== 0);
+  const isUp = (diffVal ?? trendPercentage ?? 0) >= 0;
+  const sign = isUp ? "+" : "−";
+
+  const trendStr =
+    typeof trendPercentage === "number"
+      ? `${isUp ? "+" : ""}${trendPercentage.toFixed(1)}%`
+      : typeof diffVal === "number" && diffVal !== 0
+      ? `${sign}${formatCompactEur(Math.abs(diffVal))}`
+      : null;
+
+  const natStr = Array.isArray(nationality) ? nationality[0] : nationality;
 
   return (
     <Link
       href={href}
-      className={`h-[68px] min-h-[64px] max-h-[72px] flex items-center gap-3 px-3 sm:px-4 hover:bg-white/[0.02] transition-colors w-full ${className}`}
+      className={`group flex items-center justify-between gap-3 px-3 sm:px-4 h-[var(--row-height)] min-h-[64px] rounded-xl hover:bg-[var(--bg-hover)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] w-full select-none ${className}`}
     >
-      {/* Rank (secondary text 13px) */}
-      {rank != null && (
-        <span
-          className="w-6 text-center text-[13px] font-normal tabular-nums shrink-0"
-          style={{ color: "var(--color-text-secondary)" }}
-        >
-          {rank}
-        </span>
+      {/* 1. Left side: Rank + Avatar + Name / Club */}
+      <div className="flex items-center gap-3 min-w-0 flex-1">
+        {rank != null && (
+          <span className="w-6 text-center text-xs sm:text-sm font-bold text-[var(--text-muted)] shrink-0 tabular-nums">
+            {rank}
+          </span>
+        )}
+
+        {/* Avatar (40px round) */}
+        <div className="w-10 h-10 rounded-full bg-[var(--bg-chip)] overflow-hidden shrink-0 flex items-center justify-center relative">
+          <EntityImage
+            src={effectivePhoto}
+            alt={name}
+            width={40}
+            height={40}
+            entityType="player"
+            className="object-cover w-full h-full"
+          />
+        </div>
+
+        {/* Name over Club Crest + Club Name */}
+        <div className="min-w-0 flex-1">
+          <div className="text-sm font-semibold text-[var(--text-primary)] group-hover:text-[var(--accent)] truncate transition-colors leading-tight">
+            {name}
+          </div>
+          <div className="flex items-center gap-1.5 text-xs text-[var(--text-muted)] mt-0.5 truncate">
+            {effectiveClubLogo && (
+              <span className="relative w-3.5 h-3.5 shrink-0 inline-block overflow-hidden">
+                <EntityImage
+                  src={effectiveClubLogo}
+                  alt=""
+                  width={14}
+                  height={14}
+                  entityType="club"
+                  className="object-contain w-3.5 h-3.5"
+                />
+              </span>
+            )}
+            {effectiveClubName && <span className="truncate">{effectiveClubName}</span>}
+            {posAbbr && (
+              <>
+                <span className="text-[var(--divider)]">·</span>
+                <span className="truncate">{posAbbr}</span>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* 2. Middle: Secondary info (hidden on mobile) */}
+      {(age != null || natStr) && (
+        <div className="hidden md:flex items-center gap-3 text-xs text-[var(--text-muted)] shrink-0 px-2">
+          {age != null && <span className="tabular-nums">{age} yrs</span>}
+          {natStr && <span className="truncate max-w-[90px]">{natStr}</span>}
+        </div>
       )}
 
-      {/* Photo circle */}
-      <div className="relative w-11 h-11 rounded-full overflow-hidden shrink-0 border border-white/5 bg-slate-800/80">
-        <EntityImage
-          src={photoUrl}
-          alt={name}
-          width={44}
-          height={44}
-          entityType="player"
-          className="object-cover w-full h-full"
-        />
-      </div>
-
-      {/* Middle: Name (15/500, wraps up to 2 lines, no ellipsis) & Meta (13 secondary) */}
-      <div className="flex-1 min-w-0 pr-2">
-        <div
-          className="text-[15px] font-medium leading-snug line-clamp-2"
-          style={{ color: "var(--color-text)" }}
-        >
-          {name}
+      {/* 3. Right side: Value (amber, tabular-nums, right-aligned, 700) + Trend */}
+      <div className="text-right shrink-0">
+        <div className="text-sm sm:text-base font-bold text-[var(--value-text)] tabular-nums leading-tight">
+          {marketValue ? formatCompactEur(marketValue) : "—"}
         </div>
-        <div
-          className="text-[13px] font-normal flex items-center gap-1.5 mt-0.5"
-          style={{ color: "var(--color-text-secondary)" }}
-        >
-          {club?.logoUrl && (
-            <span className="relative w-3.5 h-3.5 shrink-0 inline-block overflow-hidden">
-              <EntityImage
-                src={club.logoUrl}
-                alt=""
-                width={14}
-                height={14}
-                entityType="club"
-                className="object-contain w-3.5 h-3.5"
-              />
-            </span>
-          )}
-          {clubShortName && <span>{clubShortName}</span>}
-          {clubShortName && posAbbr && <span>·</span>}
-          {posAbbr && <span>{posAbbr}</span>}
-        </div>
-      </div>
-
-      {/* Right: Value (15/600 gold) + optional change */}
-      <div className="shrink-0 text-right flex flex-col items-end justify-center">
-        {marketValue != null && (
+        {hasTrend && trendStr && (
           <div
-            className="text-[15px] font-semibold tabular-nums leading-tight"
-            style={{ color: "var(--color-accent)" }}
+            className={`flex items-center justify-end gap-0.5 text-xs font-bold tabular-nums leading-tight mt-0.5 ${
+              isUp ? "text-[var(--trend-up)]" : "text-[var(--trend-down)]"
+            }`}
           >
-            {formatCompactEur(marketValue)}
-          </div>
-        )}
-        {changeFormatted && (
-          <div
-            className="text-[12px] font-medium tabular-nums mt-0.5 leading-tight"
-            style={{
-              color: isPositiveChange ? "var(--color-positive)" : "var(--color-negative)",
-            }}
-          >
-            {changeFormatted}
+            {isUp ? (
+              <TrendingUp className="w-3 h-3 shrink-0" aria-label="Valuation increased" />
+            ) : (
+              <TrendingDown className="w-3 h-3 shrink-0" aria-label="Valuation decreased" />
+            )}
+            <span>{trendStr}</span>
           </div>
         )}
       </div>

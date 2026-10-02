@@ -3,17 +3,14 @@
 import { useMemo, useState } from "react";
 import { EntityImage } from "./EntityImage";
 import Link from "next/link";
-import { formatCompactEur, formatEur } from "@/lib/utils";
+import { formatCompactEur } from "@/lib/utils";
+import { Card } from "@/components/ui";
 import {
   Layers,
   PieChart,
   Shield,
   TrendingUp,
-  UserCheck,
-  Globe,
   Calendar,
-  Sparkles,
-  ChevronRight,
 } from "lucide-react";
 
 export interface SquadPlayer {
@@ -44,9 +41,6 @@ interface ValuationTier {
   rangeLabel: string;
   min: number;
   max: number;
-  color: string;
-  bgColor: string;
-  borderColor: string;
   badgeBg: string;
   players: SquadPlayer[];
   totalValue: number;
@@ -65,13 +59,11 @@ export function SquadValuationPyramid({
     if (!players || players.length === 0) {
       return {
         avgAge: null,
-        foreignRatio: 0,
         topAssetRatio: 0,
         topPlayer: null,
       };
     }
 
-    // Average age
     let totalAge = 0;
     let ageCount = 0;
     const currentYear = new Date().getFullYear();
@@ -91,7 +83,6 @@ export function SquadValuationPyramid({
 
     const avgAge = ageCount > 0 ? (totalAge / ageCount).toFixed(1) : null;
 
-    // Top asset concentration
     const sorted = [...players].sort(
       (a, b) => (b.latestMarketValue || 0) - (a.latestMarketValue || 0)
     );
@@ -134,9 +125,6 @@ export function SquadValuationPyramid({
       rangeLabel: string,
       min: number,
       max: number,
-      color: string,
-      bgColor: string,
-      borderColor: string,
       badgeBg: string,
       list: SquadPlayer[]
     ): ValuationTier => {
@@ -149,9 +137,6 @@ export function SquadValuationPyramid({
         rangeLabel,
         min,
         max,
-        color,
-        bgColor,
-        borderColor,
         badgeBg,
         players: list.sort(
           (a, b) => (b.latestMarketValue || 0) - (a.latestMarketValue || 0)
@@ -167,10 +152,7 @@ export function SquadValuationPyramid({
         "€50M+",
         50_000_000,
         Infinity,
-        "text-amber-400",
-        "bg-amber-500/10",
-        "border-amber-500/30",
-        "bg-amber-400",
+        "bg-[var(--value-text)]",
         elite
       ),
       buildTier(
@@ -178,10 +160,7 @@ export function SquadValuationPyramid({
         "€20M – €50M",
         20_000_000,
         50_000_000,
-        "text-emerald-400",
-        "bg-emerald-500/10",
-        "border-emerald-500/30",
-        "bg-emerald-400",
+        "bg-[var(--trend-positive)]",
         starters
       ),
       buildTier(
@@ -189,10 +168,7 @@ export function SquadValuationPyramid({
         "€5M – €20M",
         5_000_000,
         20_000_000,
-        "text-blue-400",
-        "bg-blue-500/10",
-        "border-blue-500/30",
-        "bg-blue-400",
+        "bg-[var(--accent)]",
         core
       ),
       buildTier(
@@ -200,10 +176,7 @@ export function SquadValuationPyramid({
         "< €5M",
         0,
         5_000_000,
-        "text-slate-400",
-        "bg-slate-800/40",
-        "border-slate-700/50",
-        "bg-slate-400",
+        "bg-[var(--text-muted)]",
         rotation
       ),
     ];
@@ -213,30 +186,26 @@ export function SquadValuationPyramid({
   const positionalBreakdown = useMemo(() => {
     const posGroups: Record<
       string,
-      { title: string; color: string; barColor: string; players: SquadPlayer[] }
+      { title: string; barColor: string; players: SquadPlayer[] }
     > = {
       Goalkeeper: {
         title: "Goalkeepers",
-        color: "text-amber-400",
-        barColor: "bg-amber-400",
+        barColor: "bg-[var(--value-text)]",
         players: [],
       },
       Defender: {
         title: "Defenders",
-        color: "text-blue-400",
-        barColor: "bg-blue-500",
+        barColor: "bg-[var(--accent)]",
         players: [],
       },
       Midfield: {
         title: "Midfielders",
-        color: "text-emerald-400",
-        barColor: "bg-emerald-400",
+        barColor: "bg-[var(--trend-positive)]",
         players: [],
       },
       Attack: {
         title: "Attackers",
-        color: "text-rose-400",
-        barColor: "bg-rose-500",
+        barColor: "bg-[var(--trend-negative)]",
         players: [],
       },
     };
@@ -276,7 +245,6 @@ export function SquadValuationPyramid({
       return {
         key,
         title: group.title,
-        color: group.color,
         barColor: group.barColor,
         count: group.players.length,
         totalVal: groupVal,
@@ -288,90 +256,80 @@ export function SquadValuationPyramid({
   const activeTierObj = tiers.find((t) => t.name === selectedTier);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Squad Demographic & Concentration Barometer */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {/* Metric 1: Average Squad Age */}
-        <div className="p-5 rounded-2xl glass-panel border border-slate-800 bg-slate-900/40 flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center flex-shrink-0 text-blue-400">
-            <Calendar className="w-6 h-6" />
+        <Card className="p-4 flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-[var(--bg-chip)] flex items-center justify-center shrink-0 text-[var(--accent)]">
+            <Calendar className="w-5 h-5" />
           </div>
           <div>
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)] block">
               Average Squad Age
             </span>
-            <div className="text-xl font-black text-white tracking-tight tabular-nums mt-0.5">
+            <div className="text-lg font-black text-[var(--text-primary)] tracking-tight tabular-nums">
               {demographics.avgAge ? `${demographics.avgAge} yrs` : "N/A"}
             </div>
-            <span className="text-[10px] text-slate-500">
-              {clubName} Senior Squad
-            </span>
           </div>
-        </div>
+        </Card>
 
         {/* Metric 2: Top Asset Concentration */}
-        <div className="p-5 rounded-2xl glass-panel border border-slate-800 bg-slate-900/40 flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center flex-shrink-0 text-amber-400">
-            <TrendingUp className="w-6 h-6" />
+        <Card className="p-4 flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-[var(--bg-chip)] flex items-center justify-center shrink-0 text-[var(--value-text)]">
+            <TrendingUp className="w-5 h-5" />
           </div>
           <div className="min-w-0">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)] block">
               Top Asset Concentration
             </span>
-            <div className="text-xl font-black text-amber-400 tracking-tight tabular-nums mt-0.5">
+            <div className="text-lg font-black text-[var(--value-text)] tracking-tight tabular-nums">
               {demographics.topAssetRatio}%
             </div>
-            <span className="text-[10px] text-slate-400 truncate block">
-              Held by {demographics.topPlayer?.commonName || demographics.topPlayer?.fullName || "Top Star"} (
+            <span className="text-[10px] text-[var(--text-muted)] truncate block">
+              {demographics.topPlayer?.commonName || demographics.topPlayer?.fullName || "Top Star"} (
               {formatCompactEur(demographics.topPlayer?.latestMarketValue || 0)})
             </span>
           </div>
-        </div>
+        </Card>
 
-        {/* Metric 3: Squad Depth & Distribution */}
-        <div className="p-5 rounded-2xl glass-panel border border-slate-800 bg-slate-900/40 flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center flex-shrink-0 text-emerald-400">
-            <Shield className="w-6 h-6" />
+        {/* Metric 3: Squad Depth */}
+        <Card className="p-4 flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-[var(--bg-chip)] flex items-center justify-center shrink-0 text-[var(--trend-positive)]">
+            <Shield className="w-5 h-5" />
           </div>
           <div>
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)] block">
               Squad Valuation Depth
             </span>
-            <div className="text-xl font-black text-emerald-400 tracking-tight tabular-nums mt-0.5">
+            <div className="text-lg font-black text-[var(--trend-positive)] tracking-tight tabular-nums">
               {tiers[0].players.length + tiers[1].players.length} Key Assets
             </div>
-            <span className="text-[10px] text-slate-500">
-              Players valued &ge; €20M
+            <span className="text-[10px] text-[var(--text-muted)] block">
+              Valued &ge; €20M
             </span>
           </div>
-        </div>
+        </Card>
       </div>
 
-      {/* Main Valuation Pyramid & Positional Split Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      {/* Main Valuation Pyramid & Positional Split */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
         {/* Left Column: Financial Valuation Pyramid (7 cols) */}
-        <div className="lg:col-span-7 rounded-3xl glass-panel p-6 sm:p-7 border border-slate-800 space-y-6">
-          <div className="flex items-center justify-between pb-4 border-b border-slate-800">
-            <div className="flex items-center gap-2.5">
-              <div className="p-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400">
-                <Layers className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="text-base font-bold text-white tracking-tight">
-                  Squad Valuation Pyramid
-                </h3>
-                <p className="text-xs text-slate-400">
-                  Capital tier distribution across registered squad
-                </p>
-              </div>
+        <Card className="lg:col-span-7 p-4 sm:p-5 space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-[var(--divider)]">
+            <div className="flex items-center gap-2">
+              <Layers className="w-4 h-4 text-[var(--value-text)]" />
+              <h3 className="text-sm sm:text-base font-bold text-[var(--text-primary)] tracking-tight">
+                Squad Valuation Pyramid
+              </h3>
             </div>
-            <span className="text-xs font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-full tabular-nums">
+            <span className="text-xs font-bold text-[var(--value-text)] tabular-nums">
               Total {formatCompactEur(totalSquadValue)}
             </span>
           </div>
 
           {/* Pyramid Tiers */}
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             {tiers.map((tier) => {
               const isSelected = selectedTier === tier.name;
               return (
@@ -380,44 +338,44 @@ export function SquadValuationPyramid({
                   onClick={() =>
                     setSelectedTier(isSelected ? null : tier.name)
                   }
-                  className={`p-4 rounded-2xl border transition-all cursor-pointer ${
+                  className={`p-3 rounded-xl transition-all cursor-pointer ${
                     isSelected
-                      ? `${tier.bgColor} ${tier.borderColor} ring-1 ring-amber-400/40 shadow-lg`
-                      : "bg-slate-900/50 border-slate-800/80 hover:bg-slate-800/40 hover:border-slate-700/80"
+                      ? "bg-[var(--bg-hover)] ring-2 ring-[var(--focus-ring)]"
+                      : "bg-[var(--bg-elevated)] hover:bg-[var(--bg-hover)]"
                   }`}
                 >
-                  <div className="flex items-center justify-between gap-4">
-                    <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-2.5">
                       <div
-                        className={`w-3 h-3 rounded-full ${tier.badgeBg} flex-shrink-0`}
+                        className={`w-2.5 h-2.5 rounded-full ${tier.badgeBg} shrink-0`}
                       />
                       <div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs font-bold text-white">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-xs font-bold text-[var(--text-primary)]">
                             {tier.name}
                           </span>
-                          <span className="text-[10px] font-semibold text-slate-400 px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700/60">
+                          <span className="text-[10px] font-semibold text-[var(--text-muted)] px-1.5 py-0.5 rounded bg-[var(--bg-chip)]">
                             {tier.rangeLabel}
                           </span>
                         </div>
-                        <span className="text-[11px] text-slate-400">
+                        <span className="text-[11px] text-[var(--text-muted)]">
                           {tier.players.length} player{tier.players.length !== 1 ? "s" : ""}
                         </span>
                       </div>
                     </div>
 
                     <div className="text-right">
-                      <div className="text-xs font-extrabold text-white tabular-nums">
+                      <div className="text-xs font-bold text-[var(--text-primary)] tabular-nums">
                         {formatCompactEur(tier.totalValue)}
                       </div>
-                      <div className="text-[10px] font-bold text-slate-400 tabular-nums">
+                      <div className="text-[10px] font-medium text-[var(--text-muted)] tabular-nums">
                         {tier.pct}% of squad
                       </div>
                     </div>
                   </div>
 
                   {/* Horizontal Bar */}
-                  <div className="w-full h-1.5 bg-slate-800/80 rounded-full overflow-hidden mt-3">
+                  <div className="w-full h-1.5 bg-[var(--bg-page)] rounded-full overflow-hidden mt-2">
                     <div
                       className={`h-full rounded-full transition-all ${tier.badgeBg}`}
                       style={{ width: `${tier.pct}%` }}
@@ -428,27 +386,28 @@ export function SquadValuationPyramid({
             })}
           </div>
 
-          {/* Drawer / Expanded List for Selected Tier */}
+          {/* Expanded List for Selected Tier */}
           {activeTierObj && (
-            <div className="p-4 rounded-2xl bg-slate-950/80 border border-amber-500/20 space-y-3 transition-all animate-in fade-in duration-200">
-              <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-                <span className="text-xs font-bold text-amber-400 uppercase tracking-wider">
+            <div className="p-3 rounded-xl bg-[var(--bg-page)] space-y-2 transition-all">
+              <div className="flex items-center justify-between pb-1.5 border-b border-[var(--divider)]">
+                <span className="text-xs font-bold text-[var(--value-text)] uppercase tracking-wider">
                   {activeTierObj.name} ({activeTierObj.players.length})
                 </span>
                 <button
+                  type="button"
                   onClick={() => setSelectedTier(null)}
-                  className="text-[11px] text-slate-400 hover:text-white"
+                  className="text-[11px] text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
                 >
                   Close
                 </button>
               </div>
 
               {activeTierObj.players.length === 0 ? (
-                <div className="text-xs text-slate-500 text-center py-3">
+                <div className="text-xs text-[var(--text-muted)] text-center py-2">
                   No players in this valuation tier.
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-56 overflow-y-auto pr-1">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-52 overflow-y-auto pr-1">
                   {activeTierObj.players.map((p) => {
                     const extId = p.sourceId || p.externalId || p.id;
                     const slug =
@@ -458,10 +417,10 @@ export function SquadValuationPyramid({
                       <Link
                         key={p.id}
                         href={`/players/${slug}`}
-                        className="flex items-center justify-between p-2 rounded-xl bg-slate-900/60 border border-slate-800/60 hover:border-amber-400/40 hover:bg-slate-800/60 transition-all group"
+                        className="flex items-center justify-between p-2 rounded-lg bg-[var(--bg-elevated)] hover:bg-[var(--bg-hover)] transition-all group"
                       >
                         <div className="flex items-center gap-2 min-w-0">
-                          <div className="relative w-6 h-6 rounded-md bg-slate-800 overflow-hidden flex-shrink-0">
+                          <div className="relative w-6 h-6 rounded-md bg-[var(--bg-page)] overflow-hidden shrink-0">
                             <EntityImage
                               src={p.photoUrl}
                               alt={p.fullName}
@@ -471,11 +430,11 @@ export function SquadValuationPyramid({
                               className="object-cover"
                             />
                           </div>
-                          <span className="text-xs font-semibold text-slate-200 group-hover:text-amber-400 truncate">
+                          <span className="text-xs font-semibold text-[var(--text-primary)] group-hover:text-[var(--accent)] truncate">
                             {p.commonName || p.fullName}
                           </span>
                         </div>
-                        <span className="text-[11px] font-extrabold text-amber-400 tabular-nums ml-2 flex-shrink-0">
+                        <span className="text-[11px] font-bold text-[var(--value-text)] tabular-nums ml-2 shrink-0">
                           {formatCompactEur(p.latestMarketValue || 0)}
                         </span>
                       </Link>
@@ -485,49 +444,42 @@ export function SquadValuationPyramid({
               )}
             </div>
           )}
-        </div>
+        </Card>
 
-        {/* Right Column: Positional Capital Allocation (5 cols) */}
-        <div className="lg:col-span-5 rounded-3xl glass-panel p-6 sm:p-7 border border-slate-800 flex flex-col justify-between space-y-6">
-          <div className="space-y-4">
-            <div className="flex items-center gap-2.5 pb-4 border-b border-slate-800">
-              <div className="p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
-                <PieChart className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="text-base font-bold text-white tracking-tight">
-                  Positional Capital Split
-                </h3>
-                <p className="text-xs text-slate-400">
-                  Where squad investment is concentrated
-                </p>
-              </div>
+        {/* Right Column: Positional Capital Split (5 cols) */}
+        <Card className="lg:col-span-5 p-4 sm:p-5 flex flex-col justify-between space-y-4">
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 pb-3 border-b border-[var(--divider)]">
+              <PieChart className="w-4 h-4 text-[var(--accent)]" />
+              <h3 className="text-sm sm:text-base font-bold text-[var(--text-primary)] tracking-tight">
+                Positional Capital Split
+              </h3>
             </div>
 
             {/* Positional List */}
-            <div className="space-y-4">
+            <div className="space-y-3">
               {positionalBreakdown.map((pos) => (
-                <div key={pos.key} className="space-y-2">
+                <div key={pos.key} className="space-y-1.5">
                   <div className="flex items-center justify-between text-xs font-bold">
-                    <span className="text-white flex items-center gap-1.5">
+                    <span className="text-[var(--text-primary)] flex items-center gap-1.5">
                       <span className={`w-2 h-2 rounded-full ${pos.barColor}`} />
                       {pos.title}
-                      <span className="text-[11px] font-medium text-slate-400">
+                      <span className="text-[11px] font-medium text-[var(--text-muted)]">
                         ({pos.count})
                       </span>
                     </span>
                     <div className="flex items-center gap-2 tabular-nums">
-                      <span className="text-white">
+                      <span className="text-[var(--text-primary)]">
                         {formatCompactEur(pos.totalVal)}
                       </span>
-                      <span className="text-slate-400 font-normal text-[11px]">
+                      <span className="text-[var(--text-muted)] font-normal text-[11px]">
                         {pos.pct}%
                       </span>
                     </div>
                   </div>
 
                   {/* Allocation Bar */}
-                  <div className="w-full h-2 bg-slate-800/80 rounded-full overflow-hidden">
+                  <div className="w-full h-1.5 bg-[var(--bg-page)] rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all ${pos.barColor}`}
                       style={{ width: `${pos.pct}%` }}
@@ -538,24 +490,13 @@ export function SquadValuationPyramid({
             </div>
           </div>
 
-          {(() => {
-            const midVal = positionalBreakdown.find((p) => p.key === "mid")?.totalVal || 0;
-            const attVal = positionalBreakdown.find((p) => p.key === "att")?.totalVal || 0;
-            const midAttVal = midVal + attVal;
-            const midAttPct = totalSquadValue > 0 ? ((midAttVal / totalSquadValue) * 100).toFixed(1) : "0";
-            const defGkVal = Math.max(0, totalSquadValue - midAttVal);
-            const defGkPct = totalSquadValue > 0 ? ((defGkVal / totalSquadValue) * 100).toFixed(1) : "0";
-
-            return (
-              <div className="p-4 rounded-2xl bg-slate-900/30 border border-slate-800/60 text-[11px] text-slate-400 leading-relaxed">
-                <span className="font-semibold text-slate-300">
-                  Positional Capital Allocation:
-                </span>{" "}
-                {clubName} allocates {midAttPct}% ({formatCompactEur(midAttVal)}) of senior squad valuation across Midfield & Attack, with {defGkPct}% ({formatCompactEur(defGkVal)}) invested in Defense & Goalkeeping.
-              </div>
-            );
-          })()}
-        </div>
+          <div className="p-3 rounded-xl bg-[var(--bg-elevated)] text-[11px] text-[var(--text-muted)] leading-relaxed">
+            <span className="font-semibold text-[var(--text-primary)]">
+              Positional Breakdown:
+            </span>{" "}
+            {clubName} squad allocation across Tactical Units.
+          </div>
+        </Card>
       </div>
     </div>
   );

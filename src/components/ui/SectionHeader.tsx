@@ -6,18 +6,20 @@ export interface SectionHeaderProps {
   title: string;
   href?: string;
   actionLabel?: string;
+  action?: React.ReactNode;
   className?: string;
   count?: number;
 }
 
 /**
  * FotMob-style Section Header component:
- * Title (text-lg, 700) on the left, optional "See all" link in accent on the right.
+ * Title (text-lg, 700) on the left, optional "See all" link or custom action on the right.
  */
 export function SectionHeader({
   title,
   href,
   actionLabel = "See all",
+  action,
   className = "",
   count,
 }: SectionHeaderProps) {
@@ -34,7 +36,9 @@ export function SectionHeader({
         )}
       </div>
 
-      {href && (
+      {action ? (
+        <div className="shrink-0">{action}</div>
+      ) : href ? (
         <Link
           href={href}
           className="text-sm font-semibold text-[var(--accent)] hover:underline inline-flex items-center gap-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] rounded px-1 -mx-1 shrink-0 transition-colors"
@@ -42,7 +46,7 @@ export function SectionHeader({
           <span>{actionLabel}</span>
           <ArrowRight className="w-3.5 h-3.5" />
         </Link>
-      )}
+      ) : null}
     </div>
   );
 }

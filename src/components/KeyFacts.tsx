@@ -1,4 +1,5 @@
 import React from "react";
+import { Card } from "@/components/ui";
 
 export interface KeyFactItem {
   label: string;
@@ -14,9 +15,8 @@ interface KeyFactsProps {
  * a1score KeyFacts Component:
  * - A definition list inside a single card container.
  * - Each row 48px: label left (13/400 secondary), value right (15/500 text).
- * - No tiles, no icons on labels.
+ * - No borders on card, uses design tokens.
  * - Missing data: HIDE the field. If more than half is missing, hide the whole block.
- * - Never show "N/A", "Unknown", "No data yet", "pending", "-", or "TBD".
  */
 export function KeyFacts({ items, className = "" }: KeyFactsProps) {
   // Filter out items with missing/empty/placeholder values
@@ -46,34 +46,22 @@ export function KeyFacts({ items, className = "" }: KeyFactsProps) {
   }
 
   return (
-    <dl
-      className={`rounded-[12px] divide-y overflow-hidden ${className}`}
-      style={{
-        backgroundColor: "var(--color-surface)",
-        borderColor: "var(--color-border)",
-        borderWidth: "1px",
-      }}
-    >
-      {validItems.map((item, idx) => (
-        <div
-          key={item.label || idx}
-          className="h-12 min-h-[48px] px-4 flex items-center justify-between gap-4"
-          style={{ borderColor: "var(--color-border)" }}
-        >
-          <dt
-            className="text-[13px] font-normal shrink-0"
-            style={{ color: "var(--color-text-secondary)" }}
+    <Card className={`p-0 overflow-hidden ${className}`}>
+      <dl className="divide-y divide-[var(--divider)]">
+        {validItems.map((item, idx) => (
+          <div
+            key={item.label || idx}
+            className="h-12 min-h-[48px] px-4 flex items-center justify-between gap-4"
           >
-            {item.label}
-          </dt>
-          <dd
-            className="text-[15px] font-medium text-right min-w-0"
-            style={{ color: "var(--color-text)" }}
-          >
-            {item.value}
-          </dd>
-        </div>
-      ))}
-    </dl>
+            <dt className="text-xs sm:text-[13px] font-medium text-[var(--text-muted)] shrink-0">
+              {item.label}
+            </dt>
+            <dd className="text-sm font-semibold text-[var(--text-primary)] text-right min-w-0 tabular-nums truncate">
+              {item.value}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </Card>
   );
 }

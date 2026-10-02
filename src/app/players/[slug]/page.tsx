@@ -2,17 +2,12 @@ import { notFound } from "next/navigation";
 import { EntityImage } from "@/components/EntityImage";
 import Link from "next/link";
 import { getPlayerBySlugOrId } from "@/lib/data/players";
-import { MarketValueChart } from "@/components/MarketValueChart";
-import { TransfersTable } from "@/components/TransfersTable";
-import { StatsTable } from "@/components/StatsTable";
-import { InjuriesTable } from "@/components/InjuriesTable";
-import { KeyFacts } from "@/components/KeyFacts";
-import { SectionHeader } from "@/components/SectionHeader";
 import { calculateAge, formatCompactEur, formatDate, formatUpdateAge } from "@/lib/utils";
 import { getClubShortName } from "@/lib/data/clubs";
 import { getClubSlug } from "@/lib/slugs";
-import { constructMetadata, SITE_URL } from "@/lib/metadata";
-
+import { constructMetadata } from "@/lib/metadata";
+import { Card } from "@/components/ui";
+import { PlayerTabsContainer } from "@/components/PlayerTabsContainer";
 import type { Metadata } from "next";
 
 export const revalidate = 3600; // ISR revalidation every hour
@@ -70,23 +65,27 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
       ? new Date(player.dateOfBirth)
       : null;
 
-  // Change computation
+  // Change computation with trend arrow + %
   const currentVal = player.latestMarketValue || latestValuation?.valueEur || 0;
-  let changeLine: React.ReactNode = null;
+  let changeElement: React.ReactNode = null;
   if (prevValuation && prevValuation.valueEur > 0 && currentVal > 0) {
     const diff = currentVal - prevValuation.valueEur;
     if (diff !== 0) {
       const isPos = diff > 0;
-      const sign = isPos ? "+" : "−"; // true minus sign \u2212
+      const trendSymbol = isPos ? "▲" : "▼";
+      const sign = isPos ? "+" : "−";
       const absDiff = Math.abs(diff);
       const pct = Math.abs((diff / prevValuation.valueEur) * 100).toFixed(1);
-      changeLine = (
-        <span
-          className="text-[13px] font-medium leading-none"
-          style={{ color: isPos ? "var(--color-positive)" : "var(--color-negative)" }}
-        >
-          {`${sign}${formatCompactEur(absDiff)} (${sign}${pct}%) since previous update`}
-        </span>
+      const trendColorClass = isPos ? "text-[var(--trend-positive)]" : "text-[var(--trend-negative)]";
+
+      changeElement = (
+        <div className={`flex items-center gap-1 text-xs font-bold tabular-nums ${trendColorClass}`}>
+          <span>{trendSymbol}</span>
+          <span>{`${sign}${pct}%`}</span>
+          <span className="text-[var(--text-muted)] font-normal ml-0.5">
+            ({sign}{formatCompactEur(absDiff)})
+          </span>
+        </div>
       );
     }
   }
@@ -102,7 +101,7 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
       ? player.nationality
       : null;
 
-  // KeyFacts items (hide unknown/null)
+  // KeyFacts items
   const keyFactsItems = [
     {
       label: "Age",
@@ -127,155 +126,96 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
   ];
 
   return (
-    <div className="space-y-6">
-      {/* 1. Header: photo 72px, name (title 20/600), club crest + short name, age. Nothing else. */}
-      <header className="flex items-center gap-4 py-1">
-        <div className="relative w-[72px] h-[72px] rounded-full overflow-hidden shrink-0 border border-white/5 bg-slate-800/80">
-          <EntityImage
-            src={player.photoUrl}
-            alt={player.fullName || "Player"}
-            width={72}
-            height={72}
-            entityType="player"
-            priority
-            className="object-cover w-full h-full"
-          />
-        </div>
+    <div className="space-y-4 max-w-[720px] mx-auto">
+      {/* 1. Header Card */}
+      <Card className="p-4 sm:p-5">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          {/* Avatar + Player Metadata */}
+          <div className="flex items-center gap-4 min-w-0 flex-1">
+            <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden shrink-0 bg-[var(--bg-chip)]">
+              <EntityImage
+                src={player.photoUrl}
+                alt={player.fullName || "Player"}
+                fill
+                sizes="80px"
+                entityType="player"
+                priority
+                className="object-cover"
+              />
+            </div>
 
-        <div className="min-w-0 flex-1">
-          <h1
-            className="text-[20px] font-semibold leading-tight line-clamp-2"
-            style={{ color: "var(--color-text)" }}
-          >
-            {player.fullName}
-          </h1>
-
-          <div
-            className="flex items-center gap-2 text-[13px] font-normal mt-1"
-            style={{ color: "var(--color-text-secondary)" }}
-          >
-            {currentClub && (
-              <Link
-                href={`/clubs/${getClubSlug(currentClub)}`}
-                className="flex items-center gap-1.5 hover:underline"
-              >
-                {currentClub.logoUrl && (
-                  <span className="relative w-3.5 h-3.5 shrink-0 inline-block overflow-hidden">
-                    <EntityImage
-                      src={currentClub.logoUrl}
-                      alt=""
-                      width={14}
-                      height={14}
-                      entityType="club"
-                      className="object-contain w-3.5 h-3.5"
-                    />
-                  </span>
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wide">
+                <span>{player.position || "Footballer"}</span>
+                {nationalityText && (
+                  <>
+                    <span>•</span>
+                    <span>{nationalityText}</span>
+                  </>
                 )}
-                <span>{clubShort}</span>
-              </Link>
-            )}
-            {clubShort && age && <span>·</span>}
-            {age && <span>{age} yrs</span>}
-          </div>
-        </div>
-      </header>
+              </div>
 
-      {/* 2. Value block (one card): display number 28/600 in gold, left-aligned; under it change as one line; Updated X ago in secondary. */}
-      {currentVal > 0 && (
-        <div
-          className="rounded-[12px] p-4 flex flex-col items-start gap-1 overflow-hidden"
-          style={{
-            backgroundColor: "var(--color-surface)",
-            borderColor: "var(--color-border)",
-            borderWidth: "1px",
-          }}
-        >
-          <div
-            className="text-[28px] font-semibold tabular-nums leading-tight"
-            style={{ color: "var(--color-accent)" }}
-          >
-            {formatCompactEur(currentVal)}
+              <h1 className="text-xl sm:text-2xl font-black text-[var(--text-primary)] tracking-tight truncate mt-0.5">
+                {player.fullName}
+              </h1>
+
+              <div className="flex items-center gap-2 text-xs sm:text-sm text-[var(--text-secondary)] mt-1 truncate">
+                {currentClub && (
+                  <Link
+                    href={`/clubs/${getClubSlug(currentClub)}`}
+                    className="flex items-center gap-1.5 hover:text-[var(--accent)] transition-colors truncate"
+                  >
+                    {currentClub.logoUrl && (
+                      <span className="relative w-4 h-4 shrink-0 inline-block overflow-hidden">
+                        <EntityImage
+                          src={currentClub.logoUrl}
+                          alt=""
+                          fill
+                          sizes="16px"
+                          entityType="club"
+                          className="object-contain"
+                        />
+                      </span>
+                    )}
+                    <span className="font-semibold">{clubShort}</span>
+                  </Link>
+                )}
+                {clubShort && age && <span>•</span>}
+                {age && <span>{age} yrs</span>}
+              </div>
+            </div>
           </div>
-          {changeLine && <div className="mt-0.5">{changeLine}</div>}
-          {updateAgeText && (
-            <div
-              className="text-[13px] font-normal mt-0.5"
-              style={{ color: "var(--color-text-secondary)" }}
-            >
-              {updateAgeText}
+
+          {/* Current Market Value large in amber with trend arrow + % */}
+          {currentVal > 0 && (
+            <div className="w-full sm:w-auto p-3.5 sm:p-4 rounded-2xl bg-[var(--bg-elevated)] flex flex-col sm:items-end justify-center shrink-0">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)]">
+                Current Market Value
+              </span>
+              <div className="text-2xl sm:text-3xl font-black text-[var(--value-text)] tabular-nums tracking-tight mt-0.5">
+                {formatCompactEur(currentVal)}
+              </div>
+              {changeElement && <div className="mt-1">{changeElement}</div>}
+              {updateAgeText && (
+                <span className="text-[11px] text-[var(--text-muted)] mt-0.5 font-medium">
+                  {updateAgeText}
+                </span>
+              )}
             </div>
           )}
         </div>
-      )}
+      </Card>
 
-      {/* 3. Section "Value history": one line chart with peak marked and caption "Peak €180M". */}
-      {mvs.length > 0 && (
-        <section>
-          <SectionHeader title="Value history" />
-          <MarketValueChart
-            data={mvs}
-            playerName={player.fullName}
-            dateOfBirth={validDob}
-          />
-        </section>
-      )}
-
-      {/* 4. Section "Key facts": KeyFacts rows */}
-      <section>
-        <SectionHeader title="Key facts" />
-        <KeyFacts items={keyFactsItems} />
-      </section>
-
-      {/* 5. Section "Season stats": shown only when data exists */}
-      {Array.isArray(player.seasonStats) && player.seasonStats.length > 0 && (
-        <section>
-          <SectionHeader title="Season stats" />
-          <div
-            className="rounded-[12px] p-4 overflow-hidden"
-            style={{
-              backgroundColor: "var(--color-surface)",
-              borderColor: "var(--color-border)",
-              borderWidth: "1px",
-            }}
-          >
-            <StatsTable stats={player.seasonStats} />
-          </div>
-        </section>
-      )}
-
-      {/* Transfers (shown only when data exists) */}
-      {Array.isArray(player.transfers) && player.transfers.length > 0 && (
-        <section>
-          <SectionHeader title="Transfers" />
-          <div
-            className="rounded-[12px] p-4 overflow-hidden"
-            style={{
-              backgroundColor: "var(--color-surface)",
-              borderColor: "var(--color-border)",
-              borderWidth: "1px",
-            }}
-          >
-            <TransfersTable transfers={player.transfers} />
-          </div>
-        </section>
-      )}
-
-      {/* Injuries (shown only when data exists) */}
-      {Array.isArray(player.injuries) && player.injuries.length > 0 && (
-        <section>
-          <SectionHeader title="Injuries" />
-          <div
-            className="rounded-[12px] p-4 overflow-hidden"
-            style={{
-              backgroundColor: "var(--color-surface)",
-              borderColor: "var(--color-border)",
-              borderWidth: "1px",
-            }}
-          >
-            <InjuriesTable injuries={player.injuries} />
-          </div>
-        </section>
-      )}
+      {/* 2. Tabs: Overview, Transfers, Value history */}
+      <PlayerTabsContainer
+        keyFactsItems={keyFactsItems}
+        mvs={mvs}
+        playerName={player.fullName}
+        dateOfBirth={validDob}
+        seasonStats={player.seasonStats}
+        transfers={player.transfers}
+        injuries={player.injuries}
+      />
     </div>
   );
 }

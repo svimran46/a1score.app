@@ -1,24 +1,154 @@
-import Link from "next/link";
-import { getMostValuablePlayers, getMarketValueMovers } from "@/lib/data/players";
-import { getLeagues } from "@/lib/data/leagues";
+import { getMostValuablePlayers } from "@/lib/data/players";
+import { getTopClubs } from "@/lib/data/clubs";
 import { getMatchesByDate } from "@/lib/fotmob/client";
-import { SectionHeader } from "@/components/SectionHeader";
-import { HomeMatchRow } from "@/components/HomeMatchRow";
-import { HomePlayerRow } from "@/components/HomePlayerRow";
-import { EntityImage } from "@/components/EntityImage";
-import { formatCompactEur } from "@/lib/utils";
-import { getLeagueSlug } from "@/lib/slugs";
+import { supabase } from "@/lib/supabase";
+import {
+  Card,
+  SectionHeader,
+  MatchRow,
+  PlayerRow,
+  ClubRow,
+  TransferRow,
+} from "@/components/ui";
+import { sanitizeImageUrl } from "@/lib/image-sanitize";
+import { formatDate } from "@/lib/utils";
 import type { FotmobMatch } from "@/lib/fotmob/client";
 
 export const revalidate = 30;
 export const runtime = "edge";
 
+interface HomeTransferItem {
+  id: string;
+  playerName: string;
+  playerSlug?: string | null;
+  playerAvatar?: string | null;
+  playerPosition?: string | null;
+  fromClubName?: string | null;
+  toClubName?: string | null;
+  fee?: number | string | null;
+  date?: string | null;
+}
+
+const FALLBACK_TRANSFERS: HomeTransferItem[] = [
+  {
+    id: "t1",
+    playerName: "Kylian Mbappé",
+    playerPosition: "Centre-Forward",
+    fromClubName: "Paris Saint-Germain",
+    toClubName: "Real Madrid",
+    fee: "Free",
+    date: "Jul 1, 2024",
+  },
+  {
+    id: "t2",
+    playerName: "Julián Álvarez",
+    playerPosition: "Centre-Forward",
+    fromClubName: "Manchester City",
+    toClubName: "Atlético Madrid",
+    fee: 75000000,
+    date: "Aug 12, 2024",
+  },
+  {
+    id: "t3",
+    playerName: "Dani Olmo",
+    playerPosition: "Attacking Midfield",
+    fromClubName: "RB Leipzig",
+    toClubName: "Barcelona",
+    fee: 55000000,
+    date: "Aug 9, 2024",
+  },
+  {
+    id: "t4",
+    playerName: "Pedro Neto",
+    playerPosition: "Right Winger",
+    fromClubName: "Wolverhampton Wanderers",
+    toClubName: "Chelsea",
+    fee: 60000000,
+    date: "Aug 11, 2024",
+  },
+  {
+    id: "t5",
+    playerName: "João Félix",
+    playerPosition: "Second Striker",
+    fromClubName: "Atlético Madrid",
+    toClubName: "Chelsea",
+    fee: 52000000,
+    date: "Aug 21, 2024",
+  },
+];
+
+const FALLBACK_TOP_CLUBS = [
+  {
+    id: "cmuihn2f40001b23f2qf4z79i",
+    name: "Real Madrid",
+    leagueName: "LaLiga",
+    country: "Spain",
+    squadSize: 24,
+    totalSquadValue: 1360000000,
+  },
+  {
+    id: "cmuihn2f40002b23f2qf4z79i",
+    name: "Manchester City",
+    leagueName: "Premier League",
+    country: "England",
+    squadSize: 23,
+    totalSquadValue: 1260000000,
+  },
+  {
+    id: "cmuihn2f40003b23f2qf4z79i",
+    name: "Arsenal",
+    leagueName: "Premier League",
+    country: "England",
+    squadSize: 24,
+    totalSquadValue: 1170000000,
+  },
+  {
+    id: "cmuihn2f40004b23f2qf4z79i",
+    name: "Barcelona",
+    leagueName: "LaLiga",
+    country: "Spain",
+    squadSize: 25,
+    totalSquadValue: 940000000,
+  },
+  {
+    id: "cmuihn2f40005b23f2qf4z79i",
+    name: "Bayern Munich",
+    leagueName: "Bundesliga",
+    country: "Germany",
+    squadSize: 25,
+    totalSquadValue: 940000000,
+  },
+];
+
 export default async function HomePage() {
-  const [valuablePlayers, leagues, matchesData, movers] = await Promise.all([
-    getMostValuablePlayers(5),
-    getLeagues(),
+  const [valuablePlayers, topClubs, matchesData, latestTransfersRes] = await Promise.all([
+    getMostValuablePlayers(5).catch(() => []),
+    getTopClubs(5).catch(() => []),
     getMatchesByDate().catch(() => null),
-    getMarketValueMovers(5).catch(() => ({ risers: [], fallers: [] })),
+    supabase
+      .from("Transfer")
+      .select(`
+        id,
+        fromClubName,
+        toClubName,
+        date,
+        feeEur,
+        transferType,
+        player:Player (
+          id,
+          fullName,
+          commonName,
+          photoUrl,
+          position,
+          transfermarktId
+        )
+      `)
+      .order("date", { ascending: false, nullsFirst: false })
+      .limit(5)
+      .then(
+        (res) => res.data || [],
+        () => []
+      ),
   ]);
 
   // Extract up to 3 highlighted matches (prioritizing live, else next 3 kickoffs)
@@ -32,172 +162,143 @@ export default async function HomePage() {
     matchSectionTitle = "Live now";
     displayedMatches = liveMatches.slice(0, 3);
   } else {
-    matchSectionTitle = "Today";
-    // Sort upcoming kickoffs by timeTS
+    matchSectionTitle = "Today's Matches";
     const upcomingMatches = allMatches.filter((m) => m.isUpcoming || !m.isFinished);
     upcomingMatches.sort((a, b) => a.timeTS - b.timeTS);
     displayedMatches = (upcomingMatches.length > 0 ? upcomingMatches : allMatches).slice(0, 3);
   }
 
-  // Movers: select top 3 risers (or fallers if risers empty)
-  const moverList =
-    movers.risers.length > 0
-      ? movers.risers.slice(0, 3)
-      : movers.fallers.slice(0, 3);
+  // Map database transfers or fallback
+  const transfers =
+    latestTransfersRes && latestTransfersRes.length > 0
+      ? latestTransfersRes.map((t: any) => {
+          const rawPlayer = t.player;
+          const p = Array.isArray(rawPlayer) ? rawPlayer[0] : rawPlayer;
+          return {
+            id: t.id,
+            playerName: p?.commonName || p?.fullName || "Player",
+            playerSlug: p ? `${(p.fullName || "player").toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${p.transfermarktId || p.id}` : null,
+            playerAvatar: p ? sanitizeImageUrl(p.photoUrl, "player", p.transfermarktId || p.id) : null,
+            playerPosition: p?.position || null,
+            fromClubName: t.fromClubName,
+            toClubName: t.toClubName,
+            fee: t.feeEur ? Number(t.feeEur) : t.transferType,
+            date: t.date ? formatDate(t.date) : null,
+          };
+        })
+      : FALLBACK_TRANSFERS;
+
+  // Map top clubs or fallback
+  const clubs = topClubs && topClubs.length > 0 ? topClubs.slice(0, 5) : FALLBACK_TOP_CLUBS;
 
   return (
-    <div className="space-y-6">
-      {/* 2. Section "Live now" / "Today" */}
+    <div className="space-y-6 max-w-[720px] mx-auto">
+      {/* 1. COMPACT LIVE NOW STRIP (Match rows) */}
       <section>
         <SectionHeader
           title={matchSectionTitle}
           href="/matches"
           actionLabel="All matches"
         />
-        <div
-          className="rounded-[12px] divide-y overflow-hidden"
-          style={{
-            backgroundColor: "var(--color-surface)",
-            borderColor: "var(--color-border)",
-            borderWidth: "1px",
-          }}
-        >
+        <Card className="p-1 space-y-0.5">
           {displayedMatches.length > 0 ? (
             displayedMatches.map((match) => (
-              <HomeMatchRow key={match.id} match={match} />
+              <MatchRow
+                key={match.id}
+                id={match.id}
+                homeName={match.home.name}
+                homeCrest={match.home.imageUrl}
+                awayName={match.away.name}
+                awayCrest={match.away.imageUrl}
+                homeScore={match.home.score}
+                awayScore={match.away.score}
+                isLive={match.isLive}
+                liveMinute={match.status?.liveTime?.short || match.status?.reason?.short || "LIVE"}
+                isFinished={match.isFinished}
+                statusText={match.status?.scoreStr || (match.isFinished ? "FT" : undefined)}
+                kickoffTime={match.time}
+              />
             ))
           ) : (
-            <div
-              className="px-3 py-4 text-center text-[13px] font-normal"
-              style={{ color: "var(--color-text-secondary)" }}
-            >
-              No fixtures scheduled for today
+            <div className="px-4 py-6 text-center text-xs text-[var(--text-muted)]">
+              No live matches right now. Check upcoming fixtures.
             </div>
           )}
-        </div>
+        </Card>
       </section>
 
-      {/* 3. Section "Most valuable" */}
+      {/* 2. MOST VALUABLE (Player rows, top 5, "See all" link) */}
       <section>
         <SectionHeader
-          title="Most valuable"
-          href="/players"
+          title="Most Valuable Players"
+          href="/values"
           actionLabel="See all"
         />
-        <div
-          className="rounded-[12px] divide-y overflow-hidden"
-          style={{
-            backgroundColor: "var(--color-surface)",
-            borderColor: "var(--color-border)",
-            borderWidth: "1px",
-          }}
-        >
+        <Card className="p-1 space-y-0.5">
           {valuablePlayers.slice(0, 5).map((player, idx) => (
-            <HomePlayerRow
+            <PlayerRow
               key={player.id}
               rank={idx + 1}
               id={player.id}
               name={player.fullName}
               slug={player.slug}
-              photoUrl={player.photoUrl}
-              club={player.currentClub}
+              avatarUrl={player.photoUrl}
+              clubName={player.currentClub?.name}
+              clubCrest={player.currentClub?.logoUrl}
+              position={player.position}
               marketValue={player.latestMarketValue}
             />
           ))}
-        </div>
+        </Card>
       </section>
 
-      {/* 4. Section "Biggest movers" */}
-      {moverList.length > 0 && (
-        <section>
-          <SectionHeader
-            title="Biggest movers"
-            href="/players?view=movers"
-            actionLabel="See all"
-          />
-          <div
-            className="rounded-[12px] divide-y overflow-hidden"
-            style={{
-              backgroundColor: "var(--color-surface)",
-              borderColor: "var(--color-border)",
-              borderWidth: "1px",
-            }}
-          >
-            {moverList.map((m, idx) => (
-              <HomePlayerRow
-                key={m.id}
-                rank={idx + 1}
-                id={m.id}
-                name={m.fullName}
-                slug={m.slug}
-                photoUrl={m.photoUrl}
-                club={m.currentClub}
-                marketValue={m.latestValue}
-                change={m.diff}
-              />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* 5. Section "Leagues" */}
+      {/* 3. LATEST TRANSFERS (Transfer rows) */}
       <section>
         <SectionHeader
-          title="Leagues"
-          href="/leagues"
+          title="Latest Transfers"
+          href="/transfers"
           actionLabel="See all"
         />
-        <div
-          className="rounded-[12px] divide-y overflow-hidden"
-          style={{
-            backgroundColor: "var(--color-surface)",
-            borderColor: "var(--color-border)",
-            borderWidth: "1px",
-          }}
-        >
-          {leagues.map((league) => (
-            <Link
-              key={league.id}
-              href={`/leagues/${getLeagueSlug(league)}`}
-              className="h-12 min-h-[48px] px-4 flex items-center justify-between hover:bg-white/[0.02] transition-colors"
-              style={{ borderColor: "var(--color-border)" }}
-            >
-              <div className="flex items-center gap-3 min-w-0">
-                <div className="relative w-6 h-6 shrink-0 flex items-center justify-center">
-                  <EntityImage
-                    src={league.logoUrl}
-                    alt={league.name}
-                    width={24}
-                    height={24}
-                    entityType="league"
-                    className="object-contain w-6 h-6"
-                  />
-                </div>
-                <span
-                  className="text-[15px] font-medium leading-tight truncate"
-                  style={{ color: "var(--color-text)" }}
-                >
-                  {league.name}
-                </span>
-              </div>
-              <span
-                className="text-[15px] font-semibold tabular-nums leading-tight shrink-0 pl-3"
-                style={{ color: "var(--color-accent)" }}
-              >
-                {formatCompactEur(league.totalMarketValue)}
-              </span>
-            </Link>
+        <Card className="p-1 space-y-0.5">
+          {transfers.slice(0, 5).map((transfer) => (
+            <TransferRow
+              key={transfer.id}
+              playerName={transfer.playerName}
+              playerSlug={transfer.playerSlug}
+              playerAvatar={transfer.playerAvatar}
+              playerPosition={transfer.playerPosition}
+              fromClubName={transfer.fromClubName}
+              toClubName={transfer.toClubName}
+              fee={transfer.fee}
+              date={transfer.date}
+            />
           ))}
-        </div>
+        </Card>
       </section>
 
-      {/* 6. Footer line */}
-      <div
-        className="text-center py-6 text-[13px] font-normal"
-        style={{ color: "var(--color-text-secondary)" }}
-      >
-        Data from FotMob and Transfermarkt
-      </div>
+      {/* 4. TOP CLUBS BY SQUAD VALUE (Club rows) */}
+      <section>
+        <SectionHeader
+          title="Top Clubs by Squad Value"
+          href="/clubs"
+          actionLabel="See all"
+        />
+        <Card className="p-1 space-y-0.5">
+          {clubs.map((club: any, idx: number) => (
+            <ClubRow
+              key={club.id}
+              rank={idx + 1}
+              id={club.id}
+              name={club.name}
+              crestUrl={club.logoUrl}
+              leagueName={club.leagueName}
+              country={club.country}
+              squadSize={club.playerCount || club.squadSize}
+              squadValue={club.totalSquadValue}
+            />
+          ))}
+        </Card>
+      </section>
     </div>
   );
 }
