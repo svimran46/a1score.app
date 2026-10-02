@@ -10,6 +10,8 @@ import { getClubSlug, getLeagueSlug } from "@/lib/slugs";
 import { Users, Trophy, Globe, Clock } from "lucide-react";
 import { ClubTabsContainer } from "@/components/ClubTabsContainer";
 import { ClubHonoursStatStrip } from "@/components/ClubHonoursStatStrip";
+import { RelatedNewsCard } from "@/components/news/RelatedNewsCard";
+import { getRelatedNews } from "@/lib/data/news";
 import { Card } from "@/components/ui";
 
 import { constructMetadata, SITE_URL } from "@/lib/metadata";
@@ -87,10 +89,11 @@ export default async function ClubPage({ params }: ClubPageProps) {
     }
   }
 
-  const [transfersData, fotmobDetails, clubHonours] = await Promise.all([
+  const [transfersData, fotmobDetails, clubHonours, relatedNews] = await Promise.all([
     getClubTransfers(club.name),
     fotmobTeamId ? getFotmobTeamDetails(fotmobTeamId).catch(() => null) : Promise.resolve(null),
     getClubHonours(club.id, club.name),
+    getRelatedNews([club.name, getClubDisplayName(club)], 3).catch(() => []),
   ]);
 
   const seniorSquad = club.firstTeamPlayers && club.firstTeamPlayers.length > 0
@@ -227,6 +230,11 @@ export default async function ClubPage({ params }: ClubPageProps) {
         transfersData={transfersData}
         leagueName={club.league?.name}
       />
+
+      {/* Related News Card */}
+      {relatedNews && relatedNews.length > 0 && (
+        <RelatedNewsCard items={relatedNews} title={`${getClubDisplayName(club)} news`} />
+      )}
     </div>
   );
 }

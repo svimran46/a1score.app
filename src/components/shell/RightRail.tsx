@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { TrendingUp, TrendingDown, ArrowRight, Newspaper } from "lucide-react";
+import { TrendingUp, TrendingDown, ArrowRight, Newspaper, ExternalLink } from "lucide-react";
 import { formatCompactEur } from "@/lib/utils";
+import { NewsItem } from "@/types/news";
+import { formatRelativeTime } from "@/lib/data/news";
 
 export interface MoverItem {
   id: string;
@@ -160,7 +162,13 @@ const NEWS_PLACEHOLDERS = [
   },
 ];
 
-export function RightRail({ movers }: { movers?: MoversData }) {
+export function RightRail({
+  movers,
+  news,
+}: {
+  movers?: MoversData;
+  news?: NewsItem[];
+}) {
   const [activeTab, setActiveTab] = useState<"risers" | "fallers">("risers");
 
   const effectiveRisers =
@@ -169,6 +177,7 @@ export function RightRail({ movers }: { movers?: MoversData }) {
     movers?.fallers && movers.fallers.length > 0 ? movers.fallers.slice(0, 5) : DEFAULT_MOVERS.fallers;
 
   const currentMovers = activeTab === "risers" ? effectiveRisers : effectiveFallers;
+  const displayNews = news && news.length > 0 ? news.slice(0, 4) : null;
 
   return (
     <aside aria-label="News and market value movers" className="flex flex-col gap-4 w-full">
@@ -191,23 +200,49 @@ export function RightRail({ movers }: { movers?: MoversData }) {
         </div>
 
         <div className="flex flex-col space-y-2">
-          {NEWS_PLACEHOLDERS.map((item, idx) => (
-            <Link
-              key={idx}
-              href="/news"
-              className="group block p-2.5 -mx-2.5 rounded-xl hover:bg-[var(--bg-hover)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
-            >
-              <div className="text-[10px] font-bold uppercase tracking-wider text-[var(--accent)]">
-                {item.tag}
-              </div>
-              <div className="text-xs font-semibold text-[var(--text-primary)] group-hover:text-[var(--accent)] line-clamp-2 mt-0.5 leading-snug transition-colors">
-                {item.title}
-              </div>
-              <div className="text-[10px] text-[var(--text-muted)] mt-1">
-                {item.time}
-              </div>
-            </Link>
-          ))}
+          {displayNews
+            ? displayNews.map((item) => (
+                <a
+                  key={item.id}
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group block p-2.5 -mx-2.5 rounded-xl hover:bg-[var(--bg-hover)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
+                >
+                  <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-[var(--value-text)]">
+                    <span className="truncate max-w-[170px]">
+                      {item.entityTags?.[0]?.name || item.tags?.[0] || "Football"}
+                    </span>
+                    <span className="text-[var(--text-muted)] font-normal shrink-0">
+                      {formatRelativeTime(item.publishedAt)}
+                    </span>
+                  </div>
+                  <div className="text-xs font-semibold text-[var(--text-primary)] group-hover:text-[var(--accent)] line-clamp-2 mt-0.5 leading-snug transition-colors">
+                    {item.title}
+                  </div>
+                  <div className="flex items-center justify-between text-[10px] text-[var(--text-muted)] mt-1">
+                    <span>{item.source}</span>
+                    <ExternalLink className="w-2.5 h-2.5 opacity-60 group-hover:text-[var(--accent)] transition-colors" />
+                  </div>
+                </a>
+              ))
+            : NEWS_PLACEHOLDERS.map((item, idx) => (
+                <Link
+                  key={idx}
+                  href="/news"
+                  className="group block p-2.5 -mx-2.5 rounded-xl hover:bg-[var(--bg-hover)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
+                >
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-[var(--accent)]">
+                    {item.tag}
+                  </div>
+                  <div className="text-xs font-semibold text-[var(--text-primary)] group-hover:text-[var(--accent)] line-clamp-2 mt-0.5 leading-snug transition-colors">
+                    {item.title}
+                  </div>
+                  <div className="text-[10px] text-[var(--text-muted)] mt-1">
+                    {item.time}
+                  </div>
+                </Link>
+              ))}
         </div>
       </div>
 

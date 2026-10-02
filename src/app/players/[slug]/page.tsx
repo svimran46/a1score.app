@@ -8,6 +8,7 @@ import { getClubSlug } from "@/lib/slugs";
 import { constructMetadata } from "@/lib/metadata";
 import { Card } from "@/components/ui";
 import { PlayerTabsContainer } from "@/components/PlayerTabsContainer";
+import { getRelatedNews } from "@/lib/data/news";
 import type { Metadata } from "next";
 
 export const revalidate = 3600; // ISR revalidation every hour
@@ -59,6 +60,9 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
   const rawClub = player.currentClub;
   const currentClub = Array.isArray(rawClub) ? rawClub[0] || null : rawClub || null;
   const clubShort = currentClub ? getClubShortName(currentClub.shortName || currentClub.name || "") : null;
+
+  const tagsToMatch = [player.fullName, player.commonName, currentClub?.name].filter(Boolean) as string[];
+  const relatedNews = await getRelatedNews(tagsToMatch, 3).catch(() => []);
 
   const validDob =
     player.dateOfBirth && !isNaN(new Date(player.dateOfBirth).getTime())
@@ -215,6 +219,7 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
         seasonStats={player.seasonStats}
         transfers={player.transfers}
         injuries={player.injuries}
+        relatedNews={relatedNews}
       />
     </div>
   );

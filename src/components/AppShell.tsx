@@ -1,6 +1,7 @@
 import React from "react";
 import { getLeagues } from "@/lib/data/leagues";
 import { getMarketValueMovers } from "@/lib/data/players";
+import { getNews } from "@/lib/data/news";
 import { TopNav } from "@/components/shell/TopNav";
 import { LeftRail } from "@/components/shell/LeftRail";
 import { TabletLeaguesScroller } from "@/components/shell/TabletLeaguesScroller";
@@ -10,9 +11,10 @@ import { PwaInstallPrompt } from "@/components/PwaInstallPrompt";
 import { Footer } from "@/components/Footer";
 
 export async function AppShell({ children }: { children: React.ReactNode }) {
-  const [leagues, movers] = await Promise.all([
+  const [leagues, movers, news] = await Promise.all([
     getLeagues().catch(() => []),
     getMarketValueMovers(5).catch(() => ({ risers: [], fallers: [] })),
+    getNews().then((items) => items.slice(0, 4)).catch(() => []),
   ]);
 
   return (
@@ -39,13 +41,13 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
 
             {/* Below Content Rail on Mobile & Tablet (< 1024px) */}
             <div className="lg:hidden mt-8">
-              <RightRail movers={movers} />
+              <RightRail movers={movers} news={news} />
             </div>
           </main>
 
           {/* Right Rail (Desktop >= 1024px) */}
           <div className="hidden lg:block shrink-0">
-            <RightRail movers={movers} />
+            <RightRail movers={movers} news={news} />
           </div>
         </div>
       </div>

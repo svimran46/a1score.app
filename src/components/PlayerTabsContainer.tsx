@@ -8,6 +8,8 @@ import { TransfersTable } from "@/components/TransfersTable";
 import { StatsTable } from "@/components/StatsTable";
 import { InjuriesTable } from "@/components/InjuriesTable";
 import { SectionHeader } from "@/components/SectionHeader";
+import { RelatedNewsCard } from "@/components/news/RelatedNewsCard";
+import type { NewsItem } from "@/types/news";
 import { User, ArrowRightLeft, TrendingUp } from "lucide-react";
 
 interface PlayerTabsContainerProps {
@@ -18,6 +20,7 @@ interface PlayerTabsContainerProps {
   seasonStats?: any[];
   transfers?: any[];
   injuries?: any[];
+  relatedNews?: NewsItem[];
 }
 
 export function PlayerTabsContainer({
@@ -28,6 +31,7 @@ export function PlayerTabsContainer({
   seasonStats = [],
   transfers = [],
   injuries = [],
+  relatedNews = [],
 }: PlayerTabsContainerProps) {
   const [activeTab, setActiveTab] = useState<"overview" | "transfers" | "value">("overview");
 
@@ -77,6 +81,10 @@ export function PlayerTabsContainer({
               <SectionHeader title="Injuries" />
               <InjuriesTable injuries={injuries} />
             </section>
+          )}
+
+          {relatedNews.length > 0 && (
+            <RelatedNewsCard items={relatedNews} title="Related news" />
           )}
         </div>
       )}
