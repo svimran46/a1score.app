@@ -74,6 +74,28 @@ const ALIASES: Record<string, string> = {
   "psv eindhoven": "PSV Eindhoven",
   "psg": "Paris Saint-Germain",
   "paris saint-germain": "Paris Saint-Germain",
+
+  // Spanish clubs
+  "atletico de madrid": "Atlético de Madrid",
+  "atlético de madrid": "Atlético de Madrid",
+  "atletico madrid": "Atlético de Madrid",
+  "atlético aviación": "Atlético de Madrid",
+  "atletico aviacion": "Atlético de Madrid",
+  "athletic bilbao": "Athletic Bilbao",
+  "athletic club": "Athletic Bilbao",
+  "athletic de bilbao": "Athletic Bilbao",
+  "real betis": "Real Betis Balompié",
+  "real betis balompié": "Real Betis Balompié",
+  "betis": "Real Betis Balompié",
+  "valencia": "Valencia CF",
+  "valencia cf": "Valencia CF",
+  "sevilla": "Sevilla FC",
+  "sevilla fc": "Sevilla FC",
+  "real sociedad": "Real Sociedad",
+  "deportivo": "Deportivo de La Coruña",
+  "deportivo la coruña": "Deportivo de La Coruña",
+  "deportivo de la coruña": "Deportivo de La Coruña",
+  "rc deportivo de la coruña": "Deportivo de La Coruña",
 };
 
 interface ImportCompetitionConfig {
@@ -203,6 +225,14 @@ async function main() {
     label: "Champions League",
     note: "Includes European Cup, 1955/56 to 1991/92",
     csvFile: "data/winners/champions-league.csv",
+  });
+
+  // 3. LaLiga
+  await importCompetition({
+    key: "la-liga",
+    label: "Spanish league titles",
+    note: "Includes Atlético Aviación (1939/40, 1940/41)",
+    csvFile: "data/winners/la-liga.csv",
   });
 }
 
