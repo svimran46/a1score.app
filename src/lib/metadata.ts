@@ -43,11 +43,14 @@ export function getEffectiveSiteUrl(): string {
 }
 
 /**
- * Ensures title format is always strictly: "Page Title | a1score.app"
- * Strips any pre-existing "| a1score.app" suffixes to prevent duplicates.
+ * Ensures title format preserves "| a1score" or "| a1score.app" cleanly without duplicates.
  */
 export function formatTitle(title: string): string {
-  const cleanTitle = title.trim().replace(/\s*\|\s*a1score\.app$/i, "").trim();
+  const trimmed = title.trim();
+  if (/\s*\|\s*a1score$/i.test(trimmed)) {
+    return trimmed;
+  }
+  const cleanTitle = trimmed.replace(/\s*\|\s*a1score\.app$/i, "").trim();
   return `${cleanTitle} | a1score.app`;
 }
 

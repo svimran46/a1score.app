@@ -12,7 +12,7 @@ import { ClubTabsContainer } from "@/components/ClubTabsContainer";
 import { ClubHonoursStatStrip } from "@/components/ClubHonoursStatStrip";
 import { RelatedNewsCard } from "@/components/news/RelatedNewsCard";
 import { getRelatedNews } from "@/lib/data/news";
-import { Card, ValuationFreshness } from "@/components/ui";
+import { Card, ValuationFreshness, Breadcrumbs } from "@/components/ui";
 
 import { constructMetadata, SITE_URL } from "@/lib/metadata";
 import type { Metadata } from "next";
@@ -30,17 +30,20 @@ export async function generateMetadata({ params }: ClubPageProps): Promise<Metad
   const league = await getLeagueById(params.id);
   if (league) {
     const canonicalSlug = getLeagueSlug(league);
+    const rawLeagueTitle = `${league.name} clubs, players and market values | a1score`;
+    const leagueDesc = `${league.name} standings, ${league.clubCount} clubs, top players, and squad market values. See table and financial analytics.`;
     return constructMetadata({
-      title: `${league.name} — Standings, Club Valuations & Stats`,
-      description: `${league.name} standings, participating clubs, and squad market valuation analytics on a1score.app.`,
+      title: rawLeagueTitle,
+      description: leagueDesc.length > 155 ? leagueDesc.slice(0, 152) + "..." : leagueDesc,
       path: `/leagues/${canonicalSlug}`,
+      image: league.logoUrl || undefined,
     });
   }
 
   const club = await getClubById(params.id);
   if (!club) {
     return constructMetadata({
-      title: "Club Not Found",
+      title: "Club Not Found | a1score",
       description: "The requested football club profile could not be located.",
       path: `/clubs/${params.id}`,
     });
@@ -50,10 +53,14 @@ export async function generateMetadata({ params }: ClubPageProps): Promise<Metad
     ? formatCompactEur(club.totalSquadValue)
     : "Valuation pending";
   const canonicalSlug = getClubSlug(club);
+  const squadCount = club.squadSize || club.seniorSquad?.length || 0;
+
+  const rawClubTitle = `${club.name} squad value, players and transfers | a1score`;
+  const clubDesc = `${club.name} squad is valued at ${formattedVal}${squadCount ? ` with ${squadCount} players` : ""}. See squad value, player profiles, and transfer history.`;
 
   return constructMetadata({
-    title: `${club.name} — Squad Market Value (${formattedVal}), Roster & Stats`,
-    description: `Senior squad market valuations, player profiles, and financial analytics for ${club.name}. Total squad valuation: ${formattedVal} on a1score.app.`,
+    title: rawClubTitle,
+    description: clubDesc.length > 155 ? clubDesc.slice(0, 152) + "..." : clubDesc,
     path: `/clubs/${canonicalSlug}`,
     image: club.logoUrl || undefined,
   });
@@ -113,7 +120,7 @@ export default async function ClubPage({ params }: ClubPageProps) {
       ? {
           "@type": "SportsOrganization",
           name: club.league.name,
-          url: `${SITE_URL}/leagues/${club.league.id}`,
+          url: `${SITE_URL}/leagues/${getLeagueSlug(club.league)}`,
         }
       : undefined,
     member: seniorSquad.slice(0, 30).map((p: any) => ({
@@ -133,6 +140,12 @@ export default async function ClubPage({ params }: ClubPageProps) {
     ],
   };
 
+  const breadcrumbItems = [
+    { label: "Home", href: "/" },
+    { label: "Clubs", href: "/clubs" },
+    { label: club.name },
+  ];
+
   return (
     <div className="space-y-4 max-w-[720px] mx-auto">
       <script
@@ -143,6 +156,7 @@ export default async function ClubPage({ params }: ClubPageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
+      <Breadcrumbs items={breadcrumbItems} />
 
       {/* Club Header Card */}
       <Card className="p-4 sm:p-5">

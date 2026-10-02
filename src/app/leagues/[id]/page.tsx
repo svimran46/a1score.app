@@ -3,12 +3,13 @@ import { EntityImage } from "@/components/EntityImage";
 import Link from "next/link";
 import { getLeagueById } from "@/lib/data/leagues";
 import { formatCompactEur, formatDate } from "@/lib/utils";
-import { getLeagueSlug } from "@/lib/slugs";
+import { getLeagueSlug, getClubSlug } from "@/lib/slugs";
 import { Trophy, Clock } from "lucide-react";
 import { LeagueFinancialParity } from "@/components/LeagueFinancialParity";
 import { LeagueStandingsTable } from "@/components/LeagueStandingsTable";
 import { LeagueLeaders } from "@/components/LeagueLeaders";
 import { constructMetadata, SITE_URL } from "@/lib/metadata";
+import { Breadcrumbs } from "@/components/ui";
 import type { Metadata } from "next";
 
 export const revalidate = 3600;
@@ -24,17 +25,19 @@ export async function generateMetadata({ params }: LeaguePageProps): Promise<Met
   const league = await getLeagueById(params.id);
   if (!league) {
     return constructMetadata({
-      title: "Competition Not Found",
+      title: "Competition Not Found | a1score",
       description: "The requested football competition could not be located.",
       path: `/leagues/${params.id}`,
     });
   }
 
   const canonicalSlug = getLeagueSlug(league);
+  const rawTitle = `${league.name} clubs, players and market values | a1score`;
+  const desc = `${league.name} standings, ${league.clubCount} clubs, top players, and squad market values. See table and financial analytics.`;
 
   return constructMetadata({
-    title: `${league.name} — Standings, Club Valuations & Stats`,
-    description: `${league.name} standings (${league.season || "2026/2027"}), competition table, ${league.clubCount} participating clubs, and squad market valuation analytics on a1score.app.`,
+    title: rawTitle,
+    description: desc.length > 155 ? desc.slice(0, 152) + "..." : desc,
     path: `/leagues/${canonicalSlug}`,
     image: league.logoUrl || undefined,
   });
@@ -65,7 +68,7 @@ export default async function LeaguePage({ params }: LeaguePageProps) {
     subOrganization: league.clubs?.slice(0, 30).map((c) => ({
       "@type": "SportsTeam",
       name: c.name,
-      url: `${SITE_URL}/clubs/${c.id}`,
+      url: `${SITE_URL}/clubs/${getClubSlug(c)}`,
     })),
   };
 
@@ -79,8 +82,14 @@ export default async function LeaguePage({ params }: LeaguePageProps) {
     ],
   };
 
+  const breadcrumbItems = [
+    { label: "Home", href: "/" },
+    { label: "Leagues", href: "/leagues" },
+    { label: league.name },
+  ];
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-4">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -89,6 +98,7 @@ export default async function LeaguePage({ params }: LeaguePageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
+      <Breadcrumbs items={breadcrumbItems} />
 
       {/* League Header */}
       <div className="rounded-3xl glass-panel p-6 sm:p-8 border border-slate-800 bg-slate-900/40">

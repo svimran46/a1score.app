@@ -8,9 +8,9 @@ export const revalidate = 3600;
 export const runtime = "edge";
 
 export const metadata: Metadata = constructMetadata({
-  title: "Football Market Values — Worldwide Valuations & Movers",
+  title: "Most valuable football players | a1score",
   description:
-    "Official player valuations, biggest market value risers & fallers, and financial rankings on a1score.app.",
+    "Browse the most valuable football players worldwide, latest market value updates, top risers, and financial rankings on a1score.",
   path: "/values",
 });
 

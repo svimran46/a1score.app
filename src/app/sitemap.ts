@@ -1,6 +1,6 @@
 import { MetadataRoute } from "next";
-import { getTopClubs } from "@/lib/data/clubs";
-import { getMostValuablePlayers } from "@/lib/data/players";
+import { getAllClubs } from "@/lib/data/clubs";
+import { supabase } from "@/lib/supabase";
 import { getEffectiveSiteUrl } from "@/lib/metadata";
 import { getClubSlug, getLeagueSlug } from "@/lib/slugs";
 
@@ -36,13 +36,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/players`,
+      url: `${baseUrl}/values`,
       lastModified: now,
       changeFrequency: "daily",
       priority: 0.85,
     },
     {
-      url: `${baseUrl}/values`,
+      url: `${baseUrl}/players`,
       lastModified: now,
       changeFrequency: "daily",
       priority: 0.85,
@@ -58,6 +58,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: now,
       changeFrequency: "daily",
       priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/news`,
+      lastModified: now,
+      changeFrequency: "hourly",
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/transfers`,
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.75,
     },
     {
       url: `${baseUrl}/methodology`,
@@ -87,35 +99,46 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.85,
   }));
 
-  // 3. Dynamic Top Clubs (Readable Slugs)
+  // 3. Dynamic All Public Clubs (Readable Slugs)
   let clubRoutes: MetadataRoute.Sitemap = [];
   try {
-    const clubs = await getTopClubs(100);
-    clubRoutes = clubs.map((c) => ({
-      url: `${baseUrl}/clubs/${getClubSlug(c)}`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.75,
-    }));
+    const clubs = await getAllClubs({ all: true });
+    if (clubs && clubs.length > 0) {
+      clubRoutes = clubs.map((c: any) => ({
+        url: `${baseUrl}/clubs/${getClubSlug(c)}`,
+        lastModified: c.lastSyncedAt ? new Date(c.lastSyncedAt) : now,
+        changeFrequency: "weekly",
+        priority: 0.75,
+      }));
+    }
   } catch (err) {
-    console.warn("[Sitemap] Failed to fetch top clubs for sitemap:", err);
+    console.warn("[Sitemap] Failed to fetch clubs for sitemap:", err);
   }
 
-  // 4. Dynamic Most Valuable Players (Readable Slugs)
+  // 4. Dynamic Public Players (Readable Slugs)
   let playerRoutes: MetadataRoute.Sitemap = [];
   try {
-    const players = await getMostValuablePlayers(120);
-    playerRoutes = players.map((p) => {
-      const slug = p.slug || `${p.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${p.sourceId || p.id}`;
-      return {
-        url: `${baseUrl}/players/${slug}`,
-        lastModified: now,
-        changeFrequency: "weekly",
-        priority: 0.7,
-      };
-    });
+    const { data: dbPlayers } = await supabase
+      .from("Player")
+      .select("id, fullName, transfermarktId, updatedAt")
+      .not("latestMarketValue", "is", null)
+      .order("latestMarketValue", { ascending: false, nullsFirst: false })
+      .limit(10000);
+
+    if (dbPlayers && dbPlayers.length > 0) {
+      playerRoutes = dbPlayers.map((p: any) => {
+        const extId = p.transfermarktId || p.id;
+        const slug = `${(p.fullName || "player").toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${extId}`;
+        return {
+          url: `${baseUrl}/players/${slug}`,
+          lastModified: p.updatedAt ? new Date(p.updatedAt) : now,
+          changeFrequency: "weekly",
+          priority: 0.7,
+        };
+      });
+    }
   } catch (err) {
-    console.warn("[Sitemap] Failed to fetch top players for sitemap:", err);
+    console.warn("[Sitemap] Failed to fetch players for sitemap:", err);
   }
 
   return [...staticRoutes, ...leagueRoutes, ...clubRoutes, ...playerRoutes];

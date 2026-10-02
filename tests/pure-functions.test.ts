@@ -189,6 +189,8 @@ test("formatTitle - formats titles cleanly without duplicate suffixes", async ()
   assert.equal(formatTitle("Premier League"), "Premier League | a1score.app");
   assert.equal(formatTitle("Premier League | a1score.app"), "Premier League | a1score.app");
   assert.equal(formatTitle("Real Madrid | a1score.app "), "Real Madrid | a1score.app");
+  assert.equal(formatTitle("Most valuable football players | a1score"), "Most valuable football players | a1score");
+  assert.equal(formatTitle("Erling Haaland market value, club and transfer history | a1score"), "Erling Haaland market value, club and transfer history | a1score");
 });
 
 test("constructMetadata - enforces canonical and og:url consistency", async () => {

@@ -143,7 +143,7 @@ export async function getPlayerBySlugOrId(slugOrId: string) {
         try {
           const { data: dbClub } = await supabase
             .from("Club")
-            .select("id, name, logoUrl")
+            .select("id, name, logoUrl, league:League ( id, name )")
             .or(`transfermarktId.eq.${livePlayer.currentClub.id},id.eq.${livePlayer.currentClub.id}`)
             .maybeSingle();
 
@@ -151,6 +151,7 @@ export async function getPlayerBySlugOrId(slugOrId: string) {
             livePlayer.currentClub.id = dbClub.id;
             livePlayer.currentClub.name = dbClub.name;
             if (dbClub.logoUrl) livePlayer.currentClub.logoUrl = dbClub.logoUrl;
+            if (dbClub.league) livePlayer.currentClub.league = dbClub.league;
           }
         } catch {
           // ignore

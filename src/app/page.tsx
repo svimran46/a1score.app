@@ -193,6 +193,7 @@ export default async function HomePage() {
 
   return (
     <div className="space-y-6 max-w-[720px] mx-auto">
+      <h1 className="sr-only">a1score — Football Market Values, Live Scores & Club Records</h1>
       {/* 1. COMPACT LIVE NOW STRIP (Match rows) */}
       <section>
         <SectionHeader

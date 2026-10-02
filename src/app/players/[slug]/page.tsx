@@ -4,9 +4,9 @@ import Link from "next/link";
 import { getPlayerBySlugOrId } from "@/lib/data/players";
 import { calculateAge, formatCompactEur, formatDate, formatUpdateAge } from "@/lib/utils";
 import { getClubShortName } from "@/lib/data/clubs";
-import { getClubSlug } from "@/lib/slugs";
-import { constructMetadata } from "@/lib/metadata";
-import { Card, ValuationFreshness } from "@/components/ui";
+import { getClubSlug, getLeagueSlug } from "@/lib/slugs";
+import { constructMetadata, SITE_URL } from "@/lib/metadata";
+import { Card, ValuationFreshness, Breadcrumbs } from "@/components/ui";
 import { PlayerTabsContainer } from "@/components/PlayerTabsContainer";
 import { getRelatedNews } from "@/lib/data/news";
 import type { Metadata } from "next";
@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: PlayerPageProps): Promise<Met
   const player = await getPlayerBySlugOrId(params.slug);
   if (!player) {
     return constructMetadata({
-      title: "Player Not Found",
+      title: "Player Not Found | a1score",
       description: "The requested football player profile could not be located.",
       path: `/players/${params.slug}`,
     });
@@ -37,9 +37,14 @@ export async function generateMetadata({ params }: PlayerPageProps): Promise<Met
   const displayName = player.fullName || "Player Profile";
   const displayPos = player.position || "Footballer";
 
+  const rawTitle = `${displayName} market value, club and transfer history | a1score`;
+  const desc = formattedVal
+    ? `${displayName} (${displayPos}, ${clubName}) is valued at ${formattedVal}. See value history, transfers and club details.`
+    : `${displayName} (${displayPos}, ${clubName}). See value history, transfers and club details.`;
+
   return constructMetadata({
-    title: `${displayName} — Market Value (${formattedVal}), Stats & Transfers`,
-    description: `${displayName} (${displayPos}) playing for ${clubName}. Current market valuation: ${formattedVal}. Career transfer history, documented season statistics, and valuation evolution chart on a1score.app.`,
+    title: rawTitle,
+    description: desc.length > 155 ? desc.slice(0, 152) + "..." : desc,
     path: `/players/${params.slug}`,
     image: player.photoUrl || undefined,
   });
@@ -129,8 +134,55 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
     },
   ];
 
+  const baseUrl = SITE_URL;
+  const canonicalUrl = `${baseUrl}/players/${params.slug}`;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: player.fullName,
+    ...(player.photoUrl ? { image: player.photoUrl } : {}),
+    ...(nationalityText ? { nationality: nationalityText } : {}),
+    ...(validDob ? { birthDate: validDob.toISOString().split("T")[0] } : {}),
+    ...(currentClub
+      ? {
+          affiliation: {
+            "@type": "SportsTeam",
+            name: currentClub.name,
+            url: `${baseUrl}/clubs/${getClubSlug(currentClub)}`,
+          },
+        }
+      : {}),
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: baseUrl },
+      { "@type": "ListItem", position: 2, name: "Market Values", item: `${baseUrl}/values` },
+      { "@type": "ListItem", position: 3, name: player.fullName, item: canonicalUrl },
+    ],
+  };
+
+  const breadcrumbItems = [
+    { label: "Home", href: "/" },
+    { label: "Market Values", href: "/values" },
+    { label: player.fullName },
+  ];
+
   return (
     <div className="space-y-4 max-w-[720px] mx-auto">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <Breadcrumbs items={breadcrumbItems} />
+
       {/* 1. Header Card */}
       <Card className="p-4 sm:p-5">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -184,7 +236,18 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
                     <span className="font-semibold">{clubShort}</span>
                   </Link>
                 )}
-                {clubShort && age && <span>•</span>}
+                {currentClub?.league && (
+                  <>
+                    <span>•</span>
+                    <Link
+                      href={`/leagues/${getLeagueSlug(currentClub.league)}`}
+                      className="hover:text-[var(--accent)] transition-colors truncate"
+                    >
+                      {currentClub.league.name}
+                    </Link>
+                  </>
+                )}
+                {age && <span>•</span>}
                 {age && <span>{age} yrs</span>}
               </div>
             </div>
