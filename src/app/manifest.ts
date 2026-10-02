@@ -1,4 +1,5 @@
 import { MetadataRoute } from "next";
+import { OG_COLORS } from "@/lib/og/colors";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -7,8 +8,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Football market valuation updates, squad analytics, and club records.",
     start_url: "/",
     display: "standalone",
-    background_color: "#0a0d12",
-    theme_color: "#0a0d12",
+    background_color: "#0a0d12", // color-ignore: PWA manifest specification requires hex
+    theme_color: "#0a0d12", // color-ignore: PWA manifest specification requires hex
     orientation: "portrait-primary",
     icons: [
       {

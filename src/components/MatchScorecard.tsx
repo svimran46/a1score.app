@@ -7,6 +7,7 @@ import { LiveMinute } from "@/components/LiveMinute";
 import { KickoffTime } from "@/components/KickoffTime";
 import { formatCompactEur } from "@/lib/utils";
 import { ArrowLeft, Trophy, AlertCircle } from "lucide-react";
+import { ShareButton } from "@/components/ui/ShareButton";
 
 interface ScorerItem {
   player: string;
@@ -127,17 +128,21 @@ export function MatchScorecard({
           <span className="sm:hidden">Back</span>
         </Link>
 
-        {/* Competition Name & Round */}
+        {/* Competition Name & Round + Share Action */}
         <div className="flex items-center gap-2 text-right min-w-0">
           <Trophy className="w-4 h-4 text-[var(--value-text)] shrink-0" />
           <span className="font-bold text-[var(--text-primary)] tracking-tight truncate">
             {general.leagueName || "Match"}
           </span>
           {general.matchRound && (
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[var(--bg-chip)] text-[var(--text-secondary)] border border-[var(--border-subtle)] shrink-0">
+            <span className="hidden sm:inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-[var(--bg-chip)] text-[var(--text-secondary)] border border-[var(--border-subtle)] shrink-0">
               Round {general.matchRound}
             </span>
           )}
+          <ShareButton
+            title={`${homeTeam.name || "Home"} vs ${awayTeam.name || "Away"} — Live Match | a1score`}
+            className="ml-1"
+          />
         </div>
       </div>
 

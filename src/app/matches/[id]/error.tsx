@@ -27,7 +27,7 @@ export default function MatchError({
       <div className="flex items-center justify-center gap-3">
         <button
           onClick={reset}
-          className="min-h-[44px] px-5 py-2 rounded-lg bg-[var(--color-accent)] text-[#0B0F17] text-[13px] font-semibold transition-colors"
+          className="min-h-[44px] px-5 py-2 rounded-lg bg-[var(--color-accent)] text-[var(--accent-contrast)] text-[13px] font-semibold transition-colors"
         >
           Retry
         </button>

@@ -64,7 +64,7 @@ export async function generateMetadata({ params }: ClubPageProps): Promise<Metad
     title: rawClubTitle,
     description: clubDesc.length > 155 ? clubDesc.slice(0, 152) + "..." : clubDesc,
     path: `/clubs/${canonicalSlug}`,
-    image: club.logoUrl || undefined,
+    image: `/clubs/${canonicalSlug}/opengraph-image`,
   });
 }
 

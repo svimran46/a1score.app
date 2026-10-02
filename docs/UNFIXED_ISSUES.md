@@ -95,6 +95,13 @@ The following items are external platform dependencies or administrative tasks t
   1. Bind `PUSH_SUBSCRIPTIONS_KV` to the `a1score` Cloudflare Pages project.
   2. Set `CRON_SECRET`, `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, and `VAPID_SUBJECT` in Cloudflare Pages and deploy `workers/push-cron/`.
   3. Execute physical device test checklist in `docs/PUSH_SETUP.md` on an iPhone (iOS 16.4+ standalone Home Screen PWA) and Android device.
-
-
-
+### Item 7: Edge Runtime Dynamic OG Share Cards & Cloudflare Pages Architecture
+* **Category:** Edge Image Generation & Performance
+* **Status:** Confirmed fully working on Edge runtime.
+* **Architecture:**
+  - Implemented dynamic `opengraph-image.tsx` routes for `/players/[slug]`, `/clubs/[id]`, and `/matches/[id]`.
+  - Built using `ImageResponse` from `next/og` on `runtime = "edge"`.
+  - Standard system fonts (`system-ui, -apple-system, sans-serif`) are used to completely bypass bundling large external TTF/WOFF font binaries, ensuring the edge function bundle stays well under the 1 MB Cloudflare Pages edge worker script limit.
+  - Image payloads are rendered in under 100 kB (budget max: 250 kB).
+  - Absolute URL resolution wired into `constructMetadata` for both Open Graph and Twitter cards.
+  - Full design token parity enforced between `src/app/tokens.css` and `src/lib/og/colors.ts` with automated test assertions (`tests/share-cards.test.ts`).

@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { OG_COLORS } from "@/lib/og/colors";
 
 export const runtime = "edge";
 export const alt = "Europe's Top Flight Football Competitions — Financial Analytics";
@@ -16,10 +17,10 @@ export default async function Image() {
           alignItems: "center",
           justifyContent: "space-between",
           flexDirection: "column",
-          backgroundColor: "#09090b",
-          backgroundImage: "radial-gradient(circle at 25px 25px, #1e293b 2%, transparent 0%)",
+          backgroundColor: OG_COLORS.bgPage,
+          backgroundImage: `radial-gradient(circle at 25px 25px, ${OG_COLORS.divider} 2%, transparent 0%)`,
           backgroundSize: "40px 40px",
-          color: "#fff",
+          color: OG_COLORS.white,
           padding: "60px 80px",
           fontFamily: "system-ui, -apple-system, sans-serif",
         }}
@@ -30,26 +31,26 @@ export default async function Image() {
               width: "48px",
               height: "48px",
               borderRadius: "14px",
-              background: "linear-gradient(135deg, #f59e0b, #d97706)",
+              background: `linear-gradient(135deg, ${OG_COLORS.amber400}, ${OG_COLORS.amber500})`,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: "#09090b",
+              color: OG_COLORS.bgPage,
               fontWeight: 900,
               fontSize: "24px",
             }}
           >
             A1
           </div>
-          <span style={{ fontSize: "28px", fontWeight: 800, color: "#fff" }}>
-            a1score<span style={{ color: "#f59e0b" }}>.app</span>
+          <span style={{ fontSize: "28px", fontWeight: 800, color: OG_COLORS.white }}>
+            a1score<span style={{ color: OG_COLORS.amber400 }}>.app</span>
           </span>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", width: "100%" }}>
           <span
             style={{
-              color: "#f59e0b",
+              color: OG_COLORS.amber400,
               fontSize: "18px",
               fontWeight: 700,
               textTransform: "uppercase",
@@ -65,7 +66,7 @@ export default async function Image() {
               fontWeight: 900,
               lineHeight: 1.1,
               margin: 0,
-              color: "#ffffff",
+              color: OG_COLORS.textPrimary,
               letterSpacing: "-1px",
             }}
           >
@@ -74,7 +75,7 @@ export default async function Image() {
           <p
             style={{
               fontSize: "22px",
-              color: "#94a3b8",
+              color: OG_COLORS.textMuted,
               marginTop: "16px",
               marginBottom: 0,
               lineHeight: 1.4,
@@ -90,10 +91,10 @@ export default async function Image() {
             alignItems: "center",
             justifyContent: "space-between",
             width: "100%",
-            borderTop: "1px solid #1e293b",
+            borderTop: `1px solid ${OG_COLORS.divider}`,
             paddingTop: "24px",
             fontSize: "16px",
-            color: "#64748b",
+            color: OG_COLORS.textMuted,
           }}
         >
           <span>Active 2026/2027 Season Standings</span>

@@ -48,7 +48,7 @@ export async function generateMetadata({ params }: PlayerPageProps): Promise<Met
     title: rawTitle,
     description: desc.length > 155 ? desc.slice(0, 152) + "..." : desc,
     path: `/players/${params.slug}`,
-    image: player.photoUrl || undefined,
+    image: `/players/${params.slug}/opengraph-image`,
   });
 }
 

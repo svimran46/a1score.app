@@ -76,7 +76,11 @@ export function constructMetadata({
   const fullTitle = formatTitle(title);
   const cleanPath = path ? (path.startsWith("/") ? path : `/${path}`) : "";
   const canonicalUrl = `${baseUrl}${cleanPath}`;
-  const ogImage = image || `${baseUrl}/og-default.png`;
+  const ogImage = image
+    ? image.startsWith("http://") || image.startsWith("https://")
+      ? image
+      : `${baseUrl}${image.startsWith("/") ? image : `/${image}`}`
+    : `${baseUrl}/og-default.png`;
 
   return {
     title: fullTitle,

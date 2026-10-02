@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { OG_COLORS } from "@/lib/og/colors";
 
 export const runtime = "edge";
 export const alt = "Live Matches — Real-Time Scores & Squad Values";
@@ -16,8 +17,8 @@ export default async function Image() {
           alignItems: "center",
           justifyContent: "space-between",
           flexDirection: "column",
-          backgroundColor: "#0B0F17",
-          color: "#F2F4F8",
+          backgroundColor: OG_COLORS.bgPage,
+          color: OG_COLORS.textPrimary,
           padding: "60px 80px",
           fontFamily: "system-ui, -apple-system, sans-serif",
         }}
@@ -28,26 +29,26 @@ export default async function Image() {
               width: "48px",
               height: "48px",
               borderRadius: "12px",
-              backgroundColor: "#F5B73B",
+              backgroundColor: OG_COLORS.amber400,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: "#0B0F17",
+              color: OG_COLORS.bgPage,
               fontWeight: 900,
               fontSize: "24px",
             }}
           >
             A1
           </div>
-          <span style={{ fontSize: "28px", fontWeight: 800, color: "#F2F4F8" }}>
-            a1score<span style={{ color: "#F5B73B" }}>.app</span>
+          <span style={{ fontSize: "28px", fontWeight: 800, color: OG_COLORS.textPrimary }}>
+            a1score<span style={{ color: OG_COLORS.amber400 }}>.app</span>
           </span>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", width: "100%" }}>
           <span
             style={{
-              color: "#F5B73B",
+              color: OG_COLORS.amber400,
               fontSize: "18px",
               fontWeight: 600,
               marginBottom: "12px",
@@ -61,7 +62,7 @@ export default async function Image() {
               fontWeight: 600,
               lineHeight: 1.1,
               margin: 0,
-              color: "#F2F4F8",
+              color: OG_COLORS.textPrimary,
               letterSpacing: "-1px",
             }}
           >
@@ -70,7 +71,7 @@ export default async function Image() {
           <p
             style={{
               fontSize: "22px",
-              color: "#A3ABBC",
+              color: OG_COLORS.textMuted,
               marginTop: "16px",
               marginBottom: 0,
               lineHeight: 1.4,
@@ -86,10 +87,10 @@ export default async function Image() {
             alignItems: "center",
             justifyContent: "space-between",
             width: "100%",
-            borderTop: "1px solid #1e293b",
+            borderTop: `1px solid ${OG_COLORS.divider}`,
             paddingTop: "24px",
             fontSize: "16px",
-            color: "#64748b",
+            color: OG_COLORS.textMuted,
           }}
         >
           <span>Tactical 2D Pitch Lineups • OPTA Match Stats</span>

@@ -1,8 +1,11 @@
 import fs from "fs";
 import path from "path";
 
-const DIRECTORIES_TO_SCAN = ["src/components"];
+const DIRECTORIES_TO_SCAN = ["src/components", "src/app", "src/lib/og"];
 const ALLOWED_EXTENSIONS = [".tsx", ".ts"];
+
+// Canonical whitelist for Phase 16: src/lib/og/colors.ts is the ONLY file where hex is permitted.
+const WHITELISTED_FILES = [path.normalize("src/lib/og/colors.ts")];
 
 // Hex color regex: # followed by 3, 4, 6, or 8 hex digits, bounded by word boundary or quote
 const HEX_REGEX = /#([0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})\b/g;
@@ -32,6 +35,10 @@ function checkColors() {
   const files = DIRECTORIES_TO_SCAN.flatMap(getFiles);
 
   for (const filePath of files) {
+    const normalized = path.normalize(filePath);
+    if (WHITELISTED_FILES.some((w) => normalized.endsWith(w) || normalized === w)) {
+      continue;
+    }
     const content = fs.readFileSync(filePath, "utf-8");
     const lines = content.split("\n");
 

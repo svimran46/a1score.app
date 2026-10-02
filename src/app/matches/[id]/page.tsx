@@ -38,6 +38,7 @@ export async function generateMetadata({ params }: MatchPageProps): Promise<Meta
     title: `${home} ${scoreStr} ${away} — Live Match (${statusStr})`,
     description: `Live match scores and stats for ${home} ${scoreStr} ${away}. Live scorecard, scorers, confirmed lineups, tactical formations, live match timeline, and squad market valuations on a1score.app.`,
     path: `/matches/${params.id}`,
+    image: `/matches/${params.id}/opengraph-image`,
   });
 }
 
