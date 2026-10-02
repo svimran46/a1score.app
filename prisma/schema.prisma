@@ -31,6 +31,7 @@ model Player {
   parentClub      Club?                @relation("ParentClubPlayers", fields: [parentClubId], references: [id])
   loanUntil       DateTime?
   marketValues    MarketValueHistory[]
+  valueSnapshots  ValueSnapshot[]
   seasonStats     SeasonStats[]
   transfers       Transfer[]
   injuries        Injury[]
@@ -63,6 +64,7 @@ model Club {
   loanedOutPlayers Player[] @relation("ParentClubPlayers")
   competitionWinners CompetitionWinner[]
   honours         ClubHonour[]
+  valueSnapshots  ClubValueSnapshot[]
 
   @@index([leagueId])
   @@index([name])
@@ -184,5 +186,34 @@ model ClubHonour {
   @@unique([clubId, competitionKey])
   @@index([clubId])
   @@index([competitionKey])
+}
+
+model ValueSnapshot {
+  id        String   @id @default(cuid())
+  playerId  String
+  player    Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  valueEur  BigInt
+  date      DateTime
+  source    String   @default("Transfermarkt")
+  createdAt DateTime @default(now())
+
+  @@unique([playerId, date, source])
+  @@index([playerId, date])
+  @@index([date])
+}
+
+model ClubValueSnapshot {
+  id               String   @id @default(cuid())
+  clubId           String
+  club             Club     @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  totalMarketValue BigInt
+  squadSize        Int?
+  date             DateTime
+  source           String   @default("FotMob + Transfermarkt")
+  createdAt        DateTime @default(now())
+
+  @@unique([clubId, date, source])
+  @@index([clubId, date])
+  @@index([date])
 }
 

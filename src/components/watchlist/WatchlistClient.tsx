@@ -13,6 +13,7 @@ import {
   AlertCircle,
   X,
   Check,
+  Scale,
 } from "lucide-react";
 import { useWatchlist } from "@/lib/watchlist/useWatchlist";
 import { formatCompactEur } from "@/lib/utils";
@@ -31,6 +32,19 @@ export function WatchlistClient() {
 
   const [activeTab, setActiveTab] = useState<"players" | "clubs">("players");
   const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const [selectedSlugs, setSelectedSlugs] = useState<string[]>([]);
+
+  const toggleSelectPlayer = (slug: string) => {
+    setSelectedSlugs((prev) => {
+      if (prev.includes(slug)) {
+        return prev.filter((s) => s !== slug);
+      }
+      if (prev.length >= 3) {
+        return prev;
+      }
+      return [...prev, slug];
+    });
+  };
 
   if (!isMounted) {
     return (
@@ -186,10 +200,16 @@ export function WatchlistClient() {
                 const hasChange = diff !== 0 && initialVal > 0;
                 const href = item.slug ? `/players/${item.slug}` : `/players/${item.id}`;
 
+                const isSelected = selectedSlugs.includes(item.slug || item.id);
+
                 return (
                   <div
                     key={item.id}
-                    className="group relative flex items-center justify-between gap-3 p-3 sm:px-4 rounded-xl bg-[var(--bg-card)] hover:bg-[var(--bg-hover)] border border-[var(--divider)] shadow-xs transition-colors"
+                    className={`group relative flex items-center justify-between gap-3 p-3 sm:px-4 rounded-xl bg-[var(--bg-card)] hover:bg-[var(--bg-hover)] border shadow-xs transition-colors ${
+                      isSelected
+                        ? "border-[var(--value-text)] ring-1 ring-[var(--value-text)]/30"
+                        : "border-[var(--divider)]"
+                    }`}
                   >
                     <Link
                       href={href}
@@ -197,8 +217,25 @@ export function WatchlistClient() {
                       className="absolute inset-0 z-0 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
                     />
 
-                    {/* Left: Avatar + Details */}
+                    {/* Left: Select Checkbox + Avatar + Details */}
                     <div className="flex items-center gap-3 min-w-0 flex-1 relative z-10 pointer-events-none">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          toggleSelectPlayer(item.slug || item.id);
+                        }}
+                        aria-label={`Select ${item.name} for comparison`}
+                        className={`pointer-events-auto w-6 h-6 rounded-lg border flex items-center justify-center transition-all shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
+                          isSelected
+                            ? "bg-[var(--value-text)] border-[var(--value-text)] text-black"
+                            : "border-[var(--border-subtle)] bg-[var(--bg-elevated)] hover:border-[var(--value-text)] text-transparent"
+                        }`}
+                      >
+                        <Check className="w-3.5 h-3.5 stroke-[3]" />
+                      </button>
+
                       <div className="w-10 h-10 rounded-full bg-[var(--bg-chip)] overflow-hidden shrink-0 relative flex items-center justify-center">
                         {item.avatarUrl ? (
                           <Image
@@ -351,6 +388,34 @@ export function WatchlistClient() {
                   </div>
                 );
               })}
+        </div>
+      )}
+
+      {/* 4. Sticky Compare Action Bar when players are selected */}
+      {activeTab === "players" && selectedSlugs.length > 0 && (
+        <div className="sticky bottom-16 sm:bottom-4 z-30 p-3 sm:p-4 rounded-2xl bg-[var(--bg-card)] border border-[var(--value-text)]/40 ring-1 ring-[var(--value-text)]/20 shadow-2xl flex items-center justify-between gap-3 animate-fade-in">
+          <div className="flex items-center gap-2">
+            <Scale className="w-4 h-4 text-[var(--value-text)] shrink-0" />
+            <span className="text-xs sm:text-sm font-bold text-[var(--text-primary)]">
+              {selectedSlugs.length} of 3 players selected
+            </span>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => setSelectedSlugs([])}
+              className="px-3 py-1.5 min-h-[36px] rounded-xl text-xs font-semibold text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
+            >
+              Clear
+            </button>
+            <Link
+              href={`/compare?players=${selectedSlugs.join(",")}`}
+              className="inline-flex items-center gap-1.5 px-4 py-2 min-h-[40px] rounded-xl bg-[var(--value-text)] text-black font-bold text-xs hover:opacity-95 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] shadow-xs"
+            >
+              <Scale className="w-3.5 h-3.5" />
+              <span>Compare ({selectedSlugs.length})</span>
+            </Link>
+          </div>
         </div>
       )}
     </div>

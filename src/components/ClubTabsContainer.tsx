@@ -9,6 +9,7 @@ import { formatDate } from "@/lib/utils";
 import { KickoffTime } from "@/components/KickoffTime";
 import { Tabs } from "@/components/ui/Tabs";
 import { Card } from "@/components/ui";
+import dynamic from "next/dynamic";
 import {
   Users,
   Layers,
@@ -19,6 +20,11 @@ import {
   Building,
   UserCheck,
 } from "lucide-react";
+
+const ClubValueTrendChart = dynamic(
+  () => import("@/components/clubs/ClubValueTrendChart").then((m) => m.ClubValueTrendChart),
+  { ssr: false }
+);
 
 interface ClubTabsContainerProps {
   clubName: string;
@@ -32,6 +38,7 @@ interface ClubTabsContainerProps {
     recordDepartures: any[];
   };
   leagueName?: string | null;
+  snapshots?: any[];
 }
 
 export function ClubTabsContainer({
@@ -43,6 +50,7 @@ export function ClubTabsContainer({
   details,
   transfersData,
   leagueName,
+  snapshots = [],
 }: ClubTabsContainerProps) {
   const [activeTab, setActiveTab] = useState<
     "squad" | "transfers" | "value" | "overview" | "form"
@@ -103,13 +111,18 @@ export function ClubTabsContainer({
         />
       )}
 
-      {/* Tab 3: Squad Valuation */}
+      {/* Tab 3: Squad Valuation & Value Trend */}
       {activeTab === "value" && (
-        <SquadValuationPyramid
-          players={firstTeamPlayers.length > 0 ? firstTeamPlayers : players}
-          totalSquadValue={totalSquadValue}
-          clubName={clubName}
-        />
+        <div className="space-y-4">
+          <SquadValuationPyramid
+            players={firstTeamPlayers.length > 0 ? firstTeamPlayers : players}
+            totalSquadValue={totalSquadValue}
+            clubName={clubName}
+          />
+          {snapshots && snapshots.length >= 2 && (
+            <ClubValueTrendChart snapshots={snapshots} clubName={clubName} />
+          )}
+        </div>
       )}
 
       {/* Tab 4: Overview (Stadium & Manager) */}

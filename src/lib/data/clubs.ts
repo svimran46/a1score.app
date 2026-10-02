@@ -836,4 +836,24 @@ export async function getClubHonours(clubId: string, clubName: string): Promise<
   }
 }
 
+/**
+ * Fetch real historical squad valuation snapshots for a club.
+ * Phase 15: Valuation history, comparison, and club value trends.
+ */
+export async function getClubSnapshots(clubId: string) {
+  if (!clubId) return [];
+  try {
+    const { data, error } = await supabase
+      .from("ClubValueSnapshot")
+      .select("id, date, totalMarketValue, squadSize")
+      .eq("clubId", clubId)
+      .order("date", { ascending: true });
+
+    if (error || !data) return [];
+    return data;
+  } catch {
+    return [];
+  }
+}
+
 

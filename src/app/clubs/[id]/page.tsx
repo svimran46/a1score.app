@@ -1,7 +1,7 @@
 import { notFound, permanentRedirect } from "next/navigation";
 import { EntityImage } from "@/components/EntityImage";
 import Link from "next/link";
-import { getClubById, getClubTransfers, getClubDisplayName } from "@/lib/data/clubs";
+import { getClubById, getClubTransfers, getClubDisplayName, getClubSnapshots } from "@/lib/data/clubs";
 import { getClubHonours } from "@/lib/data/honours";
 import { getLeagueById } from "@/lib/data/leagues";
 import { getFotmobTeamDetails } from "@/lib/fotmob/client";
@@ -98,11 +98,12 @@ export default async function ClubPage({ params }: ClubPageProps) {
     }
   }
 
-  const [transfersData, fotmobDetails, clubHonours, relatedNews] = await Promise.all([
+  const [transfersData, fotmobDetails, clubHonours, relatedNews, clubSnapshots] = await Promise.all([
     getClubTransfers(club.name),
     fotmobTeamId ? getFotmobTeamDetails(fotmobTeamId).catch(() => null) : Promise.resolve(null),
     getClubHonours(club.id),
     getRelatedNews([club.name, getClubDisplayName(club)], 3).catch(() => []),
+    getClubSnapshots(club.id).catch(() => []),
   ]);
 
   const seniorSquad = club.firstTeamPlayers && club.firstTeamPlayers.length > 0
@@ -241,6 +242,7 @@ export default async function ClubPage({ params }: ClubPageProps) {
         details={fotmobDetails}
         transfersData={transfersData}
         leagueName={club.league?.name}
+        snapshots={clubSnapshots}
       />
 
       {/* Related News Card */}

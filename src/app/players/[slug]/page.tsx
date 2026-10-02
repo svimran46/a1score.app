@@ -10,6 +10,7 @@ import { Card, ValuationFreshness, Breadcrumbs, PageHeader } from "@/components/
 import { PlayerTabsContainer } from "@/components/PlayerTabsContainer";
 import { FollowButton } from "@/components/watchlist/FollowButton";
 import { getRelatedNews } from "@/lib/data/news";
+import { Scale } from "lucide-react";
 import type { Metadata } from "next";
 
 export const revalidate = 3600; // ISR revalidation every hour
@@ -232,18 +233,29 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
           age ? <span key="age">{age} yrs</span> : null,
         ].filter(Boolean)}
         actions={
-          <FollowButton
-            variant="button"
-            id={player.id}
-            type="player"
-            name={player.fullName}
-            slug={params.slug}
-            avatarUrl={player.photoUrl}
-            clubName={clubShort}
-            clubCrest={currentClub?.logoUrl}
-            position={player.position}
-            marketValue={currentVal}
-          />
+          <div className="flex items-center gap-2">
+            <Link
+              href={`/compare?players=${params.slug}`}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 min-h-[44px] rounded-xl text-xs font-semibold bg-[var(--bg-elevated)] border border-[var(--border-subtle)] hover:bg-[var(--bg-hover)] text-[var(--text-primary)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] shrink-0"
+              title={`Compare ${player.fullName} with other players`}
+              aria-label={`Compare ${player.fullName}`}
+            >
+              <Scale className="w-3.5 h-3.5 text-[var(--value-text)]" />
+              <span>Compare</span>
+            </Link>
+            <FollowButton
+              variant="button"
+              id={player.id}
+              type="player"
+              name={player.fullName}
+              slug={params.slug}
+              avatarUrl={player.photoUrl}
+              clubName={clubShort}
+              clubCrest={currentClub?.logoUrl}
+              position={player.position}
+              marketValue={currentVal}
+            />
+          </div>
         }
         shareTitle={`${player.fullName} market valuation & stats | a1score`}
         shareUrl={canonicalUrl}

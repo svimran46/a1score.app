@@ -44,6 +44,9 @@
   --trend-down: var(--red-500);
   --live: var(--green-500);
   --focus-ring: var(--amber-400);
+  --compare-line-1: var(--amber-400);
+  --compare-line-2: var(--blue-500);
+  --compare-line-3: var(--green-500);
 
   /* ---------- Layer 3: component ---------- */
   --card-radius: var(--radius-lg);
