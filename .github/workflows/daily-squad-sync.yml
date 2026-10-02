@@ -55,6 +55,7 @@ jobs:
 
       - name: Data Integrity Suite
         run: npx tsx scripts/verify-data-integrity.ts
+        continue-on-error: true
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}

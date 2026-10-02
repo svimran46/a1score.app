@@ -20,7 +20,6 @@ import "dotenv/config";
 import pg from "pg";
 import fs from "fs";
 import path from "path";
-import fetch from "node-fetch";
 import { fotmobFetch } from "../src/lib/fotmob/client";
 import { FOTMOB_TEAM_MAPPINGS } from "../src/lib/league-mappings";
 
