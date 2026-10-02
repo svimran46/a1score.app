@@ -7,6 +7,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 const ALIASES: Record<string, string> = {
+  // English clubs
   "burnley": "Burnley FC",
   "burnley fc": "Burnley FC",
   "sheffield utd": "Sheffield United",
@@ -42,24 +43,63 @@ const ALIASES: Record<string, string> = {
   "nottingham forest": "Nottingham Forest",
   "leeds": "Leeds United",
   "leeds united": "Leeds United",
+
+  // Champions League European clubs
+  "real madrid": "Real Madrid",
+  "ac milan": "AC Milan",
+  "milan": "AC Milan",
+  "inter": "Internazionale",
+  "inter milan": "Internazionale",
+  "internazionale": "Internazionale",
+  "bayern": "Bayern Munich",
+  "bayern munich": "Bayern Munich",
+  "fc bayern münchen": "Bayern Munich",
+  "barcelona": "FC Barcelona",
+  "fc barcelona": "FC Barcelona",
+  "ajax": "Ajax",
+  "afc ajax": "Ajax",
+  "juventus": "Juventus",
+  "porto": "FC Porto",
+  "fc porto": "FC Porto",
+  "benfica": "SL Benfica",
+  "sl benfica": "SL Benfica",
+  "dortmund": "Borussia Dortmund",
+  "borussia dortmund": "Borussia Dortmund",
+  "feyenoord": "Feyenoord",
+  "hsv": "Hamburger SV",
+  "hamburger sv": "Hamburger SV",
+  "marseille": "Olympique Marseille",
+  "olympique marseille": "Olympique Marseille",
+  "psv": "PSV Eindhoven",
+  "psv eindhoven": "PSV Eindhoven",
+  "psg": "Paris Saint-Germain",
+  "paris saint-germain": "Paris Saint-Germain",
 };
 
-async function importPremierLeagueHonours() {
-  console.log("=== Importing Premier League Honours ===");
+interface ImportCompetitionConfig {
+  key: string;
+  label: string;
+  note?: string;
+  csvFile: string;
+}
+
+async function importCompetition(config: ImportCompetitionConfig) {
+  console.log(`\n=== Importing Competition: ${config.key} ("${config.label}") ===`);
 
   // 1. Ensure Competition row exists
-  const compKey = "premier-league";
-  const compLabel = "English league titles";
-
   const comp = await prisma.competition.upsert({
-    where: { key: compKey },
-    update: { label: compLabel },
+    where: { key: config.key },
+    update: {
+      label: config.label,
+      note: config.note || null,
+    },
     create: {
-      key: compKey,
-      label: compLabel,
+      key: config.key,
+      label: config.label,
+      note: config.note || null,
     },
   });
-  console.log(`Competition upserted: ${comp.key} ("${comp.label}")`);
+  console.log(`Competition upserted: ${comp.key} ("${comp.label}", note: "${comp.note || ''}")`);
 
   // 2. Load all clubs from database for mapping
   const allClubs = await prisma.club.findMany({
@@ -70,15 +110,14 @@ async function importPremierLeagueHonours() {
     allClubs.map((c) => [c.name.toLowerCase().trim(), c])
   );
 
-  // 3. Read data/winners/premier-league.csv
-  const csvPath = path.resolve(process.cwd(), "data/winners/premier-league.csv");
+  // 3. Read CSV
+  const csvPath = path.resolve(process.cwd(), config.csvFile);
   if (!fs.existsSync(csvPath)) {
     throw new Error(`File not found: ${csvPath}`);
   }
 
   const raw = fs.readFileSync(csvPath, "utf-8");
   const lines = raw.trim().split("\n");
-  const headers = lines[0].split(",").map((h) => h.trim());
   const rows = lines.slice(1).filter((l) => l.trim().length > 0);
 
   console.log(`Processing ${rows.length} winners records from ${csvPath}...`);
@@ -87,7 +126,6 @@ async function importPremierLeagueHonours() {
   let externalClubCount = 0;
 
   for (const line of rows) {
-    // Parse CSV line handling potential quotes if any
     const parts = line.split(",").map((p) => p.trim());
     const [cKey, season, seasonEndYearStr, clubName, providedClubId, source, verifiedAtStr, note] = parts;
 
@@ -98,12 +136,10 @@ async function importPremierLeagueHonours() {
     if (providedClubId && clubById.has(providedClubId)) {
       finalClubId = providedClubId;
     } else {
-      // Try exact name match
       const lowerName = clubName.toLowerCase();
       if (clubByName.has(lowerName)) {
         finalClubId = clubByName.get(lowerName)!.id;
       } else if (ALIASES[lowerName] && clubByName.has(ALIASES[lowerName].toLowerCase())) {
-        // Try alias match
         finalClubId = clubByName.get(ALIASES[lowerName].toLowerCase())!.id;
       } else {
         // Unmatched -> store as external (do not fail)
@@ -148,12 +184,29 @@ async function importPremierLeagueHonours() {
     });
   }
 
-  console.log(`Import complete! Total rows: ${rows.length}`);
+  console.log(`Import complete for ${config.key}! Total rows: ${rows.length}`);
   console.log(`Matched to internal clubs: ${matchedClubCount}`);
   console.log(`Stored as external: ${externalClubCount}`);
 }
 
-importPremierLeagueHonours()
+async function main() {
+  // 1. Premier League
+  await importCompetition({
+    key: "premier-league",
+    label: "English league titles",
+    csvFile: "data/winners/premier-league.csv",
+  });
+
+  // 2. Champions League
+  await importCompetition({
+    key: "champions-league",
+    label: "Champions League",
+    note: "Includes European Cup, 1955/56 to 1991/92",
+    csvFile: "data/winners/champions-league.csv",
+  });
+}
+
+main()
   .catch((err) => {
     console.error("Error importing honours:", err);
     process.exit(1);

@@ -2,12 +2,15 @@
 
 import React, { useState } from "react";
 import { StatStrip } from "@/components/StatStrip";
-import { Trophy, X, Calendar, Sparkles } from "lucide-react";
+import { Trophy, X, Calendar, Sparkles, Info } from "lucide-react";
 
 export interface ClubHonourCompetitionData {
   key: string;
   label: string;
+  note?: string | null;
   titles: number;
+  source?: string | null;
+  updatedDate?: string | null;
   seasons: Array<{
     season: string;
     seasonEndYear: number;
@@ -27,21 +30,26 @@ export function ClubHonoursStatStrip({ honours, clubName }: ClubHonoursStatStrip
   const activeHonours = (honours || []).filter((h) => h.titles > 0);
   if (activeHonours.length === 0) return null;
 
+  // Each competition with titles > 0 becomes an item in the StatStrip
   const statItems = activeHonours.map((h) => ({
     value: h.titles,
     label: h.label,
     onClick: () => setActiveSheetComp(h),
   }));
 
+  // Build footer source text dynamically based on competitions displayed
+  const uniqueDates = Array.from(new Set(activeHonours.map((h) => h.updatedDate).filter(Boolean)));
+  const footerDateText = uniqueDates.length > 0 ? uniqueDates.join(" / ") : "18 Jun 2026";
+
   return (
     <div className="space-y-2">
-      {/* StatStrip: only shown when club has titles > 0 */}
+      {/* StatStrip: shows numbers for all competitions with titles > 0 */}
       <StatStrip items={statItems} className="shadow-sm" />
 
-      {/* Footer under the card: "Source: RSSSF, updated 14 Jun 2026" */}
+      {/* Footer under the card: "Source: RSSSF, updated {date}" */}
       <div className="text-[11px] text-slate-400 dark:text-slate-500 flex items-center justify-between px-1">
-        <span>Source: RSSSF, updated 14 Jun 2026</span>
-        <span className="text-[10px] text-amber-500/80 font-medium">Tap title count to view winning seasons</span>
+        <span>Source: RSSSF, updated {footerDateText}</span>
+        <span className="text-[10px] text-amber-500/80 font-medium">Tap count to view winning seasons</span>
       </div>
 
       {/* Interactive Sheet / Modal when tapped */}
@@ -69,6 +77,12 @@ export function ClubHonoursStatStrip({ honours, clubName }: ClubHonoursStatStrip
                   <p className="text-xs text-slate-400 mt-0.5">
                     {activeSheetComp.titles} {activeSheetComp.titles === 1 ? "Title" : "Titles"} in club history (Newest first)
                   </p>
+                  {activeSheetComp.note && (
+                    <div className="flex items-center gap-1 text-[11px] text-amber-400/90 mt-1">
+                      <Info className="w-3.5 h-3.5 flex-shrink-0" />
+                      <span>{activeSheetComp.note}</span>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -101,7 +115,10 @@ export function ClubHonoursStatStrip({ honours, clubName }: ClubHonoursStatStrip
 
                   {/* Era note per row */}
                   {s.note ? (
-                    <span className="text-[11px] font-medium text-slate-400 bg-slate-800/80 border border-slate-700/60 px-2 py-0.5 rounded-full text-right ml-2 truncate max-w-[200px]" title={s.note}>
+                    <span
+                      className="text-[11px] font-medium text-slate-300 bg-slate-800/80 border border-slate-700/60 px-2 py-0.5 rounded-full text-right ml-2 truncate max-w-[220px]"
+                      title={s.note}
+                    >
                       {s.note}
                     </span>
                   ) : (
@@ -119,7 +136,7 @@ export function ClubHonoursStatStrip({ honours, clubName }: ClubHonoursStatStrip
                 <Sparkles className="w-3.5 h-3.5 text-amber-400" />
                 Verified Championship Record
               </span>
-              <span>Source: RSSSF, updated 14 Jun 2026</span>
+              <span>Source: RSSSF, updated {activeSheetComp.updatedDate || "18 Jun 2026"}</span>
             </div>
           </div>
         </div>

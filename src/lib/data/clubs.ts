@@ -729,7 +729,10 @@ export async function getClubTransfers(clubName: string) {
 export interface ClubHonourCompetition {
   key: string;
   label: string;
+  note?: string | null;
   titles: number;
+  source?: string | null;
+  updatedDate?: string | null;
   seasons: Array<{
     season: string;
     seasonEndYear: number;
@@ -742,7 +745,7 @@ export async function getClubHonours(clubId: string, clubName: string): Promise<
     // 1. Fetch competitions
     const { data: competitions, error: compErr } = await supabase
       .from("Competition")
-      .select("key, label");
+      .select("key, label, note");
 
     if (compErr || !competitions || competitions.length === 0) {
       return [];
@@ -752,7 +755,7 @@ export async function getClubHonours(clubId: string, clubName: string): Promise<
     // Match either clubId or canonical name
     const { data: winners, error: winErr } = await supabase
       .from("CompetitionWinner")
-      .select("competitionKey, season, seasonEndYear, note, clubId, clubName, isExternal")
+      .select("competitionKey, season, seasonEndYear, note, source, clubId, clubName, isExternal")
       .or(`clubId.eq.${clubId},clubName.eq.${clubName}`)
       .eq("isExternal", false)
       .order("seasonEndYear", { ascending: false });
@@ -761,31 +764,70 @@ export async function getClubHonours(clubId: string, clubName: string): Promise<
       return [];
     }
 
-    const compMap = new Map(competitions.map((c) => [c.key, c.label]));
-    const honoursByComp = new Map<string, Array<{ season: string; seasonEndYear: number; note?: string | null }>>();
+    const compMap = new Map(competitions.map((c) => [c.key, { label: c.label, note: c.note }]));
+    const honoursByComp = new Map<
+      string,
+      {
+        source?: string | null;
+        seasons: Array<{ season: string; seasonEndYear: number; note?: string | null }>;
+      }
+    >();
 
     for (const w of winners) {
       if (!honoursByComp.has(w.competitionKey)) {
-        honoursByComp.set(w.competitionKey, []);
+        honoursByComp.set(w.competitionKey, {
+          source: w.source,
+          seasons: [],
+        });
       }
-      honoursByComp.get(w.competitionKey)!.push({
+      const entry = honoursByComp.get(w.competitionKey)!;
+      if (!entry.source && w.source) entry.source = w.source;
+      entry.seasons.push({
         season: w.season,
         seasonEndYear: w.seasonEndYear,
         note: w.note,
       });
     }
 
+    // Helper to format source update date (e.g. "updated 2026-06-18" -> "18 Jun 2026")
+    const extractDate = (src?: string | null) => {
+      if (!src) return "18 Jun 2026";
+      const match = src.match(/updated\s+(\d{4})-(\d{2})-(\d{2})/i);
+      if (match) {
+        const [, y, m, d] = match;
+        const dateObj = new Date(`${y}-${m}-${d}`);
+        return dateObj.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+      }
+      return "18 Jun 2026";
+    };
+
+    // Sort order: premier-league, then champions-league, then others
+    const priority = ["premier-league", "champions-league"];
     const result: ClubHonourCompetition[] = [];
-    for (const [compKey, seasonsList] of honoursByComp.entries()) {
-      if (seasonsList.length > 0) {
+
+    for (const [compKey, data] of honoursByComp.entries()) {
+      if (data.seasons.length > 0) {
+        const compMeta = compMap.get(compKey);
         result.push({
           key: compKey,
-          label: compMap.get(compKey) || compKey,
-          titles: seasonsList.length,
-          seasons: seasonsList.sort((a, b) => b.seasonEndYear - a.seasonEndYear),
+          label: compMeta?.label || compKey,
+          note: compMeta?.note || null,
+          titles: data.seasons.length,
+          source: data.source,
+          updatedDate: extractDate(data.source),
+          seasons: data.seasons.sort((a, b) => b.seasonEndYear - a.seasonEndYear),
         });
       }
     }
+
+    result.sort((a, b) => {
+      const idxA = priority.indexOf(a.key);
+      const idxB = priority.indexOf(b.key);
+      if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+      if (idxA !== -1) return -1;
+      if (idxB !== -1) return 1;
+      return b.titles - a.titles;
+    });
 
     return result;
   } catch (err) {

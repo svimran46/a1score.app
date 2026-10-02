@@ -130,3 +130,84 @@ test("Validation 5: Competitions row exists with key=premier-league and label='E
   assert.ok(comp, "Competition row for premier-league must exist");
   assert.equal(comp?.label, "English league titles", "Competition label must be 'English league titles'");
 });
+
+test("Validation 6: Exactly 71 winners rows in Champions League CSV and database", async () => {
+  const csvPath = path.resolve(process.cwd(), "data/winners/champions-league.csv");
+  assert.ok(fs.existsSync(csvPath), "data/winners/champions-league.csv exists");
+
+  const lines = fs.readFileSync(csvPath, "utf-8").trim().split("\n").slice(1).filter(l => l.trim().length > 0);
+  assert.equal(lines.length, 71, "CSV must contain exactly 71 winners rows");
+
+  const dbWinners = await prisma.competitionWinner.findMany({
+    where: { competitionKey: "champions-league" },
+  });
+  assert.equal(dbWinners.length, 71, "Database must contain exactly 71 winners rows for champions-league");
+});
+
+test("Validation 7: Continuous seasons 1955/56 to 2025/26 for Champions League", async () => {
+  const dbWinners = await prisma.competitionWinner.findMany({
+    where: { competitionKey: "champions-league" },
+    select: { season: true, seasonEndYear: true },
+    orderBy: { seasonEndYear: "asc" },
+  });
+
+  assert.equal(dbWinners.length, 71, "Must have exactly 71 seasons");
+  const seasonSet = new Set(dbWinners.map(w => w.season));
+
+  const missingSeasons: string[] = [];
+  for (let y = 1956; y <= 2026; y++) {
+    const s = `${y - 1}/${String(y % 100).padStart(2, "0")}`;
+    if (!seasonSet.has(s)) {
+      missingSeasons.push(s);
+    }
+  }
+
+  assert.equal(missingSeasons.length, 0, `Continuous seasons check failed. Missing: ${missingSeasons.join(", ")}`);
+});
+
+test("Validation 8: Per-club Champions League title counts equal expected-counts/champions-league.csv", async () => {
+  const expectedPath = path.resolve(process.cwd(), "data/expected-counts/champions-league.csv");
+  assert.ok(fs.existsSync(expectedPath), "data/expected-counts/champions-league.csv exists");
+
+  const expectedLines = fs.readFileSync(expectedPath, "utf-8").trim().split("\n").slice(1).filter(l => l.trim().length > 0);
+  const expectedMap = new Map<string, number>();
+  for (const line of expectedLines) {
+    const parts = line.split(",").map(p => p.trim());
+    expectedMap.set(parts[1], parseInt(parts[2], 10));
+  }
+
+  const dbWinners = await prisma.competitionWinner.findMany({
+    where: { competitionKey: "champions-league" },
+  });
+
+  const actualMap = new Map<string, number>();
+  for (const w of dbWinners) {
+    actualMap.set(w.clubName, (actualMap.get(w.clubName) || 0) + 1);
+  }
+
+  assert.equal(
+    actualMap.size,
+    expectedMap.size,
+    `Unique winner clubs (${actualMap.size}) must match expected (${expectedMap.size})`
+  );
+
+  for (const [clubName, expTitles] of expectedMap.entries()) {
+    const actual = actualMap.get(clubName) || 0;
+    assert.equal(
+      actual,
+      expTitles,
+      `CL titles count mismatch for ${clubName}: expected ${expTitles}, got ${actual}`
+    );
+  }
+});
+
+test("Validation 9: Competitions row exists with key=champions-league, label='Champions League', and note", async () => {
+  const comp = await prisma.competition.findUnique({
+    where: { key: "champions-league" },
+  });
+
+  assert.ok(comp, "Competition row for champions-league must exist");
+  assert.equal(comp?.label, "Champions League", "Competition label must be 'Champions League'");
+  assert.equal(comp?.note, "Includes European Cup, 1955/56 to 1991/92", "Competition note must match specification");
+});
+
