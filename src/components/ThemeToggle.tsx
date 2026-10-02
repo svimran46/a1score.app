@@ -40,7 +40,7 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <div className="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800" />
+      <div className="w-11 h-11 rounded-xl bg-[var(--bg-chip)]" />
     );
   }
 
@@ -49,13 +49,13 @@ export function ThemeToggle() {
       type="button"
       onClick={toggleTheme}
       title={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
-      className="min-h-[44px] min-w-[44px] p-2.5 rounded-xl text-slate-400 hover:text-amber-400 hover:bg-slate-800/60 transition-colors flex items-center justify-center"
-      aria-label="Toggle visual theme"
+      className="min-h-[44px] min-w-[44px] p-2.5 rounded-xl text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-colors flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
+      aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
     >
       {theme === "dark" ? (
-        <Sun className="w-4 h-4 text-amber-400/90" />
+        <Sun className="w-5 h-5 text-[var(--accent)]" />
       ) : (
-        <Moon className="w-4 h-4 text-slate-600" />
+        <Moon className="w-5 h-5 text-[var(--text-primary)]" />
       )}
     </button>
   );

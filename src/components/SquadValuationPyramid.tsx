@@ -257,6 +257,10 @@ export function SquadValuationPyramid({
 
   return (
     <div className="space-y-4">
+      <p className="sr-only">
+        Squad financial pyramid and asset distribution analysis for {clubName}. Total squad valuation is {formatCompactEur(totalSquadValue)} across {players.length} squad members.
+      </p>
+
       {/* Squad Demographic & Concentration Barometer */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {/* Metric 1: Average Squad Age */}

@@ -19,6 +19,14 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen flex flex-col bg-[var(--bg-page)] text-[var(--text-primary)]">
+      {/* Accessible skip-to-content link */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[var(--accent)] focus:text-[var(--accent-contrast)] focus:rounded-[var(--chip-radius)] focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-[var(--focus-ring)] text-sm font-semibold"
+      >
+        Skip to content
+      </a>
+
       {/* Small non-overlapping PWA banner */}
       <PwaInstallPrompt />
 

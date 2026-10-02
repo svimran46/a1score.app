@@ -128,6 +128,9 @@ export function MarketValueChart({
               Peak: {formatCompactEur(overallPeak.value)} ({overallPeak.dateStr})
             </span>
           )}
+          <p className="sr-only">
+            Valuation history chart for {playerName || "player"}. Latest market valuation is {formatCompactEur(latest.value)} recorded on {latest.dateStr}. All-time peak valuation is {overallPeak ? `${formatCompactEur(overallPeak.value)} recorded on ${overallPeak.dateStr}` : "not available"}.
+          </p>
         </div>
 
         {/* Range Chips */}

@@ -174,9 +174,8 @@
 
 /* TV & D-Pad Keyboard Navigation Visible Focus Ring */
 :focus-visible {
-  outline: 3px solid #f59e0b !important;
-  outline-offset: 3px !important;
-  box-shadow: 0 0 0 5px rgba(245, 158, 11, 0.4) !important;
+  outline: 2px solid var(--focus-ring) !important;
+  outline-offset: 2px !important;
   border-radius: inherit;
   z-index: 50;
 }

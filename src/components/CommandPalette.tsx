@@ -14,7 +14,7 @@ import {
   ArrowRight,
   TrendingUp,
   Radio,
-  ExternalLink,
+  Newspaper,
 } from "lucide-react";
 
 interface SearchResultPlayer {
@@ -98,8 +98,8 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
             : [];
           setPlayers(playerList.slice(0, 6));
         }
-      } catch (err) {
-        console.error("Search API error:", err);
+      } catch {
+        // Fallback gracefully on search error
       } finally {
         setIsLoading(false);
       }
@@ -108,102 +108,117 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
     return () => clearTimeout(timer);
   }, [query]);
 
-  // Filter leagues by query
+  // Filter local leagues based on search query
   const matchingLeagues = query.trim()
-    ? QUICK_LEAGUES.filter((l) =>
-        l.name.toLowerCase().includes(query.toLowerCase()) ||
-        l.country.toLowerCase().includes(query.toLowerCase())
+    ? QUICK_LEAGUES.filter(
+        (l) =>
+          l.name.toLowerCase().includes(query.toLowerCase()) ||
+          l.country.toLowerCase().includes(query.toLowerCase())
       )
     : [];
 
   const totalResults = players.length + matchingLeagues.length;
 
-  const navigateTo = (url: string) => {
+  const navigateTo = (path: string) => {
     onClose();
-    router.push(url);
+    router.push(path);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && query.trim()) {
+      navigateTo(`/search?q=${encodeURIComponent(query.trim())}`);
+    }
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-4 bg-slate-950/80 backdrop-blur-md transition-all">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Database quick search"
+      className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-150"
+    >
       {/* Click outside to close */}
-      <div className="fixed inset-0" onClick={onClose} />
+      <div className="fixed inset-0" onClick={onClose} aria-hidden="true" />
 
       {/* Modal Dialog */}
-      <div className="relative w-full max-w-xl rounded-3xl glass-panel border border-slate-800 bg-slate-900/95 shadow-2xl overflow-hidden flex flex-col max-h-[80vh]">
+      <div className="relative w-full max-w-xl rounded-[var(--card-radius)] bg-[var(--bg-card)] border border-[var(--divider)] shadow-2xl overflow-hidden flex flex-col max-h-[80vh]">
         {/* Search Input Bar */}
-        <div className="flex items-center px-4 py-3.5 border-b border-slate-800 gap-3">
-          <Search className="w-5 h-5 text-slate-400 flex-shrink-0" />
+        <div className="flex items-center px-4 py-3.5 border-b border-[var(--divider)] gap-3">
+          <Search className="w-5 h-5 text-[var(--text-muted)] shrink-0" />
           <input
             ref={inputRef}
             type="text"
             placeholder="Search players, clubs, competitions..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-full bg-transparent text-sm sm:text-base text-white placeholder-slate-500 focus:outline-none"
+            onKeyDown={handleKeyDown}
+            aria-label="Search players, clubs, competitions"
+            className="w-full bg-transparent text-sm sm:text-base text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none"
           />
           {query ? (
             <button
               type="button"
               onClick={() => setQuery("")}
-              className="p-1 rounded-lg text-slate-400 hover:text-white"
+              className="p-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
+              aria-label="Clear search input"
             >
               <X className="w-4 h-4" />
             </button>
           ) : (
-            <kbd className="hidden sm:inline-block px-2 py-0.5 text-[10px] font-semibold text-slate-400 bg-slate-800 border border-slate-700 rounded-md">
+            <kbd className="hidden sm:inline-block px-2 py-0.5 text-[10px] font-semibold text-[var(--text-muted)] bg-[var(--bg-chip)] rounded-[var(--chip-radius)] border border-[var(--divider)]">
               ESC
             </kbd>
           )}
         </div>
 
         {/* Results / Suggestions Container */}
-        <div className="overflow-y-auto p-3 space-y-4 divide-y divide-slate-800/40">
+        <div className="overflow-y-auto p-3 space-y-4 divide-y divide-[var(--divider)]">
           {/* Empty query state: Quick Links */}
           {!query.trim() && (
             <div className="space-y-3 pt-1">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 px-2 block">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)] px-2 block">
                 Quick Navigation
               </span>
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
                   onClick={() => navigateTo("/matches")}
-                  className="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-950/60 hover:bg-slate-800/60 border border-slate-800 text-left text-xs text-slate-200 transition-colors group"
+                  className="flex items-center gap-2.5 p-2.5 rounded-xl bg-[var(--bg-chip)] hover:bg-[var(--bg-hover)] text-left text-xs text-[var(--text-primary)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
                 >
-                  <Radio className="w-4 h-4 text-rose-400 group-hover:scale-110 transition-transform" />
+                  <Radio className="w-4 h-4 text-[var(--live)]" />
                   <span className="font-semibold">Live Matches</span>
                 </button>
                 <button
                   type="button"
-                  onClick={() => navigateTo("/players")}
-                  className="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-950/60 hover:bg-slate-800/60 border border-slate-800 text-left text-xs text-slate-200 transition-colors group"
+                  onClick={() => navigateTo("/values")}
+                  className="flex items-center gap-2.5 p-2.5 rounded-xl bg-[var(--bg-chip)] hover:bg-[var(--bg-hover)] text-left text-xs text-[var(--text-primary)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
                 >
-                  <TrendingUp className="w-4 h-4 text-emerald-400 group-hover:scale-110 transition-transform" />
+                  <TrendingUp className="w-4 h-4 text-[var(--value-text)]" />
                   <span className="font-semibold">Top Valuations</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => navigateTo("/leagues")}
-                  className="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-950/60 hover:bg-slate-800/60 border border-slate-800 text-left text-xs text-slate-200 transition-colors group"
+                  className="flex items-center gap-2.5 p-2.5 rounded-xl bg-[var(--bg-chip)] hover:bg-[var(--bg-hover)] text-left text-xs text-[var(--text-primary)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
                 >
-                  <Trophy className="w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" />
+                  <Trophy className="w-4 h-4 text-[var(--accent)]" />
                   <span className="font-semibold">All Leagues</span>
                 </button>
                 <button
                   type="button"
-                  onClick={() => navigateTo("/methodology")}
-                  className="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-950/60 hover:bg-slate-800/60 border border-slate-800 text-left text-xs text-slate-200 transition-colors group"
+                  onClick={() => navigateTo("/news")}
+                  className="flex items-center gap-2.5 p-2.5 rounded-xl bg-[var(--bg-chip)] hover:bg-[var(--bg-hover)] text-left text-xs text-[var(--text-primary)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
                 >
-                  <Shield className="w-4 h-4 text-blue-400 group-hover:scale-110 transition-transform" />
-                  <span className="font-semibold">Methodology</span>
+                  <Newspaper className="w-4 h-4 text-[var(--accent)]" />
+                  <span className="font-semibold">Football News</span>
                 </button>
               </div>
 
               {/* Top Leagues */}
               <div className="pt-3">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 px-2 block mb-2">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)] px-2 block mb-2">
                   Featured Leagues
                 </span>
                 <div className="space-y-1">
@@ -212,14 +227,14 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                       key={l.id}
                       type="button"
                       onClick={() => navigateTo(`/leagues/${l.id}`)}
-                      className="w-full flex items-center justify-between p-2 rounded-xl hover:bg-slate-800/60 text-xs text-slate-300 transition-colors"
+                      className="w-full flex items-center justify-between p-2 rounded-xl hover:bg-[var(--bg-hover)] text-xs text-[var(--text-secondary)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
                     >
                       <div className="flex items-center gap-2.5">
-                        <Trophy className="w-4 h-4 text-amber-400/80" />
-                        <span className="font-semibold text-white">{l.name}</span>
-                        <span className="text-slate-500">• {l.country}</span>
+                        <Trophy className="w-4 h-4 text-[var(--accent)]" />
+                        <span className="font-semibold text-[var(--text-primary)]">{l.name}</span>
+                        <span className="text-[var(--text-muted)]">• {l.country}</span>
                       </div>
-                      <ArrowRight className="w-3.5 h-3.5 text-slate-500" />
+                      <ArrowRight className="w-3.5 h-3.5 text-[var(--text-muted)]" />
                     </button>
                   ))}
                 </div>
@@ -229,7 +244,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
 
           {/* Loading Indicator */}
           {isLoading && (
-            <div className="py-8 text-center text-xs text-slate-400">
+            <div className="py-8 text-center text-xs text-[var(--text-muted)]">
               Searching players, clubs and leagues...
             </div>
           )}
@@ -237,7 +252,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
           {/* Players Results */}
           {!isLoading && players.length > 0 && (
             <div className="space-y-1.5 pt-2">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 px-2 block mb-1">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)] px-2 block mb-1">
                 Players ({players.length})
               </span>
               {players.map((p) => {
@@ -248,10 +263,10 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                     key={p.id}
                     type="button"
                     onClick={() => navigateTo(`/players/${slug}`)}
-                    className="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-800/70 border border-transparent hover:border-slate-700/60 text-left transition-all group"
+                    className="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-[var(--bg-hover)] text-left transition-all group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
                   >
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className="relative w-8 h-8 rounded-lg bg-slate-800 overflow-hidden flex-shrink-0 flex items-center justify-center">
+                      <div className="relative w-8 h-8 rounded-lg bg-[var(--bg-chip)] overflow-hidden shrink-0 flex items-center justify-center">
                         <EntityImage
                           src={p.photoUrl}
                           alt={p.fullName}
@@ -262,10 +277,10 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                         />
                       </div>
                       <div className="min-w-0">
-                        <div className="font-semibold text-white text-xs truncate group-hover:text-emerald-400 transition-colors">
+                        <div className="font-semibold text-[var(--text-primary)] text-xs truncate group-hover:text-[var(--accent)] transition-colors">
                           {p.commonName || p.fullName}
                         </div>
-                        <div className="text-[11px] text-slate-400 truncate flex items-center gap-1.5">
+                        <div className="text-[11px] text-[var(--text-muted)] truncate flex items-center gap-1.5">
                           <span>{p.position}</span>
                           {p.currentClub?.name && (
                             <>
@@ -277,13 +292,13 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                       </div>
                     </div>
 
-                    <div className="text-right flex-shrink-0 pl-3">
+                    <div className="text-right shrink-0 pl-3">
                       {p.latestMarketValue ? (
-                        <span className="text-xs font-bold text-emerald-400">
+                        <span className="text-xs font-bold text-[var(--value-text)] tabular-nums">
                           {formatCompactEur(p.latestMarketValue)}
                         </span>
                       ) : (
-                        <span className="text-[11px] text-slate-500">—</span>
+                        <span className="text-[11px] text-[var(--text-muted)]">—</span>
                       )}
                     </div>
                   </button>
@@ -295,7 +310,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
           {/* Competitions Results */}
           {!isLoading && matchingLeagues.length > 0 && (
             <div className="space-y-1 pt-2">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 px-2 block mb-1">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)] px-2 block mb-1">
                 Competitions
               </span>
               {matchingLeagues.map((l) => (
@@ -303,14 +318,14 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                   key={l.id}
                   type="button"
                   onClick={() => navigateTo(`/leagues/${l.id}`)}
-                  className="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-800/70 text-left transition-colors"
+                  className="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-[var(--bg-hover)] text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
                 >
                   <div className="flex items-center gap-2.5">
-                    <Trophy className="w-4 h-4 text-amber-400" />
-                    <span className="font-semibold text-white text-xs">{l.name}</span>
-                    <span className="text-slate-400 text-xs">• {l.country}</span>
+                    <Trophy className="w-4 h-4 text-[var(--accent)]" />
+                    <span className="font-semibold text-[var(--text-primary)] text-xs">{l.name}</span>
+                    <span className="text-[var(--text-muted)] text-xs">• {l.country}</span>
                   </div>
-                  <ArrowRight className="w-3.5 h-3.5 text-slate-500" />
+                  <ArrowRight className="w-3.5 h-3.5 text-[var(--text-muted)]" />
                 </button>
               ))}
             </div>
@@ -319,11 +334,11 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
           {/* No results */}
           {!isLoading && query.trim() && totalResults === 0 && (
             <div className="py-8 text-center space-y-2">
-              <p className="text-xs text-slate-400">No instant results found for &ldquo;{query}&rdquo;</p>
+              <p className="text-xs text-[var(--text-muted)]">No instant results found for &ldquo;{query}&rdquo;</p>
               <button
                 type="button"
                 onClick={() => navigateTo(`/search?q=${encodeURIComponent(query.trim())}`)}
-                className="text-xs font-semibold text-emerald-400 hover:underline"
+                className="text-xs font-semibold text-[var(--accent)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] rounded px-1"
               >
                 Perform full search across database →
               </button>
@@ -333,12 +348,12 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
 
         {/* Footer */}
         {query.trim() && (
-          <div className="p-3 bg-slate-950/80 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
+          <div className="p-3 bg-[var(--bg-page)]/80 border-t border-[var(--divider)] flex items-center justify-between text-[11px] text-[var(--text-muted)]">
             <span>Press Enter to view all results</span>
             <button
               type="button"
               onClick={() => navigateTo(`/search?q=${encodeURIComponent(query.trim())}`)}
-              className="text-emerald-400 font-semibold hover:underline"
+              className="text-[var(--accent)] font-semibold hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] rounded px-1"
             >
               See all results →
             </button>

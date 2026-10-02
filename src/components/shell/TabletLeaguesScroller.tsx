@@ -24,7 +24,7 @@ export function TabletLeaguesScroller({ leagues }: { leagues?: LeagueItem[] }) {
           <Link
             key={league.id}
             href={href}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-[var(--chip-radius)] text-xs font-semibold shrink-0 transition-all shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
+            className={`flex items-center gap-2 px-3.5 py-2 min-h-[44px] rounded-[var(--chip-radius)] text-xs font-semibold shrink-0 transition-all shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
               isActive
                 ? "bg-[var(--bg-chip)] text-[var(--accent)] font-bold"
                 : "bg-[var(--bg-card)] text-[var(--text-primary)] hover:bg-[var(--bg-hover)] hover:text-[var(--accent)]"
