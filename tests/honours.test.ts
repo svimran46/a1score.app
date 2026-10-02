@@ -13,6 +13,20 @@ import { PrismaClient } from "@prisma/client";
 const hasDbUrl = Boolean((process.env.DATABASE_URL || "").trim());
 const prisma = (!process.env.CI || process.env.TEST_HONOURS_DB === "true") && hasDbUrl ? new PrismaClient() : null;
 
+test.before(async () => {
+  if (prisma) {
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        await prisma.$queryRaw`SELECT 1`;
+        break;
+      } catch (e) {
+        if (attempt === 3) throw e;
+        await new Promise((r) => setTimeout(r, 1000));
+      }
+    }
+  }
+});
+
 test.after(async () => {
   if (prisma) {
     await prisma.$disconnect();
@@ -428,4 +442,159 @@ test("Validation 14: Competitions row exists with key=la-liga, label='Spanish le
   assert.ok(comp, "Competition row for la-liga must exist");
   assert.equal(comp?.label, "Spanish league titles", "Competition label must be 'Spanish league titles'");
   assert.equal(comp?.note, "Includes Atlético Aviación (1939/40, 1940/41)", "Competition note must match specification");
+});
+
+test("Validation 15: Exactly 114 winners rows in CSV and database for bundesliga", async (t) => {
+  const csvPath = path.resolve(process.cwd(), "data/winners/bundesliga.csv");
+  assert.ok(fs.existsSync(csvPath), "data/winners/bundesliga.csv exists");
+
+  const lines = fs.readFileSync(csvPath, "utf-8").trim().split("\n").slice(1).filter(l => l.trim().length > 0);
+  assert.equal(lines.length, 114, "Bundesliga CSV must contain exactly 114 winners rows");
+
+  if (!prisma) {
+    t.skip("DATABASE_URL not configured. Skipping database check.");
+    return;
+  }
+
+  const dbWinners = await prisma.competitionWinner.findMany({
+    where: { competitionKey: "bundesliga" },
+  });
+  assert.equal(dbWinners.length, 114, "Database must contain exactly 114 winners rows for bundesliga");
+});
+
+test("Validation 16: No duplicate seasons in CSV or database for bundesliga", async (t) => {
+  const csvPath = path.resolve(process.cwd(), "data/winners/bundesliga.csv");
+  const lines = fs.readFileSync(csvPath, "utf-8").trim().split("\n").slice(1).filter(l => l.trim().length > 0);
+  const csvSeasons = lines.map(l => l.split(",")[1].trim());
+  const uniqueCsvSeasons = new Set(csvSeasons);
+  assert.equal(csvSeasons.length, uniqueCsvSeasons.size, "Bundesliga CSV must have no duplicate seasons");
+
+  if (!prisma) {
+    t.skip("DATABASE_URL not configured. Skipping database check.");
+    return;
+  }
+
+  const dbWinners = await prisma.competitionWinner.findMany({
+    where: { competitionKey: "bundesliga" },
+    select: { season: true },
+  });
+  const dbSeasons = dbWinners.map(w => w.season);
+  const uniqueDbSeasons = new Set(dbSeasons);
+  assert.equal(dbSeasons.length, uniqueDbSeasons.size, "Database must have no duplicate seasons for bundesliga");
+});
+
+test("Validation 17: Gaps in consecutive seasons only match season-exceptions-bundesliga.csv", async () => {
+  const exceptionsPath = path.resolve(process.cwd(), "data/season-exceptions-bundesliga.csv");
+  assert.ok(fs.existsSync(exceptionsPath), "data/season-exceptions-bundesliga.csv exists");
+
+  const exceptionLines = fs.readFileSync(exceptionsPath, "utf-8").trim().split("\n").slice(1).filter(l => l.trim().length > 0);
+  const expectedExceptions = new Set(exceptionLines.map(l => l.split(",")[1].trim()));
+
+  const csvPath = path.resolve(process.cwd(), "data/winners/bundesliga.csv");
+  const lines = fs.readFileSync(csvPath, "utf-8").trim().split("\n").slice(1).filter(l => l.trim().length > 0);
+  const seasonsData = lines.map(l => {
+    const parts = l.split(",").map(p => p.trim());
+    return { season: parts[1], seasonEndYear: parseInt(parts[2], 10) };
+  }).sort((a, b) => a.seasonEndYear - b.seasonEndYear);
+
+  const allSeasons = new Set(seasonsData.map(w => w.season));
+  const minYear = seasonsData[0].seasonEndYear; // 1903 (1902/03)
+  const maxYear = seasonsData[seasonsData.length - 1].seasonEndYear; // 2026 (2025/26)
+
+  const actualGaps: string[] = [];
+  for (let y = minYear; y <= maxYear; y++) {
+    const currYearShort = String(y % 100).padStart(2, "0");
+    const startYear = y - 1;
+    const seasonStr = `${startYear}/${currYearShort}`;
+
+    if (!allSeasons.has(seasonStr)) {
+      actualGaps.push(seasonStr);
+    }
+  }
+
+  assert.equal(
+    actualGaps.length,
+    expectedExceptions.size,
+    `Gaps count (${actualGaps.length}) must equal expected exceptions (${expectedExceptions.size})`
+  );
+
+  for (const gap of actualGaps) {
+    assert.ok(
+      expectedExceptions.has(gap),
+      `Unexpected gap season found: ${gap} is not in season-exceptions-bundesliga.csv`
+    );
+  }
+});
+
+test("Validation 18: Per-club title counts equal data/expected-counts/bundesliga.csv", async (t) => {
+  const expectedPath = path.resolve(process.cwd(), "data/expected-counts/bundesliga.csv");
+  assert.ok(fs.existsSync(expectedPath), "data/expected-counts/bundesliga.csv exists");
+
+  const expectedLines = fs.readFileSync(expectedPath, "utf-8").trim().split("\n").slice(1).filter(l => l.trim().length > 0);
+  const expectedMap = new Map<string, number>();
+  for (const line of expectedLines) {
+    const parts = line.split(",").map(p => p.trim());
+    expectedMap.set(parts[1], parseInt(parts[2], 10));
+  }
+
+  const csvPath = path.resolve(process.cwd(), "data/winners/bundesliga.csv");
+  const lines = fs.readFileSync(csvPath, "utf-8").trim().split("\n").slice(1).filter(l => l.trim().length > 0);
+  const csvMap = new Map<string, number>();
+  for (const l of lines) {
+    const club = l.split(",")[3].trim();
+    csvMap.set(club, (csvMap.get(club) || 0) + 1);
+  }
+
+  assert.equal(csvMap.size, expectedMap.size, "Bundesliga CSV unique clubs must match expected");
+  for (const [clubName, expTitles] of expectedMap.entries()) {
+    assert.equal(csvMap.get(clubName), expTitles, `Bundesliga CSV titles mismatch for ${clubName}`);
+  }
+
+  if (!prisma) {
+    t.skip("DATABASE_URL not configured. Skipping database check.");
+    return;
+  }
+
+  const dbWinners = await prisma.competitionWinner.findMany({
+    where: { competitionKey: "bundesliga" },
+  });
+
+  const actualMap = new Map<string, number>();
+  for (const w of dbWinners) {
+    actualMap.set(w.clubName, (actualMap.get(w.clubName) || 0) + 1);
+  }
+
+  assert.equal(
+    actualMap.size,
+    expectedMap.size,
+    `Unique winner clubs (${actualMap.size}) must match expected (${expectedMap.size})`
+  );
+
+  for (const [clubName, expTitles] of expectedMap.entries()) {
+    const actual = actualMap.get(clubName) || 0;
+    assert.equal(
+      actual,
+      expTitles,
+      `Titles count mismatch for ${clubName}: expected ${expTitles}, got ${actual}`
+    );
+  }
+});
+
+test("Validation 19: Competitions row exists with key=bundesliga, label='German league titles', and note", async (t) => {
+  if (!prisma) {
+    t.skip("DATABASE_URL not configured. Skipping database check.");
+    return;
+  }
+
+  const comp = await prisma.competition.findUnique({
+    where: { key: "bundesliga" },
+  });
+
+  assert.ok(comp, "Competition row for bundesliga must exist");
+  assert.equal(comp?.label, "German league titles", "Competition label must be 'German league titles'");
+  assert.equal(
+    comp?.note,
+    "Includes German Championship finals (1903–1963) and Bundesliga (since 1963/64)",
+    "Competition note must match specification"
+  );
 });

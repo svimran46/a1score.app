@@ -801,8 +801,8 @@ export async function getClubHonours(clubId: string, clubName: string): Promise<
       return "18 Jun 2026";
     };
 
-    // Sort order: domestic leagues (premier-league, la-liga), then champions-league, then others
-    const priority = ["premier-league", "la-liga", "champions-league"];
+    // Sort order: domestic leagues (premier-league, la-liga, bundesliga), then champions-league, then others
+    const priority = ["premier-league", "la-liga", "bundesliga", "champions-league"];
     const result: ClubHonourCompetition[] = [];
 
     for (const [compKey, data] of honoursByComp.entries()) {
