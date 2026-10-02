@@ -53,6 +53,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: SITE_URL,
   },
+  manifest: "/manifest.webmanifest",
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
@@ -63,9 +64,16 @@ export const metadata: Metadata = {
       { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
     ],
   },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "a1score",
+  },
 };
 
 import { GridKeyNavigation } from "@/components/GridKeyNavigation";
+import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
+import { PwaInstallPrompt } from "@/components/PwaInstallPrompt";
 
 export default function RootLayout({
   children,
@@ -92,11 +100,13 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen flex flex-col font-sans antialiased transition-colors duration-200" style={{ backgroundColor: "var(--color-bg)", color: "var(--color-text)" }}>
+        <ServiceWorkerRegister />
         <GridKeyNavigation />
         <Navbar />
         <main className="app-container flex-1 pt-3 pb-20 sm:pb-8 sm:py-6">
           {children}
         </main>
+        <PwaInstallPrompt />
         <Footer />
       </body>
     </html>
