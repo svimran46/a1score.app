@@ -32,6 +32,36 @@ export function _getMemoryCacheSize(): number {
   return memoryCache.size;
 }
 
+export interface CacheStats {
+  size: number;
+  maxEntries: number;
+  inFlightCount: number;
+  oldestEntryAgeSeconds: number | null;
+  isOperational: boolean;
+}
+
+export function _getCacheStats(): CacheStats {
+  const now = Date.now();
+  let oldestTimestamp: number | null = null;
+  for (const entry of memoryCache.values()) {
+    const approxCreatedAt = entry.expiresAt - 3600 * 1000;
+    if (oldestTimestamp === null || approxCreatedAt < oldestTimestamp) {
+      oldestTimestamp = approxCreatedAt;
+    }
+  }
+
+  const oldestEntryAgeSeconds =
+    oldestTimestamp !== null ? Math.max(0, Math.floor((now - oldestTimestamp) / 1000)) : null;
+
+  return {
+    size: memoryCache.size,
+    maxEntries: MAX_CACHE_ENTRIES,
+    inFlightCount: inFlight.size,
+    oldestEntryAgeSeconds,
+    isOperational: true,
+  };
+}
+
 function touchLru<T>(key: string, entry: CacheEntry<T>): void {
   memoryCache.delete(key);
   memoryCache.set(key, entry);

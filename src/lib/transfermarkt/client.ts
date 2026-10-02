@@ -7,6 +7,10 @@
  */
 
 import { sanitizeImageUrl } from "@/lib/image-sanitize";
+import {
+  validateTmMarketValueGraph,
+  validateTmTransferHistory,
+} from "@/lib/validation/upstream-shapes";
 
 const TM_BASE = "https://www.transfermarkt.com";
 
@@ -218,11 +222,33 @@ export async function tmGetPlayer(slugOrId: string) {
     }
 
     // Parallel fetch: HTML profile + CEAPI market values graph + CEAPI transfers
-    const [html, mvData, transferData] = await Promise.all([
+    const [html, rawMvData, rawTransferData] = await Promise.all([
       tmFetch(`/spieler/profil/spieler/${pId}`, false, 3600),
       tmFetch(`/ceapi/marketValueDevelopment/graph/${pId}`, true, 3600),
       tmFetch(`/ceapi/transferHistory/list/${pId}`, true, 3600),
     ]);
+
+    let mvData = rawMvData;
+    if (rawMvData) {
+      const val = validateTmMarketValueGraph(rawMvData, `/ceapi/marketValueDevelopment/graph/${pId}`);
+      if (!val.success) {
+        console.warn(`[TM Schema Drift] Market value graph drifted for player ${pId}: ${val.error}`);
+        if (!rawMvData || typeof rawMvData !== "object" || !Array.isArray(rawMvData.list)) {
+          mvData = null;
+        }
+      }
+    }
+
+    let transferData = rawTransferData;
+    if (rawTransferData) {
+      const val = validateTmTransferHistory(rawTransferData, `/ceapi/transferHistory/list/${pId}`);
+      if (!val.success) {
+        console.warn(`[TM Schema Drift] Transfer history drifted for player ${pId}: ${val.error}`);
+        if (!rawTransferData || typeof rawTransferData !== "object" || !Array.isArray(rawTransferData.transfers)) {
+          transferData = null;
+        }
+      }
+    }
 
     if (!html && !mvData) return null;
 

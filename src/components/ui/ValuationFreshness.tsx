@@ -11,7 +11,7 @@ export interface ValuationFreshnessProps {
 /**
  * Calculates human-readable relative time and checks freshness against threshold.
  */
-function getFreshnessDetails(timestamp: string | Date | null | undefined, thresholdDays = 14) {
+export function getFreshnessDetails(timestamp: string | Date | null | undefined, thresholdDays = 14) {
   if (!timestamp) return null;
 
   try {
@@ -70,12 +70,23 @@ function getFreshnessDetails(timestamp: string | Date | null | undefined, thresh
  */
 export function ValuationFreshness({
   timestamp,
-  thresholdDays = 14,
+  thresholdDays = 30,
   className = "",
   showIcon = false,
 }: ValuationFreshnessProps) {
   const details = getFreshnessDetails(timestamp, thresholdDays);
-  if (!details) return null;
+
+  if (!details) {
+    return (
+      <div
+        title="Valuation revision pending verification"
+        className={`inline-flex items-center gap-1.5 text-xs text-[var(--text-muted)] cursor-help select-none ${className}`}
+      >
+        {showIcon && <Clock className="w-3.5 h-3.5 opacity-70 shrink-0" />}
+        <span className="text-[var(--value-text)] font-medium">Review pending</span>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -85,8 +96,8 @@ export function ValuationFreshness({
       {showIcon && <Clock className="w-3.5 h-3.5 opacity-70 shrink-0" />}
       <span>Values updated {details.relativeStr}</span>
       {details.isOutOfDate && (
-        <span className="opacity-80">
-          • <span className="underline decoration-dotted underline-offset-2">May be out of date</span>
+        <span className="opacity-90">
+          • <span className="text-[var(--value-text)] font-semibold underline decoration-dotted underline-offset-2">Review pending</span>
         </span>
       )}
     </div>

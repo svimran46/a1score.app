@@ -238,9 +238,13 @@ export function MatchScorecard({
                         isFinished={false}
                         className="text-xs sm:text-sm"
                       />
-                      {lastUpdatedTime && (
+                      {lastUpdatedTime ? (
                         <span className="text-[10px] font-medium text-[var(--text-muted)] tracking-wider">
-                          {lastUpdatedTime}
+                          Updated {lastUpdatedTime}
+                        </span>
+                      ) : (
+                        <span className="text-[10px] font-medium text-[var(--text-muted)] tracking-wider">
+                          Feed active
                         </span>
                       )}
                     </div>

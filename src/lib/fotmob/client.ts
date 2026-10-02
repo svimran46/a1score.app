@@ -7,6 +7,11 @@
  */
 
 import { formatKickoff } from "@/lib/utils";
+import {
+  validateFotmobMatches,
+  validateFotmobLeague,
+  validateFotmobMatchDetails,
+} from "@/lib/validation/upstream-shapes";
 
 const FOTMOB_BASE = "https://www.fotmob.com";
 
@@ -335,13 +340,26 @@ export async function getMatchesByDate(dateStr?: string): Promise<{
   const path = `/api/data/matches?date=${dateFormatted}`;
   const data = await fotmobFetch<any>(path, 5); // 5s cache for ultra-responsive live scores
 
-  if (!data || !Array.isArray(data.leagues)) {
+  if (!data) {
     return {
       date: dateFormatted,
       leagues: [],
       totalMatches: 0,
       liveMatchesCount: 0,
     };
+  }
+
+  const validation = validateFotmobMatches(data, path);
+  if (!validation.success) {
+    console.warn(`[FotMob Schema Drift] ${path}: ${validation.error}`);
+    if (!Array.isArray(data.leagues)) {
+      return {
+        date: dateFormatted,
+        leagues: [],
+        totalMatches: 0,
+        liveMatchesCount: 0,
+      };
+    }
   }
 
   let totalMatches = 0;
@@ -572,6 +590,11 @@ export async function getLeagueStandings(leagueIdOrCode: number | string): Promi
   const data = await fotmobFetch<any>(path, 300); // 5 min cache for league standings
 
   if (!data) return null;
+
+  const val = validateFotmobLeague(data, path);
+  if (!val.success) {
+    console.warn(`[FotMob Schema Drift] ${path}: ${val.error}`);
+  }
 
   const rawTable =
     data.table?.[0]?.data?.table?.all ||
@@ -935,6 +958,11 @@ export async function getMatchDetails(matchId: string | number) {
   const data = await fotmobFetch<any>(path, 5); // 5s cache for live match details and lineups
 
   if (!data) return null;
+
+  const val = validateFotmobMatchDetails(data, path);
+  if (!val.success) {
+    console.warn(`[FotMob Schema Drift] ${path}: ${val.error}`);
+  }
 
   const general = data.general || {};
   const header = data.header || {};

@@ -1,0 +1,22 @@
+name = "a1score-health-monitor"
+main = "index.ts"
+compatibility_date = "2024-04-01"
+
+# Run probe every 15 minutes
+[triggers]
+crons = ["*/15 * * * *"]
+
+[vars]
+HEALTH_URL = "https://a1score.app"
+
+# Secrets to configure via `wrangler secret put`:
+# - HEALTH_SECRET: Secret shared with a1score's /api/health/detail endpoint
+# - DISCORD_WEBHOOK_URL: Discord channel webhook URL for health alerts (optional)
+# - TELEGRAM_BOT_TOKEN: Telegram bot API token (optional)
+# - TELEGRAM_CHAT_ID: Telegram destination chat or group ID (optional)
+
+# KV Namespace for persisting consecutive failure counts across 15-minute executions
+# Create via: wrangler kv:namespace create "HEALTH_STATE"
+# [[kv_namespaces]]
+# binding = "HEALTH_STATE"
+# id = "<YOUR_KV_NAMESPACE_ID>"
