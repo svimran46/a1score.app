@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
 import { SITE_URL } from "@/lib/metadata";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
@@ -73,7 +71,7 @@ export const metadata: Metadata = {
 
 import { GridKeyNavigation } from "@/components/GridKeyNavigation";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
-import { PwaInstallPrompt } from "@/components/PwaInstallPrompt";
+import { AppShell } from "@/components/AppShell";
 
 export default function RootLayout({
   children,
@@ -104,12 +102,9 @@ export default function RootLayout({
       <body className="min-h-screen flex flex-col font-sans antialiased transition-colors duration-200" style={{ backgroundColor: "var(--bg-page)", color: "var(--text-primary)", fontFamily: "var(--font-sans)" }}>
         <ServiceWorkerRegister />
         <GridKeyNavigation />
-        <Navbar />
-        <main className="app-container flex-1 pt-3 pb-20 sm:pb-8 sm:py-6">
+        <AppShell>
           {children}
-        </main>
-        <PwaInstallPrompt />
-        <Footer />
+        </AppShell>
       </body>
     </html>
   );
