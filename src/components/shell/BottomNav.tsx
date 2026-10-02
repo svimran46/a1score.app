@@ -14,6 +14,7 @@ import {
   Trophy,
   ArrowLeftRight,
   BookOpen,
+  Star,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
@@ -46,6 +47,7 @@ export function BottomNav({ liveCount }: { liveCount?: number | null }) {
   const isValuesActive = pathname === "/values";
   const isMoreActive =
     isMoreOpen ||
+    pathname.startsWith("/watchlist") ||
     pathname.startsWith("/leagues") ||
     pathname.startsWith("/transfers") ||
     pathname.startsWith("/news") ||
@@ -182,6 +184,15 @@ export function BottomNav({ liveCount }: { liveCount?: number | null }) {
 
             {/* Navigation links */}
             <nav className="flex flex-col space-y-1">
+              <Link
+                href="/watchlist"
+                onClick={() => setIsMoreOpen(false)}
+                className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
+              >
+                <Star className="w-5 h-5 text-[var(--accent)]" />
+                <span>Watchlist</span>
+              </Link>
+
               <Link
                 href="/news"
                 onClick={() => setIsMoreOpen(false)}

@@ -8,6 +8,7 @@ import { getClubSlug, getLeagueSlug } from "@/lib/slugs";
 import { constructMetadata, SITE_URL } from "@/lib/metadata";
 import { Card, ValuationFreshness, Breadcrumbs } from "@/components/ui";
 import { PlayerTabsContainer } from "@/components/PlayerTabsContainer";
+import { FollowButton } from "@/components/watchlist/FollowButton";
 import { getRelatedNews } from "@/lib/data/news";
 import type { Metadata } from "next";
 
@@ -253,22 +254,37 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
             </div>
           </div>
 
-          {/* Current Market Value large in amber with trend arrow + % */}
-          {currentVal > 0 && (
-            <div className="w-full sm:w-auto p-3.5 sm:p-4 rounded-2xl bg-[var(--bg-elevated)] flex flex-col sm:items-end justify-center shrink-0">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)]">
-                Current Market Value
-              </span>
-              <div className="text-2xl sm:text-3xl font-black text-[var(--value-text)] tabular-nums tracking-tight mt-0.5">
-                {formatCompactEur(currentVal)}
+          {/* Current Market Value + Follow Button */}
+          <div className="flex flex-col sm:items-end gap-2.5 w-full sm:w-auto shrink-0">
+            {currentVal > 0 && (
+              <div className="w-full sm:w-auto p-3.5 sm:p-4 rounded-2xl bg-[var(--bg-elevated)] flex flex-col sm:items-end justify-center shrink-0">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)]">
+                  Current Market Value
+                </span>
+                <div className="text-2xl sm:text-3xl font-black text-[var(--value-text)] tabular-nums tracking-tight mt-0.5">
+                  {formatCompactEur(currentVal)}
+                </div>
+                {changeElement && <div className="mt-1">{changeElement}</div>}
+                <ValuationFreshness
+                  timestamp={latestValuation?.date || player.updatedAt}
+                  className="mt-1"
+                />
               </div>
-              {changeElement && <div className="mt-1">{changeElement}</div>}
-              <ValuationFreshness
-                timestamp={latestValuation?.date || player.updatedAt}
-                className="mt-1"
-              />
-            </div>
-          )}
+            )}
+            <FollowButton
+              variant="button"
+              id={player.id}
+              type="player"
+              name={player.fullName}
+              slug={params.slug}
+              avatarUrl={player.photoUrl}
+              clubName={clubShort}
+              clubCrest={currentClub?.logoUrl}
+              position={player.position}
+              marketValue={currentVal}
+              className="w-full sm:w-auto"
+            />
+          </div>
         </div>
       </Card>
 

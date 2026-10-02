@@ -43,5 +43,6 @@ test("Navbar DRAWER_ITEMS highlights the correct item across detail and list rou
   assert.deepEqual(getActiveDrawerItems("/players/erling-haaland-123"), ["Players"]);
   assert.deepEqual(getActiveDrawerItems("/clubs/chelsea-fc"), ["Clubs"]);
   assert.deepEqual(getActiveDrawerItems("/leagues/L1"), ["Leagues"]);
+  assert.deepEqual(getActiveDrawerItems("/watchlist"), ["Watchlist"]);
   assert.deepEqual(getActiveDrawerItems("/methodology"), ["Methodology"]);
 });

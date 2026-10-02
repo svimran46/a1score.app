@@ -1,8 +1,9 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { User, TrendingUp, TrendingDown, Shield } from "lucide-react";
+import { User, TrendingUp, TrendingDown } from "lucide-react";
 import { formatCompactEur } from "@/lib/utils";
+import { FollowButton } from "@/components/watchlist/FollowButton";
 
 export interface PlayerRowProps {
   rank?: number | string;
@@ -24,9 +25,10 @@ export interface PlayerRowProps {
 
 /**
  * FotMob-style PlayerRow component (valuation-first, height --row-height):
- * rank (24px, muted) | avatar 40px round | name (600) over club crest + club (muted, text-sm) | ... | value (amber, tabular-nums, right-aligned, 700) + trend arrow with %
+ * rank (24px, muted) | avatar 40px round | name (600) over club crest + club (muted, text-sm) | ... | value (amber, tabular-nums, right-aligned, 700) + trend arrow with % | star
  * - Trend uses arrow + number, never color alone.
  * - On mobile, hide secondary columns but always keep name, club, and value.
+ * - Star button is desktop hover/focus, always visible when followed, 44px tap target.
  */
 export function PlayerRow({
   rank,
@@ -55,12 +57,17 @@ export function PlayerRow({
       : null;
 
   return (
-    <Link
-      href={href}
-      className={`group flex items-center justify-between gap-3 px-3 sm:px-4 h-[var(--row-height)] min-h-[64px] rounded-xl hover:bg-[var(--bg-hover)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] w-full select-none ${className}`}
+    <div
+      className={`group relative flex items-center justify-between gap-3 px-3 sm:px-4 h-[var(--row-height)] min-h-[64px] rounded-xl hover:bg-[var(--bg-hover)] transition-colors select-none ${className}`}
     >
+      <Link
+        href={href}
+        aria-label={name}
+        className="absolute inset-0 z-0 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
+      />
+
       {/* Left side: Rank + Avatar + Name / Club */}
-      <div className="flex items-center gap-3 min-w-0 flex-1">
+      <div className="flex items-center gap-3 min-w-0 flex-1 relative z-10 pointer-events-none">
         {/* Rank (24px width, muted) */}
         {rank !== undefined && rank !== null && (
           <span className="w-6 text-center text-xs sm:text-sm font-bold text-[var(--text-muted)] shrink-0 tabular-nums">
@@ -114,8 +121,8 @@ export function PlayerRow({
       </div>
 
       {/* Middle: Secondary columns (hidden on mobile, visible on tablet/desktop) */}
-      {(age !== null && age !== undefined || nationality) && (
-        <div className="hidden md:flex items-center gap-4 text-xs text-[var(--text-muted)] shrink-0 px-2">
+      {((age !== null && age !== undefined) || nationality) && (
+        <div className="hidden md:flex items-center gap-4 text-xs text-[var(--text-muted)] shrink-0 px-2 relative z-10 pointer-events-none">
           {age !== null && age !== undefined && (
             <span className="tabular-nums">{age} yrs</span>
           )}
@@ -123,26 +130,43 @@ export function PlayerRow({
         </div>
       )}
 
-      {/* Right side: Value (amber, tabular-nums, right-aligned, 700) + Trend */}
-      <div className="text-right shrink-0">
-        <div className="text-sm sm:text-base font-bold text-[var(--value-text)] tabular-nums leading-tight">
-          {marketValue ? formatCompactEur(marketValue) : "—"}
-        </div>
-        {hasTrend && pctStr && (
-          <div
-            className={`flex items-center justify-end gap-0.5 text-xs font-bold tabular-nums leading-tight mt-0.5 ${
-              isUp ? "text-[var(--trend-up)]" : "text-[var(--trend-down)]"
-            }`}
-          >
-            {isUp ? (
-              <TrendingUp className="w-3 h-3 shrink-0" aria-label="Valuation increased" />
-            ) : (
-              <TrendingDown className="w-3 h-3 shrink-0" aria-label="Valuation decreased" />
-            )}
-            <span>{pctStr}</span>
+      {/* Right side: Value + Trend + FollowButton */}
+      <div className="flex items-center gap-1 sm:gap-2 shrink-0 relative z-10">
+        <div className="text-right pointer-events-none">
+          <div className="text-sm sm:text-base font-bold text-[var(--value-text)] tabular-nums leading-tight">
+            {marketValue ? formatCompactEur(marketValue) : "—"}
           </div>
-        )}
+          {hasTrend && pctStr && (
+            <div
+              className={`flex items-center justify-end gap-0.5 text-xs font-bold tabular-nums leading-tight mt-0.5 ${
+                isUp ? "text-[var(--trend-up)]" : "text-[var(--trend-down)]"
+              }`}
+            >
+              {isUp ? (
+                <TrendingUp className="w-3 h-3 shrink-0" aria-label="Valuation increased" />
+              ) : (
+                <TrendingDown className="w-3 h-3 shrink-0" aria-label="Valuation decreased" />
+              )}
+              <span>{pctStr}</span>
+            </div>
+          )}
+        </div>
+
+        <FollowButton
+          id={id || slug || name}
+          type="player"
+          name={name}
+          slug={slug}
+          avatarUrl={avatarUrl}
+          clubName={clubName}
+          clubCrest={clubCrest}
+          position={position}
+          marketValue={marketValue}
+          variant="icon"
+          desktopHoverOnly={true}
+          className="pointer-events-auto shrink-0"
+        />
       </div>
-    </Link>
+    </div>
   );
 }

@@ -6,6 +6,7 @@ import { TrendingUp, TrendingDown, ArrowRight, Newspaper, ExternalLink } from "l
 import { formatCompactEur } from "@/lib/utils";
 import { NewsItem } from "@/types/news";
 import { formatRelativeTime } from "@/lib/data/news";
+import { WatchlistRightRailCard } from "@/components/watchlist/WatchlistRightRailCard";
 
 export interface MoverItem {
   id: string;
@@ -181,6 +182,9 @@ export function RightRail({
 
   return (
     <aside aria-label="News and market value movers" className="flex flex-col gap-4 w-full">
+      {/* Watchlist Widget Card */}
+      <WatchlistRightRailCard />
+
       {/* News Widget Card */}
       <div className="bg-[var(--bg-card)] rounded-[var(--card-radius)] p-[var(--card-padding)] shadow-xs">
         <div className="flex items-center justify-between mb-3 px-1">

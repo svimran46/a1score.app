@@ -12,6 +12,7 @@ import {
   ArrowLeftRight,
   Newspaper,
   Search,
+  Star,
 } from "lucide-react";
 import { CommandPalette } from "@/components/CommandPalette";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -115,6 +116,12 @@ export const DRAWER_ITEMS = [
     href: "/values",
     icon: TrendingUp,
     isActive: (p: string, f: string | null) => p === "/values" || (p === "/search" && f === "valuable"),
+  },
+  {
+    name: "Watchlist",
+    href: "/watchlist",
+    icon: Star,
+    isActive: (p: string) => p === "/watchlist" || p.startsWith("/watchlist/"),
   },
   {
     name: "Transfers",

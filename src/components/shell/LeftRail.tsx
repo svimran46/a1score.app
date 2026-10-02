@@ -11,6 +11,7 @@ import {
   Shield,
   Users,
   BookOpen,
+  Star,
 } from "lucide-react";
 import { getLeagueSlug } from "@/lib/slugs";
 
@@ -36,6 +37,7 @@ export const DEFAULT_TOP_LEAGUES: LeagueItem[] = [
 const QUICK_LINKS = [
   { name: "Live Matches", href: "/matches", icon: Radio, pulse: true },
   { name: "Market Values", href: "/values", icon: TrendingUp },
+  { name: "Watchlist", href: "/watchlist", icon: Star },
   { name: "Transfers", href: "/transfers", icon: ArrowLeftRight },
   { name: "Clubs Directory", href: "/clubs", icon: Shield },
   { name: "Players Directory", href: "/players", icon: Users },

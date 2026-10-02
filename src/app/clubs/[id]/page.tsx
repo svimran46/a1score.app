@@ -13,6 +13,7 @@ import { ClubHonoursStatStrip } from "@/components/ClubHonoursStatStrip";
 import { RelatedNewsCard } from "@/components/news/RelatedNewsCard";
 import { getRelatedNews } from "@/lib/data/news";
 import { Card, ValuationFreshness, Breadcrumbs } from "@/components/ui";
+import { FollowButton } from "@/components/watchlist/FollowButton";
 
 import { constructMetadata, SITE_URL } from "@/lib/metadata";
 import type { Metadata } from "next";
@@ -215,20 +216,33 @@ export default async function ClubPage({ params }: ClubPageProps) {
             </div>
           </div>
 
-          {/* Squad Market Value in Amber */}
-          <div className="w-full sm:w-auto p-3.5 sm:p-4 rounded-2xl bg-[var(--bg-elevated)] flex flex-col sm:items-end justify-center shrink-0">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)]">
-              Total Squad Valuation
-            </span>
-            <span className="text-2xl sm:text-3xl font-black text-[var(--value-text)] tracking-tight mt-0.5 tabular-nums">
-              {formatCompactEur(club.totalSquadValue)}
-            </span>
-            <span className="text-[10px] text-[var(--text-muted)] mt-0.5">
-              Based on senior first-team roster
-            </span>
-            <ValuationFreshness
-              timestamp={club.lastSyncedAt || seniorSquad[0]?.updatedAt || seniorSquad[0]?.marketValues?.[0]?.date}
-              className="mt-1"
+          {/* Squad Market Value in Amber + Follow Button */}
+          <div className="flex flex-col sm:items-end gap-2.5 w-full sm:w-auto shrink-0">
+            <div className="w-full sm:w-auto p-3.5 sm:p-4 rounded-2xl bg-[var(--bg-elevated)] flex flex-col sm:items-end justify-center shrink-0">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)]">
+                Total Squad Valuation
+              </span>
+              <span className="text-2xl sm:text-3xl font-black text-[var(--value-text)] tracking-tight mt-0.5 tabular-nums">
+                {formatCompactEur(club.totalSquadValue)}
+              </span>
+              <span className="text-[10px] text-[var(--text-muted)] mt-0.5">
+                Based on senior first-team roster
+              </span>
+              <ValuationFreshness
+                timestamp={club.lastSyncedAt || seniorSquad[0]?.updatedAt || seniorSquad[0]?.marketValues?.[0]?.date}
+                className="mt-1"
+              />
+            </div>
+            <FollowButton
+              variant="button"
+              id={club.id}
+              type="club"
+              name={club.name || getClubDisplayName(club)}
+              slug={canonicalSlug}
+              clubCrest={club.logoUrl}
+              avatarUrl={club.logoUrl}
+              marketValue={club.totalSquadValue}
+              className="w-full sm:w-auto"
             />
           </div>
         </div>
