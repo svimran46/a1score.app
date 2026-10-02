@@ -57,6 +57,14 @@ export function FollowButton({
       initialValueEur: marketValue || 0,
     });
 
+    if (!following && type === "player" && typeof window !== "undefined") {
+      window.dispatchEvent(
+        new CustomEvent("a1score:player-followed", {
+          detail: { name, id, slug },
+        })
+      );
+    }
+
     // Provide immediate optimistic feedback
     setTimeout(() => {
       setIsLoading(false);

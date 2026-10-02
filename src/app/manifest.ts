@@ -4,11 +4,11 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "a1score — Money meets the pitch",
     short_name: "a1score",
-    description: "Real-time football intelligence: live match tracking, tactical lineups, player valuations, and club records.",
+    description: "Football market valuation updates, squad analytics, and club records.",
     start_url: "/",
     display: "standalone",
-    background_color: "#030712",
-    theme_color: "#0b1120",
+    background_color: "#0a0d12",
+    theme_color: "#0a0d12",
     orientation: "portrait-primary",
     icons: [
       {

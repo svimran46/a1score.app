@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useWatchlist } from "@/lib/watchlist/useWatchlist";
 import { formatCompactEur } from "@/lib/utils";
+import { NotificationSettingsCard } from "@/components/notifications/NotificationSettingsCard";
 
 export function WatchlistClient() {
   const {
@@ -110,6 +111,9 @@ export function WatchlistClient() {
           </p>
         </div>
       )}
+
+      {/* Notification Alerts Settings */}
+      <NotificationSettingsCard />
 
       {/* 2. Tabs: Players / Clubs */}
       <div className="flex items-center gap-2 border-b border-[var(--divider)] pb-2">

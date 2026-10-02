@@ -71,6 +71,7 @@ export const metadata: Metadata = {
 
 import { GridKeyNavigation } from "@/components/GridKeyNavigation";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
+import { PostFollowNotificationPrompt } from "@/components/notifications/PostFollowNotificationPrompt";
 import { AppShell } from "@/components/AppShell";
 
 export default function RootLayout({
@@ -102,6 +103,7 @@ export default function RootLayout({
       <body className="min-h-screen flex flex-col font-sans antialiased transition-colors duration-200" style={{ backgroundColor: "var(--bg-page)", color: "var(--text-primary)", fontFamily: "var(--font-sans)" }}>
         <ServiceWorkerRegister />
         <GridKeyNavigation />
+        <PostFollowNotificationPrompt />
         <AppShell>
           {children}
         </AppShell>
