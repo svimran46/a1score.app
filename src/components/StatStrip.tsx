@@ -3,11 +3,13 @@ import React from "react";
 export interface StatStripItem {
   value: React.ReactNode | string | number;
   label: string;
+  onClick?: () => void;
 }
 
 interface StatStripProps {
   items: StatStripItem[];
   className?: string;
+  onClick?: () => void;
 }
 
 /**
@@ -16,7 +18,7 @@ interface StatStripProps {
  * - Value 20/600 above a 13px secondary label.
  * - Not tiles, no nested cards.
  */
-export function StatStrip({ items, className = "" }: StatStripProps) {
+export function StatStrip({ items, className = "", onClick }: StatStripProps) {
   const displayItems = items.slice(0, 3);
   if (displayItems.length === 0) return null;
 
@@ -29,26 +31,32 @@ export function StatStrip({ items, className = "" }: StatStripProps) {
         borderWidth: "1px",
       }}
     >
-      {displayItems.map((item, idx) => (
-        <div
-          key={item.label || idx}
-          className="flex-1 py-3 px-2 text-center flex flex-col items-center justify-center min-w-0"
-          style={{ borderColor: "var(--color-border)" }}
-        >
+      {displayItems.map((item, idx) => {
+        const isClickable = Boolean(item.onClick || onClick);
+        return (
           <div
-            className="text-[20px] font-semibold tabular-nums leading-tight"
-            style={{ color: "var(--color-text)" }}
+            key={item.label || idx}
+            onClick={item.onClick || onClick}
+            className={`flex-1 py-3 px-2 text-center flex flex-col items-center justify-center min-w-0 ${
+              isClickable ? "cursor-pointer hover:bg-white/5 active:scale-[0.99] transition-all" : ""
+            }`}
+            style={{ borderColor: "var(--color-border)" }}
           >
-            {item.value}
+            <div
+              className="text-[20px] font-semibold tabular-nums leading-tight"
+              style={{ color: "var(--color-text)" }}
+            >
+              {item.value}
+            </div>
+            <div
+              className="text-[13px] font-normal leading-tight mt-1"
+              style={{ color: "var(--color-text-secondary)" }}
+            >
+              {item.label}
+            </div>
           </div>
-          <div
-            className="text-[13px] font-normal leading-tight mt-1"
-            style={{ color: "var(--color-text-secondary)" }}
-          >
-            {item.label}
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

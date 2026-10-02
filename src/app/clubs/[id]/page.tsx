@@ -1,7 +1,7 @@
 import { notFound, permanentRedirect } from "next/navigation";
 import { EntityImage } from "@/components/EntityImage";
 import Link from "next/link";
-import { getClubById, getClubTransfers, getClubDisplayName } from "@/lib/data/clubs";
+import { getClubById, getClubTransfers, getClubDisplayName, getClubHonours } from "@/lib/data/clubs";
 import { getLeagueById } from "@/lib/data/leagues";
 import { getFotmobTeamDetails } from "@/lib/fotmob/client";
 import { FOTMOB_TEAM_MAPPINGS } from "@/lib/league-mappings";
@@ -9,6 +9,7 @@ import { formatCompactEur } from "@/lib/utils";
 import { getClubSlug, getLeagueSlug } from "@/lib/slugs";
 import { Shield, Users, Trophy, Globe, Calendar, Clock } from "lucide-react";
 import { ClubTabsContainer } from "@/components/ClubTabsContainer";
+import { ClubHonoursStatStrip } from "@/components/ClubHonoursStatStrip";
 
 import { constructMetadata, SITE_URL } from "@/lib/metadata";
 import type { Metadata } from "next";
@@ -85,9 +86,10 @@ export default async function ClubPage({ params }: ClubPageProps) {
     }
   }
 
-  const [transfersData, fotmobDetails] = await Promise.all([
+  const [transfersData, fotmobDetails, clubHonours] = await Promise.all([
     getClubTransfers(club.name),
     fotmobTeamId ? getFotmobTeamDetails(fotmobTeamId).catch(() => null) : Promise.resolve(null),
+    getClubHonours(club.id, club.name),
   ]);
 
   const seniorSquad = club.firstTeamPlayers && club.firstTeamPlayers.length > 0
@@ -214,6 +216,9 @@ export default async function ClubPage({ params }: ClubPageProps) {
           </div>
         </div>
       </div>
+
+      {/* Honours StatStrip (rendered only if club has titles > 0) */}
+      <ClubHonoursStatStrip honours={clubHonours} clubName={getClubDisplayName(club)} />
 
       {/* Multi-Tab Interactive Interface (Squad, Stadium & Manager, Form, Transfers, Pyramid) */}
       <ClubTabsContainer

@@ -726,3 +726,72 @@ export async function getClubTransfers(clubName: string) {
   }
 }
 
+export interface ClubHonourCompetition {
+  key: string;
+  label: string;
+  titles: number;
+  seasons: Array<{
+    season: string;
+    seasonEndYear: number;
+    note?: string | null;
+  }>;
+}
+
+export async function getClubHonours(clubId: string, clubName: string): Promise<ClubHonourCompetition[]> {
+  try {
+    // 1. Fetch competitions
+    const { data: competitions, error: compErr } = await supabase
+      .from("Competition")
+      .select("key, label");
+
+    if (compErr || !competitions || competitions.length === 0) {
+      return [];
+    }
+
+    // 2. Fetch winning seasons where clubId matches or clubName matches and not external
+    // Match either clubId or canonical name
+    const { data: winners, error: winErr } = await supabase
+      .from("CompetitionWinner")
+      .select("competitionKey, season, seasonEndYear, note, clubId, clubName, isExternal")
+      .or(`clubId.eq.${clubId},clubName.eq.${clubName}`)
+      .eq("isExternal", false)
+      .order("seasonEndYear", { ascending: false });
+
+    if (winErr || !winners || winners.length === 0) {
+      return [];
+    }
+
+    const compMap = new Map(competitions.map((c) => [c.key, c.label]));
+    const honoursByComp = new Map<string, Array<{ season: string; seasonEndYear: number; note?: string | null }>>();
+
+    for (const w of winners) {
+      if (!honoursByComp.has(w.competitionKey)) {
+        honoursByComp.set(w.competitionKey, []);
+      }
+      honoursByComp.get(w.competitionKey)!.push({
+        season: w.season,
+        seasonEndYear: w.seasonEndYear,
+        note: w.note,
+      });
+    }
+
+    const result: ClubHonourCompetition[] = [];
+    for (const [compKey, seasonsList] of honoursByComp.entries()) {
+      if (seasonsList.length > 0) {
+        result.push({
+          key: compKey,
+          label: compMap.get(compKey) || compKey,
+          titles: seasonsList.length,
+          seasons: seasonsList.sort((a, b) => b.seasonEndYear - a.seasonEndYear),
+        });
+      }
+    }
+
+    return result;
+  } catch (err) {
+    console.error(`[Data Layer] Error fetching honours for club ${clubName} (${clubId}):`, err);
+    return [];
+  }
+}
+
+

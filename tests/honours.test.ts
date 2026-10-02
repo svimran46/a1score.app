@@ -1,0 +1,132 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import fs from "fs";
+import path from "path";
+import dotenv from "dotenv";
+dotenv.config();
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
+
+test.after(async () => {
+  await prisma.$disconnect();
+});
+
+test("Validation 1: Exactly 127 winners rows in CSV and database", async () => {
+  const csvPath = path.resolve(process.cwd(), "data/winners/premier-league.csv");
+  assert.ok(fs.existsSync(csvPath), "data/winners/premier-league.csv exists");
+
+  const lines = fs.readFileSync(csvPath, "utf-8").trim().split("\n").slice(1).filter(l => l.trim().length > 0);
+  assert.equal(lines.length, 127, "CSV must contain exactly 127 winners rows");
+
+  const dbWinners = await prisma.competitionWinner.findMany({
+    where: { competitionKey: "premier-league" },
+  });
+  assert.equal(dbWinners.length, 127, "Database must contain exactly 127 winners rows for premier-league");
+});
+
+test("Validation 2: No duplicate seasons in CSV or database", async () => {
+  const csvPath = path.resolve(process.cwd(), "data/winners/premier-league.csv");
+  const lines = fs.readFileSync(csvPath, "utf-8").trim().split("\n").slice(1).filter(l => l.trim().length > 0);
+  const csvSeasons = lines.map(l => l.split(",")[1].trim());
+  const uniqueCsvSeasons = new Set(csvSeasons);
+  assert.equal(csvSeasons.length, uniqueCsvSeasons.size, "CSV must have no duplicate seasons");
+
+  const dbWinners = await prisma.competitionWinner.findMany({
+    where: { competitionKey: "premier-league" },
+    select: { season: true },
+  });
+  const dbSeasons = dbWinners.map(w => w.season);
+  const uniqueDbSeasons = new Set(dbSeasons);
+  assert.equal(dbSeasons.length, uniqueDbSeasons.size, "Database must have no duplicate seasons");
+});
+
+test("Validation 3: Gaps in consecutive seasons only match season-exceptions.csv", async () => {
+  const exceptionsPath = path.resolve(process.cwd(), "data/season-exceptions.csv");
+  assert.ok(fs.existsSync(exceptionsPath), "data/season-exceptions.csv exists");
+
+  const exceptionLines = fs.readFileSync(exceptionsPath, "utf-8").trim().split("\n").slice(1).filter(l => l.trim().length > 0);
+  const expectedExceptions = new Set(exceptionLines.map(l => l.split(",")[1].trim()));
+
+  const dbWinners = await prisma.competitionWinner.findMany({
+    where: { competitionKey: "premier-league" },
+    select: { season: true, seasonEndYear: true },
+    orderBy: { seasonEndYear: "asc" },
+  });
+
+  const allSeasons = new Set(dbWinners.map(w => w.season));
+
+  const minYear = dbWinners[0].seasonEndYear; // 1889
+  const maxYear = dbWinners[dbWinners.length - 1].seasonEndYear; // 2026
+
+  const actualGaps: string[] = [];
+
+  for (let y = minYear; y <= maxYear; y++) {
+    const prevYearShort = String((y - 1) % 100).padStart(2, "0");
+    const currYearShort = String(y % 100).padStart(2, "0");
+    const startYear = y - 1;
+    const seasonStr = `${startYear}/${currYearShort}`;
+
+    if (!allSeasons.has(seasonStr)) {
+      actualGaps.push(seasonStr);
+    }
+  }
+
+  assert.equal(
+    actualGaps.length,
+    expectedExceptions.size,
+    `Gaps count (${actualGaps.length}) must equal expected exceptions (${expectedExceptions.size})`
+  );
+
+  for (const gap of actualGaps) {
+    assert.ok(
+      expectedExceptions.has(gap),
+      `Unexpected gap season found: ${gap} is not in season-exceptions.csv`
+    );
+  }
+});
+
+test("Validation 4: Per-club title counts equal data/expected-counts/premier-league.csv", async () => {
+  const expectedPath = path.resolve(process.cwd(), "data/expected-counts/premier-league.csv");
+  assert.ok(fs.existsSync(expectedPath), "data/expected-counts/premier-league.csv exists");
+
+  const expectedLines = fs.readFileSync(expectedPath, "utf-8").trim().split("\n").slice(1).filter(l => l.trim().length > 0);
+  const expectedMap = new Map<string, number>();
+  for (const line of expectedLines) {
+    const parts = line.split(",").map(p => p.trim());
+    expectedMap.set(parts[1], parseInt(parts[2], 10));
+  }
+
+  const dbWinners = await prisma.competitionWinner.findMany({
+    where: { competitionKey: "premier-league" },
+  });
+
+  const actualMap = new Map<string, number>();
+  for (const w of dbWinners) {
+    actualMap.set(w.clubName, (actualMap.get(w.clubName) || 0) + 1);
+  }
+
+  assert.equal(
+    actualMap.size,
+    expectedMap.size,
+    `Unique winner clubs (${actualMap.size}) must match expected (${expectedMap.size})`
+  );
+
+  for (const [clubName, expTitles] of expectedMap.entries()) {
+    const actual = actualMap.get(clubName) || 0;
+    assert.equal(
+      actual,
+      expTitles,
+      `Titles count mismatch for ${clubName}: expected ${expTitles}, got ${actual}`
+    );
+  }
+});
+
+test("Validation 5: Competitions row exists with key=premier-league and label='English league titles'", async () => {
+  const comp = await prisma.competition.findUnique({
+    where: { key: "premier-league" },
+  });
+
+  assert.ok(comp, "Competition row for premier-league must exist");
+  assert.equal(comp?.label, "English league titles", "Competition label must be 'English league titles'");
+});
