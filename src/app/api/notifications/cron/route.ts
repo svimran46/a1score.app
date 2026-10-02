@@ -2,14 +2,43 @@ import { NextRequest, NextResponse } from "next/server";
 import { dispatchValuationAlerts, PlayerValuationMovement } from "@/lib/notifications/dispatcher";
 import { supabase } from "@/lib/supabase";
 
-export const runtime = "nodejs";
+export const runtime = "edge";
+
+/**
+ * Constant-time comparison using SHA-256 digests to prevent timing attacks.
+ */
+async function timingSafeEqualString(a: string, b: string): Promise<boolean> {
+  if (!a || !b) return false;
+  const enc = new TextEncoder();
+  const hashA = new Uint8Array(await crypto.subtle.digest("SHA-256", enc.encode(a) as unknown as BufferSource));
+  const hashB = new Uint8Array(await crypto.subtle.digest("SHA-256", enc.encode(b) as unknown as BufferSource));
+  let diff = 0;
+  for (let i = 0; i < 32; i++) {
+    diff |= hashA[i] ^ hashB[i];
+  }
+  return diff === 0 && a.length === b.length;
+}
 
 export async function POST(req: NextRequest) {
   try {
-    // 1. Authorize cron trigger (CRON_SECRET or development bypass)
-    const authHeader = req.headers.get("authorization");
+    // 1. Authorize cron trigger with CRON_SECRET using constant-time compare
+    const authHeader = req.headers.get("authorization") || "";
     const cronSecret = process.env.CRON_SECRET;
-    if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+
+    if (!cronSecret) {
+      console.warn("[Cron Alerts] CRON_SECRET environment variable is not configured.");
+      return NextResponse.json(
+        { error: "Unauthorized: CRON_SECRET not configured on server" },
+        { status: 401 }
+      );
+    }
+
+    const bearerToken = authHeader.startsWith("Bearer ")
+      ? authHeader.slice(7).trim()
+      : "";
+
+    const authorized = await timingSafeEqualString(bearerToken, cronSecret);
+    if (!authorized) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -32,7 +61,7 @@ export async function POST(req: NextRequest) {
           )
         `)
         .not("latestMarketValue", "is", null)
-        .limit(200);
+        .limit(100);
 
       if (players && players.length > 0) {
         for (const p of players) {
@@ -51,7 +80,7 @@ export async function POST(req: NextRequest) {
               movements.push({
                 id: p.id,
                 name: p.fullName,
-                slug: p.id, // slug or id
+                slug: p.id,
                 avatarUrl: p.photoUrl,
                 previousValueEur: prev,
                 latestValueEur: latest,
@@ -66,7 +95,7 @@ export async function POST(req: NextRequest) {
       console.warn("[Cron Alerts] Could not load DB movements, using fallback movers:", dbErr);
     }
 
-    // Fallback benchmark movers if database table is in sync process
+    // Fallback benchmark movers if database is syncing
     if (movements.length === 0) {
       movements.push(
         {
@@ -99,8 +128,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 3. Dispatch to all eligible subscribers
-    const dispatchResult = await dispatchValuationAlerts(movements);
+    // 3. Dispatch to all eligible subscribers (capped at 100 subscribers per cron execution)
+    const dispatchResult = await dispatchValuationAlerts(movements, {
+      maxSubscriptions: 100,
+    });
 
     return NextResponse.json({
       success: true,
@@ -110,7 +141,7 @@ export async function POST(req: NextRequest) {
   } catch (err: any) {
     console.error("[API Notifications Cron] Error running alerts dispatch:", err);
     return NextResponse.json(
-      { error: "Failed to dispatch valuation alerts", details: err.message },
+      { error: "Failed to dispatch valuation alerts", details: err?.message },
       { status: 500 }
     );
   }

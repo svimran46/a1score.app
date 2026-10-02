@@ -84,4 +84,17 @@ The following items are external platform dependencies or administrative tasks t
   1. Run the squad reconciliation scraper (`npm run reconcile:squads` or `scripts/reconcile-squads-canonical.ts`) targeting the 104 remaining clubs.
   2. Populate their full first-team squads from Transfermarkt 2026/27 data so their active rosters reach the standard 20–35 player range.
 
+### Item 6: Physical Device Push Notification Delivery Verification (iOS & Android)
+* **Category:** Mobile PWA & Push Notification Verification
+* **Problem:** End-to-end push notification delivery requires native OS permission dialogues, Apple Push Notification service (APNs), and Google Firebase Cloud Messaging (FCM) gateways that can only be triggered and confirmed on physical mobile hardware.
+* **Why Code Cannot Resolve This:** Headless build environments and local development runners lack physical Apple and Android device hardware.
+* **Current Code Status:**
+  - 100% of WebCrypto RFC 8291 payload encryption, RFC 8292 VAPID token generation, Cloudflare edge routes (`/api/notifications/*`), secret authorization (timing-safe compare), dispatcher idempotency, rate limiting, and 503 missing store handling are fully automated and verified via `npm test`.
+  - Step-by-step setup and verification runbook provided in [docs/PUSH_SETUP.md](file:///c:/Users/User/Documents/antigravity/epic-brahmagupta/docs/PUSH_SETUP.md).
+* **Required Administrative & Manual Action:**
+  1. Bind `PUSH_SUBSCRIPTIONS_KV` to the `a1score` Cloudflare Pages project.
+  2. Set `CRON_SECRET`, `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, and `VAPID_SUBJECT` in Cloudflare Pages and deploy `workers/push-cron/`.
+  3. Execute physical device test checklist in `docs/PUSH_SETUP.md` on an iPhone (iOS 16.4+ standalone Home Screen PWA) and Android device.
+
+
 

@@ -134,7 +134,8 @@ test("SEO JSON-LD - Schema.org BreadcrumbList structure", () => {
 
 test("SEO Robots - allows crawling of pages, css, js, images and references sitemap", () => {
   const r = robots();
-  assert.ok(r.sitemap?.endsWith("/sitemap.xml"));
+  const sitemapUrl = Array.isArray(r.sitemap) ? r.sitemap[0] : r.sitemap;
+  assert.ok(sitemapUrl?.endsWith("/sitemap.xml"));
   const rules = Array.isArray(r.rules) ? r.rules[0] : r.rules;
   assert.equal(rules.userAgent, "*");
   assert.equal(rules.allow, "/");

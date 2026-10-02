@@ -23,10 +23,24 @@ export function useNotifications() {
 
     if (typeof window === "undefined") return;
 
-    // Detect iOS
+    // Detect iOS & Version
     const ua = window.navigator.userAgent;
-    const isIosDevice = /iPad|iPhone|iPod/.test(ua) && !(window as any).MSStream;
+    const isIosDevice =
+      (/iPad|iPhone|iPod/.test(ua) ||
+        (typeof navigator !== "undefined" && navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)) &&
+      !(window as any).MSStream;
     setIsIOS(isIosDevice);
+
+    let iosSupported = true;
+    const match = ua.match(/OS (\d+)[_.](\d+)?/);
+    if (match) {
+      const major = parseInt(match[1], 10);
+      const minor = match[2] ? parseInt(match[2], 10) : 0;
+      // Web Push on iOS requires at least iOS 16.4
+      if (major < 16 || (major === 16 && minor < 4)) {
+        iosSupported = false;
+      }
+    }
 
     // Detect PWA Standalone Mode
     const standaloneMode =
@@ -36,6 +50,7 @@ export function useNotifications() {
 
     // Check Push & Notification API Support
     const supported =
+      iosSupported &&
       "Notification" in window &&
       "serviceWorker" in navigator &&
       "PushManager" in window;
@@ -114,6 +129,13 @@ export function useNotifications() {
         return false;
       }
 
+      // Never prompt again if already denied by user
+      if (permission === "denied" || Notification.permission === "denied") {
+        setPermission("denied");
+        setIsLoading(false);
+        return false;
+      }
+
       setIsLoading(true);
 
       try {
@@ -173,7 +195,7 @@ export function useNotifications() {
         return false;
       }
     },
-    [isSupported, needsInstallForPush, threshold]
+    [isSupported, needsInstallForPush, threshold, permission]
   );
 
   // Unsubscribe from Web Push

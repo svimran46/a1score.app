@@ -93,7 +93,7 @@ export function NotificationSettingsCard() {
         <div className="shrink-0 flex items-center gap-2">
           {permission === "denied" ? (
             <span className="text-xs font-semibold text-[var(--trend-down)] bg-[var(--bg-chip)] px-2.5 py-1.5 rounded-lg">
-              Blocked in Browser
+              Blocked in browser
             </span>
           ) : (
             <button
@@ -120,6 +120,16 @@ export function NotificationSettingsCard() {
           )}
         </div>
       </div>
+
+      {/* Permission Denied Explanatory Banner */}
+      {permission === "denied" && (
+        <div className="p-3.5 rounded-xl bg-[var(--bg-chip)] border border-[var(--divider)] flex items-start gap-2.5 text-xs text-[var(--text-secondary)]">
+          <Info className="w-4 h-4 shrink-0 text-[var(--trend-down)] mt-0.5" />
+          <p>
+            Notifications are blocked in your browser settings. To receive value update alerts, please enable notifications for this site in your browser or device settings.
+          </p>
+        </div>
+      )}
 
       {/* iOS Installation Guidance Banner */}
       {needsInstallForPush && (

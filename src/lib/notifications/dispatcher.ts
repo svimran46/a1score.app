@@ -1,10 +1,11 @@
 /**
  * Notification Dispatcher
+ *
  * Evaluates market value movements against active subscriptions and sends
- * grouped Web Push notifications with rate-limiting and auto-cleanup.
+ * grouped Web Push notifications with rate-limiting, idempotency, and auto-cleanup.
+ * Runs on Cloudflare Workers / Edge Runtime with native WebCrypto.
  */
 
-import webpush from "web-push";
 import { subscriptionStore } from "./store";
 import {
   DEFAULT_VAPID_PUBLIC_KEY,
@@ -14,20 +15,9 @@ import {
 import {
   DispatchResult,
   NotificationPayload,
-  PushSubscriptionRecord,
 } from "./types";
 import { formatCompactEur } from "@/lib/utils";
-
-// Initialize VAPID details
-try {
-  webpush.setVapidDetails(
-    DEFAULT_VAPID_SUBJECT,
-    DEFAULT_VAPID_PUBLIC_KEY,
-    DEFAULT_VAPID_PRIVATE_KEY
-  );
-} catch (e) {
-  console.warn("[Push] VAPID initialization warning:", e);
-}
+import { sendWebPushNotification } from "./web-push-edge";
 
 export interface PlayerValuationMovement {
   id: string;
@@ -42,8 +32,10 @@ export interface PlayerValuationMovement {
 
 export interface DispatchOptions {
   ignoreRateLimit?: boolean;
+  ignoreIdempotency?: boolean;
   simulatedMovements?: PlayerValuationMovement[];
   targetEndpoint?: string;
+  maxSubscriptions?: number; // Cap subscriptions processed per run (default: 100)
 }
 
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
@@ -59,7 +51,8 @@ export async function dispatchValuationAlerts(
     skippedRateLimitCount: 0,
   };
 
-  const allSubscriptions = await subscriptionStore.getAll();
+  const maxSubs = options.maxSubscriptions || 100;
+  const allSubscriptions = await subscriptionStore.getAll(maxSubs);
   const subscriptions = options.targetEndpoint
     ? allSubscriptions.filter((s) => s.endpoint === options.targetEndpoint)
     : allSubscriptions;
@@ -68,7 +61,7 @@ export async function dispatchValuationAlerts(
     return result;
   }
 
-  // Index movements by player ID for quick lookups
+  // Index movements by player ID and slug for quick lookups
   const movementsMap = new Map<string, PlayerValuationMovement>();
   for (const m of movements) {
     movementsMap.set(m.id, m);
@@ -78,103 +71,129 @@ export async function dispatchValuationAlerts(
   const expiredEndpoints: string[] = [];
   const now = new Date();
 
-  for (const sub of subscriptions) {
-    // 1. Check rate-limit (max 1 push per user per day by default)
-    if (!options.ignoreRateLimit && sub.lastNotifiedAt) {
-      const last = new Date(sub.lastNotifiedAt).getTime();
-      if (!isNaN(last) && now.getTime() - last < ONE_DAY_MS) {
-        result.skippedRateLimitCount++;
-        continue;
-      }
-    }
+  // Process subscriptions in small concurrent batches (concurrency: 5) to respect Worker limits
+  const BATCH_SIZE = 5;
+  for (let i = 0; i < subscriptions.length; i += BATCH_SIZE) {
+    const batch = subscriptions.slice(i, i + BATCH_SIZE);
 
-    // 2. Identify followed players whose value change meets/exceeds the user's threshold
-    const userThreshold = sub.threshold || 0.05;
-    const triggeredPlayers: PlayerValuationMovement[] = [];
-
-    for (const followedId of sub.followedPlayerIds) {
-      const movement = movementsMap.get(followedId);
-      if (movement) {
-        if (Math.abs(movement.percentage) >= userThreshold) {
-          triggeredPlayers.push(movement);
+    await Promise.all(
+      batch.map(async (sub) => {
+        // 1. Check persistent daily rate-limit (max 1 push per user per day by default)
+        if (!options.ignoreRateLimit && sub.lastNotifiedAt) {
+          const last = new Date(sub.lastNotifiedAt).getTime();
+          if (!isNaN(last) && now.getTime() - last < ONE_DAY_MS) {
+            result.skippedRateLimitCount++;
+            return;
+          }
         }
-      }
-    }
 
-    if (triggeredPlayers.length === 0) {
-      continue;
-    }
+        // 2. Identify followed players whose value change meets/exceeds the user's threshold
+        // and has not already been notified (Idempotency)
+        const userThreshold = sub.threshold || 0.05;
+        const triggeredPlayers: PlayerValuationMovement[] = [];
+        const newlyNotifiedValues: Record<string, number> = {};
 
-    // 3. Compose grouped or single notification payload
-    let payload: NotificationPayload;
+        for (const followedId of sub.followedPlayerIds) {
+          const movement = movementsMap.get(followedId);
+          if (movement) {
+            // Check threshold condition
+            if (Math.abs(movement.percentage) >= userThreshold) {
+              // Idempotency check: don't notify same value twice
+              const lastVal = sub.lastNotifiedValues?.[movement.id];
+              if (!options.ignoreIdempotency && lastVal !== undefined && lastVal === movement.latestValueEur) {
+                // Already notified for this exact valuation
+                continue;
+              }
 
-    if (triggeredPlayers.length === 1) {
-      const p = triggeredPlayers[0];
-      const isUp = p.diffEur >= 0;
-      const pctStr = (Math.abs(p.percentage) * 100).toFixed(1);
-      const sign = isUp ? "+" : "-";
-      const oldStr = formatCompactEur(p.previousValueEur);
-      const newStr = formatCompactEur(p.latestValueEur);
+              triggeredPlayers.push(movement);
+              newlyNotifiedValues[movement.id] = movement.latestValueEur;
+            }
+          }
+        }
 
-      payload = {
-        title: `Value update: ${p.name}`,
-        body: `${oldStr} to ${newStr} (${sign}${pctStr}%)`,
-        icon: p.avatarUrl || "/icon-192.png",
-        badge: "/icon-192.png",
-        tag: `value-update-${p.id}`,
-        data: {
-          url: p.slug ? `/players/${p.slug}` : `/players/${p.id}`,
-          playerId: p.id,
-          changePercentage: p.percentage,
-        },
-      };
-    } else {
-      const count = triggeredPlayers.length;
-      const first = triggeredPlayers[0];
-      const others = count - 1;
+        if (triggeredPlayers.length === 0) {
+          return;
+        }
 
-      payload = {
-        title: `Value update: ${count} players you follow`,
-        body: `${first.name} and ${others} other${others > 1 ? "s" : ""} changed in market value.`,
-        icon: "/icon-192.png",
-        badge: "/icon-192.png",
-        tag: "value-update-grouped",
-        data: {
-          url: "/watchlist",
-        },
-      };
-    }
+        // 3. Compose grouped or single notification payload (zero PII)
+        let payload: NotificationPayload;
 
-    // 4. Send Web Push
-    try {
-      await webpush.sendNotification(
-        {
-          endpoint: sub.endpoint,
-          keys: sub.keys,
-        },
-        JSON.stringify(payload)
-      );
+        if (triggeredPlayers.length === 1) {
+          const p = triggeredPlayers[0];
+          const isUp = p.diffEur >= 0;
+          const pctStr = (Math.abs(p.percentage) * 100).toFixed(1);
+          const sign = isUp ? "+" : "-";
+          const oldStr = formatCompactEur(p.previousValueEur);
+          const newStr = formatCompactEur(p.latestValueEur);
 
-      result.sentCount++;
-      await subscriptionStore.updateLastNotified(sub.endpoint, now.toISOString());
-    } catch (err: any) {
-      // 404 Not Found or 410 Gone indicates expired/unregistered subscription
-      if (err.statusCode === 404 || err.statusCode === 410) {
-        result.expiredCount++;
-        expiredEndpoints.push(sub.endpoint);
-      } else {
-        result.failedCount++;
-        console.warn("[Push] Failed to deliver push to subscriber:", err.statusCode || err.message);
-      }
-    }
+          payload = {
+            title: `Value update: ${p.name}`,
+            body: `${oldStr} to ${newStr} (${sign}${pctStr}%)`,
+            icon: p.avatarUrl || "/icon-192.png",
+            badge: "/icon-192.png",
+            tag: `value-update-${p.id}`,
+            data: {
+              url: p.slug ? `/players/${p.slug}` : `/players/${p.id}`,
+              playerId: p.id,
+              changePercentage: p.percentage,
+            },
+          };
+        } else {
+          const count = triggeredPlayers.length;
+          const first = triggeredPlayers[0];
+          const others = count - 1;
+
+          payload = {
+            title: `Value update: ${count} players you follow`,
+            body: `${first.name} and ${others} other${others > 1 ? "s" : ""} changed in market value.`,
+            icon: "/icon-192.png",
+            badge: "/icon-192.png",
+            tag: "value-update-grouped",
+            data: {
+              url: "/watchlist",
+            },
+          };
+        }
+
+        // 4. Send Web Push using edge WebCrypto client
+        const pushResult = await sendWebPushNotification(
+          {
+            endpoint: sub.endpoint,
+            keys: sub.keys,
+          },
+          JSON.stringify(payload),
+          {
+            vapidSubject: DEFAULT_VAPID_SUBJECT,
+            vapidPublicKey: DEFAULT_VAPID_PUBLIC_KEY,
+            vapidPrivateKey: DEFAULT_VAPID_PRIVATE_KEY,
+          }
+        );
+
+        if (pushResult.success) {
+          result.sentCount++;
+          // Persist both lastNotifiedAt timestamp AND lastNotifiedValues for idempotency
+          await subscriptionStore.updateLastNotified(
+            sub.endpoint,
+            now.toISOString(),
+            newlyNotifiedValues
+          );
+        } else if (pushResult.expired) {
+          result.expiredCount++;
+          expiredEndpoints.push(sub.endpoint);
+        } else {
+          result.failedCount++;
+          console.warn("[Push Dispatch] Push delivery failed for subscriber:", pushResult.error);
+        }
+      })
+    );
   }
 
-  // 5. Clean up expired subscriptions
+  // 5. Clean up expired subscriptions from KV / storage
   if (expiredEndpoints.length > 0) {
     await subscriptionStore.removeExpired(expiredEndpoints);
   }
 
-  // 6. Anonymous logging (counts only, zero personal data)
+  // 6. Anonymous operational logging (zero PII)
   console.log(
     `[Push Dispatch] Sent: ${result.sentCount} | Failed: ${result.failedCount} | Expired: ${result.expiredCount} | Rate-limited: ${result.skippedRateLimitCount}`
   );

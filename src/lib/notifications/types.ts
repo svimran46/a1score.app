@@ -24,6 +24,7 @@ export interface PushSubscriptionRecord {
   createdAt: string; // ISO string
   updatedAt: string; // ISO string
   lastNotifiedAt?: string | null; // ISO string
+  lastNotifiedValues?: Record<string, number>; // playerId -> market value EUR when last notified (for idempotency)
 }
 
 export interface NotificationPayload {

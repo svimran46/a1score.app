@@ -126,3 +126,29 @@ self.addEventListener("notificationclick", (event) => {
     })
   );
 });
+
+// Automatic re-subscription when browser subscription changes or expires
+self.addEventListener("pushsubscriptionchange", (event) => {
+  event.waitUntil(
+    self.registration.pushManager
+      .subscribe(
+        event.oldSubscription?.options || {
+          userVisibleOnly: true,
+          // Browser will retain applicationServerKey from previous subscription
+        }
+      )
+      .then((newSubscription) => {
+        return fetch("/api/notifications/subscribe", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            subscription: newSubscription.toJSON(),
+          }),
+        });
+      })
+      .catch((err) => {
+        console.warn("[PWA SW] pushsubscriptionchange re-subscription failed:", err);
+      })
+  );
+});
+

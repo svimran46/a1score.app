@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { dispatchValuationAlerts, PlayerValuationMovement } from "@/lib/notifications/dispatcher";
 import { subscriptionStore } from "@/lib/notifications/store";
 
-export const runtime = "nodejs";
+export const runtime = "edge";
 
 export async function POST(req: NextRequest) {
   try {
@@ -17,9 +17,9 @@ export async function POST(req: NextRequest) {
 
     let targetEndpoint = endpoint;
     if (!targetEndpoint) {
-      const all = await subscriptionStore.getAll();
+      const all = await subscriptionStore.getAll(1);
       if (all.length > 0) {
-        targetEndpoint = all[all.length - 1].endpoint;
+        targetEndpoint = all[0].endpoint;
       }
     }
 
@@ -66,6 +66,7 @@ export async function POST(req: NextRequest) {
 
     const dispatchResult = await dispatchValuationAlerts(testMovements, {
       ignoreRateLimit: true, // Allow test mode to dispatch immediately
+      ignoreIdempotency: true, // Allow test mode to repeat
       targetEndpoint,
     });
 
@@ -77,7 +78,7 @@ export async function POST(req: NextRequest) {
   } catch (err: any) {
     console.error("[API Notifications] Test notification error:", err);
     return NextResponse.json(
-      { error: "Failed to send test push notification", details: err.message },
+      { error: "Failed to send test push notification", details: err?.message },
       { status: 500 }
     );
   }
