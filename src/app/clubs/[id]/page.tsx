@@ -1,7 +1,8 @@
 import { notFound, permanentRedirect } from "next/navigation";
 import { EntityImage } from "@/components/EntityImage";
 import Link from "next/link";
-import { getClubById, getClubTransfers, getClubDisplayName, getClubHonours } from "@/lib/data/clubs";
+import { getClubById, getClubTransfers, getClubDisplayName } from "@/lib/data/clubs";
+import { getClubHonours } from "@/lib/data/honours";
 import { getLeagueById } from "@/lib/data/leagues";
 import { getFotmobTeamDetails } from "@/lib/fotmob/client";
 import { FOTMOB_TEAM_MAPPINGS } from "@/lib/league-mappings";
@@ -9,7 +10,7 @@ import { formatCompactEur } from "@/lib/utils";
 import { getClubSlug, getLeagueSlug } from "@/lib/slugs";
 import { Users, Trophy, Globe, Clock } from "lucide-react";
 import { ClubTabsContainer } from "@/components/ClubTabsContainer";
-import { ClubHonoursStatStrip } from "@/components/ClubHonoursStatStrip";
+import { ClubHonoursBox } from "@/components/ClubHonoursBox";
 import { RelatedNewsCard } from "@/components/news/RelatedNewsCard";
 import { getRelatedNews } from "@/lib/data/news";
 import { Card, ValuationFreshness, Breadcrumbs } from "@/components/ui";
@@ -100,7 +101,7 @@ export default async function ClubPage({ params }: ClubPageProps) {
   const [transfersData, fotmobDetails, clubHonours, relatedNews] = await Promise.all([
     getClubTransfers(club.name),
     fotmobTeamId ? getFotmobTeamDetails(fotmobTeamId).catch(() => null) : Promise.resolve(null),
-    getClubHonours(club.id, club.name),
+    getClubHonours(club.id),
     getRelatedNews([club.name, getClubDisplayName(club)], 3).catch(() => []),
   ]);
 
@@ -110,6 +111,8 @@ export default async function ClubPage({ params }: ClubPageProps) {
 
   const academySquad = club.academyPlayers || club.players.filter((p: any) => p.tier === "academy");
 
+  const honoursAwards = (clubHonours || []).map((h) => `${h.titleCount}x ${h.competitionName}`);
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SportsTeam",
@@ -117,6 +120,7 @@ export default async function ClubPage({ params }: ClubPageProps) {
     sport: "Football",
     logo: club.logoUrl || undefined,
     url: `${SITE_URL}/clubs/${canonicalSlug}`,
+    award: honoursAwards.length > 0 ? honoursAwards : undefined,
     memberOf: club.league
       ? {
           "@type": "SportsOrganization",
@@ -178,15 +182,25 @@ export default async function ClubPage({ params }: ClubPageProps) {
               <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)] block">
                 Football Club
               </span>
-              <h1 className="text-xl sm:text-2xl font-black text-[var(--text-primary)] tracking-tight truncate mt-0.5">
-                {getClubDisplayName(club)}
-              </h1>
+              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mt-0.5">
+                <h1 className="text-xl sm:text-2xl font-black text-[var(--text-primary)] tracking-tight">
+                  {getClubDisplayName(club)}
+                </h1>
+                <div className="flex items-center gap-1.5 tabular-nums">
+                  <span className="text-lg sm:text-xl font-black text-[var(--value-text)] tracking-tight">
+                    {formatCompactEur(club.totalSquadValue)}
+                  </span>
+                  <ValuationFreshness
+                    timestamp={club.lastSyncedAt || seniorSquad[0]?.updatedAt || seniorSquad[0]?.marketValues?.[0]?.date}
+                  />
+                </div>
+              </div>
               {club.name && club.name !== getClubDisplayName(club) && (
-                <p className="text-xs text-[var(--text-muted)] font-medium truncate" title={club.name}>
+                <p className="text-xs text-[var(--text-muted)] font-medium truncate mt-0.5" title={club.name}>
                   {club.name}
                 </p>
               )}
-              <div className="flex flex-wrap items-center gap-2.5 text-xs text-[var(--text-secondary)] mt-1">
+              <div className="flex flex-wrap items-center gap-2.5 text-xs text-[var(--text-secondary)] mt-1.5">
                 {club.country && (
                   <span className="flex items-center gap-1">
                     <Globe className="w-3.5 h-3.5 text-[var(--text-muted)]" />
@@ -216,23 +230,11 @@ export default async function ClubPage({ params }: ClubPageProps) {
             </div>
           </div>
 
-          {/* Squad Market Value in Amber + Follow Button */}
-          <div className="flex flex-col sm:items-end gap-2.5 w-full sm:w-auto shrink-0">
-            <div className="w-full sm:w-auto p-3.5 sm:p-4 rounded-2xl bg-[var(--bg-elevated)] flex flex-col sm:items-end justify-center shrink-0">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)]">
-                Total Squad Valuation
-              </span>
-              <span className="text-2xl sm:text-3xl font-black text-[var(--value-text)] tracking-tight mt-0.5 tabular-nums">
-                {formatCompactEur(club.totalSquadValue)}
-              </span>
-              <span className="text-[10px] text-[var(--text-muted)] mt-0.5">
-                Based on senior first-team roster
-              </span>
-              <ValuationFreshness
-                timestamp={club.lastSyncedAt || seniorSquad[0]?.updatedAt || seniorSquad[0]?.marketValues?.[0]?.date}
-                className="mt-1"
-              />
-            </div>
+          {/* Achievements (Honours) + Follow Button */}
+          <div className="flex flex-col sm:items-end gap-2 w-full sm:w-auto shrink-0">
+            {clubHonours && clubHonours.length > 0 && (
+              <ClubHonoursBox honours={clubHonours} clubName={getClubDisplayName(club)} />
+            )}
             <FollowButton
               variant="button"
               id={club.id}
@@ -247,9 +249,6 @@ export default async function ClubPage({ params }: ClubPageProps) {
           </div>
         </div>
       </Card>
-
-      {/* Honours StatStrip (rendered only if club has titles > 0) */}
-      <ClubHonoursStatStrip honours={clubHonours} clubName={getClubDisplayName(club)} />
 
       {/* Multi-Tab Interactive Interface (Squad, Transfers, Value, Overview, Form) */}
       <ClubTabsContainer

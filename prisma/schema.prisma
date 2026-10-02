@@ -62,6 +62,7 @@ model Club {
   players         Player[] @relation("CurrentClubPlayers")
   loanedOutPlayers Player[] @relation("ParentClubPlayers")
   competitionWinners CompetitionWinner[]
+  honours         ClubHonour[]
 
   @@index([leagueId])
   @@index([name])
@@ -166,3 +167,22 @@ model CompetitionWinner {
   @@index([clubId])
   @@index([isExternal])
 }
+
+model ClubHonour {
+  id              String   @id @default(cuid())
+  clubId          String
+  club            Club     @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  competitionKey  String   // e.g. "domestic_league", "ucl"
+  competitionName String   // e.g. "Premier League", "UEFA Champions League"
+  titleCount      Int
+  seasons         Json     // array of season strings e.g. ["2023/24", "2022/23"]
+  source          String?  @default("Transfermarkt")
+  fetchedAt       DateTime @default(now())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([clubId, competitionKey])
+  @@index([clubId])
+  @@index([competitionKey])
+}
+

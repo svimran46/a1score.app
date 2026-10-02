@@ -10,6 +10,7 @@ async function main() {
   await pool.query(`
     ALTER TABLE "Competition" ENABLE ROW LEVEL SECURITY;
     ALTER TABLE "CompetitionWinner" ENABLE ROW LEVEL SECURITY;
+    ALTER TABLE "ClubHonour" ENABLE ROW LEVEL SECURITY;
 
     DO $$
     BEGIN
@@ -23,6 +24,12 @@ async function main() {
         SELECT 1 FROM pg_policies WHERE tablename = 'CompetitionWinner' AND policyname = 'Public read-only CompetitionWinner'
       ) THEN
         CREATE POLICY "Public read-only CompetitionWinner" ON "CompetitionWinner" FOR SELECT USING (true);
+      END IF;
+
+      IF NOT EXISTS (
+        SELECT 1 FROM pg_policies WHERE tablename = 'ClubHonour' AND policyname = 'Public read-only ClubHonour'
+      ) THEN
+        CREATE POLICY "Public read-only ClubHonour" ON "ClubHonour" FOR SELECT USING (true);
       END IF;
     END
     $$;

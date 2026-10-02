@@ -598,3 +598,108 @@ test("Validation 19: Competitions row exists with key=bundesliga, label='German 
     "Competition note must match specification"
   );
 });
+
+// ==========================================
+// Phase 11 Tests: Club Honours Pipeline & UI
+// ==========================================
+
+import { normalizeSeasonString, parseTransfermarktHonoursHtml } from "../scripts/ingest-honours";
+import { getClubHonours } from "../src/lib/data/honours";
+
+test("Phase 11: normalizeSeasonString correctly maps modern, 20th century, and 19th century seasons", () => {
+  assert.equal(normalizeSeasonString("23/24"), "2023/24");
+  assert.equal(normalizeSeasonString("25/26"), "2025/26");
+  assert.equal(normalizeSeasonString("98/99"), "1998/99");
+  assert.equal(normalizeSeasonString("80/81"), "1980/81");
+  assert.equal(normalizeSeasonString("31/32"), "1931/32");
+  assert.equal(normalizeSeasonString("1909/10"), "1909/10");
+  assert.equal(normalizeSeasonString("1899/00"), "1899/00");
+  assert.equal(normalizeSeasonString("1893/94"), "1893/94");
+  assert.equal(normalizeSeasonString("1955"), "1955");
+});
+
+test("Phase 11: parseTransfermarktHonoursHtml extracts UCL & domestic league while rejecting lower tiers & cups", () => {
+  const sampleHtml = `
+    <div class="box">
+      <div class="header"><h2>1x European Champion Clubs' Cup winner</h2></div>
+      <div class="erfolg_infotext_box">81/82</div>
+    </div>
+    <div class="box">
+      <div class="header"><h2>7x English Champion</h2></div>
+      <div class="erfolg_infotext_box">80/81,&nbsp;1909/10,&nbsp;1899/00,&nbsp;1898/99,&nbsp;1896/97,&nbsp;1895/96,&nbsp;1893/94</div>
+    </div>
+    <div class="box">
+      <div class="header"><h2>1x Intertoto Cup Champion</h2></div>
+      <div class="erfolg_infotext_box">01/02</div>
+    </div>
+    <div class="box">
+      <div class="header"><h2>2x English 2nd tier champion</h2></div>
+      <div class="erfolg_infotext_box">59/60,&nbsp;37/38</div>
+    </div>
+    <div class="box">
+      <div class="header"><h2>1x UEFA Supercup Winner</h2></div>
+      <div class="erfolg_infotext_box">82/83</div>
+    </div>
+  `;
+
+  const parsed = parseTransfermarktHonoursHtml(sampleHtml);
+  assert.equal(parsed.length, 2, "Must only match UCL and English Champion (no Intertoto, 2nd tier, or Supercup)");
+
+  const ucl = parsed.find((h) => h.competitionKey === "ucl");
+  assert.ok(ucl, "UCL honour must exist");
+  assert.equal(ucl.titleCount, 1);
+  assert.deepEqual(ucl.seasons, ["1981/82"]);
+
+  const league = parsed.find((h) => h.competitionKey === "domestic_league");
+  assert.ok(league, "Domestic league honour must exist");
+  assert.equal(league.titleCount, 7);
+  assert.equal(league.seasons.length, 7);
+  assert.equal(league.seasons[0], "1980/81");
+  assert.equal(league.seasons[6], "1893/94");
+});
+
+test("Phase 11: parseTransfermarktHonoursHtml returns empty array when no titles exist", () => {
+  const emptyHtml = `
+    <div class="box">
+      <div class="header"><h2>1x English League Cup winner</h2></div>
+      <div class="erfolg_infotext_box">20/21</div>
+    </div>
+    <div class="box">
+      <div class="header"><h2>1x Italian Serie B champion</h2></div>
+      <div class="erfolg_infotext_box">14/15</div>
+    </div>
+  `;
+
+  const parsed = parseTransfermarktHonoursHtml(emptyHtml);
+  assert.equal(parsed.length, 0, "Must return empty array and never create 0-title entries");
+});
+
+test("Phase 11: getClubHonours handles empty/invalid club ID safely without throwing", async () => {
+  const honoursEmpty = await getClubHonours("");
+  assert.deepEqual(honoursEmpty, []);
+
+  const honoursInvalid = await getClubHonours("non-existent-club-id-99999");
+  assert.deepEqual(honoursInvalid, []);
+});
+
+test("Phase 11: Database contains ingested honours for top European clubs", async (t) => {
+  if (!prisma) {
+    t.skip("DATABASE_URL not configured. Skipping database check.");
+    return;
+  }
+
+  const realMadridHonours = await prisma.clubHonour.findMany({
+    where: { club: { name: { contains: "Real Madrid" } } },
+  });
+
+  if (realMadridHonours.length > 0) {
+    const ucl = realMadridHonours.find((h) => h.competitionKey === "ucl");
+    assert.ok(ucl, "Real Madrid must have UCL honours");
+    assert.equal(ucl.titleCount, 15, "Real Madrid must have 15 UCL titles");
+
+    const league = realMadridHonours.find((h) => h.competitionKey === "domestic_league");
+    assert.ok(league, "Real Madrid must have Spanish League honours");
+    assert.equal(league.titleCount, 36, "Real Madrid must have 36 Spanish League titles");
+  }
+});
+
