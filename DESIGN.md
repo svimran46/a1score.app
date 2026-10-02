@@ -255,4 +255,27 @@ To ensure high information density, content prominence, and zero viewport waste 
 ### 4. Shared Polymorphic Architecture
 - Implemented as a single, reusable `PageHeader` component in `src/components/ui/PageHeader.tsx` supporting `player`, `club`, `league`, and `directory` variants. Duplicate header markup is eliminated.
 
+---
+
+## 10. Ad Slot Standards & Placement Guardrails
+
+To preserve platform speed, clean typography, and zero-distraction market intelligence, optional promotional or sponsorship ad slots (configured behind the `NEXT_PUBLIC_ADS_ENABLED=false` feature flag) adhere to strict layout guardrails:
+
+### 1. Mandatory Placement Invariants
+- **Never Above the Main Valuation Block:** The primary valuation card, player profile header, club crest, and key meta must always command initial viewport priority. Ads are strictly prohibited above the fold or above valuation metrics.
+- **Never Inside Tables or Rows:** Ad slots must never interrupt tabular listings (match fixtures, player transfer ledgers, squad rosters, league standings tables, or compare matrices).
+- **Max 1 Per Viewport on Mobile:** At no point may multiple ad slots occupy a single visible viewport on mobile devices (<= 768px).
+- **Prohibited on Watchlist and Settings:** Personal utility surfaces—including `/watchlist`, notification management, and user preferences—are permanent ad-free safe zones.
+
+### 2. Zero-CLS Reserved Containers
+- Every ad slot must render a strictly reserved, fixed-height container (`min-h-[250px]` for rectangles, `min-h-[90px]` for horizontal leaderboards).
+- When `NEXT_PUBLIC_ADS_ENABLED=false`, the slot returns `null`, adding zero markup to the DOM.
+- When enabled, the fixed height prevents any Cumulative Layout Shift (CLS) when creative assets load.
+- Containers are labeled with an explicit text badge: `Advertisement` in `--text-muted` uppercase micro-copy.
+
+### 3. Deferred Script Execution
+- Third-party ad scripts are never included in initial HTML head or hydration bundles.
+- Scripts are lazily loaded only after first user interaction (pointerdown, keydown, scroll) or post-LCP `requestIdleCallback`, preserving Lighthouse Core Web Vitals budgets.
+
+
 

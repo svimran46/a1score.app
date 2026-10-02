@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { watchlistAdapter } from "@/lib/watchlist/storage";
 import { DEFAULT_VAPID_PUBLIC_KEY, urlBase64ToUint8Array } from "./vapid";
+import { trackEvent } from "@/lib/analytics";
 
 const LOCAL_PREF_KEY = "a1score_push_pref_v1";
 
@@ -179,6 +180,7 @@ export function useNotifications() {
           throw new Error(`Server returned ${res.status}`);
         }
 
+        trackEvent("push opt-in");
         setIsSubscribed(true);
         try {
           localStorage.setItem(

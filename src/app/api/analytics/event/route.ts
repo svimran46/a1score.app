@@ -1,0 +1,34 @@
+import { NextRequest, NextResponse } from "next/server";
+import { sanitizeEventPayload } from "@/lib/analytics";
+
+export const runtime = "edge";
+
+export async function POST(req: NextRequest) {
+  try {
+    const json = await req.json();
+    if (!json || typeof json.event !== "string") {
+      return new NextResponse(null, { status: 400 });
+    }
+
+    const sanitized = sanitizeEventPayload(json.event, json);
+    if (!sanitized) {
+      return new NextResponse(null, { status: 400 });
+    }
+
+    // In production, aggregate counter metrics can be piped to Cloudflare Analytics Engine or Supabase
+    // Logging in development/preview:
+    if (process.env.NODE_ENV !== "production") {
+      console.log(`[Analytics Event] ${sanitized.event}`, sanitized.category || "");
+    }
+
+    return new NextResponse(null, {
+      status: 204,
+      headers: {
+        "Cache-Control": "no-store, no-cache, must-revalidate",
+        "Access-Control-Allow-Origin": "*",
+      },
+    });
+  } catch {
+    return new NextResponse(null, { status: 400 });
+  }
+}

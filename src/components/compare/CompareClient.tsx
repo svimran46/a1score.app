@@ -8,6 +8,7 @@ import { ComparePlayerPicker } from "./ComparePlayerPicker";
 import type { ComparePlayerChartMeta } from "./CompareValuationChart";
 import { Scale, Share2, Check, ArrowRightLeft, Sparkles } from "lucide-react";
 import { PageHeader } from "@/components/ui";
+import { trackEvent } from "@/lib/analytics";
 
 const CompareValuationChart = dynamic(
   () => import("./CompareValuationChart").then((m) => m.CompareValuationChart),
@@ -52,6 +53,7 @@ export function CompareClient({ initialPlayers, initialSlugs }: CompareClientPro
   const handleAddPlayer = (newSlug: string) => {
     if (currentSlugs.length >= 3) return;
     if (currentSlugs.some((s) => s.toLowerCase() === newSlug.toLowerCase())) return;
+    trackEvent("compare", { value: currentSlugs.length + 1 });
     updateUrlSlugs([...currentSlugs, newSlug]);
   };
 

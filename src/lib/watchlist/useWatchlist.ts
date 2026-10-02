@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { watchlistAdapter, WatchlistItem } from "./storage";
+import { trackEvent } from "@/lib/analytics";
 
 export function useWatchlist() {
   const [isMounted, setIsMounted] = useState(false);
@@ -44,6 +45,7 @@ export function useWatchlist() {
   const follow = useCallback(
     (item: Omit<WatchlistItem, "savedAt">) => {
       watchlistAdapter.addFavorite(item);
+      trackEvent("follow", { category: item.type });
     },
     []
   );
@@ -58,6 +60,7 @@ export function useWatchlist() {
         watchlistAdapter.removeFavorite(item.id, item.type);
       } else {
         watchlistAdapter.addFavorite(item);
+        trackEvent("follow", { category: item.type });
       }
     },
     []

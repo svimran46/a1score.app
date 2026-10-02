@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Share2, Check } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 
 interface ShareButtonProps {
   title?: string;
@@ -13,6 +14,7 @@ export function ShareButton({ title, url, className = "" }: ShareButtonProps) {
   const [copied, setCopied] = useState(false);
 
   const handleShare = async () => {
+    trackEvent("share");
     const shareUrl = url || (typeof window !== "undefined" ? window.location.href : "");
     const shareTitle = title || (typeof document !== "undefined" ? document.title : "a1score.app");
 

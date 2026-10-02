@@ -5,6 +5,7 @@ import { NewsItem } from "@/types/news";
 import { NewsCardHero } from "./NewsCardHero";
 import { NewsCardRow } from "./NewsCardRow";
 import { Card, Chip, EmptyState, ErrorState, Skeleton, PageHeader } from "@/components/ui";
+import { AdSlot } from "@/components/ads/AdSlot";
 import { RefreshCw } from "lucide-react";
 
 interface NewsDirectoryClientProps {
@@ -155,6 +156,9 @@ export function NewsDirectoryClient({ initialNews }: NewsDirectoryClientProps) {
               </div>
             </Card>
           )}
+
+          {/* Optional non-intrusive AdSlot at bottom of feed */}
+          <AdSlot id="news-feed-footer" format="leaderboard" />
         </div>
       )}
     </div>

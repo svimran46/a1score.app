@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { EntityImage } from "./EntityImage";
 import { formatCompactEur } from "@/lib/utils";
 import { getClubDisplayName } from "@/lib/data/clubs";
+import { trackEvent } from "@/lib/analytics";
 import {
   Search,
   X,
@@ -120,6 +121,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
   const totalResults = players.length + matchingLeagues.length;
 
   const navigateTo = (path: string) => {
+    trackEvent("search used");
     onClose();
     router.push(path);
   };

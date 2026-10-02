@@ -72,6 +72,8 @@ export const metadata: Metadata = {
 import { GridKeyNavigation } from "@/components/GridKeyNavigation";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { PostFollowNotificationPrompt } from "@/components/notifications/PostFollowNotificationPrompt";
+import { AnalyticsProvider } from "@/components/analytics/AnalyticsProvider";
+import { ConsentBanner } from "@/components/privacy/ConsentBanner";
 import { AppShell } from "@/components/AppShell";
 
 export default function RootLayout({
@@ -101,6 +103,8 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen flex flex-col font-sans antialiased transition-colors duration-200" style={{ backgroundColor: "var(--bg-page)", color: "var(--text-primary)", fontFamily: "var(--font-sans)" }}>
+        <AnalyticsProvider />
+        <ConsentBanner />
         <ServiceWorkerRegister />
         <GridKeyNavigation />
         <PostFollowNotificationPrompt />
