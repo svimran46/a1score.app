@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json.schemastore.org/budget.json",
+  "limits": {
+    "maxRouteJsKb": 250,
+    "maxSharedJsKb": 120,
+    "maxImageKb": 250,
+    "maxFontKb": 100,
+    "maxTotalPageWeightKb": 900
+  },
+  "routes": {
+    "/": { "maxJsKb": 200 },
+    "/values": { "maxJsKb": 250 },
+    "/players/[slug]": { "maxJsKb": 250 },
+    "/clubs/[id]": { "maxJsKb": 200 },
+    "/news": { "maxJsKb": 200 }
+  },
+  "lighthouse": {
+    "budgets": [
+      {
+        "resourceSizes": [
+          { "resourceType": "script", "budget": 350 },
+          { "resourceType": "image", "budget": 300 },
+          { "resourceType": "font", "budget": 100 },
+          { "resourceType": "total", "budget": 900 }
+        ],
+        "timings": [
+          { "metric": "largest-contentful-paint", "budget": 2500 },
+          { "metric": "cumulative-layout-shift", "budget": 0.1 },
+          { "metric": "total-blocking-time", "budget": 300 }
+        ]
+      }
+    ],
+    "thresholds": {
+      "performance": 85,
+      "accessibility": 95,
+      "lcpMs": 2500,
+      "cls": 0.1,
+      "tbtMs": 300
+    }
+  }
+}

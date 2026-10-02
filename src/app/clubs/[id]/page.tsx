@@ -12,7 +12,7 @@ import { ClubTabsContainer } from "@/components/ClubTabsContainer";
 import { ClubHonoursStatStrip } from "@/components/ClubHonoursStatStrip";
 import { RelatedNewsCard } from "@/components/news/RelatedNewsCard";
 import { getRelatedNews } from "@/lib/data/news";
-import { Card } from "@/components/ui";
+import { Card, ValuationFreshness } from "@/components/ui";
 
 import { constructMetadata, SITE_URL } from "@/lib/metadata";
 import type { Metadata } from "next";
@@ -212,6 +212,10 @@ export default async function ClubPage({ params }: ClubPageProps) {
             <span className="text-[10px] text-[var(--text-muted)] mt-0.5">
               Based on senior first-team roster
             </span>
+            <ValuationFreshness
+              timestamp={club.lastSyncedAt || seniorSquad[0]?.updatedAt || seniorSquad[0]?.marketValues?.[0]?.date}
+              className="mt-1"
+            />
           </div>
         </div>
       </Card>

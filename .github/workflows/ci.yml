@@ -50,3 +50,26 @@ jobs:
           NEXT_PUBLIC_SUPABASE_URL: "https://placeholder-project.supabase.co"
           NEXT_PUBLIC_SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.placeholder"
           SITE_URL: "https://a1score.app"
+
+      - name: Enforce Performance Budgets
+        run: npm run perf:budget
+
+      - name: Lighthouse CI Mobile Audit
+        run: npx @lhci/cli autorun
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: "https://placeholder-project.supabase.co"
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.placeholder"
+          SITE_URL: "https://a1score.app"
+          LHCI_BUILD_CONTEXT__CURRENT_BRANCH: ${{ github.ref_name }}
+
+      - name: Summary Table Log
+        if: always()
+        run: npm run perf:budget
+
+      - name: Upload Lighthouse CI Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-reports
+          path: .lighthouseci/
+          if-no-files-found: ignore

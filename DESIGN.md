@@ -189,3 +189,41 @@ All shared primitive components reside under `src/components/ui/` and are showca
   npm run lint:colors
   ```
   This scans all 80+ component files to ensure 100% compliance with CSS variables.
+
+---
+
+## 8. Performance Guardrails & Lighthouse CI
+
+### Budgets & Metrics (`perf-budget.json`)
+The application enforces strict performance limits across bundle sizes, static assets, and Core Web Vitals:
+- **Route JS Limits (gzipped):**
+  - `/` (Home): <= 200 kB
+  - `/values` (Market Values directory): <= 250 kB
+  - `/players/[slug]` (Player Detail): <= 250 kB
+  - `/clubs/[id]` (Club Detail): <= 200 kB
+  - `/news` (News Hub): <= 200 kB
+- **Asset Limits:**
+  - Single image weight: <= 250 kB
+  - Font weight: <= 100 kB
+- **Lighthouse CI Mobile Thresholds:**
+  - Performance score: >= 85
+  - Accessibility score: >= 95
+  - Largest Contentful Paint (LCP): <= 2.5s
+  - Cumulative Layout Shift (CLS): <= 0.1
+  - Total Blocking Time (TBT): <= 300ms
+
+### Running Local Verification
+1. **Build the production bundle:**
+   ```bash
+   npm run build
+   ```
+2. **Verify bundle sizes and static asset weights against budgets:**
+   ```bash
+   npm run perf:budget
+   ```
+3. **Execute local Lighthouse CI audit on mobile emulation:**
+   ```bash
+   npm run lhci:mobile
+   ```
+   Reports and trace artifacts are generated inside `.lighthouseci/`.
+

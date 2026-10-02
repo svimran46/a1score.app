@@ -20,6 +20,20 @@ export default async function MarketValuesPage() {
     getMarketValueMovers(6).catch(() => ({ risers: [], fallers: [] })),
   ]);
 
+  const latestTimestamp = players.reduce<Date | null>((max, p: any) => {
+    const raw = p.updatedAt || p.marketValues?.[p.marketValues?.length - 1]?.date;
+    if (!raw) return max;
+    const d = new Date(raw);
+    if (isNaN(d.getTime())) return max;
+    return !max || d > max ? d : max;
+  }, null);
+
+  const latestRevisionDate = latestTimestamp
+    ? latestTimestamp.toISOString()
+    : players.length > 0
+    ? new Date().toISOString()
+    : undefined;
+
   return (
     <Suspense
       fallback={
@@ -31,6 +45,7 @@ export default async function MarketValuesPage() {
       <PlayersDirectoryClient
         initialPlayers={players}
         movers={movers}
+        latestRevisionDate={latestRevisionDate}
         pageTitle="Market Values"
         pageSubtitle="Worldwide player valuation rankings and movers"
       />

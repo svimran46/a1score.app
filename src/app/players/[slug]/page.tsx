@@ -6,7 +6,7 @@ import { calculateAge, formatCompactEur, formatDate, formatUpdateAge } from "@/l
 import { getClubShortName } from "@/lib/data/clubs";
 import { getClubSlug } from "@/lib/slugs";
 import { constructMetadata } from "@/lib/metadata";
-import { Card } from "@/components/ui";
+import { Card, ValuationFreshness } from "@/components/ui";
 import { PlayerTabsContainer } from "@/components/PlayerTabsContainer";
 import { getRelatedNews } from "@/lib/data/news";
 import type { Metadata } from "next";
@@ -200,11 +200,10 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
                 {formatCompactEur(currentVal)}
               </div>
               {changeElement && <div className="mt-1">{changeElement}</div>}
-              {updateAgeText && (
-                <span className="text-[11px] text-[var(--text-muted)] mt-0.5 font-medium">
-                  {updateAgeText}
-                </span>
-              )}
+              <ValuationFreshness
+                timestamp={latestValuation?.date || player.updatedAt}
+                className="mt-1"
+              />
             </div>
           )}
         </div>

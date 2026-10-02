@@ -5,7 +5,7 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { PlayerRow } from "./PlayerRow";
 import { PageHeader } from "./PageHeader";
 import { FilterButtonAndSheet } from "./FilterBar";
-import { Card, Chip, EmptyState } from "@/components/ui";
+import { Card, Chip, EmptyState, ValuationFreshness } from "@/components/ui";
 import type { MarketMover } from "@/lib/data/players";
 import { ChevronLeft, ChevronRight, TrendingUp, TrendingDown, ArrowUpDown } from "lucide-react";
 
@@ -197,10 +197,15 @@ export function PlayersDirectoryClient({
   return (
     <div className="space-y-4 max-w-[720px] mx-auto">
       {/* 1. Page Header */}
-      <PageHeader
-        title={pageTitle}
-        subtitle={pageSubtitle}
-      />
+      <div className="space-y-1">
+        <PageHeader
+          title={pageTitle}
+          subtitle={pageSubtitle}
+        />
+        {latestRevisionDate && (
+          <ValuationFreshness timestamp={latestRevisionDate} className="px-1" />
+        )}
+      </div>
 
       {/* 2. Segmented Tab Control [Rankings | Movers] */}
       <div className="flex items-center p-1 rounded-[var(--chip-radius)] bg-[var(--bg-card)] w-full max-w-xs text-xs font-semibold shadow-xs">

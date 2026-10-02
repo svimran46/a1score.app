@@ -22,7 +22,9 @@
     "test:honours": "tsx --test tests/honours.test.ts",
     "test:unit": "tsx --test tests/pure-functions.test.ts tests/positions.test.ts tests/image-proxy.test.ts tests/navbar-active.test.ts tests/cache.test.ts tests/health.test.ts tests/clubs-squad.test.ts tests/club-names.test.ts tests/matches-toggle.test.ts tests/honours.test.ts",
     "test:integrity": "tsx --test tests/integrity.test.ts",
-    "test": "npm run test:unit && npm run test:integrity"
+    "test": "npm run test:unit && npm run test:integrity",
+    "perf:budget": "tsx scripts/check-perf-budget.ts",
+    "lhci:mobile": "lhci autorun"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.2",
@@ -37,6 +39,7 @@
   },
   "devDependencies": {
     "@cloudflare/next-on-pages": "^1.13.16",
+    "@lhci/cli": "^0.15.1",
     "@prisma/adapter-pg": "5.22.0",
     "@prisma/client": "5.22.0",
     "@types/node": "^20.17.0",
