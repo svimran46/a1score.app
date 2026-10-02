@@ -243,7 +243,7 @@ export function MatchesClient({
             onClick={() => handleFilterClick("finished")}
             className={`min-h-[44px] px-3.5 py-1.5 rounded-lg font-medium flex items-center gap-1 border transition-all ${
               activeFilter === "finished"
-                ? "bg-[var(--color-accent)] text-[#0B0F17] font-semibold border-[var(--color-accent)]"
+                ? "bg-[var(--color-accent)] text-[var(--accent-contrast)] font-semibold border-[var(--color-accent)]"
                 : "bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-secondary)] hover:text-[var(--color-text)]"
             }`}
           >
@@ -256,7 +256,7 @@ export function MatchesClient({
             onClick={() => handleFilterClick("upcoming")}
             className={`min-h-[44px] px-3.5 py-1.5 rounded-lg font-medium flex items-center gap-1 border transition-all ${
               activeFilter === "upcoming"
-                ? "bg-[var(--color-accent)] text-[#0B0F17] font-semibold border-[var(--color-accent)]"
+                ? "bg-[var(--color-accent)] text-[var(--accent-contrast)] font-semibold border-[var(--color-accent)]"
                 : "bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-secondary)] hover:text-[var(--color-text)]"
             }`}
           >
@@ -372,7 +372,7 @@ export function MatchesClient({
             <button
               type="button"
               onClick={() => navigateTo(undefined, "all", "all")}
-              className="px-4 py-2 min-h-[44px] rounded-lg bg-[var(--color-accent)] text-[#0B0F17] text-[13px] font-semibold transition-colors"
+              className="px-4 py-2 min-h-[44px] rounded-lg bg-[var(--color-accent)] text-[var(--accent-contrast)] text-[13px] font-semibold transition-colors"
             >
               Show all matches
             </button>
@@ -434,7 +434,7 @@ export function MatchesClient({
                     }}
                     className={`min-h-[44px] rounded-lg text-[13px] font-medium border transition-colors ${
                       isSelected
-                        ? "bg-[var(--color-accent)] text-[#0B0F17] font-semibold border-[var(--color-accent)]"
+                        ? "bg-[var(--color-accent)] text-[var(--accent-contrast)] font-semibold border-[var(--color-accent)]"
                         : "bg-[var(--color-surface-2)] text-[var(--color-text-secondary)] border-[var(--color-border)] hover:text-[var(--color-text)]"
                     }`}
                   >

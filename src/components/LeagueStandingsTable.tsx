@@ -92,9 +92,9 @@ export function LeagueStandingsTable({
   const activeLegend = useMemo(() => {
     if (legend && legend.length > 0) return legend;
     return [
-      { title: "Champions League", tKey: "ucl", color: "#2AD572", indices: [0, 1, 2, 3] },
-      { title: "Europa League", tKey: "uel", color: "#0046A7", indices: [4] },
-      { title: "Relegation Zone", tKey: "rel", color: "#FF4646", indices: [17, 18, 19] },
+      { title: "Champions League", tKey: "ucl", color: "var(--live)", indices: [0, 1, 2, 3] },
+      { title: "Europa League", tKey: "uel", color: "var(--blue-500)", indices: [4] },
+      { title: "Relegation Zone", tKey: "rel", color: "var(--trend-down)", indices: [17, 18, 19] },
     ];
   }, [legend]);
 

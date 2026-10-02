@@ -1,82 +1,116 @@
-/* src/app/tokens.css - a1score Design System Single Source of Truth */
+/* src/app/tokens.css - a1score FotMob-style Design Tokens */
 
 :root {
-  /* Colors - Dark Theme (Default) */
-  --color-bg: #0B0F17;
-  --color-surface: #121826;
-  --color-surface-2: #1A2133;
-  --color-border: rgba(255, 255, 255, 0.08);
-  --color-text: #F2F4F8;
-  --color-text-secondary: #A3ABBC;
-  --color-accent: #F5B73B;
-  --color-positive: #22C55E;
-  --color-negative: #EF4444;
+  /* ---------- Layer 1: primitives ---------- */
+  --ink-950: #07080b;
+  --ink-900: #0f1116;
+  --ink-800: #181b22;
+  --ink-700: #232733;
+  --gray-100: #f4f5f7;
+  --gray-400: #9aa1ae;
+  --amber-400: #ffb020;
+  --amber-500: #f59e0b;
+  --green-500: #2ecc71;
+  --red-500: #ff5a5f;
+  --blue-500: #2563eb;
+  --white: #ffffff;
+  --pitch-surface: #0a180e;
+  --pitch-surface-alt: #122818;
 
-  /* Typography (Inter only) */
-  --type-display: 600 28px/1.2 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --type-title: 600 20px/1.3 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --type-section: 600 16px/1.3 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --type-body: 400 15px/1.4 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --type-body-name: 500 15px/1.4 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --type-body-value: 600 15px/1.4 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --type-caption: 400 13px/1.4 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --type-badge: 500 12px/1.2 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --space-1: 4px;  --space-2: 8px;  --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px;
 
-  /* Spacing & Radii */
-  --space-page: 16px;
-  --space-section: 24px;
-  --space-card: 16px;
-  --radius-card: 12px;
-  --radius-control: 8px;
-  --radius-pill: 9999px;
+  --radius-sm: 10px; --radius-md: 14px; --radius-lg: 20px; --radius-pill: 999px;
+
+  --font-sans: "Inter", "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --text-xs: 0.75rem;  --text-sm: 0.875rem; --text-base: 1rem;
+  --text-lg: 1.125rem; --text-xl: 1.375rem; --text-2xl: 1.75rem;
+
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dur-fast: 120ms; --dur-base: 200ms;
+
+  /* ---------- Layer 2: semantic (dark default) ---------- */
+  --bg-page: var(--ink-950);
+  --bg-card: var(--ink-900);
+  --bg-chip: var(--ink-800);
+  --bg-hover: var(--ink-800);
+  --divider: var(--ink-700);
+  --text-primary: var(--gray-100);
+  --text-muted: var(--gray-400);
+  --accent: var(--amber-400);
+  --accent-contrast: var(--ink-950);
+  --value-text: var(--amber-400);
+  --trend-up: var(--green-500);
+  --trend-down: var(--red-500);
+  --live: var(--green-500);
+  --focus-ring: var(--amber-400);
+
+  /* ---------- Layer 3: component ---------- */
+  --card-radius: var(--radius-lg);
+  --card-padding: var(--space-5);
+  --chip-radius: var(--radius-pill);
+  --chip-height: 40px;
+  --row-height: 64px;
+  --nav-height: 72px;
+  --container-max: 1280px;
+  --rail-left: 260px;
+  --rail-right: 320px;
+  --gap: var(--space-4);
+
+  /* ---------- Compatibility aliases (existing components) ---------- */
+  --color-bg: var(--bg-page);
+  --color-surface: var(--bg-card);
+  --color-surface-2: var(--bg-chip);
+  --color-border: var(--divider);
+  --color-text: var(--text-primary);
+  --color-text-secondary: var(--text-muted);
+  --color-accent: var(--accent);
+  --color-positive: var(--live);
+  --color-negative: var(--trend-down);
 }
 
+/* Light theme: redefine ONLY semantic tokens */
+:root[data-theme="light"],
+:root.light,
 .light {
-  /* Colors - Light Theme */
-  --color-bg: #F6F7F9;
-  --color-surface: #FFFFFF;
-  --color-surface-2: #EEF0F4;
-  --color-border: rgba(0, 0, 0, 0.08);
-  --color-text: #0F1420;
-  --color-text-secondary: #5B6475;
-  --color-accent: #B7791F;
-  --color-positive: #15803D;
-  --color-negative: #B91C1C;
+  --bg-page: #f3f4f7;
+  --bg-card: #ffffff;
+  --bg-chip: #eceef3;
+  --bg-hover: #f0f1f5;
+  --divider: #e1e4ea;
+  --text-primary: #0f1116;
+  --text-muted: #5b6372;
+  --accent: #b45309;
+  --accent-contrast: #ffffff;
+  --value-text: #b45309;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
 
 /* System Helper Classes */
-.bg-token-bg {
-  background-color: var(--color-bg);
-}
-.bg-token-surface {
-  background-color: var(--color-surface);
-}
-.bg-token-surface-2 {
-  background-color: var(--color-surface-2);
-}
-.border-token {
-  border-color: var(--color-border);
-}
-.text-token {
-  color: var(--color-text);
-}
-.text-token-secondary {
-  color: var(--color-text-secondary);
-}
-.text-token-accent {
-  color: var(--color-accent);
-}
-.text-token-positive {
-  color: var(--color-positive);
-}
-.text-token-negative {
-  color: var(--color-negative);
-}
+.bg-token-page { background-color: var(--bg-page); }
+.bg-token-card { background-color: var(--bg-card); }
+.bg-token-chip { background-color: var(--bg-chip); }
+.bg-token-hover { background-color: var(--bg-hover); }
+.border-token { border-color: var(--divider); }
+.text-token-primary { color: var(--text-primary); }
+.text-token-muted { color: var(--text-muted); }
+.text-token-accent { color: var(--accent); }
+.text-token-contrast { color: var(--accent-contrast); }
 
-/* Card Container Rule: One level of container, radius 12px, surface color, 1px border */
+/* Compatibility Helper Classes */
+.bg-token-bg { background-color: var(--bg-page); }
+.bg-token-surface { background-color: var(--bg-card); }
+.bg-token-surface-2 { background-color: var(--bg-chip); }
+.text-token { color: var(--text-primary); }
+.text-token-secondary { color: var(--text-muted); }
+.text-token-positive { color: var(--live); }
+.text-token-negative { color: var(--trend-down); }
+
 .token-card {
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-card);
+  background-color: var(--bg-card);
+  border-radius: var(--card-radius);
   overflow: hidden;
 }

@@ -377,7 +377,7 @@ function NavbarContent() {
                   className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center flex-shrink-0"
                   style={{ backgroundColor: "var(--color-accent)" }}
                 >
-                  <span className="text-[#0B0F17] font-black text-base sm:text-lg tracking-tighter">
+                  <span className="text-[var(--accent-contrast)] font-black text-base sm:text-lg tracking-tighter">
                     A1
                   </span>
                 </div>

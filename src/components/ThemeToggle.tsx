@@ -12,10 +12,12 @@ export function ThemeToggle() {
     const stored = localStorage.getItem("theme");
     if (stored === "light") {
       setTheme("light");
+      document.documentElement.setAttribute("data-theme", "light");
       document.documentElement.classList.remove("dark");
       document.documentElement.classList.add("light");
     } else {
       setTheme("dark");
+      document.documentElement.setAttribute("data-theme", "dark");
       document.documentElement.classList.add("dark");
       document.documentElement.classList.remove("light");
     }
@@ -25,6 +27,7 @@ export function ThemeToggle() {
     const nextTheme = theme === "dark" ? "light" : "dark";
     setTheme(nextTheme);
     localStorage.setItem("theme", nextTheme);
+    document.documentElement.setAttribute("data-theme", nextTheme);
 
     if (nextTheme === "light") {
       document.documentElement.classList.remove("dark");

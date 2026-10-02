@@ -105,7 +105,7 @@ export function HomeMatchRow({ match }: HomeMatchRowProps) {
           <KickoffTime
             date={kickoffDate}
             timeOnly
-            className="text-[15px] font-semibold text-[#F2F4F8] tabular-nums leading-none"
+            className="text-[15px] font-semibold text-[var(--text-primary)] tabular-nums leading-none"
           />
         )}
       </div>

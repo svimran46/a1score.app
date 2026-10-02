@@ -60,7 +60,7 @@ export function FilterButtonAndSheet({
         <SlidersHorizontal className="w-3.5 h-3.5 shrink-0" />
         <span>{buttonLabel}</span>
         {activeFilterCount > 0 && (
-          <span className="ml-0.5 inline-flex items-center justify-center px-1.5 py-0.2 text-[12px] font-semibold rounded-full bg-[var(--color-accent)] text-[#0B0F17]">
+          <span className="ml-0.5 inline-flex items-center justify-center px-1.5 py-0.2 text-[12px] font-semibold rounded-full bg-[var(--color-accent)] text-[var(--accent-contrast)]">
             {activeFilterCount}
           </span>
         )}
@@ -94,7 +94,7 @@ export function FilterButtonAndSheet({
               <div className="flex items-center gap-2">
                 <h2 className="text-[16px] font-semibold text-[var(--color-text)]">Filters</h2>
                 {activeFilterCount > 0 && (
-                  <span className="px-2 py-0.5 rounded-full text-[12px] font-semibold bg-[var(--color-accent)] text-[#0B0F17]">
+                  <span className="px-2 py-0.5 rounded-full text-[12px] font-semibold bg-[var(--color-accent)] text-[var(--accent-contrast)]">
                     {activeFilterCount} Active
                   </span>
                 )}
@@ -133,7 +133,7 @@ export function FilterButtonAndSheet({
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
-                className="w-full h-11 rounded-lg bg-[var(--color-accent)] text-[#0B0F17] font-semibold text-[15px] flex items-center justify-center transition-colors active:scale-[0.99]"
+                className="w-full h-11 rounded-lg bg-[var(--color-accent)] text-[var(--accent-contrast)] font-semibold text-[15px] flex items-center justify-center transition-colors active:scale-[0.99]"
               >
                 Apply Filters
               </button>

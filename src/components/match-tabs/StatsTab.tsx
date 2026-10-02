@@ -69,7 +69,7 @@ export function StatsTab({ match }: StatsTabProps) {
           </div>
 
           {/* Half Pitch Visual for Shots */}
-          <div className="relative w-full aspect-[2/1] rounded-2xl bg-gradient-to-b from-[#122818] to-[#0a180e] border border-emerald-900/50 shadow-inner overflow-hidden p-3">
+          <div className="relative w-full aspect-[2/1] rounded-2xl bg-gradient-to-b from-[var(--pitch-surface-alt)] to-[var(--pitch-surface)] border border-emerald-900/50 shadow-inner overflow-hidden p-3">
             {/* Goal Line & Box Markings */}
             <div className="absolute top-0 left-1/4 right-1/4 h-24 border-2 border-t-0 border-emerald-600/30 rounded-b-xl pointer-events-none" />
             <div className="absolute top-0 left-1/3 right-1/3 h-10 border-2 border-t-0 border-emerald-600/30 rounded-b-lg pointer-events-none" />

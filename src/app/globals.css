@@ -4,25 +4,25 @@
 @tailwind utilities;
 
 :root {
-  --background: var(--color-bg);
-  --foreground: var(--color-text);
-  --card-bg: var(--color-surface);
-  --card-border: var(--color-border);
-  --card-border-amber: var(--color-accent);
-  --muted-foreground: var(--color-text-secondary);
-  --accent-amber: var(--color-accent);
-  --accent-pitch: var(--color-positive);
+  --background: var(--bg-page);
+  --foreground: var(--text-primary);
+  --card-bg: var(--bg-card);
+  --card-border: var(--divider);
+  --card-border-amber: var(--accent);
+  --muted-foreground: var(--text-muted);
+  --accent-amber: var(--accent);
+  --accent-pitch: var(--live);
 }
 
 .light {
-  --background: var(--color-bg);
-  --foreground: var(--color-text);
-  --card-bg: var(--color-surface);
-  --card-border: var(--color-border);
-  --card-border-amber: var(--color-accent);
-  --muted-foreground: var(--color-text-secondary);
-  --accent-amber: var(--color-accent);
-  --accent-pitch: var(--color-positive);
+  --background: var(--bg-page);
+  --foreground: var(--text-primary);
+  --card-bg: var(--bg-card);
+  --card-border: var(--divider);
+  --card-border-amber: var(--accent);
+  --muted-foreground: var(--text-muted);
+  --accent-amber: var(--accent);
+  --accent-pitch: var(--live);
 }
 
 @layer base {
@@ -53,8 +53,9 @@
   }
 
   body {
-    background-color: var(--background);
-    color: var(--foreground);
+    background: var(--bg-page);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
     font-feature-settings: "rlig" 1, "calt" 1, "tnum" 1;
     min-height: 100vh;
     overflow-x: clip;

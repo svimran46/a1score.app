@@ -260,7 +260,7 @@ export function ClubsDirectoryClient({ initialClubs }: ClubsDirectoryClientProps
           <button
             type="button"
             onClick={handleClearFilters}
-            className="px-4 py-2 min-h-[44px] rounded-lg bg-[var(--color-accent)] text-[#0B0F17] text-[13px] font-semibold transition-colors"
+            className="px-4 py-2 min-h-[44px] rounded-lg bg-[var(--color-accent)] text-[var(--accent-contrast)] text-[13px] font-semibold transition-colors"
           >
             Clear all filters
           </button>

@@ -148,7 +148,7 @@ export function LineupTab({ match }: LineupTabProps) {
         </div>
 
         {/* The Football Pitch Graphic */}
-        <div className="relative w-full aspect-[4/5] sm:aspect-[4/3] rounded-2xl bg-gradient-to-b from-[#122818] via-[#0e2113] to-[#0a180e] border border-emerald-900/60 shadow-inner overflow-hidden p-4">
+        <div className="relative w-full aspect-[4/5] sm:aspect-[4/3] rounded-2xl bg-gradient-to-b from-[var(--pitch-surface-alt)] to-[var(--pitch-surface)] border border-emerald-900/60 shadow-inner overflow-hidden p-4">
           {/* Pitch markings */}
           <div className="absolute inset-3 border-2 border-emerald-600/30 rounded-xl pointer-events-none" />
           <div className="absolute left-3 right-3 top-1/2 -translate-y-1/2 border-b-2 border-emerald-600/30 pointer-events-none" />
