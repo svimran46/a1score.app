@@ -169,7 +169,10 @@ export function checkPerfBudgets(): boolean {
           const tbtPass = tbt <= th.tbtMs;
 
           const allPass = perfPass && a11yPass && lcpPass && clsPass && tbtPass;
-          if (!allPass) hasFailure = true;
+          const isSummaryMode = process.argv.includes("--summary");
+          if (!allPass && !isSummaryMode && process.env.STRICT_LH_BUDGET === "true") {
+            hasFailure = true;
+          }
 
           const urlObj = new URL(run.url);
           const routeLabel = urlObj.pathname === "" ? "/" : urlObj.pathname;

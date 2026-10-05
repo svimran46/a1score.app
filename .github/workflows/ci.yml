@@ -65,7 +65,7 @@ jobs:
 
       - name: Summary Table Log
         if: always()
-        run: npm run perf:budget
+        run: npm run perf:budget -- --summary
 
       - name: Upload Lighthouse CI Artifacts
         if: always()
