@@ -2,7 +2,9 @@ import React from "react";
 import { Clock } from "lucide-react";
 
 export interface ValuationFreshnessProps {
-  timestamp: string | Date | null | undefined;
+  timestamp?: string | Date | null | undefined; // backward compatible / valueUpdatedAt
+  valueUpdatedAt?: string | Date | null | undefined;
+  checkedAt?: string | Date | null | undefined;
   thresholdDays?: number;
   className?: string;
   showIcon?: boolean;
@@ -11,7 +13,10 @@ export interface ValuationFreshnessProps {
 /**
  * Calculates human-readable relative time and checks freshness against threshold.
  */
-export function getFreshnessDetails(timestamp: string | Date | null | undefined, thresholdDays = 14) {
+export function getFreshnessDetails(
+  timestamp: string | Date | null | undefined,
+  thresholdDays = 14
+) {
   if (!timestamp) return null;
 
   try {
@@ -43,12 +48,9 @@ export function getFreshnessDetails(timestamp: string | Date | null | undefined,
     }
 
     const fullDate = new Intl.DateTimeFormat("en-US", {
-      weekday: "short",
       year: "numeric",
       month: "short",
       day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
     }).format(d);
 
     return {
@@ -63,23 +65,28 @@ export function getFreshnessDetails(timestamp: string | Date | null | undefined,
 
 /**
  * Standardized data freshness indicator for valuation data:
- * - "Values updated 3 days ago"
- * - If older than threshold (default 14 days), subtle "May be out of date" note
- * - Full date on hover/title
- * - Consistent text-xs, var(--text-muted) style
+ * - "Value last changed: <date> • Checked: <relative time>"
+ * - "Review pending" shown ONLY when checkedAt is older than thresholdDays (pipeline staleness),
+ *   never because the value simply has not changed recently at source.
  */
 export function ValuationFreshness({
   timestamp,
-  thresholdDays = 30,
+  valueUpdatedAt,
+  checkedAt,
+  thresholdDays = 14,
   className = "",
   showIcon = false,
 }: ValuationFreshnessProps) {
-  const details = getFreshnessDetails(timestamp, thresholdDays);
+  const actualValueUpdated = valueUpdatedAt || timestamp;
+  const actualChecked = checkedAt || timestamp;
 
-  if (!details) {
+  const valueDetails = getFreshnessDetails(actualValueUpdated, 365);
+  const checkedDetails = getFreshnessDetails(actualChecked, thresholdDays);
+
+  if (!valueDetails && !checkedDetails) {
     return (
       <div
-        title="Valuation revision pending verification"
+        title="Valuation verification pending"
         className={`inline-flex items-center gap-1.5 text-xs text-[var(--text-muted)] cursor-help select-none ${className}`}
       >
         {showIcon && <Clock className="w-3.5 h-3.5 opacity-70 shrink-0" />}
@@ -88,6 +95,34 @@ export function ValuationFreshness({
     );
   }
 
+  // Dual display when checkedAt and valueUpdatedAt are provided
+  if (valueUpdatedAt && checkedAt) {
+    const isCheckedStale = checkedDetails ? checkedDetails.isOutOfDate : false;
+
+    return (
+      <div
+        title={`Value source recorded on ${valueDetails?.fullDate || ""}. Pipeline checked on ${checkedDetails?.fullDate || ""}.`}
+        className={`inline-flex items-center gap-1 text-xs text-[var(--text-muted)] cursor-help select-none flex-wrap ${className}`}
+      >
+        {showIcon && <Clock className="w-3.5 h-3.5 opacity-70 shrink-0" />}
+        {valueDetails && (
+          <span>Value last changed: {valueDetails.fullDate}</span>
+        )}
+        {valueDetails && checkedDetails && <span>•</span>}
+        {checkedDetails && (
+          <span>Checked: {checkedDetails.relativeStr}</span>
+        )}
+        {isCheckedStale && (
+          <span className="opacity-90">
+            • <span className="text-[var(--value-text)] font-semibold underline decoration-dotted underline-offset-2">Review pending</span>
+          </span>
+        )}
+      </div>
+    );
+  }
+
+  // Single timestamp fallback (shows relative time with review pending if out of date)
+  const details = checkedDetails || valueDetails!;
   return (
     <div
       title={`Valuation recorded on ${details.fullDate}`}

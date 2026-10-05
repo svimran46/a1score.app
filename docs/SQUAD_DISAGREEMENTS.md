@@ -1,6 +1,6 @@
 # a1score.app — Squad Source Disagreements Report (FotMob vs Transfermarkt)
 
-**Execution Date:** 2026-10-02T13:29:30.208Z
+**Execution Date:** 2026-10-05T14:31:15.725Z
 **Total Disagreements Flagged:** 29
 
 > [!NOTE]

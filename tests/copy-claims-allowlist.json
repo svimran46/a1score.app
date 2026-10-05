@@ -1,0 +1,29 @@
+{
+  "description": "Allowlist of files and line contents permitted to contain certain words/comments for copy-claims automated testing",
+  "entries": [
+    {
+      "file": "src/app/api/players/most-valuable/route.ts",
+      "reason": "Accurate engineering comment explaining valuations update twice per season, not real-time"
+    },
+    {
+      "file": "src/app/img/club/[id]/route.ts",
+      "reason": "Engineering comment describing in-memory Map lookup"
+    },
+    {
+      "file": "src/lib/cache.ts",
+      "reason": "Engineering comment describing L1 in-memory cache lookup"
+    },
+    {
+      "file": "src/lib/fotmob/client.ts",
+      "reason": "FotMob client library internal technical constants and method comments"
+    },
+    {
+      "file": "src/app/privacy/page.tsx",
+      "reason": "Browser permission revocation disclosure (browser setting toggle)"
+    },
+    {
+      "file": "src/components/LiveAutoRefresher.tsx",
+      "reason": "Visibility handler code comment"
+    }
+  ]
+}

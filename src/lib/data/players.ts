@@ -8,6 +8,7 @@ import { getFotmobPlayerStats } from "@/lib/fotmob/client";
 import { sanitizeImageUrl } from "@/lib/image-sanitize";
 
 import { getCanonicalPosition } from "@/lib/positions";
+import { getPlayerSlug } from "@/lib/slugs";
 
 export async function getMostValuablePlayers(limit = 40, positionFilter?: string) {
   // Fetch DB clubs to map TM club IDs to canonical DB club IDs
@@ -43,9 +44,11 @@ export async function getMostValuablePlayers(limit = 40, positionFilter?: string
           : p.currentClub?.logoUrl;
 
         const canonicalPos = getCanonicalPosition(p.position);
+        const slug = getPlayerSlug({ fullName: p.fullName, transfermarktId: p.id });
 
         return {
           ...p,
+          slug,
           position: canonicalPos.detailed,
           positionGroup: canonicalPos.group,
           canonicalPosition: canonicalPos,
@@ -111,7 +114,7 @@ export async function getMostValuablePlayers(limit = 40, positionFilter?: string
       return {
         ...p,
         sourceId: extId,
-        slug: `${p.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${extId}`,
+        slug: getPlayerSlug(p),
         photoUrl: sanitizeImageUrl(p.photoUrl, "player", extId),
         latestMarketValue: p.latestMarketValue ? Number(p.latestMarketValue) : 0,
         position: canonicalPos.detailed,
@@ -394,7 +397,7 @@ export async function getPlayerBySlugOrId(slugOrId: string) {
       subPosition: player.subPosition || null,
       preferredFoot: player.preferredFoot || null,
       heightCm: player.heightCm ? Number(player.heightCm) : null,
-      slug: `${(player.fullName || "player").toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${extId}`,
+      slug: getPlayerSlug(player),
       photoUrl: sanitizeImageUrl(player.photoUrl, "player", extId),
       currentClub: currentClub
         ? {
@@ -483,7 +486,7 @@ export async function searchPlayers(
       return {
         ...p,
         sourceId: extId,
-        slug: `${p.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${extId}`,
+        slug: getPlayerSlug(p),
         photoUrl: sanitizeImageUrl(p.photoUrl, "player", extId),
         latestMarketValue: p.latestMarketValue ? Number(p.latestMarketValue) : 0,
         currentClub: currentClub
@@ -567,9 +570,7 @@ export async function getMarketValueMovers(limit = 6): Promise<{ risers: MarketM
         const diff = latestVal - prevVal;
         const percentage = prevVal > 0 ? (diff / prevVal) * 100 : 0;
 
-        const slug = `${p.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${
-          p.transfermarktId || p.id
-        }`;
+        const slug = getPlayerSlug(p);
 
         const clubRaw = (p as any).currentClub;
         const currentClub = Array.isArray(clubRaw) ? clubRaw[0] || null : clubRaw || null;
@@ -720,7 +721,7 @@ export async function getPositionalPeers(
         id: p.id,
         fullName: p.fullName,
         commonName: p.commonName,
-        slug: `${p.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${p.transfermarktId || p.id}`,
+        slug: getPlayerSlug(p),
         position: p.position,
         subPosition: p.subPosition,
         dateOfBirth: p.dateOfBirth,

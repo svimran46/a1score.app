@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 import { OG_COLORS } from "@/lib/og/colors";
 
 export const runtime = "edge";
-export const alt = "a1score.app — Money Meets the Pitch | Football Market Intelligence";
+export const alt = "a1score — Money Meets the Pitch | Football Market Intelligence";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -81,7 +81,7 @@ export default async function Image() {
               lineHeight: 1.4,
             }}
           >
-            Real-time match events synthesized with Transfermarkt player valuations, squad expenditure pyramids, and disparity analytics.
+            Match events synthesized with Transfermarkt player market valuations, squad expenditure pyramids, and disparity analytics.
           </p>
         </div>
 

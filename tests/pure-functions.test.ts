@@ -186,9 +186,9 @@ test("cloudflareImageLoader - respects resizing and CDN mirrors", () => {
 
 test("formatTitle - formats titles cleanly without duplicate suffixes", async () => {
   const { formatTitle } = await import("../src/lib/metadata");
-  assert.equal(formatTitle("Premier League"), "Premier League | a1score.app");
-  assert.equal(formatTitle("Premier League | a1score.app"), "Premier League | a1score.app");
-  assert.equal(formatTitle("Real Madrid | a1score.app "), "Real Madrid | a1score.app");
+  assert.equal(formatTitle("Premier League"), "Premier League | a1score");
+  assert.equal(formatTitle("Premier League | a1score.app"), "Premier League | a1score");
+  assert.equal(formatTitle("Real Madrid | a1score.app "), "Real Madrid | a1score");
   assert.equal(formatTitle("Most valuable football players | a1score"), "Most valuable football players | a1score");
   assert.equal(formatTitle("Erling Haaland market value, club and transfer history | a1score"), "Erling Haaland market value, club and transfer history | a1score");
 });
@@ -201,7 +201,7 @@ test("constructMetadata - enforces canonical and og:url consistency", async () =
     description: "Squad analytics",
     path: "/clubs/manchester-city",
   });
-  assert.equal(meta.title, "Manchester City | a1score.app");
+  assert.equal(meta.title, "Manchester City | a1score");
   assert.equal(meta.alternates?.canonical, "https://a1score.app/clubs/manchester-city");
   assert.equal((meta.openGraph as any)?.url, "https://a1score.app/clubs/manchester-city");
 });

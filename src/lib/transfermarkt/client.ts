@@ -1,8 +1,8 @@
 /**
  * src/lib/transfermarkt/client.ts
  *
- * High-Performance Direct Live Proxy for Transfermarkt
- * Fetches real-time, up-to-date football intelligence directly from Transfermarkt
+ * High-Performance Direct Proxy for Transfermarkt
+ * Fetches up-to-date football market intelligence directly from Transfermarkt
  * using Edge-compatible fetch with Next.js revalidation caching.
  */
 
@@ -264,6 +264,7 @@ export async function tmGetPlayer(slugOrId: string) {
     let heightCm: number | null = null;
     let preferredFoot: string | null = null;
     let leagueInfo: any = null;
+    let contractUntil: string | null = null;
 
     if (html) {
       // Name
@@ -337,6 +338,21 @@ export async function tmGetPlayer(slugOrId: string) {
         const hMatch = heightMatch[1].match(/(\d+)[,\.](\d+)\s*m/i);
         if (hMatch) {
           heightCm = parseInt(hMatch[1], 10) * 100 + parseInt(hMatch[2], 10);
+        }
+      }
+
+      // Contract Expiration Date
+      const contractMatch = html.match(/Contract expires:[\s\S]*?<span class="info-table__content[^"]*--bold">([^<]+)<\/span>/i);
+      if (contractMatch) {
+        const rawExpiry = contractMatch[1].trim();
+        if (rawExpiry && rawExpiry !== "-" && !rawExpiry.toLowerCase().includes("n/a")) {
+          // Can be e.g. "Jun 30, 2029" or "30/06/2029"
+          const parsedExpiry = new Date(rawExpiry);
+          if (!isNaN(parsedExpiry.getTime())) {
+            contractUntil = parsedExpiry.toISOString();
+          } else {
+            contractUntil = rawExpiry;
+          }
         }
       }
     }
@@ -414,6 +430,7 @@ export async function tmGetPlayer(slugOrId: string) {
       subPosition,
       preferredFoot,
       heightCm,
+      contractUntil,
       photoUrl: sanitizeImageUrl(photoUrl, "player", pId),
       currentClubId,
       currentClub: currentClubName

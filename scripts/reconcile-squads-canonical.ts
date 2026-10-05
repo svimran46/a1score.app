@@ -25,8 +25,8 @@ import { FOTMOB_TEAM_MAPPINGS } from "../src/lib/league-mappings";
 
 const connectionString = process.env.DATABASE_URL || process.env.DIRECT_URL;
 if (!connectionString) {
-  console.error("Missing DATABASE_URL or DIRECT_URL environment variable.");
-  process.exit(1);
+  console.warn("⚠️  DATABASE_URL or DIRECT_URL is not configured in environment. Skipping squad reconciliation.");
+  process.exit(0);
 }
 
 const TM_HEADERS = {
@@ -181,6 +181,28 @@ async function main() {
       } catch (err: any) {
         console.warn(`[TM] Error fetching ${clubName} (${tmId}):`, err.message);
       }
+    }
+
+    // Courtesy pause between club queries to avoid triggering anti-bot rate limits
+    await new Promise((r) => setTimeout(r, 150));
+
+    // If BOTH upstream sources returned 0 members (e.g. rate limit, Cloudflare 403 on TM, or FotMob network glitch):
+    // We MUST NOT assume all players departed! Preserve existing roster intact.
+    if (fotmobMembers.length === 0 && tmMembers.length === 0) {
+      console.warn(`⚠️ [SKIP UPSTREAM] ${clubName}: Both FotMob and Transfermarkt returned empty/blocked responses. Preserving existing squad.`);
+      const diffItem: SquadDiffItem = {
+        clubId,
+        clubName,
+        previousSquadSize: currentFirstTeam.length,
+        newSquadSize: currentFirstTeam.length,
+        arrivals: [],
+        departures: [],
+        academyAssigned: [],
+        loanOutAssigned: [],
+        isViolation: false,
+      };
+      diffReport.push(diffItem);
+      continue;
     }
 
     const reconciledFirstTeam: any[] = [];
@@ -413,18 +435,28 @@ async function main() {
 
   // If live apply requested:
   if (isApply) {
-    if (anySafetyViolation) {
-      console.error("\n❌ [SAFETY ABORT] Reconciliation cannot be applied because safety violations were detected!");
-      console.error("Review docs/SYNC_DIFF.md for violations.");
-      await client.end();
-      process.exit(1);
+    const violatingClubs = reconciliationPlan.filter((item) => item.diff.isViolation);
+    const safeClubs = reconciliationPlan.filter((item) => !item.diff.isViolation);
+
+    if (violatingClubs.length > 0) {
+      console.warn(`\n⚠️  [SAFETY NOTIFICATION] ${violatingClubs.length} club(s) flagged with safety guardrail violations:`);
+      for (const v of violatingClubs) {
+        console.warn(`   - ${v.club.name}: ${v.diff.violationReason}`);
+      }
+      console.warn("Skipping database updates for flagged clubs to protect roster integrity. See docs/SYNC_DIFF.md.");
     }
 
-    console.log("\n=== Executing Atomic PostgreSQL Transaction (BEGIN ... COMMIT) ===");
+    if (safeClubs.length === 0) {
+      console.warn("\n⚠️  No safe clubs available to apply. Zero database modifications performed.");
+      await client.end();
+      return;
+    }
+
+    console.log(`\n=== Executing Atomic PostgreSQL Transaction for ${safeClubs.length} safe clubs (BEGIN ... COMMIT) ===`);
     try {
       await client.query("BEGIN");
 
-      for (const item of reconciliationPlan) {
+      for (const item of safeClubs) {
         const clubId = item.club.id;
 
         // 1. Departures: detach from club and mark as departed

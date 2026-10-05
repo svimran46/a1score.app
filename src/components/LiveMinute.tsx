@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import { evaluateLiveMatchFreshness } from "@/lib/date-utils";
 
 export interface LiveMinuteProps {
   shortTime?: string | null;
@@ -9,6 +10,8 @@ export interface LiveMinuteProps {
   isHT?: boolean;
   isFinished?: boolean;
   showPulsingDot?: boolean;
+  lastUpdatedMs?: number | null;
+  reason?: string | null;
   className?: string;
 }
 
@@ -19,6 +22,8 @@ export function LiveMinute({
   isHT = false,
   isFinished = false,
   showPulsingDot = true,
+  lastUpdatedMs = null,
+  reason = null,
   className = "",
 }: LiveMinuteProps) {
   // Parse initial seconds from "MM:SS" (e.g. "47:07" -> 2827 seconds)
@@ -86,7 +91,27 @@ export function LiveMinute({
     return "Live";
   };
 
-  const displayText = getFormattedMinute();
+  // Check freshness and stoppage sanity
+  const freshness = evaluateLiveMatchFreshness({
+    isLive,
+    liveMinuteStr: cleanShort || shortTime,
+    liveTimeLong: longTime,
+    lastUpdatedMs,
+    reason,
+  });
+
+  const displayText = freshness.isUnconfirmed ? "Status unconfirmed" : getFormattedMinute();
+
+  if (freshness.isUnconfirmed) {
+    return (
+      <span
+        className={`inline-flex items-center gap-1 font-semibold text-amber-400/90 text-xs tracking-tight ${className}`}
+        title="Live event feed delayed or minute unconfirmed"
+      >
+        <span>Status unconfirmed</span>
+      </span>
+    );
+  }
 
   if (isFinished) {
     return <span className={`text-slate-400 font-semibold ${className}`}>FT</span>;

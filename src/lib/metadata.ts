@@ -1,27 +1,8 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
+import { SITE_URL, getCanonicalUrl } from "@/lib/siteUrl";
 
-function resolveSiteUrl(): string {
-  const envUrl =
-    process.env.SITE_URL ||
-    process.env.NEXT_PUBLIC_SITE_URL ||
-    process.env.CF_PAGES_URL;
-
-  if (envUrl && envUrl.trim() !== "") {
-    return envUrl.trim().replace(/\/$/, "");
-  }
-
-  if (process.env.NODE_ENV === "production") {
-    console.warn(
-      "[Metadata] Warning: SITE_URL or NEXT_PUBLIC_SITE_URL is not set in environment variables. Falling back to 'https://a1score.app'. Configure this in Cloudflare Pages dashboard settings."
-    );
-    return "https://a1score.app";
-  }
-
-  return "http://localhost:3000";
-}
-
-export const SITE_URL = resolveSiteUrl();
+export { SITE_URL, getCanonicalUrl };
 
 /**
  * Returns the effective base URL for metadata, canonicals, and sitemaps.
@@ -43,15 +24,16 @@ export function getEffectiveSiteUrl(): string {
 }
 
 /**
- * Ensures title format preserves "| a1score" or "| a1score.app" cleanly without duplicates.
+ * Ensures title format unifies to "Page | a1score" (no domain in titles) and avoids duplicate suffixes.
  */
 export function formatTitle(title: string): string {
   const trimmed = title.trim();
-  if (/\s*\|\s*a1score$/i.test(trimmed)) {
-    return trimmed;
-  }
-  const cleanTitle = trimmed.replace(/\s*\|\s*a1score\.app$/i, "").trim();
-  return `${cleanTitle} | a1score.app`;
+  // Strip any trailing "| a1score", "| a1score.app", or variants
+  const cleanTitle = trimmed
+    .replace(/\s*\|\s*a1score\.app$/i, "")
+    .replace(/\s*\|\s*a1score$/i, "")
+    .trim();
+  return `${cleanTitle} | a1score`;
 }
 
 export interface MetadataOptions {
@@ -92,7 +74,7 @@ export function constructMetadata({
       title: fullTitle,
       description,
       url: canonicalUrl,
-      siteName: "a1score.app",
+      siteName: "a1score",
       images: [{ url: ogImage, width: 1200, height: 630, alt: fullTitle }],
       type: "website",
       locale: "en_US",

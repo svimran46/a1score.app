@@ -17,6 +17,7 @@ export interface TransferRowProps {
   fee?: number | string | null;
   transferType?: string | null; // e.g. "Loan", "Free", "End of loan"
   date?: string | null;
+  isAgreedFutureDeal?: boolean;
   href?: string;
   className?: string;
 }
@@ -38,6 +39,7 @@ export function TransferRow({
   fee,
   transferType,
   date,
+  isAgreedFutureDeal = false,
   href = playerSlug ? `/players/${playerSlug}` : id ? `/players/${id}` : "/transfers",
   className = "",
 }: TransferRowProps) {
@@ -131,11 +133,15 @@ export function TransferRow({
         <div className="text-sm sm:text-base font-bold text-[var(--value-text)] tabular-nums leading-tight">
           {feeDisplay}
         </div>
-        {date && (
+        {isAgreedFutureDeal ? (
+          <span className="inline-block mt-1 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-[var(--bg-chip)] text-[var(--trend-positive)] whitespace-nowrap">
+            {date || "Agreed Future Deal"}
+          </span>
+        ) : date ? (
           <div className="text-xs text-[var(--text-muted)] mt-0.5 tabular-nums">
             {date}
           </div>
-        )}
+        ) : null}
       </div>
     </Link>
   );

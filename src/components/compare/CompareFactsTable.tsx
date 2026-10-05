@@ -35,6 +35,11 @@ export interface ComparePlayerFact {
   } | null;
   latestMarketValue: number;
   marketValues: Array<{ date: string | Date; valueEur: number }>;
+  achievements?: {
+    totalTitles: number;
+    majorCount: number;
+    topHonour?: string;
+  } | null;
 }
 
 interface CompareFactsTableProps {
@@ -262,13 +267,37 @@ export function CompareFactsTable({ players, onRemovePlayer }: CompareFactsTable
                   </div>
 
                   {/* Nationality */}
-                  <div className="flex items-center justify-between gap-2 py-1.5">
+                  <div className="flex items-center justify-between gap-2 py-1.5 border-b border-[var(--divider)]">
                     <span className="text-[var(--text-muted)] flex items-center gap-1.5 shrink-0">
                       <Globe className="w-3.5 h-3.5 text-amber-400" />
                       Nationality
                     </span>
                     <span className="font-semibold text-[var(--text-primary)] text-right truncate">
                       {nationalities}
+                    </span>
+                  </div>
+
+                  {/* Career Achievements & Honours */}
+                  <div className="flex items-center justify-between gap-2 py-1.5">
+                    <span className="text-[var(--text-muted)] flex items-center gap-1.5 shrink-0">
+                      <Trophy className="w-3.5 h-3.5 text-[var(--value-text)]" />
+                      Achievements
+                    </span>
+                    <span className="font-semibold text-[var(--text-primary)] text-right">
+                      {player.achievements && player.achievements.totalTitles > 0 ? (
+                        <span className="inline-flex items-center gap-1.5">
+                          <span className="text-[var(--value-text)] font-bold">
+                            {player.achievements.totalTitles} {player.achievements.totalTitles === 1 ? "title" : "titles"}
+                          </span>
+                          {player.achievements.topHonour && (
+                            <span className="text-[11px] text-[var(--text-muted)] font-normal hidden sm:inline truncate max-w-[110px]" title={player.achievements.topHonour}>
+                              ({player.achievements.topHonour})
+                            </span>
+                          )}
+                        </span>
+                      ) : (
+                        <span className="text-[var(--text-muted)]">—</span>
+                      )}
                     </span>
                   </div>
                 </div>

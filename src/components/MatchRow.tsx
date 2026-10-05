@@ -3,6 +3,7 @@ import Link from "next/link";
 import { EntityImage } from "./EntityImage";
 import { KickoffTime } from "./KickoffTime";
 import { getClubShortName } from "@/lib/data/clubs";
+import { evaluateLiveMatchFreshness } from "@/lib/date-utils";
 import type { FotmobMatch } from "@/lib/fotmob/client";
 
 export interface MatchRowProps {
@@ -70,6 +71,13 @@ export function MatchRow({
     ? match.status?.liveTime?.short || match.status?.reason?.short || "LIVE"
     : liveMinuteProp;
 
+  const freshness = evaluateLiveMatchFreshness({
+    isLive,
+    liveMinuteStr: liveMinute !== null && liveMinute !== undefined ? String(liveMinute) : null,
+    liveTimeLong: match?.status?.liveTime?.long,
+    reason: match?.status?.reason?.short || match?.status?.reason?.long,
+  });
+
   const kickoffDate = match ? (match.status?.utcTime || match.timeTS || match.time) : null;
 
   return (
@@ -101,10 +109,16 @@ export function MatchRow({
             <span className="text-sm sm:text-base font-bold text-[var(--text-primary)] tabular-nums leading-tight">
               {scoreText || "0 - 0"}
             </span>
-            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[var(--live)] leading-tight mt-0.5 tracking-tight">
-              <span className="w-1.5 h-1.5 rounded-full bg-[var(--live)] animate-ping" />
-              <span>{liveMinute ? `${liveMinute}' ` : ""}LIVE</span>
-            </span>
+            {freshness.isUnconfirmed ? (
+              <span className="text-[10px] font-semibold text-amber-400/90 leading-tight mt-0.5 tracking-tight">
+                Status unconfirmed
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[var(--live)] leading-tight mt-0.5 tracking-tight">
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--live)] animate-ping" />
+                <span>{liveMinute ? `${liveMinute}' ` : ""}LIVE</span>
+              </span>
+            )}
           </>
         ) : isFinished ? (
           <>

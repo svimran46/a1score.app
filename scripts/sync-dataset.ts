@@ -422,6 +422,11 @@ async function main() {
   console.log("=== a1score.app High-Performance Data Pipeline Sync ===");
   console.log(`Mode: ${isDryRun ? "DRY-RUN (Default - Run with --apply to write changes)" : "APPLY"}\n`);
 
+  if (!process.env.DATABASE_URL && !process.env.DIRECT_URL) {
+    console.warn("⚠️  DATABASE_URL or DIRECT_URL is not configured in environment. Skipping data pipeline sync.");
+    return;
+  }
+
   try {
     const compFile = await downloadFile("competitions.csv");
     const clubsFile = await downloadFile("clubs.csv");

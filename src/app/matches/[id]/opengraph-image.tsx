@@ -4,7 +4,7 @@ import { getMatchDetails } from "@/lib/fotmob/client";
 import { OG_COLORS } from "@/lib/og/colors";
 
 export const runtime = "edge";
-export const alt = "Match Score & Center | a1score.app";
+export const alt = "Match Score & Center | a1score";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 export const revalidate = 60; // Refresh match card every minute
@@ -362,8 +362,8 @@ export default async function Image({ params }: { params: { id: string } }) {
             color: OG_COLORS.textMuted,
           }}
         >
-          <span>Money Meets the Pitch — Live events, lineups & squad valuations</span>
-          <span>FotMob real-time match stats & Transfermarkt financial data</span>
+          <span>Money Meets the Pitch — Match events, lineups & squad valuations</span>
+          <span>FotMob match statistics & Transfermarkt valuation data</span>
         </div>
       </div>
     ),

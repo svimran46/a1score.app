@@ -164,3 +164,30 @@ test("SEO Sitemap - includes static core, news, leagues, and dynamic entities", 
   assert.ok(urls.some((u) => u.includes("/leagues/laliga")), "Must include laliga");
   assert.ok(urls.some((u) => u.includes("/leagues/bundesliga")), "Must include bundesliga");
 });
+
+test("SEO Origin Parity - sitemap, robots, and metadata canonicals share exact SITE_URL origin", async () => {
+  const { SITE_URL, getCanonicalUrl } = await import("../src/lib/siteUrl");
+  const parsedSiteUrl = new URL(SITE_URL);
+
+  // 1. Robots sitemap URL matches SITE_URL origin
+  const r = robots();
+  const sitemapUrl = Array.isArray(r.sitemap) ? r.sitemap[0] : r.sitemap;
+  assert.ok(sitemapUrl, "robots must define a sitemap URL");
+  const parsedRobotsSitemap = new URL(sitemapUrl!);
+  assert.equal(parsedRobotsSitemap.origin, parsedSiteUrl.origin);
+
+  // 2. getCanonicalUrl produces exact canonical matching SITE_URL origin
+  const matchCanonical = getCanonicalUrl("/matches");
+  assert.equal(new URL(matchCanonical).origin, parsedSiteUrl.origin);
+  assert.equal(matchCanonical, `${SITE_URL}/matches`);
+
+  // 3. constructMetadata canonical & OG match SITE_URL origin
+  const meta = constructMetadata({
+    title: "Test Page",
+    description: "Test page description",
+    path: "/matches",
+  });
+  assert.equal(new URL(meta.alternates?.canonical as string).origin, parsedSiteUrl.origin);
+  assert.equal(new URL((meta.openGraph as any)?.url).origin, parsedSiteUrl.origin);
+  assert.equal(meta.title, "Test Page | a1score");
+});

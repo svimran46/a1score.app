@@ -65,13 +65,21 @@ export async function GET(req: NextRequest) {
     const payloadStr = JSON.stringify(payload);
     const etag = `"${pureMd5(payloadStr)}"`;
 
+    const hasLive = (data.liveMatchesCount || 0) > 0;
+    const todayStr = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+    const isPast = data.date < todayStr;
+    const cacheTtl = hasLive ? 30 : data.date === todayStr ? 60 : isPast ? 86400 : 300;
+    const cacheControlHeader = isPast
+      ? "public, max-age=86400, s-maxage=86400, stale-while-revalidate=86400"
+      : `public, max-age=${cacheTtl}, s-maxage=${cacheTtl}, stale-while-revalidate=${cacheTtl * 2}`;
+
     const ifNoneMatch = req.headers.get("if-none-match");
     if (ifNoneMatch && ifNoneMatch === etag) {
       return new NextResponse(null, {
         status: 304,
         headers: {
           ETag: etag,
-          "Cache-Control": "public, s-maxage=5, stale-while-revalidate=10",
+          "Cache-Control": cacheControlHeader,
         },
       });
     }
@@ -81,7 +89,7 @@ export async function GET(req: NextRequest) {
       headers: {
         "Content-Type": "application/json",
         ETag: etag,
-        "Cache-Control": "public, s-maxage=5, stale-while-revalidate=10",
+        "Cache-Control": cacheControlHeader,
       },
     });
   } catch (err: any) {

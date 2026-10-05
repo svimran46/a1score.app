@@ -5,6 +5,7 @@ import { EntityImage } from "./EntityImage";
 import Link from "next/link";
 import { formatCompactEur } from "@/lib/utils";
 import { formatTransferFee } from "@/lib/transfers";
+import { getPlayerSlug } from "@/lib/slugs";
 import { Card } from "@/components/ui";
 import {
   ArrowDownLeft,
@@ -141,7 +142,7 @@ export function ClubTransferLedger({
           const p = t.player;
           const extId = p ? (p.sourceId || p.externalId || p.id) : null;
           const slug = p
-            ? p.slug || `${p.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${extId}`
+            ? p.slug || getPlayerSlug({ ...p, transfermarktId: extId })
             : null;
           const counterparty = activeTab === "arrivals" ? t.fromClubName : t.toClubName;
           const feeInfo = formatTransferFee(t.feeEur, t.transferType);
@@ -230,7 +231,7 @@ export function ClubTransferLedger({
               const extId = p ? (p.sourceId || p.externalId || p.id) : null;
               const slug = p
                 ? p.slug ||
-                  `${p.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${extId}`
+                  getPlayerSlug({ ...p, transfermarktId: extId })
                 : null;
               const counterparty =
                 activeTab === "arrivals" ? t.fromClubName : t.toClubName;

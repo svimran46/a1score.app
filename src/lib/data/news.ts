@@ -3,10 +3,6 @@ import { NewsItem, NewsEntityTag } from "@/types/news";
 const RSS_FEEDS = [
   {
     name: "Sky Sports",
-    url: "https://www.skysports.com/rss/11095", // Strictly Football
-  },
-  {
-    name: "Sky Sports",
     url: "https://www.skysports.com/rss/12691", // Transfer Centre
   },
   {
@@ -14,12 +10,16 @@ const RSS_FEEDS = [
     url: "https://www.theguardian.com/football/rss",
   },
   {
-    name: "The Independent",
-    url: "https://www.independent.co.uk/sport/football/rss",
-  },
-  {
     name: "BBC Sport",
     url: "https://feeds.bbci.co.uk/sport/football/rss.xml",
+  },
+  {
+    name: "Marca (English)",
+    url: "https://e00-marca.uecdn.es/rss/en/football.xml", // Spanish / European Football
+  },
+  {
+    name: "Football Italia",
+    url: "https://football-italia.net/feed/", // Italian Serie A coverage
   },
 ];
 
@@ -300,24 +300,84 @@ function parseRssFeed(xml: string, sourceName: string): NewsItem[] {
 }
 
 /**
- * Deduplicate news items by normalized title keywords.
+ * Normalize a headline title for strict deduplication.
  */
-function deduplicateNews(items: NewsItem[]): NewsItem[] {
+export function normalizeHeadline(title: string): string {
+  return (title || "")
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/^papers:\s*/i, "")
+    .replace(/^paper talk:\s*/i, "")
+    .replace(/^gossip:\s*/i, "")
+    .replace(/[^a-z0-9\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/**
+ * Filter out generic/empty/meaningless headlines.
+ */
+function isMeaningfulHeadline(title: string): boolean {
+  if (!title || title.trim().length < 10) return false;
+  const lower = title.toLowerCase().trim();
+  const genericTitles = [
+    "latest news",
+    "football news",
+    "breaking news",
+    "live updates",
+    "match report",
+    "highlights",
+    "watch live",
+  ];
+  if (genericTitles.includes(lower)) return false;
+  return true;
+}
+
+/**
+ * Deduplicate news items by normalized title keywords and canonical URL,
+ * balance sources by capping items per source, and tag/label roundups.
+ */
+export function deduplicateNews(items: NewsItem[], maxPerSource = 8): NewsItem[] {
   const seenTitles = new Set<string>();
+  const seenUrls = new Set<string>();
+  const sourceCounts: Record<string, number> = {};
   const deduped: NewsItem[] = [];
 
   for (const item of items) {
-    const sig = item.title
-      .toLowerCase()
-      .replace(/[^a-z0-9\s]/g, "")
-      .split(/\s+/)
-      .slice(0, 6)
-      .join(" ");
+    if (!isMeaningfulHeadline(item.title)) continue;
 
-    if (!seenTitles.has(sig)) {
-      seenTitles.add(sig);
-      deduped.push(item);
+    // Check per-source quota for regional balance
+    const currentCount = sourceCounts[item.source] || 0;
+    if (currentCount >= maxPerSource) continue;
+
+    // Normalize URL (strip tracking params like utm_*)
+    const cleanUrl = item.url.split("?")[0].toLowerCase();
+    if (seenUrls.has(cleanUrl)) continue;
+
+    // Normalize title tokens (first 6 substantive words)
+    const normalized = normalizeHeadline(item.title);
+    const sig = normalized.split(/\s+/).slice(0, 6).join(" ");
+
+    if (sig.length >= 8 && seenTitles.has(sig)) continue;
+
+    seenUrls.add(cleanUrl);
+    if (sig.length >= 8) seenTitles.add(sig);
+    sourceCounts[item.source] = currentCount + 1;
+
+    // Label "Papers:" roundup articles explicitly
+    let adjustedTitle = item.title;
+    const isRoundup = /^(papers|paper talk|gossip|media watch):\s*/i.test(item.title);
+    const tags = [...item.tags];
+    if (isRoundup && !tags.includes("Press Roundup")) {
+      tags.unshift("Press Roundup");
     }
+
+    deduped.push({
+      ...item,
+      title: adjustedTitle,
+      tags,
+    });
   }
 
   return deduped;
@@ -406,10 +466,11 @@ export function formatRelativeTime(dateStr: string): string {
     const now = new Date();
     const diffMs = now.getTime() - date.getTime();
 
-    if (isNaN(diffMs) || diffMs < 0) return "Just now";
+    if (isNaN(diffMs) || !dateStr) return "Recent";
+    if (diffMs < 0) return "Just now"; // recent within clock skew
 
     const minutes = Math.floor(diffMs / (1000 * 60));
-    if (minutes < 1) return "Just now";
+    if (minutes < 1) return "< 1 min. ago";
     if (minutes < 60) return `${minutes} min. ago`;
 
     const hours = Math.floor(minutes / 60);

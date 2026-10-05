@@ -1,7 +1,7 @@
 # a1score.app — Automated Squad Reconciliation Diff Report
 
-**Execution Date:** 2026-10-02T13:29:30.206Z
-**Run Mode:** DRY RUN
+**Execution Date:** 2026-10-05T14:31:15.721Z
+**Run Mode:** LIVE APPLY
 **Clubs Audited:** 5
 **Safety Violations Encountered:** 0
 

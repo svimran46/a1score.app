@@ -7,7 +7,7 @@ export const runtime = "edge";
 export const metadata: Metadata = {
   title: "Data Methodology & Architecture",
   description:
-    "Explore how a1score.app powers 'Money meets the pitch' through our unified data architecture: market valuation modelling, squad analytics, and real-time match operations.",
+    "Explore how a1score.app powers 'Money meets the pitch' through our unified data architecture: market valuation modelling, squad analytics, and live match center operations.",
 };
 
 export default function MethodologyPage() {
@@ -23,7 +23,7 @@ export default function MethodologyPage() {
           How A1Score Operates
         </h1>
         <p className="text-sm sm:text-base text-slate-400 max-w-2xl [text-wrap:balance]">
-          &ldquo;Money meets the pitch.&rdquo; Most football platforms present either live scores or financial valuations in isolation. A1Score synthesizes both into a unified intelligence engine.
+          &ldquo;Money meets the pitch.&rdquo; Most football platforms present either match fixtures or financial valuations in isolation. A1Score synthesizes both into a unified intelligence engine.
         </p>
       </div>
 
@@ -75,12 +75,12 @@ export default function MethodologyPage() {
             </h2>
           </div>
           <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-            Live fixtures, in-play scores, confirmed tactical lineups with pitch formations, real-time match events, domestic league tables, and player tournament performance are processed through our low-latency edge synchronisation layer.
+            Live fixtures, in-play scores, confirmed tactical lineups with pitch formations, in-match timeline events, domestic league tables, and player tournament performance are processed through our low-latency edge synchronisation layer.
           </p>
           <ul className="space-y-2 text-xs text-slate-400 pt-2 border-t border-slate-800">
             <li className="flex items-start gap-2">
               <span className="text-emerald-400 font-bold shrink-0">•</span>
-              <span><strong>Edge Synchronization:</strong> Live scores and match clocks synchronize efficiently with shared edge caching, preventing redundant upstream calls and conserving bandwidth.</span>
+              <span><strong>Edge Synchronization:</strong> Match scores and clocks synchronize efficiently with shared edge caching (5s edge TTL) and 45s visibility-aware polling, preventing redundant upstream calls and conserving bandwidth.</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-emerald-400 font-bold shrink-0">•</span>
@@ -155,10 +155,10 @@ export default function MethodologyPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 text-xs">
           <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-1.5">
-            <span className="text-emerald-400 font-bold text-sm">5 Seconds</span>
-            <h4 className="text-white font-semibold">Live Match Intelligence</h4>
+            <span className="text-emerald-400 font-bold text-sm">45 Seconds (5s Edge)</span>
+            <h4 className="text-white font-semibold">In-Play Match Intelligence</h4>
             <p className="text-slate-400">
-              Scores, minute counters, timeline cards, and confirmed lineups. Actively polled in Match Center during live matches via LiveAutoRefresher.
+              Scores, minute counters, timeline events, and confirmed lineups. In-play matches sync every 45s on active tabs with 5s edge cache TTL. Scores may be 1–2 minutes behind broadcast.
             </p>
           </div>
 

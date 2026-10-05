@@ -39,7 +39,7 @@ export default async function StatusPage() {
             System Status
           </h1>
           <p className="text-sm text-[var(--text-muted)] mt-1.5 max-w-2xl">
-            Real-time health monitoring of upstream APIs, data pipelines, PostgreSQL persistence, and memory caching layers.
+            Automated health monitoring of upstream APIs, data pipelines, PostgreSQL persistence, and memory caching layers.
           </p>
         </div>
 

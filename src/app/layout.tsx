@@ -8,33 +8,33 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "sw
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "a1score.app — Money meets the pitch",
+    default: "a1score — Money meets the pitch",
     template: "%s",
   },
   description:
-    "Football platform combining real-time scores with player market valuations and club records on a1score.app.",
+    "Football platform combining match fixtures and scores with player market valuation updates and club records.",
   openGraph: {
     type: "website",
     locale: "en_US",
     url: SITE_URL,
-    siteName: "a1score.app",
-    title: "a1score.app — Money meets the pitch",
+    siteName: "a1score",
+    title: "a1score — Money meets the pitch",
     description:
-      "Football platform: live scores, player market valuations, and club records.",
+      "Football platform: match scores, player market valuation updates, and club records.",
     images: [
       {
         url: `${SITE_URL}/og-default.png`,
         width: 1200,
         height: 630,
-        alt: "a1score.app — Money meets the pitch",
+        alt: "a1score — Money meets the pitch",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "a1score.app — Money meets the pitch",
+    title: "a1score — Money meets the pitch",
     description:
-      "Football platform: live scores, player market valuations, and club records.",
+      "Football platform: match scores, player market valuation updates, and club records.",
     images: [`${SITE_URL}/og-default.png`],
   },
   robots: {

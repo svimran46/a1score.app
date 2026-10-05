@@ -1,14 +1,15 @@
 import { getMatchesByDate, TOP_LEAGUE_IDS } from "@/lib/fotmob/client";
 import { MatchesClient } from "@/components/MatchesClient";
+import { getDefaultMatchDate } from "@/lib/date-utils";
 import type { Metadata } from "next";
 
-export const revalidate = 5; // Ultra-fresh live scores every 5s
+export const revalidate = 30; // Dynamic edge revalidation for live match updates
 export const runtime = "edge";
 
 export const metadata: Metadata = {
-  title: "Live Matches — Real-Time Scores, Lineups & Squad Values",
+  title: "Matches — Scores, Lineups & Squad Values",
   description:
-    "Live football scores, real-time match events, confirmed tactical lineups, and squad market values on a1score.app.",
+    "Match scores, in-play timeline events, confirmed tactical lineups, and squad market values on a1score.app.",
 };
 
 interface MatchesPageProps {
@@ -20,12 +21,8 @@ interface MatchesPageProps {
 }
 
 export default async function MatchesPage({ searchParams }: MatchesPageProps) {
-  const activeDate =
-    searchParams.date ||
-    new Date()
-      .toISOString()
-      .slice(0, 10)
-      .replace(/-/g, "");
+  const activeDate = getDefaultMatchDate(searchParams.date);
+  const fetchedAt = new Date().toISOString();
 
   const activeFilter = searchParams.filter || "all";
   let activeScope: "top" | "all" = searchParams.scope === "all" ? "all" : "top";
@@ -91,6 +88,7 @@ export default async function MatchesPage({ searchParams }: MatchesPageProps) {
       finishedScopedMatchesCount={finishedScopedMatchesCount}
       upcomingScopedMatchesCount={upcomingScopedMatchesCount}
       totalAllMatchesCount={totalAllMatchesCount}
+      fetchedAt={fetchedAt}
     />
   );
 }

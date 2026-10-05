@@ -26,6 +26,7 @@ interface MatchesClientProps {
   finishedScopedMatchesCount: number;
   upcomingScopedMatchesCount: number;
   totalAllMatchesCount: number;
+  fetchedAt?: string | null;
 }
 
 function formatDateString(dateStr: string): string {
@@ -73,6 +74,7 @@ export function MatchesClient({
   finishedScopedMatchesCount,
   upcomingScopedMatchesCount,
   totalAllMatchesCount,
+  fetchedAt,
 }: MatchesClientProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -87,6 +89,17 @@ export function MatchesClient({
       setTzLabel(`GMT${sign}${offsetHours}`);
     } catch {}
   }, []);
+
+  const [formattedUpdatedTime, setFormattedUpdatedTime] = useState<string | null>(null);
+  useEffect(() => {
+    if (fetchedAt) {
+      try {
+        const d = new Date(fetchedAt);
+        const pad = (n: number) => String(n).padStart(2, "0");
+        setFormattedUpdatedTime(`${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`);
+      } catch {}
+    }
+  }, [fetchedAt]);
 
   // Calendar Sheet state
   const [calendarOpen, setCalendarOpen] = useState(false);
@@ -211,9 +224,15 @@ export function MatchesClient({
         </button>
       </div>
 
-      {/* Single timezone caption under the date bar */}
-      <div className="text-[13px] text-[var(--color-text-secondary)] text-center font-normal -mt-1">
-        Times in {tzLabel}
+      {/* Single timezone and updated timestamp caption under the date bar */}
+      <div className="flex items-center justify-center gap-2 text-[12px] sm:text-[13px] text-[var(--color-text-secondary)] text-center font-normal -mt-1 tabular-nums">
+        <span>Times in {tzLabel}</span>
+        {formattedUpdatedTime && (
+          <>
+            <span className="opacity-40">•</span>
+            <span>Updated {formattedUpdatedTime}</span>
+          </>
+        )}
       </div>
 
       {/* 

@@ -2,14 +2,33 @@
  * Utility functions for human-readable SEO slugs across clubs, leagues, and players.
  */
 
+const TRANSLITERATION_MAP: Record<string, string> = {
+  "\u00f8": "o", "\u00d8": "o", // ø, Ø
+  "\u0142": "l", "\u0141": "l", // ł, Ł
+  "\u0111": "d", "\u0110": "d", // đ, Đ
+  "\u00df": "ss",               // ß
+  "\u00e6": "ae", "\u00c6": "ae", // æ, Æ
+  "\u0153": "oe", "\u0152": "oe", // œ, Œ
+  "\u00fe": "th", "\u00de": "th", // þ, Þ
+  "\u00f0": "d",  "\u00d0": "d",  // ð, Ð
+};
+
 export function slugify(text: string): string {
   if (!text) return "entity";
-  return text
+
+  let str = text;
+  for (const [char, replacement] of Object.entries(TRANSLITERATION_MAP)) {
+    str = str.replaceAll(char, replacement);
+  }
+
+  return str
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "") // strip combining diacritical marks
     .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "") // strip diacritics (e.g. München -> Munchen)
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
+    .replace(/['’]/g, "-")          // apostrophes to hyphens
+    .replace(/[^a-z0-9]+/g, "-")    // non-alphanumeric to hyphens
+    .replace(/-+/g, "-")            // eliminate duplicate hyphens
+    .replace(/^-+|-+$/g, "");       // strip leading and trailing hyphens
 }
 
 export function getClubSlug(club: { id: string; name: string }): string {
@@ -22,10 +41,16 @@ export function getLeagueSlug(league: { id: string; name: string }): string {
   return `${slug}-${league.id}`;
 }
 
-export function getPlayerSlug(player: { id: string; fullName?: string | null; commonName?: string | null }): string {
+export function getPlayerSlug(player: {
+  id?: string;
+  fullName?: string | null;
+  commonName?: string | null;
+  transfermarktId?: string | number | null;
+}): string {
   const name = player.commonName || player.fullName || "player";
   const slug = slugify(name);
-  return `${slug}-${player.id}`;
+  const extId = player.transfermarktId || player.id || "0";
+  return `${slug}-${extId}`;
 }
 
 /**

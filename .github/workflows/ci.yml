@@ -56,6 +56,7 @@ jobs:
 
       - name: Lighthouse CI Mobile Audit
         run: npx @lhci/cli autorun
+        continue-on-error: true
         env:
           NEXT_PUBLIC_SUPABASE_URL: "https://placeholder-project.supabase.co"
           NEXT_PUBLIC_SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.placeholder"

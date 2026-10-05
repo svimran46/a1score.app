@@ -92,7 +92,7 @@ export function FactsTab({ match }: FactsTabProps) {
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-emerald-400" />
             <h3 className="text-sm font-bold text-white uppercase tracking-wider">
-              Match Timeline {isLive && <span className="text-emerald-400 text-xs font-normal">• Live Updates</span>}
+              Match Timeline {isLive && <span className="text-emerald-400 text-xs font-normal">• Live (45s sync)</span>}
             </h3>
           </div>
           <span className="text-[11px] text-slate-400">

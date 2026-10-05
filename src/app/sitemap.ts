@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 import { getAllClubs } from "@/lib/data/clubs";
 import { supabase } from "@/lib/supabase";
 import { getEffectiveSiteUrl } from "@/lib/metadata";
-import { getClubSlug, getLeagueSlug } from "@/lib/slugs";
+import { getClubSlug, getLeagueSlug, getPlayerSlug } from "@/lib/slugs";
 import { getMatchesByDate } from "@/lib/fotmob/client";
 
 export const runtime = "edge";
@@ -22,7 +22,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = getEffectiveSiteUrl();
   const now = new Date();
 
-  // 1. Static Core Pages
+  // Helper: safely format entity date without exceeding current time
+  const getSafeDate = (d: string | Date | null | undefined): Date | undefined => {
+    if (!d) return undefined;
+    const parsed = typeof d === "string" ? new Date(d) : d;
+    if (isNaN(parsed.getTime())) return undefined;
+    return parsed > now ? now : parsed;
+  };
+
+  // 1. Static Core Pages:
+  // Pages without a real entity update date omit lastModified.
+  // Realtime/daily pages reflect actual system context.
   const staticRoutes: MetadataRoute.Sitemap = [
     {
       url: `${baseUrl}`,
@@ -32,61 +42,51 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: `${baseUrl}/matches`,
-      lastModified: now,
       changeFrequency: "always",
       priority: 0.9,
     },
     {
       url: `${baseUrl}/values`,
-      lastModified: now,
       changeFrequency: "daily",
       priority: 0.85,
     },
     {
       url: `${baseUrl}/players`,
-      lastModified: now,
       changeFrequency: "daily",
       priority: 0.85,
     },
     {
       url: `${baseUrl}/clubs`,
-      lastModified: now,
       changeFrequency: "daily",
       priority: 0.8,
     },
     {
       url: `${baseUrl}/leagues`,
-      lastModified: now,
       changeFrequency: "daily",
       priority: 0.8,
     },
     {
       url: `${baseUrl}/news`,
-      lastModified: now,
       changeFrequency: "hourly",
       priority: 0.8,
     },
     {
       url: `${baseUrl}/transfers`,
-      lastModified: now,
       changeFrequency: "daily",
       priority: 0.75,
     },
     {
       url: `${baseUrl}/methodology`,
-      lastModified: now,
       changeFrequency: "monthly",
       priority: 0.5,
     },
     {
       url: `${baseUrl}/privacy`,
-      lastModified: now,
       changeFrequency: "monthly",
       priority: 0.3,
     },
     {
       url: `${baseUrl}/terms`,
-      lastModified: now,
       changeFrequency: "monthly",
       priority: 0.3,
     },
@@ -95,28 +95,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // 2. League Competitions (Readable Slugs)
   const leagueRoutes: MetadataRoute.Sitemap = TRACKED_LEAGUES.map((l) => ({
     url: `${baseUrl}/leagues/${getLeagueSlug(l)}`,
-    lastModified: now,
     changeFrequency: "daily",
     priority: 0.85,
   }));
 
-  // 3. Dynamic All Public Clubs (Readable Slugs)
+  // 3. Dynamic All Public Clubs (Readable Slugs with authentic lastSyncedAt/updatedAt)
   let clubRoutes: MetadataRoute.Sitemap = [];
   try {
     const clubs = await getAllClubs({ all: true });
     if (clubs && clubs.length > 0) {
-      clubRoutes = clubs.map((c: any) => ({
-        url: `${baseUrl}/clubs/${getClubSlug(c)}`,
-        lastModified: c.lastSyncedAt ? new Date(c.lastSyncedAt) : now,
-        changeFrequency: "weekly",
-        priority: 0.75,
-      }));
+      clubRoutes = clubs.map((c: any) => {
+        const lastMod = getSafeDate(c.lastSyncedAt || c.updatedAt);
+        return {
+          url: `${baseUrl}/clubs/${getClubSlug(c)}`,
+          ...(lastMod ? { lastModified: lastMod } : {}),
+          changeFrequency: "weekly",
+          priority: 0.75,
+        };
+      });
     }
   } catch (err) {
     console.warn("[Sitemap] Failed to fetch clubs for sitemap:", err);
   }
 
-  // 4. Dynamic Public Players (Readable Slugs)
+  // 4. Dynamic Public Players (Readable Slugs with authentic updatedAt)
   let playerRoutes: MetadataRoute.Sitemap = [];
   try {
     const { data: dbPlayers } = await supabase
@@ -128,11 +130,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     if (dbPlayers && dbPlayers.length > 0) {
       playerRoutes = dbPlayers.map((p: any) => {
-        const extId = p.transfermarktId || p.id;
-        const slug = `${(p.fullName || "player").toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${extId}`;
+        const slug = getPlayerSlug(p);
+        const lastMod = getSafeDate(p.updatedAt);
         return {
           url: `${baseUrl}/players/${slug}`,
-          lastModified: p.updatedAt ? new Date(p.updatedAt) : now,
+          ...(lastMod ? { lastModified: lastMod } : {}),
           changeFrequency: "weekly",
           priority: 0.7,
         };
@@ -142,7 +144,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.warn("[Sitemap] Failed to fetch players for sitemap:", err);
   }
 
-  // 5. Finished Matches (only include verified finished fixtures)
+  // 5. Finished Matches (only include verified finished fixtures with verified match time)
   let matchRoutes: MetadataRoute.Sitemap = [];
   try {
     const yesterday = new Date(Date.now() - 86400000)
@@ -155,12 +157,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         .flatMap((l) => l.matches || [])
         .filter((m) => m && m.id && m.isFinished);
 
-      matchRoutes = finished.slice(0, 100).map((m) => ({
-        url: `${baseUrl}/matches/${m.id}`,
-        lastModified: now,
-        changeFrequency: "monthly",
-        priority: 0.6,
-      }));
+      matchRoutes = finished.slice(0, 100).map((m) => {
+        const matchTime = getSafeDate(m.status?.utcTime || m.time);
+        return {
+          url: `${baseUrl}/matches/${m.id}`,
+          ...(matchTime ? { lastModified: matchTime } : {}),
+          changeFrequency: "monthly",
+          priority: 0.6,
+        };
+      });
     }
   } catch (err) {
     console.warn("[Sitemap] Failed to fetch finished matches for sitemap:", err);

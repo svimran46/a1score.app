@@ -1,15 +1,16 @@
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { EntityImage } from "@/components/EntityImage";
 import Link from "next/link";
 import { getPlayerBySlugOrId } from "@/lib/data/players";
 import { calculateAge, formatCompactEur, formatDate, formatUpdateAge } from "@/lib/utils";
 import { getClubShortName } from "@/lib/data/clubs";
-import { getClubSlug, getLeagueSlug } from "@/lib/slugs";
+import { getClubSlug, getLeagueSlug, getPlayerSlug } from "@/lib/slugs";
 import { constructMetadata, SITE_URL } from "@/lib/metadata";
 import { Card, ValuationFreshness, Breadcrumbs, PageHeader } from "@/components/ui";
 import { PlayerTabsContainer } from "@/components/PlayerTabsContainer";
 import { FollowButton } from "@/components/watchlist/FollowButton";
 import { getRelatedNews } from "@/lib/data/news";
+import { getPlayerAchievements } from "@/lib/data/playerAchievements";
 import { Scale } from "lucide-react";
 import type { Metadata } from "next";
 
@@ -32,6 +33,7 @@ export async function generateMetadata({ params }: PlayerPageProps): Promise<Met
     });
   }
 
+  const canonicalSlug = getPlayerSlug(player);
   const formattedVal = player.latestMarketValue
     ? formatCompactEur(player.latestMarketValue)
     : "";
@@ -47,8 +49,8 @@ export async function generateMetadata({ params }: PlayerPageProps): Promise<Met
   return constructMetadata({
     title: rawTitle,
     description: desc.length > 155 ? desc.slice(0, 152) + "..." : desc,
-    path: `/players/${params.slug}`,
-    image: `/players/${params.slug}/opengraph-image`,
+    path: `/players/${canonicalSlug}`,
+    image: `/players/${canonicalSlug}/opengraph-image`,
   });
 }
 
@@ -57,6 +59,12 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
 
   if (!player) {
     notFound();
+  }
+
+  // 301 redirect any non-canonical slug, accent-stripped legacy slug, or raw ID to canonical slug URL
+  const canonicalSlug = getPlayerSlug(player);
+  if (params.slug !== canonicalSlug) {
+    permanentRedirect(`/players/${canonicalSlug}`);
   }
 
   const age = calculateAge(player.dateOfBirth);
@@ -69,7 +77,20 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
   const clubShort = currentClub ? getClubShortName(currentClub.shortName || currentClub.name || "") : null;
 
   const tagsToMatch = [player.fullName, player.commonName, currentClub?.name].filter(Boolean) as string[];
-  const relatedNews = await getRelatedNews(tagsToMatch, 3).catch(() => []);
+  const [relatedNews, achievements] = await Promise.all([
+    getRelatedNews(tagsToMatch, 3).catch(() => []),
+    getPlayerAchievements(player.id).catch(() => ({
+      majorHonours: [],
+      domesticCupsAndOther: [],
+      individualAwards: [],
+      all: [],
+      totalTitles: 0,
+    })),
+  ]);
+
+  const awardsList = achievements.all.map(
+    (a) => `${a.titleCount}x ${a.competitionName}`
+  );
 
   const validDob =
     player.dateOfBirth && !isNaN(new Date(player.dateOfBirth).getTime())
@@ -137,7 +158,7 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
   ];
 
   const baseUrl = SITE_URL;
-  const canonicalUrl = `${baseUrl}/players/${params.slug}`;
+  const canonicalUrl = `${baseUrl}/players/${canonicalSlug}`;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -146,6 +167,7 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
     ...(player.photoUrl ? { image: player.photoUrl } : {}),
     ...(nationalityText ? { nationality: nationalityText } : {}),
     ...(validDob ? { birthDate: validDob.toISOString().split("T")[0] } : {}),
+    ...(awardsList.length > 0 ? { award: awardsList } : {}),
     ...(currentClub
       ? {
           affiliation: {
@@ -197,6 +219,8 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
         value={currentVal > 0 ? formatCompactEur(currentVal) : null}
         valueLabel="Current Market Value"
         valueTrend={changeElement}
+        valueUpdatedAt={latestValuation?.date}
+        checkedAt={player.updatedAt}
         freshnessTimestamp={latestValuation?.date || player.updatedAt}
         metaItems={[
           nationalityText ? <span key="nat">{nationalityText}</span> : null,
@@ -261,7 +285,7 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
         shareUrl={canonicalUrl}
       />
 
-      {/* 2. Tabs: Overview, Transfers, Value history */}
+      {/* 2. Tabs: Overview, Transfers, Value history, Achievements */}
       <PlayerTabsContainer
         keyFactsItems={keyFactsItems}
         mvs={mvs}
@@ -271,6 +295,7 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
         transfers={player.transfers}
         injuries={player.injuries}
         relatedNews={relatedNews}
+        achievements={achievements}
       />
     </div>
   );

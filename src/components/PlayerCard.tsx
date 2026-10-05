@@ -2,6 +2,7 @@ import Link from "next/link";
 import { EntityImage } from "./EntityImage";
 import { formatCompactEur } from "@/lib/utils";
 import { getClubDisplayName } from "@/lib/data/clubs";
+import { getPlayerSlug } from "@/lib/slugs";
 
 interface PlayerCardProps {
   player: {
@@ -28,7 +29,7 @@ export function PlayerCard({ player }: PlayerCardProps) {
   const extId = player.sourceId || player.externalId || player.id;
   const slug =
     player.slug ||
-    `${player.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${extId}`;
+    getPlayerSlug({ ...player, transfermarktId: extId });
 
   return (
     <Link

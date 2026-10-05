@@ -87,12 +87,12 @@ export function StatusDashboard({ initialData }: StatusDashboardProps) {
   const componentsList = [
     {
       id: "fotmob",
-      name: "FotMob Live Match Engine",
+      name: "FotMob Match Engine",
       category: "Match Scores & Lineups",
       status: health.components.fotmob,
       icon: <Activity className="w-5 h-5 text-[var(--accent)]" aria-hidden="true" />,
-      description: "Direct upstream proxy providing real-time scores, lineups, player ratings, and match events.",
-      sla: "5-second live cache with automatic anti-bot signature reconciliation",
+      description: "Direct upstream proxy providing match scores, lineups, player ratings, and timeline events.",
+      sla: "5-second edge cache with automatic anti-bot signature reconciliation",
     },
     {
       id: "transfermarkt",

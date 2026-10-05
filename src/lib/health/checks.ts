@@ -56,6 +56,13 @@ export interface SystemHealthDetail extends SystemHealthSummary {
     database: ComponentHealth;
     cache: ComponentHealth;
   };
+  staleness?: {
+    olderThan3d: number;
+    olderThan7d: number;
+    olderThan14d: number;
+    olderThan30d: number;
+    olderThan60d: number;
+  };
   timings: {
     totalMs: number;
   };

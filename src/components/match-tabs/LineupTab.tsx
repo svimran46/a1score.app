@@ -5,6 +5,7 @@ import Link from "next/link";
 import { formatCompactEur } from "@/lib/utils";
 import { EntityImage } from "@/components/EntityImage";
 import { Users, User, ExternalLink } from "lucide-react";
+import { slugify } from "@/lib/slugs";
 
 interface LineupTabProps {
   match: any;
@@ -14,7 +15,7 @@ function getPlayerProfileUrl(player: any): string {
   if (!player) return "/values";
   if (player.slug) return `/players/${player.slug}`;
   if (player.name) {
-    const slug = String(player.name).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    const slug = slugify(String(player.name));
     return `/players/${slug || player.id}`;
   }
   return `/players/${player.id || ""}`;

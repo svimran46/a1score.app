@@ -1,0 +1,392 @@
+[
+  {
+    "file": "src/app/api/players/most-valuable/route.ts",
+    "line": 67,
+    "pattern": "real-time",
+    "text": "// Cache at edge 1h, stale 1h — valuations update twice per season, not real-time"
+  },
+  {
+    "file": "src/app/img/club/[id]/route.ts",
+    "line": 42,
+    "pattern": "instant",
+    "text": "// 1. Instant in-memory resolution from FOTMOB_TEAM_MAPPINGS (0ms)"
+  },
+  {
+    "file": "src/app/layout.tsx",
+    "line": 15,
+    "pattern": "real-time",
+    "text": "\"Football platform combining real-time scores with player market valuations and club records on a1score.app.\","
+  },
+  {
+    "file": "src/app/layout.tsx",
+    "line": 23,
+    "pattern": "live scores",
+    "text": "\"Football platform: live scores, player market valuations, and club records.\","
+  },
+  {
+    "file": "src/app/layout.tsx",
+    "line": 37,
+    "pattern": "live scores",
+    "text": "\"Football platform: live scores, player market valuations, and club records.\","
+  },
+  {
+    "file": "src/app/matches/opengraph-image.tsx",
+    "line": 5,
+    "pattern": "real-time",
+    "text": "export const alt = \"Live Matches — Real-Time Scores & Squad Values\";"
+  },
+  {
+    "file": "src/app/matches/opengraph-image.tsx",
+    "line": 57,
+    "pattern": "live scores",
+    "text": "Live scores & squad values"
+  },
+  {
+    "file": "src/app/matches/opengraph-image.tsx",
+    "line": 80,
+    "pattern": "real-time",
+    "text": "Real-time match events, confirmed starting lineups, and squad market values across European competitions."
+  },
+  {
+    "file": "src/app/matches/page.tsx",
+    "line": 5,
+    "pattern": "every 5s",
+    "text": "export const revalidate = 5; // Ultra-fresh live scores every 5s"
+  },
+  {
+    "file": "src/app/matches/page.tsx",
+    "line": 9,
+    "pattern": "real-time",
+    "text": "title: \"Live Matches — Real-Time Scores, Lineups & Squad Values\","
+  },
+  {
+    "file": "src/app/matches/page.tsx",
+    "line": 11,
+    "pattern": "real-time",
+    "text": "\"Live football scores, real-time match events, confirmed tactical lineups, and squad market values on a1score.app.\","
+  },
+  {
+    "file": "src/app/matches/[id]/opengraph-image.tsx",
+    "line": 366,
+    "pattern": "real-time",
+    "text": "<span>FotMob real-time match stats & Transfermarkt financial data</span>"
+  },
+  {
+    "file": "src/app/matches/[id]/page.tsx",
+    "line": 7,
+    "pattern": "every 5s",
+    "text": "export const revalidate = 5; // Ultra-fresh match details every 5s"
+  },
+  {
+    "file": "src/app/methodology/page.tsx",
+    "line": 10,
+    "pattern": "real-time",
+    "text": "\"Explore how a1score.app powers 'Money meets the pitch' through our unified data architecture: market valuation modelling, squad analytics, and real-time match operations.\","
+  },
+  {
+    "file": "src/app/methodology/page.tsx",
+    "line": 26,
+    "pattern": "live scores",
+    "text": "&ldquo;Money meets the pitch.&rdquo; Most football platforms present either live scores or financial valuations in isolation. A1Score synthesizes both into a unified intelligence engine."
+  },
+  {
+    "file": "src/app/methodology/page.tsx",
+    "line": 78,
+    "pattern": "real-time",
+    "text": "Live fixtures, in-play scores, confirmed tactical lineups with pitch formations, real-time match events, domestic league tables, and player tournament performance are processed through our low-latency edge synchronisation layer."
+  },
+  {
+    "file": "src/app/methodology/page.tsx",
+    "line": 83,
+    "pattern": "live scores",
+    "text": "<span><strong>Edge Synchronization:</strong> Live scores and match clocks synchronize efficiently with shared edge caching, preventing redundant upstream calls and conserving bandwidth.</span>"
+  },
+  {
+    "file": "src/app/opengraph-image.tsx",
+    "line": 84,
+    "pattern": "real-time",
+    "text": "Real-time match events synthesized with Transfermarkt player valuations, squad expenditure pyramids, and disparity analytics."
+  },
+  {
+    "file": "src/app/page.tsx",
+    "line": 196,
+    "pattern": "live scores",
+    "text": "<h1 className=\"sr-only\">a1score — Football Market Values, Live Scores & Club Records</h1>"
+  },
+  {
+    "file": "src/app/status/page.tsx",
+    "line": 42,
+    "pattern": "real-time",
+    "text": "Real-time health monitoring of upstream APIs, data pipelines, PostgreSQL persistence, and memory caching layers."
+  },
+  {
+    "file": "src/app/status/StatusDashboard.tsx",
+    "line": 94,
+    "pattern": "real-time",
+    "text": "description: \"Direct upstream proxy providing real-time scores, lineups, player ratings, and match events.\","
+  },
+  {
+    "file": "src/components/CommandPalette.tsx",
+    "line": 339,
+    "pattern": "instant",
+    "text": "<p className=\"text-xs text-[var(--text-muted)]\">No instant results found for &ldquo;{query}&rdquo;</p>"
+  },
+  {
+    "file": "src/components/Footer.tsx",
+    "line": 50,
+    "pattern": "real-time",
+    "text": "Football platform synthesizing real-time match events with player market valuations and transfer records."
+  },
+  {
+    "file": "src/components/LiveAutoRefresher.tsx",
+    "line": 8,
+    "pattern": "5s",
+    "text": "intervalMs?: number; // default 5000 (5s)"
+  },
+  {
+    "file": "src/components/match-tabs/FactsTab.tsx",
+    "line": 95,
+    "pattern": "live updates",
+    "text": "Match Timeline {isLive && <span className=\"text-emerald-400 text-xs font-normal\">• Live Updates</span>}"
+  },
+  {
+    "file": "src/lib/cache.ts",
+    "line": 116,
+    "pattern": "instant",
+    "text": "// 1. Check L1 in-memory cache first (instant 0ms)"
+  },
+  {
+    "file": "src/lib/cache.ts",
+    "line": 148,
+    "pattern": "5s",
+    "text": "// 3. Stale value exists: race flight with soft 1.5s timeout, falling back to stale on delay/error"
+  },
+  {
+    "file": "src/lib/fotmob/client.ts",
+    "line": 6,
+    "pattern": "live scores",
+    "text": "* to provide live scores, fixtures, lineups, and match stats with zero external dependencies."
+  },
+  {
+    "file": "src/lib/fotmob/client.ts",
+    "line": 237,
+    "pattern": "5s",
+    "text": "const timer = setTimeout(() => controller.abort(), 5000); // 5s timeout"
+  },
+  {
+    "file": "src/lib/fotmob/client.ts",
+    "line": 341,
+    "pattern": "5s",
+    "text": "const data = await fotmobFetch<any>(path, 5); // 5s cache for ultra-responsive live scores"
+  },
+  {
+    "file": "src/lib/fotmob/client.ts",
+    "line": 958,
+    "pattern": "5s",
+    "text": "const data = await fotmobFetch<any>(path, 5); // 5s cache for live match details and lineups"
+  },
+  {
+    "file": "src/lib/transfermarkt/client.ts",
+    "line": 5,
+    "pattern": "real-time",
+    "text": "* Fetches real-time, up-to-date football intelligence directly from Transfermarkt"
+  },
+  {
+    "file": "src/lib/transfermarkt/client.ts",
+    "line": 49,
+    "pattern": "5s",
+    "text": "const timer = setTimeout(() => controller.abort(), 1500); // 1.5s max edge timeout"
+  },
+  {
+    "file": "docs/all-phases-0-to-9-master-report.md",
+    "line": 181,
+    "pattern": "instant",
+    "text": "- **Command Palette (`src/components/CommandPalette.tsx`)**: Instant global search dialog accessible via `Cmd+K` / `Ctrl+K` with keyboard navigation (`ArrowUp`/`ArrowDown`/`Enter`)."
+  },
+  {
+    "file": "docs/all-phases-0-to-9-master-report.md",
+    "line": 283,
+    "pattern": "real-time",
+    "text": "- Respect constraints: say \"value update\" (never \"live/real-time\"), no permission prompts on page load, iOS Home Screen installation detection (iOS 16.4+)."
+  },
+  {
+    "file": "docs/AUDIT.md",
+    "line": 117,
+    "pattern": "every 5s",
+    "text": "* **Polling:** Live matches poll every 5s on active tabs via `src/components/LiveAutoRefresher.tsx`."
+  },
+  {
+    "file": "docs/AUDIT.md",
+    "line": 123,
+    "pattern": "live scores",
+    "text": "* **Rationale:** Eliminates API-Football's restrictive 100 req/day paywall and missing credentials. FotMob API provides fixtures, live scores, confirmed match lineups with formations, team stats, live events, league tables, and player ratings at zero cost with edge authentication. Transfermarkt provides player valuation histories, transfer records, career bios, and club rosters."
+  },
+  {
+    "file": "docs/AUDIT.md",
+    "line": 222,
+    "pattern": "instant",
+    "text": "* Features live keyboard navigation (Arrow Up/Down, Enter), recent searches, and instant results with player market valuations and photos."
+  },
+  {
+    "file": "docs/AUDIT.md",
+    "line": 282,
+    "pattern": "5s",
+    "text": "| **Phase 1** | `feat/phase-1` | `7ed0024` | Top-flight club counts fix, dynamic SEO metadata, image `sizes`, ⌘K command palette, `/methodology` page, visibility-aware 5s polling. | Completed |"
+  },
+  {
+    "file": "docs/AUDIT_HANDOFF.md",
+    "line": 7,
+    "pattern": "live scores",
+    "text": "**Data Providers:** FotMob API (Live scores, confirmed tactical lineups, OPTA match stats, league tables) + Transfermarkt (Player market valuations, 254k+ historical valuation points, commercial transfer records, club rosters). **Strictly zero dependency on API-Football.**"
+  },
+  {
+    "file": "docs/AUDIT_HANDOFF.md",
+    "line": 14,
+    "pattern": "live scores",
+    "text": "1. **Live Score Trackers (e.g. Flashscore, Sofascore):** Provide live scores and match statistics, but lack deep financial context, player valuation curves, and squad expenditure analytics."
+  },
+  {
+    "file": "docs/AUDIT_HANDOFF.md",
+    "line": 15,
+    "pattern": "real-time",
+    "text": "2. **Transfer Sites (e.g. Transfermarkt):** Provide rich valuation and transfer data, but lack real-time live match centers, tactical pitch boards, and live financial disparity barometers."
+  },
+  {
+    "file": "docs/AUDIT_HANDOFF.md",
+    "line": 17,
+    "pattern": "real-time",
+    "text": "**The a1score Solution:** Synthesizes real-time live match events with deep transfer market valuations. Every screen answers: *\"How does squad market capital correlate with performance on the pitch?\"*"
+  },
+  {
+    "file": "docs/AUDIT_HANDOFF.md",
+    "line": 51,
+    "pattern": "every 5s",
+    "text": "| **f** | **Unconstrained 5s Polling** | `LiveAutoRefresher` polled every 5s regardless of whether the browser tab was active or hidden. | Added `document.visibilityState` listener to suspend polling when tabs are backgrounded. Added user on/off toggle and non-blocking background transitions. | `src/components/LiveAutoRefresher.tsx`, `src/app/matches/page.tsx`, `src/app/matches/[id]/page.tsx` |"
+  },
+  {
+    "file": "docs/AUDIT_HANDOFF.md",
+    "line": 52,
+    "pattern": "real-time",
+    "text": "| **g** | **Missing Season Stats for Star Players** | `SeasonStats` table contained 0 rows, resulting in \"No detailed season stats recorded\" for Haaland, Mbappé, Yamal. | Built `PlayerIntelligenceRibbon.tsx` synthesizing real-time FotMob tournament stats (goals, assists, FotMob ratings) with Transfermarkt valuation velocity. | `src/components/PlayerIntelligenceRibbon.tsx`, `src/app/players/[slug]/page.tsx` |"
+  },
+  {
+    "file": "docs/BRIEF.md",
+    "line": 4,
+    "pattern": "real-time",
+    "text": "A football intelligence platform synthesizing real-time match events with transfer market valuations, squad expenditure analytics, and player valuation histories."
+  },
+  {
+    "file": "docs/BRIEF.md",
+    "line": 8,
+    "pattern": "real-time",
+    "text": "Most football platforms either track live scores without financial context, or track player valuations without real-time pitch intelligence. `a1score.app` bridges this gap:"
+  },
+  {
+    "file": "docs/DATA_PIPELINE.md",
+    "line": 5,
+    "pattern": "real-time",
+    "text": "**a1score.app** delivers real-time football intelligence, squad rosters, market valuations, and financial parity analytics across Europe's top leagues."
+  },
+  {
+    "file": "docs/FIRST_TEAM_SOURCE.md",
+    "line": 49,
+    "pattern": "real-time",
+    "text": "- **No Real-Time Current Squad Verification:** It relies on historical relational foreign keys in PostgreSQL rather than the club's active declared squad."
+  },
+  {
+    "file": "docs/FIX_REPORT.md",
+    "line": 40,
+    "pattern": "5s",
+    "text": "| **R2-13** | **Home Page Display Refinements** (`src/app/page.tsx`) | Hero tag duplicated string (\"Live: 5s: 5s\"), featured matches included obscure lower-league games, and copy stated static \"96 Elite Clubs\". | Cleaned tag to single \"Live\" badge, prioritized top-flight league fixtures in match selector, and made club count dynamic with \"top-flight clubs\" wording. | \"Live: 5s: 5s\", Chilean/Indian cup ties featured, \"96 Elite Clubs\". | **Clean \"Live\" indicator, elite domestic/European fixtures featured, dynamic club count**. | **FIXED** (`7159bd7`) |"
+  },
+  {
+    "file": "docs/FIX_REPORT.md",
+    "line": 97,
+    "pattern": "real-time",
+    "text": "1. **Source of Truth:** Roster data derives canonically from Supabase PostgreSQL `Player` table filtered by active seasons (`lastSeason === null || lastSeason >= 2025`), enriched with Transfermarkt canonical positions and market valuations, with real-time match stats from FotMob."
+  },
+  {
+    "file": "docs/FIX_REPORT.md",
+    "line": 119,
+    "pattern": "5s",
+    "text": "| **C.4** | Cloudflare KV Timeouts on Free Plan | Unbounded async reads caused cold-start latency and potential edge timeouts. | Created `src/lib/cache.ts` with strict 1.5s max timeout (`withTimeout`) and in-memory L1 cache fallback. Reduced `tmFetch` timeout to 1500ms. | Edge requests could hang or fail page render | **Non-blocking cache guarantees instant fallback without failing SSR/RSC render** | **FIXED** |"
+  },
+  {
+    "file": "docs/FREE_PLAN_LIMITS.md",
+    "line": 12,
+    "pattern": "5s",
+    "text": "| **KV Operations** | 100,000 reads/day<br>1,000 writes/day | Free KV has cold starts and unpredictable read latency (can exceed 2-3 seconds during cross-region edge calls). Hard KV dependencies fail page loads. | **Non-blocking cache pattern (`src/lib/cache.ts`):** All KV and remote cache reads are wrapped with strict `withTimeout(fetcher, 1500, fallback)`. If KV exceeds 1.5s, it gracefully returns in-memory L1 cache or falls back to direct read without failing page renders. Writes are batched. |"
+  },
+  {
+    "file": "docs/FREE_PLAN_LIMITS.md",
+    "line": 21,
+    "pattern": "real-time",
+    "text": "Real-time sync of 245 clubs and 16,000+ players directly from Transfermarkt per page request is neither viable on free-tier edge runtimes nor acceptable for page latency."
+  },
+  {
+    "file": "docs/FREE_PLAN_LIMITS.md",
+    "line": 27,
+    "pattern": "5s",
+    "text": "- **Cadence:** Polled every 5 seconds on the client when viewing live matches (`LiveAutoRefresher.tsx`), cached for 5s at the edge (`s-maxage=5, stale-while-revalidate=10`)."
+  },
+  {
+    "file": "docs/FREE_PLAN_LIMITS.md",
+    "line": 80,
+    "pattern": "5s",
+    "text": "- On the Free plan (100,000 requests/day), edge-cached routes count toward request limits. Because live scores have an edge cache TTL of 5s, 100 concurrent users generate 12 edge cache misses per minute (1 upstream call every 5 seconds), consuming only ~1,440 upstream requests over a 2-hour match window while effortlessly staying within the 100k daily ceiling."
+  },
+  {
+    "file": "docs/MATCH_DATA_AUDIT.md",
+    "line": 31,
+    "pattern": "real-time",
+    "text": "- Must not claim \"real-time\" or \"live updates\" if polling on 30–60s intervals. Must show explicit \"Updated HH:MM:SS\"."
+  },
+  {
+    "file": "docs/PERFORMANCE_RUNBOOK.md",
+    "line": 13,
+    "pattern": "5s",
+    "text": "| **LCP** (Largest Contentful Paint) | **&le; 2.5s** | 2.5s – 4.0s | &gt; 4.0s | Time until main player card, match scorecard, or hero banner is fully rendered. |"
+  },
+  {
+    "file": "docs/PERFORMANCE_RUNBOOK.md",
+    "line": 39,
+    "pattern": "5s",
+    "text": "- If 75% or more of user page loads experience LCP &le; 2.5s, the route is considered **Healthy (Good)**."
+  },
+  {
+    "file": "docs/PERFORMANCE_RUNBOOK.md",
+    "line": 40,
+    "pattern": "5s",
+    "text": "- If more than 25% of visits exceed 2.5s, an incident must be logged and resolved."
+  },
+  {
+    "file": "docs/PERFORMANCE_RUNBOOK.md",
+    "line": 55,
+    "pattern": "5s",
+    "text": "### If LCP Regresses (&gt; 2.5s):"
+  },
+  {
+    "file": "docs/phase-8-9-complete.md",
+    "line": 1473,
+    "pattern": "real-time",
+    "text": "assert.ok(!manifestContent.includes(\"Real-time\"), \"Manifest copy must not promise real-time valuations\");"
+  },
+  {
+    "file": "README.md",
+    "line": 29,
+    "pattern": "real-time",
+    "text": "- **Matches (`/matches`, `/matches/[id]`):** Real-time scores, timeline events, lineups, and head-to-head records."
+  },
+  {
+    "file": "DESIGN.md",
+    "line": 4,
+    "pattern": "real-time",
+    "text": "> A modern, content-first sports intelligence interface synthesizing real-time match events with player market valuations and transfer records. Inspired by FotMob's clean, high-density, tone-separated design language."
+  },
+  {
+    "file": "DESIGN.md",
+    "line": 211,
+    "pattern": "5s",
+    "text": "- Largest Contentful Paint (LCP): <= 2.5s"
+  }
+]

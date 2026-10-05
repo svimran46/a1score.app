@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import { EntityImage } from "./EntityImage";
 import { formatCompactEur } from "@/lib/utils";
+import { getPlayerSlug } from "@/lib/slugs";
 import { Card } from "@/components/ui";
 import {
   ChevronDown,
@@ -69,6 +70,11 @@ export function ClubSquadTable({
       ? academyPlayers
       : players.filter((p) => p.tier === "academy");
   }, [selectedTier, players, firstTeamPlayers, academyPlayers]);
+
+  // Check if active list has any documented contract expiry data
+  const hasContractData = useMemo(() => {
+    return activeList.some((p) => p.contractUntil && p.contractUntil.trim() !== "" && p.contractUntil !== "-");
+  }, [activeList]);
 
   const toggleGroup = (groupKey: string) => {
     setCollapsedGroups((prev) => ({
@@ -254,6 +260,17 @@ export function ClubSquadTable({
                         </th>
                         <th className="py-2 px-3 font-bold">Position</th>
                         <th className="py-2 px-3 font-bold">Nationality</th>
+                        {hasContractData && (
+                          <th className="py-2 px-3 font-bold text-center">
+                            <button
+                              type="button"
+                              onClick={() => handleSort("contract")}
+                              className="flex items-center justify-center gap-1 hover:text-[var(--text-primary)] mx-auto"
+                            >
+                              Contract <ArrowUpDown className="w-3 h-3 opacity-60" />
+                            </button>
+                          </th>
+                        )}
                         <th className="py-2 px-3 sm:px-4 text-right font-bold">
                           <button
                             type="button"
@@ -270,7 +287,7 @@ export function ClubSquadTable({
                         const extId = player.sourceId || player.id;
                         const slug =
                           player.slug ||
-                          `${player.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${extId}`;
+                          getPlayerSlug({ ...player, transfermarktId: extId });
 
                         return (
                           <tr
@@ -330,6 +347,15 @@ export function ClubSquadTable({
                                 ? player.nationality.join(", ")
                                 : "—"}
                             </td>
+
+                            {/* Contract Expiry (only rendered if squad has contract data) */}
+                            {hasContractData && (
+                              <td className="py-2.5 px-3 text-center text-[var(--text-secondary)] whitespace-nowrap tabular-nums">
+                                {player.contractUntil && player.contractUntil !== "-"
+                                  ? player.contractUntil
+                                  : "—"}
+                              </td>
+                            )}
 
                             {/* Market Value */}
                             <td className="py-2.5 px-3 sm:px-4 text-right text-[var(--value-text)] font-bold whitespace-nowrap text-sm tabular-nums">

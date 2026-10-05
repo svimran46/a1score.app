@@ -337,8 +337,14 @@ export async function getMatchesByDate(dateStr?: string): Promise<{
       .slice(0, 10)
       .replace(/-/g, "");
 
+  const todayStr = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+  const isPast = dateFormatted < todayStr;
+  const isFuture = dateFormatted > todayStr;
+  // TTL selection: today is short (30s), future is 300s (5m), past/finished is 86400s (24h)
+  const fetchRevalidate = isPast ? 86400 : isFuture ? 300 : 30;
+
   const path = `/api/data/matches?date=${dateFormatted}`;
-  const data = await fotmobFetch<any>(path, 5); // 5s cache for ultra-responsive live scores
+  const data = await fotmobFetch<any>(path, fetchRevalidate);
 
   if (!data) {
     return {

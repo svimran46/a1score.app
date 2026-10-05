@@ -6,7 +6,7 @@ import { calculate12MonthChange } from "@/lib/compare";
 import { OG_COLORS } from "@/lib/og/colors";
 
 export const runtime = "edge";
-export const alt = "Player Market Valuation | a1score.app";
+export const alt = "Player Market Valuation | a1score";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 export const revalidate = 3600; // Hourly revalidation

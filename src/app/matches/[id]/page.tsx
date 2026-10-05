@@ -4,7 +4,7 @@ import { constructMetadata, SITE_URL } from "@/lib/metadata";
 import { MatchCenterClient } from "@/components/MatchCenterClient";
 import type { Metadata } from "next";
 
-export const revalidate = 5; // Ultra-fresh match details every 5s
+export const revalidate = 5; // Edge cache TTL 5s with stale-while-revalidate
 export const runtime = "edge";
 
 interface MatchPageProps {

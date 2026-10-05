@@ -26,7 +26,7 @@ Built with a bespoke dark-themed interface, responsive charts, and Edge-rendered
 All application routes run on the Edge Runtime (`export const runtime = "edge"`):
 
 - **Home (`/`):** Live matches, market value risers, competition quick links, and intelligence search.
-- **Matches (`/matches`, `/matches/[id]`):** Real-time scores, timeline events, lineups, and head-to-head records.
+- **Matches (`/matches`, `/matches/[id]`):** Match scores, timeline events, confirmed lineups, and head-to-head records.
 - **Player Profile (`/players/[slug]`):** Market valuation history, career stats, and transfer timeline.
 - **Club Profile (`/clubs/[id]`):** Senior squad rosters, total squad valuation, and positional depth.
 - **League Directory (`/leagues`, `/leagues/[id]`):** Club standings and valuation rankings.

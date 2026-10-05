@@ -10,7 +10,9 @@ import { InjuriesTable } from "@/components/InjuriesTable";
 import { SectionHeader } from "@/components/SectionHeader";
 import { RelatedNewsCard } from "@/components/news/RelatedNewsCard";
 import type { NewsItem } from "@/types/news";
-import { User, ArrowRightLeft, TrendingUp } from "lucide-react";
+import { User, ArrowRightLeft, TrendingUp, Trophy } from "lucide-react";
+import { PlayerAchievements } from "@/components/players/PlayerAchievements";
+import type { PlayerAchievementsGrouped } from "@/lib/data/playerAchievements";
 
 interface PlayerTabsContainerProps {
   keyFactsItems: KeyFactItem[];
@@ -21,6 +23,7 @@ interface PlayerTabsContainerProps {
   transfers?: any[];
   injuries?: any[];
   relatedNews?: NewsItem[];
+  achievements?: PlayerAchievementsGrouped;
 }
 
 export function PlayerTabsContainer({
@@ -32,8 +35,11 @@ export function PlayerTabsContainer({
   transfers = [],
   injuries = [],
   relatedNews = [],
+  achievements,
 }: PlayerTabsContainerProps) {
-  const [activeTab, setActiveTab] = useState<"overview" | "transfers" | "value">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "transfers" | "value" | "achievements">("overview");
+
+  const totalTitles = achievements?.totalTitles || 0;
 
   const tabs = [
     { id: "overview", label: "Overview", icon: <User className="w-4 h-4" /> },
@@ -49,6 +55,16 @@ export function PlayerTabsContainer({
       count: mvs.length > 0 ? mvs.length : undefined,
       icon: <TrendingUp className="w-4 h-4" />,
     },
+    ...(totalTitles > 0
+      ? [
+          {
+            id: "achievements",
+            label: "Achievements",
+            count: totalTitles,
+            icon: <Trophy className="w-4 h-4" />,
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -73,6 +89,25 @@ export function PlayerTabsContainer({
             <section className="space-y-2">
               <SectionHeader title="Season stats" />
               <StatsTable stats={seasonStats} />
+            </section>
+          )}
+
+          {achievements && achievements.totalTitles > 0 && (
+            <section className="space-y-2">
+              <div className="flex items-center justify-between">
+                <SectionHeader title="Achievements & Honours" />
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("achievements")}
+                  className="text-xs font-semibold text-[var(--value-text)] hover:underline flex items-center gap-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] rounded"
+                >
+                  View all ({achievements.totalTitles})
+                </button>
+              </div>
+              <PlayerAchievements
+                achievements={achievements}
+                playerName={playerName}
+              />
             </section>
           )}
 
@@ -115,6 +150,19 @@ export function PlayerTabsContainer({
                 No valuation history recorded.
               </div>
             )}
+          </section>
+        </div>
+      )}
+
+      {/* Tab 4: Achievements */}
+      {activeTab === "achievements" && achievements && achievements.totalTitles > 0 && (
+        <div className="space-y-4">
+          <section className="space-y-2">
+            <SectionHeader title="Career Achievements & Trophies" />
+            <PlayerAchievements
+              achievements={achievements}
+              playerName={playerName}
+            />
           </section>
         </div>
       )}

@@ -240,13 +240,19 @@ export function MatchScorecard({
                       />
                       {lastUpdatedTime ? (
                         <span className="text-[10px] font-medium text-[var(--text-muted)] tracking-wider">
-                          Updated {lastUpdatedTime}
+                          {lastUpdatedTime}
                         </span>
                       ) : (
                         <span className="text-[10px] font-medium text-[var(--text-muted)] tracking-wider">
-                          Feed active
+                          Feed active (45s sync)
                         </span>
                       )}
+                      <span
+                        className="text-[9px] text-[var(--text-muted)] opacity-80 cursor-help"
+                        title="Match events and scores may be 1 to 2 minutes behind the live broadcast."
+                      >
+                        ~1-2m behind broadcast
+                      </span>
                     </div>
                   ) : isFinished ? (
                     <span className="text-xs sm:text-sm font-semibold text-[var(--text-muted)]">

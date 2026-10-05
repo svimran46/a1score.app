@@ -47,7 +47,7 @@ export function Footer() {
               </span>
             </div>
             <p className="text-xs sm:text-sm text-[var(--text-secondary)] leading-relaxed max-w-sm">
-              Football platform synthesizing real-time match events with player market valuations and transfer records.
+              Football platform synthesizing match events with player market valuation updates and transfer records.
             </p>
             <p className="text-[11px] text-[var(--text-muted)]">
               Data grounded in FotMob match feeds & Transfermarkt market data.

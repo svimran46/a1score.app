@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 import { OG_COLORS } from "@/lib/og/colors";
 
 export const runtime = "edge";
-export const alt = "Live Matches — Real-Time Scores & Squad Values";
+export const alt = "Matches — Scores, Lineups & Squad Values";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -54,7 +54,7 @@ export default async function Image() {
               marginBottom: "12px",
             }}
           >
-            Live scores & squad values
+            Match scores & squad values
           </span>
           <h1
             style={{
@@ -66,7 +66,7 @@ export default async function Image() {
               letterSpacing: "-1px",
             }}
           >
-            Live Matches & Squad Values
+            Matches & Squad Values
           </h1>
           <p
             style={{
@@ -77,7 +77,7 @@ export default async function Image() {
               lineHeight: 1.4,
             }}
           >
-            Real-time match events, confirmed starting lineups, and squad market values across European competitions.
+            In-play match events, confirmed starting lineups, and squad market values across European competitions.
           </p>
         </div>
 

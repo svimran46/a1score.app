@@ -1,7 +1,7 @@
 # a1score.app — Design System & Component Guidelines
 
 > **"Money meets the pitch."**
-> A modern, content-first sports intelligence interface synthesizing real-time match events with player market valuations and transfer records. Inspired by FotMob's clean, high-density, tone-separated design language.
+> A modern, content-first sports intelligence interface synthesizing match events with player market valuations and transfer records. Inspired by FotMob's clean, high-density, tone-separated design language.
 
 ---
 

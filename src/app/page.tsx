@@ -1,6 +1,6 @@
 import { getMostValuablePlayers } from "@/lib/data/players";
 import { getTopClubs } from "@/lib/data/clubs";
-import { getMatchesByDate } from "@/lib/fotmob/client";
+import { getMatchesByDate, TOP_LEAGUE_IDS } from "@/lib/fotmob/client";
 import { supabase } from "@/lib/supabase";
 import {
   Card,
@@ -12,6 +12,7 @@ import {
 } from "@/components/ui";
 import { sanitizeImageUrl } from "@/lib/image-sanitize";
 import { formatDate } from "@/lib/utils";
+import { getPlayerSlug } from "@/lib/slugs";
 import type { FotmobMatch } from "@/lib/fotmob/client";
 
 export const revalidate = 30;
@@ -151,9 +152,17 @@ export default async function HomePage() {
       ),
   ]);
 
-  // Extract up to 3 highlighted matches (prioritizing live, else next 3 kickoffs)
+  // Extract up to 3 highlighted matches (prioritizing top competitions: top leagues, UCL/UEL, internationals)
   const allMatches: FotmobMatch[] = (matchesData?.leagues || []).flatMap((l) => l.matches);
+
+  // Sorting function: prefers top European leagues/cups, then kickoff timestamp
+  const rankMatch = (m: FotmobMatch) => {
+    const isTop = TOP_LEAGUE_IDS.includes(m.leagueId);
+    return isTop ? 0 : 1;
+  };
+
   const liveMatches = allMatches.filter((m) => m.isLive);
+  liveMatches.sort((a, b) => rankMatch(a) - rankMatch(b));
 
   let matchSectionTitle = "Live now";
   let displayedMatches: FotmobMatch[] = [];
@@ -164,7 +173,11 @@ export default async function HomePage() {
   } else {
     matchSectionTitle = "Today's Matches";
     const upcomingMatches = allMatches.filter((m) => m.isUpcoming || !m.isFinished);
-    upcomingMatches.sort((a, b) => a.timeTS - b.timeTS);
+    upcomingMatches.sort((a, b) => {
+      const rankDiff = rankMatch(a) - rankMatch(b);
+      if (rankDiff !== 0) return rankDiff;
+      return a.timeTS - b.timeTS;
+    });
     displayedMatches = (upcomingMatches.length > 0 ? upcomingMatches : allMatches).slice(0, 3);
   }
 
@@ -177,7 +190,7 @@ export default async function HomePage() {
           return {
             id: t.id,
             playerName: p?.commonName || p?.fullName || "Player",
-            playerSlug: p ? `${(p.fullName || "player").toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${p.transfermarktId || p.id}` : null,
+            playerSlug: p ? getPlayerSlug(p) : null,
             playerAvatar: p ? sanitizeImageUrl(p.photoUrl, "player", p.transfermarktId || p.id) : null,
             playerPosition: p?.position || null,
             fromClubName: t.fromClubName,
@@ -193,7 +206,7 @@ export default async function HomePage() {
 
   return (
     <div className="space-y-6 max-w-[720px] mx-auto">
-      <h1 className="sr-only">a1score — Football Market Values, Live Scores & Club Records</h1>
+      <h1 className="sr-only">a1score — Football Market Values, Match Scores & Club Records</h1>
       {/* 1. COMPACT LIVE NOW STRIP (Match rows) */}
       <section>
         <SectionHeader

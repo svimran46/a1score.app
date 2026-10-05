@@ -27,6 +27,8 @@ export interface PageHeaderProps {
   valueLabel?: string;
   valueTrend?: React.ReactNode;
   freshnessTimestamp?: string | Date | null;
+  valueUpdatedAt?: string | Date | null;
+  checkedAt?: string | Date | null;
 
   // Metadata items line (e.g. Club • League • Position • Age)
   metaItems?: React.ReactNode[];
@@ -57,6 +59,8 @@ export function PageHeader({
   valueLabel,
   valueTrend,
   freshnessTimestamp,
+  valueUpdatedAt,
+  checkedAt,
   metaItems,
   extraContent,
   actions,
@@ -144,8 +148,12 @@ export function PageHeader({
                       {value}
                     </span>
                     {valueTrend}
-                    {freshnessTimestamp && (
-                      <ValuationFreshness timestamp={freshnessTimestamp} />
+                    {(freshnessTimestamp || valueUpdatedAt || checkedAt) && (
+                      <ValuationFreshness
+                        timestamp={freshnessTimestamp}
+                        valueUpdatedAt={valueUpdatedAt}
+                        checkedAt={checkedAt}
+                      />
                     )}
                   </div>
                 )}
@@ -170,8 +178,12 @@ export function PageHeader({
               </span>
               <div className="flex items-center gap-1.5 mt-0.5">
                 {valueTrend}
-                {freshnessTimestamp && (
-                  <ValuationFreshness timestamp={freshnessTimestamp} />
+                {(freshnessTimestamp || valueUpdatedAt || checkedAt) && (
+                  <ValuationFreshness
+                    timestamp={freshnessTimestamp}
+                    valueUpdatedAt={valueUpdatedAt}
+                    checkedAt={checkedAt}
+                  />
                 )}
               </div>
             </div>

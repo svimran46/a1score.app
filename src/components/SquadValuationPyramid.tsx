@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { EntityImage } from "./EntityImage";
 import Link from "next/link";
 import { formatCompactEur } from "@/lib/utils";
+import { getPlayerSlug } from "@/lib/slugs";
 import { Card } from "@/components/ui";
 import {
   Layers,
@@ -416,7 +417,7 @@ export function SquadValuationPyramid({
                     const extId = p.sourceId || p.externalId || p.id;
                     const slug =
                       p.slug ||
-                      `${p.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${extId}`;
+                      getPlayerSlug({ ...p, transfermarktId: extId });
                     return (
                       <Link
                         key={p.id}

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { EntityImage } from "./EntityImage";
 import { formatCompactEur } from "@/lib/utils";
 import { getClubDisplayName } from "@/lib/data/clubs";
+import { getPlayerSlug } from "@/lib/slugs";
 import { trackEvent } from "@/lib/analytics";
 import {
   Search,
@@ -259,7 +260,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
               </span>
               {players.map((p) => {
                 const extId = p.sourceId || p.externalId || p.id;
-                const slug = p.slug || `${p.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${extId}`;
+                const slug = p.slug || getPlayerSlug({ ...p, transfermarktId: extId });
                 return (
                   <button
                     key={p.id}
@@ -336,7 +337,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
           {/* No results */}
           {!isLoading && query.trim() && totalResults === 0 && (
             <div className="py-8 text-center space-y-2">
-              <p className="text-xs text-[var(--text-muted)]">No instant results found for &ldquo;{query}&rdquo;</p>
+              <p className="text-xs text-[var(--text-muted)]">No results found for &ldquo;{query}&rdquo;</p>
               <button
                 type="button"
                 onClick={() => navigateTo(`/search?q=${encodeURIComponent(query.trim())}`)}

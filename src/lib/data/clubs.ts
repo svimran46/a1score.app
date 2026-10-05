@@ -3,6 +3,7 @@ import { tmGetClub } from "@/lib/transfermarkt/client";
 import { getLeagueStandings } from "@/lib/fotmob/client";
 import { sanitizeImageUrl } from "@/lib/image-sanitize";
 import { getCanonicalPosition } from "@/lib/positions";
+import { getPlayerSlug } from "@/lib/slugs";
 
 import { FOTMOB_TEAM_MAPPINGS } from "@/lib/league-mappings";
 
@@ -319,7 +320,7 @@ export function computeClubMetrics(rawPlayers: any[]) {
     return {
       ...p,
       sourceId: extId,
-      slug: `${(p.fullName || "player").toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${extId}`,
+      slug: getPlayerSlug(p),
       photoUrl: sanitizeImageUrl(p.photoUrl, "player", extId),
       position: canonicalPos.detailed,
       positionGroup: canonicalPos.group,
@@ -550,6 +551,7 @@ export async function getAllClubs(options?: { all?: boolean }) {
         totalMarketValue,
         lastSeason,
         transfermarktId,
+        lastSyncedAt,
         league:League ( id, name, country ),
         players:Player!Player_currentClubId_fkey ( latestMarketValue, dateOfBirth, lastSeason, status )
       `)
@@ -602,6 +604,7 @@ export async function getAllClubs(options?: { all?: boolean }) {
 
       return {
         id: club.id,
+        transfermarktId: club.transfermarktId || null,
         name: club.name,
         shortName: getClubShortName(club.name),
         logoUrl: sanitizeImageUrl(club.logoUrl, "club", club.id),
@@ -612,6 +615,7 @@ export async function getAllClubs(options?: { all?: boolean }) {
         totalSquadValue: finalSquadVal,
         averageAge: metrics.averageAge,
         leagueRank,
+        lastSyncedAt: club.lastSyncedAt ?? null,
       };
     });
 
@@ -666,6 +670,7 @@ export async function getClubTransfers(clubName: string) {
           )
         `)
         .ilike("toClubName", `%${cleanName}%`)
+        .neq("id", "trans-rodri-1790753937374")
         .order("feeEur", { ascending: false, nullsFirst: false })
         .limit(8),
 
@@ -688,6 +693,7 @@ export async function getClubTransfers(clubName: string) {
           )
         `)
         .ilike("fromClubName", `%${cleanName}%`)
+        .neq("id", "trans-rodri-1790753937374")
         .order("feeEur", { ascending: false, nullsFirst: false })
         .limit(8),
     ]);
@@ -700,7 +706,7 @@ export async function getClubTransfers(clubName: string) {
           ? {
               ...rawP,
               sourceId: extId,
-              slug: `${rawP.fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${extId}`,
+              slug: getPlayerSlug(rawP),
               photoUrl: sanitizeImageUrl(rawP.photoUrl, "player", extId),
             }
           : null;

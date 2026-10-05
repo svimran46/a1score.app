@@ -5,14 +5,14 @@ import { useRouter } from "next/navigation";
 import { RefreshCw, Play, Pause } from "lucide-react";
 
 interface LiveAutoRefresherProps {
-  intervalMs?: number; // default 5000 (5s)
+  intervalMs?: number; // default 45000 (45s sync)
   showControls?: boolean;
   defaultEnabled?: boolean;
   label?: string;
 }
 
 export function LiveAutoRefresher({
-  intervalMs = 5000,
+  intervalMs = 45000,
   showControls = true,
   defaultEnabled = true,
   label = "Live Sync",

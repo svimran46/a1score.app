@@ -2,6 +2,7 @@ import React from "react";
 import type { Metadata } from "next";
 import { parseCompareSlugs } from "@/lib/compare";
 import { getPlayerBySlugOrId } from "@/lib/data/players";
+import { getPlayerAchievements } from "@/lib/data/playerAchievements";
 import { getPlayerSlug } from "@/lib/slugs";
 import { CompareClient } from "@/components/compare/CompareClient";
 import type { ComparePlayerFact } from "@/components/compare/CompareFactsTable";
@@ -67,6 +68,11 @@ export default async function ComparePage({ searchParams }: ComparePageProps) {
       const mvs = Array.isArray(p.marketValues) ? p.marketValues : [];
       const latestVal = p.latestMarketValue || (mvs.length > 0 ? mvs[mvs.length - 1].valueEur : 0);
 
+      // Load achievements safely with graceful fallback
+      const ach = await getPlayerAchievements(p.id).catch(() => null);
+      const totalTitles = ach?.totalTitles || 0;
+      const topHonour = ach?.majorHonours?.[0]?.competitionName || ach?.all?.[0]?.competitionName;
+
       initialPlayers.push({
         id: p.id,
         slug: rawSlugs[i] || canonicalSlug,
@@ -86,6 +92,11 @@ export default async function ComparePage({ searchParams }: ComparePageProps) {
           : null,
         latestMarketValue: Number(latestVal) || 0,
         marketValues: mvs,
+        achievements: totalTitles > 0 ? {
+          totalTitles,
+          majorCount: ach?.majorHonours?.reduce((a, b) => a + b.titleCount, 0) || 0,
+          topHonour,
+        } : null,
       });
     }
   }
