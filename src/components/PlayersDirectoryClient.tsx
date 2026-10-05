@@ -348,21 +348,9 @@ export function PlayersDirectoryClient({
       {activeTab === "rankings" ? (
         <>
 
-          {/* 5. Player List Card with Sticky Header */}
+          {/* 5. Player List Card */}
           {paginatedPlayers.length > 0 ? (
             <Card className="p-1 overflow-hidden">
-              {/* Sticky List Header on Desktop */}
-              <div className="sticky top-[var(--nav-height)] z-20 bg-[var(--bg-card)]/95 backdrop-blur-md px-3 sm:px-4 py-2 flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)] border-b border-[var(--divider)]">
-                <div className="flex items-center gap-3">
-                  <span className="w-6 text-center">#</span>
-                  <span>Player & Club</span>
-                </div>
-                <div className="flex items-center gap-4">
-                  <span className="hidden md:inline">Age / Nat</span>
-                  <span>Market Value</span>
-                </div>
-              </div>
-
               <div className="divide-y divide-[var(--divider)]">
                 {paginatedPlayers.map((player, idx) => (
                   <PlayerRow
