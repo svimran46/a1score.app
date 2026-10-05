@@ -195,7 +195,7 @@ export function PlayersDirectoryClient({
   }, [movers, latestRevisionDate]);
 
   return (
-    <div className="space-y-4 max-w-[720px] mx-auto">
+    <div className="space-y-4 max-w-[720px] mx-auto pt-2 sm:pt-4">
       {/* 1. Page Header */}
       <div className="space-y-1">
         <PageHeader
@@ -207,183 +207,146 @@ export function PlayersDirectoryClient({
         )}
       </div>
 
-      {/* 2. Segmented Tab Control [Rankings | Movers] */}
-      <div className="flex items-center p-1 rounded-[var(--chip-radius)] bg-[var(--bg-card)] w-full max-w-xs text-xs font-semibold shadow-xs">
-        <button
-          type="button"
-          onClick={() => {
-            setActiveTab("rankings");
-            updateParams({ view: "rankings" });
-          }}
-          className={`flex-1 min-h-[40px] rounded-[var(--chip-radius)] transition-all text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
-            activeTab === "rankings"
-              ? "bg-[var(--accent)] text-[var(--accent-contrast)] font-bold shadow-xs"
-              : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
-          }`}
-        >
-          Rankings
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            setActiveTab("movers");
-            updateParams({ view: "movers" });
-          }}
-          className={`flex-1 min-h-[40px] rounded-[var(--chip-radius)] transition-all text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
-            activeTab === "movers"
-              ? "bg-[var(--accent)] text-[var(--accent-contrast)] font-bold shadow-xs"
-              : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
-          }`}
-        >
-          Movers
-        </button>
+      {/* 2. Controls Bar: [Rankings | Movers] and [Filters] Button */}
+      <div className="flex items-center justify-between gap-3">
+        {/* Segmented Tab Control [Rankings | Movers] */}
+        <div className="flex items-center p-1 rounded-[var(--chip-radius)] bg-[var(--bg-card)] w-full max-w-xs text-xs font-semibold shadow-xs">
+          <button
+            type="button"
+            onClick={() => {
+              setActiveTab("rankings");
+              updateParams({ view: "rankings" });
+            }}
+            className={`flex-1 min-h-[40px] rounded-[var(--chip-radius)] transition-all text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
+              activeTab === "rankings"
+                ? "bg-[var(--accent)] text-[var(--accent-contrast)] font-bold shadow-xs"
+                : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+            }`}
+          >
+            Rankings
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setActiveTab("movers");
+              updateParams({ view: "movers" });
+            }}
+            className={`flex-1 min-h-[40px] rounded-[var(--chip-radius)] transition-all text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
+              activeTab === "movers"
+                ? "bg-[var(--accent)] text-[var(--accent-contrast)] font-bold shadow-xs"
+                : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+            }`}
+          >
+            Movers
+          </button>
+        </div>
+
+        {/* Filters button (Rankings view) */}
+        {activeTab === "rankings" && (
+          <div className="shrink-0">
+            <FilterButtonAndSheet
+              activeFilterCount={activeFilterCount}
+              onResetFilters={handleClearFilters}
+            >
+              <div className="space-y-4">
+                <div>
+                  <label htmlFor="modal-pos" className="block text-xs font-semibold text-[var(--text-muted)] mb-1.5">
+                    Position
+                  </label>
+                  <select
+                    id="modal-pos"
+                    value={posParam}
+                    onChange={(e) => updateParams({ pos: e.target.value, page: "1" })}
+                    className="w-full min-h-[44px] px-3 py-2 rounded-xl bg-[var(--bg-chip)] text-[var(--text-primary)] text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
+                  >
+                    <option value="ALL">All positions</option>
+                    <option value="ATT">Forwards (ATT)</option>
+                    <option value="MID">Midfield (MID)</option>
+                    <option value="DEF">Defenders (DEF)</option>
+                    <option value="GK">Goalkeepers (GK)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label htmlFor="modal-sort" className="block text-xs font-semibold text-[var(--text-muted)] mb-1.5">
+                    Sort By
+                  </label>
+                  <select
+                    id="modal-sort"
+                    value={sortParam}
+                    onChange={(e) => updateParams({ sort: e.target.value, page: "1" })}
+                    className="w-full min-h-[44px] px-3 py-2 rounded-xl bg-[var(--bg-chip)] text-[var(--text-primary)] text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
+                  >
+                    <option value="val_desc">Market value: High to low</option>
+                    <option value="val_asc">Market value: Low to high</option>
+                    <option value="age_asc">Age: Youngest first</option>
+                    <option value="age_desc">Age: Oldest first</option>
+                    <option value="name_asc">Name: A to Z</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label htmlFor="modal-league" className="block text-xs font-semibold text-[var(--text-muted)] mb-1.5">
+                    Competition
+                  </label>
+                  <select
+                    id="modal-league"
+                    value={leagueParam}
+                    onChange={(e) => updateParams({ league: e.target.value, page: "1" })}
+                    className="w-full min-h-[44px] px-3 py-2 rounded-xl bg-[var(--bg-chip)] text-[var(--text-primary)] text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
+                  >
+                    <option value="ALL">All competitions</option>
+                    {availableLeagues.map((l) => (
+                      <option key={l} value={l}>
+                        {l}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label htmlFor="modal-val" className="block text-xs font-semibold text-[var(--text-muted)] mb-1.5">
+                    Valuation Tier
+                  </label>
+                  <select
+                    id="modal-val"
+                    value={valParam}
+                    onChange={(e) => updateParams({ val: e.target.value, page: "1" })}
+                    className="w-full min-h-[44px] px-3 py-2 rounded-xl bg-[var(--bg-chip)] text-[var(--text-primary)] text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
+                  >
+                    <option value="ALL">All valuations</option>
+                    <option value="150m_plus">€150M+ (Elite)</option>
+                    <option value="100m_150m">€100M – €150M</option>
+                    <option value="50m_100m">€50M – €100M</option>
+                    <option value="under_50m">Under €50M</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label htmlFor="modal-age" className="block text-xs font-semibold text-[var(--text-muted)] mb-1.5">
+                    Age Bracket
+                  </label>
+                  <select
+                    id="modal-age"
+                    value={ageParam}
+                    onChange={(e) => updateParams({ age: e.target.value, page: "1" })}
+                    className="w-full min-h-[44px] px-3 py-2 rounded-xl bg-[var(--bg-chip)] text-[var(--text-primary)] text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
+                  >
+                    <option value="ALL">All ages</option>
+                    <option value="u21">U21 (Prospects)</option>
+                    <option value="21_25">21–25 yrs</option>
+                    <option value="26_30">26–30 yrs</option>
+                    <option value="over_30">30+ yrs</option>
+                  </select>
+                </div>
+              </div>
+            </FilterButtonAndSheet>
+          </div>
+        )}
       </div>
 
       {activeTab === "rankings" ? (
         <>
-          {/* 3. Horizontal Filter Chips Bar */}
-          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
-            {/* Position filter chips */}
-            {[
-              { label: "All Positions", val: "ALL" },
-              { label: "Forwards (ATT)", val: "ATT" },
-              { label: "Midfield (MID)", val: "MID" },
-              { label: "Defenders (DEF)", val: "DEF" },
-              { label: "Keepers (GK)", val: "GK" },
-            ].map((item) => (
-              <Chip
-                key={item.val}
-                active={posParam === item.val}
-                onClick={() => updateParams({ pos: item.val, page: "1" })}
-              >
-                {item.label}
-              </Chip>
-            ))}
-
-            {/* Age Quick Chip */}
-            <Chip
-              active={ageParam === "u21"}
-              onClick={() => updateParams({ age: ageParam === "u21" ? "ALL" : "u21", page: "1" })}
-            >
-              U21 Prospects
-            </Chip>
-
-            {/* Elite Valuation Quick Chip */}
-            <Chip
-              active={valParam === "150m_plus"}
-              onClick={() => updateParams({ val: valParam === "150m_plus" ? "ALL" : "150m_plus", page: "1" })}
-            >
-              €150M+ Elite
-            </Chip>
-          </div>
-
-          {/* 4. Controls row: count and sort selector */}
-          <div className="flex items-center justify-between text-xs py-1 px-1">
-            <span className="text-[var(--text-muted)] font-medium">
-              Showing {filteredPlayers.length > 0 ? (currentPage - 1) * ITEMS_PER_PAGE + 1 : 0}–
-              {Math.min(currentPage * ITEMS_PER_PAGE, filteredPlayers.length)} of {filteredPlayers.length} players
-            </span>
-
-            <div className="flex items-center gap-2">
-              {/* Sort selector pill */}
-              <div className="relative">
-                <select
-                  value={sortParam}
-                  onChange={(e) => updateParams({ sort: e.target.value, page: "1" })}
-                  className="appearance-none bg-[var(--bg-chip)] text-[var(--text-primary)] text-xs font-semibold px-3 py-1.5 pr-7 rounded-[var(--chip-radius)] hover:bg-[var(--bg-hover)] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] transition-colors"
-                  aria-label="Sort players"
-                >
-                  <option value="val_desc">Value: High to Low</option>
-                  <option value="val_asc">Value: Low to High</option>
-                  <option value="age_asc">Age: Youngest</option>
-                  <option value="age_desc">Age: Oldest</option>
-                  <option value="name_asc">Name: A to Z</option>
-                </select>
-                <ArrowUpDown className="w-3 h-3 text-[var(--text-muted)] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-              </div>
-
-              {/* Advanced Filter Modal Trigger */}
-              <FilterButtonAndSheet
-                activeFilterCount={activeFilterCount}
-                onResetFilters={handleClearFilters}
-              >
-                <div className="space-y-4">
-                  <div>
-                    <label htmlFor="modal-sort" className="block text-xs font-semibold text-[var(--text-muted)] mb-1.5">
-                      Sort By
-                    </label>
-                    <select
-                      id="modal-sort"
-                      value={sortParam}
-                      onChange={(e) => updateParams({ sort: e.target.value, page: "1" })}
-                      className="w-full min-h-[44px] px-3 py-2 rounded-xl bg-[var(--bg-chip)] text-[var(--text-primary)] text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
-                    >
-                      <option value="val_desc">Market value: High to low</option>
-                      <option value="val_asc">Market value: Low to high</option>
-                      <option value="age_asc">Age: Youngest first</option>
-                      <option value="age_desc">Age: Oldest first</option>
-                      <option value="name_asc">Name: A to Z</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label htmlFor="modal-league" className="block text-xs font-semibold text-[var(--text-muted)] mb-1.5">
-                      Competition
-                    </label>
-                    <select
-                      id="modal-league"
-                      value={leagueParam}
-                      onChange={(e) => updateParams({ league: e.target.value, page: "1" })}
-                      className="w-full min-h-[44px] px-3 py-2 rounded-xl bg-[var(--bg-chip)] text-[var(--text-primary)] text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
-                    >
-                      <option value="ALL">All competitions</option>
-                      {availableLeagues.map((l) => (
-                        <option key={l} value={l}>
-                          {l}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label htmlFor="modal-val" className="block text-xs font-semibold text-[var(--text-muted)] mb-1.5">
-                      Valuation Tier
-                    </label>
-                    <select
-                      id="modal-val"
-                      value={valParam}
-                      onChange={(e) => updateParams({ val: e.target.value, page: "1" })}
-                      className="w-full min-h-[44px] px-3 py-2 rounded-xl bg-[var(--bg-chip)] text-[var(--text-primary)] text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
-                    >
-                      <option value="ALL">All valuations</option>
-                      <option value="150m_plus">€150M+ (Elite)</option>
-                      <option value="100m_150m">€100M – €150M</option>
-                      <option value="50m_100m">€50M – €100M</option>
-                      <option value="under_50m">Under €50M</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label htmlFor="modal-age" className="block text-xs font-semibold text-[var(--text-muted)] mb-1.5">
-                      Age Bracket
-                    </label>
-                    <select
-                      id="modal-age"
-                      value={ageParam}
-                      onChange={(e) => updateParams({ age: e.target.value, page: "1" })}
-                      className="w-full min-h-[44px] px-3 py-2 rounded-xl bg-[var(--bg-chip)] text-[var(--text-primary)] text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
-                    >
-                      <option value="ALL">All ages</option>
-                      <option value="u21">U21 (Prospects)</option>
-                      <option value="21_25">21–25 yrs</option>
-                      <option value="26_30">26–30 yrs</option>
-                      <option value="over_30">30+ yrs</option>
-                    </select>
-                  </div>
-                </div>
-              </FilterButtonAndSheet>
-            </div>
-          </div>
 
           {/* 5. Player List Card with Sticky Header */}
           {paginatedPlayers.length > 0 ? (

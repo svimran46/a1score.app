@@ -24,14 +24,14 @@ export function PageHeader({
       <div className="min-w-0 flex-1 flex flex-col justify-center">
         <h1
           className="text-[20px] font-semibold leading-snug line-clamp-2"
-          style={{ color: "var(--color-text)" }}
+          style={{ color: "var(--text-primary)" }}
         >
           {title}
         </h1>
         {subtitle && (
           <p
             className="text-[13px] font-normal leading-snug hidden min-[400px]:block mt-0.5"
-            style={{ color: "var(--color-text-secondary)" }}
+            style={{ color: "var(--text-muted)" }}
           >
             {subtitle}
           </p>

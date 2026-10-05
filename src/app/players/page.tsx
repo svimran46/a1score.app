@@ -9,7 +9,7 @@ export const revalidate = 3600;
 export const runtime = "edge";
 
 export const metadata: Metadata = constructMetadata({
-  title: "Football Players Directory — Top Market Valuations & Leaderboard",
+  title: "Players — Top market valuations worldwide",
   description:
     "Explore worldwide football player market valuations, career positions, age demographics, and valuation movements on a1score.app.",
   path: "/players",
