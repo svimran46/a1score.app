@@ -15,13 +15,9 @@ function resolveCanonicalOrigin(): string {
     return envUrl.trim().replace(/\/+$/, "");
   }
 
-  // Fail build if missing in production
+  // Default to the Cloudflare Pages subdomain in production if not explicitly configured
   if (process.env.NODE_ENV === "production" && !process.env.NEXT_PHASE_BUILD_IGNORE) {
-    throw new Error(
-      "[Fatal Config Error] NEXT_PUBLIC_SITE_URL is required in production environments. " +
-        "Please configure NEXT_PUBLIC_SITE_URL in your Cloudflare Pages environment variables " +
-        "(e.g. 'https://a1score.app')."
-    );
+    return "https://a1score.pages.dev";
   }
 
   return "http://localhost:3000";
