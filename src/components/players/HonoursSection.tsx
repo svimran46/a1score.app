@@ -1,3 +1,4 @@
+import React from "react";
 import type { PlayerProfileVM } from "@/lib/data/playerProfile.types";
 import { isMajorHonour, type PlayerAchievementItem } from "@/lib/data/playerAchievements";
 import { formatCount } from "@/lib/format-value";

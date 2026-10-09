@@ -118,7 +118,7 @@ function StatusBlock({ vm }: { vm: PlayerProfileVM }) {
   }
 
   return (
-    <div className="ml-auto mt-1 text-right @[560px]/profile:border-l @[560px]/profile:border-divider @[560px]/profile:pl-5">
+    <div className="ml-auto mt-1 shrink-0 text-right @[560px]/profile:border-l @[560px]/profile:border-divider @[560px]/profile:pl-5">
       <p className="text-xs leading-4 text-text-muted">{label}</p>
       <p className="text-sm font-semibold leading-5 text-text-primary">{value}</p>
       {extra && <p className="hidden text-xs leading-4 text-text-muted @[560px]/profile:block">{extra}</p>}
@@ -143,9 +143,9 @@ function PriceBand({ vm }: { vm: PlayerProfileVM }) {
 
   return (
     <>
-      <div className="flex flex-wrap items-start gap-x-3 gap-y-2 @[560px]/profile:gap-x-5">
-        <ValueFigure eur={current.valueEur} size="hero" srLabel={label} />
-        <div className="mt-1">
+      <div className="flex flex-wrap items-start gap-x-3 gap-y-2 @[560px]/profile:flex-nowrap @[560px]/profile:gap-x-4">
+        <ValueFigure eur={current.valueEur} size="hero" srLabel={label} className="shrink-0" />
+        <div className="mt-1 min-w-0">
           <p aria-hidden="true" className="text-xs font-medium leading-4 text-text-muted">
             {label}
           </p>

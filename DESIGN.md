@@ -202,6 +202,8 @@ All shared primitive components reside under `src/components/ui/` and are showca
 5. **Charts & Visualizations:**
    - Always supply screen-reader accessible summaries (`<p className="sr-only">...</p>`).
    - Recharts tooltips display exact numbers with currency symbols and date context.
+   - Recharts is never in a page's initial bundle: load charts through a client `next/dynamic` wrapper with `ssr: false` (see `ValueChartLazy`), with a skeleton of exactly the chart's height (`ChartSkeleton`) so loading causes no layout shift.
+   - Plot only real data points. Never add a synthetic "today" point; step lines (not monotone curves) for values that change on discrete dates; time axes are true time scales, not categories.
 6. **Landmarks & Skip Link:**
    - Semantic HTML5 landmarks: `<header>`, `<nav>`, `<main id="main-content">`, `<aside>`, `<footer>`.
    - Accessible skip link positioned at the top of the DOM: `<a href="#main-content">Skip to content</a>`.
@@ -295,7 +297,14 @@ To ensure high information density, content prominence, and zero viewport waste 
 - **No Secondary Wrapping:** Actions never wrap into an awkward secondary row on small viewports (down to 320px width).
 
 ### 4. Shared Polymorphic Architecture
-- Implemented as a single, reusable `PageHeader` component in `src/components/ui/PageHeader.tsx` supporting `player`, `club`, `league`, and `directory` variants. Duplicate header markup is eliminated.
+- Implemented as a single, reusable `PageHeader` component in `src/components/ui/PageHeader.tsx` supporting `club`, `league`, and `directory` variants. Duplicate header markup is eliminated.
+- **Players use `PlayerHero`** (`src/components/players/PlayerHero.tsx`): one value figure (`ValueFigure`), a dated delta (`TrendDelta`, built from `describeDelta`), and Follow / Compare / Share chips. Layout is driven by the `@container/profile` container at 560px, not the viewport, so it adapts to the column it sits in. Below 560px the actions sit on their own row; from 560px the name takes the full top row and the actions sit beside the value.
+
+### 5. One-Page Profile & Section Bar
+- Entity profiles are **one scrolling page, not tabs**. Each block is a `ProfileSection` (`<section id aria-labelledby data-nav-label>` with a single `h2`); a section with no data renders **nothing** — no heading, no chip, no "no data" filler.
+- `ProfileSectionNav` is a sticky bar of plain `#anchor` links (works without JS) under the TopNav, with scrollspy via `aria-current="location"`, focus moved to the section `h2` after a jump, and a mini value pill once the hero scrolls away. Streamed sections (e.g. Season inside `<Suspense>`) add their own chip when they mount.
+- Long lists collapse behind native `<details>` (`ProfileDisclosure`): zero JS, content stays in the static HTML.
+- All sections render from one server-built view model (`PlayerProfileVM`, `src/lib/data/playerProfile.ts`) where `null` means "not on record". Formatting goes through `src/lib/format-value.ts` (U+2212 minus, en-GB dates in UTC).
 
 ---
 
