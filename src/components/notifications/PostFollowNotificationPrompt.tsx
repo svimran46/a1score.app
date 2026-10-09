@@ -86,7 +86,7 @@ export function PostFollowNotificationPrompt() {
   };
 
   return (
-    <div className="fixed bottom-16 sm:bottom-6 right-4 left-4 sm:left-auto sm:max-w-md z-50 animate-in slide-in-from-bottom-4 duration-300">
+    <div className="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom))] lg:bottom-6 right-4 left-4 sm:left-auto sm:max-w-md z-50 animate-in slide-in-from-bottom-4 duration-300">
       <div className="p-4 rounded-2xl bg-[var(--bg-card)] border border-[var(--divider)] shadow-2xl space-y-3">
         {/* Header */}
         <div className="flex items-start justify-between gap-3">

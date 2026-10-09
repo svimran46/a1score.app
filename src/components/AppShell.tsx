@@ -18,7 +18,8 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
   ]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[var(--bg-page)] text-[var(--text-primary)]">
+    // Bottom padding keeps the last content (rail or footer) clear of the fixed BottomNav below lg
+    <div className="min-h-screen flex flex-col bg-[var(--bg-page)] text-[var(--text-primary)] pb-[calc(3.5rem+env(safe-area-inset-bottom))] lg:pb-0">
       {/* Accessible skip-to-content link */}
       <a
         href="#main-content"
@@ -35,7 +36,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
 
       {/* Centered Main Shell Container (max-width: 1280px) */}
       <div className="w-full max-w-[var(--container-max)] mx-auto px-4 lg:px-6 py-4 sm:py-6 flex-1">
-        {/* Tablet Leagues Scroller (640px to 1023px) */}
+        {/* Tablet Leagues Scroller (480px to 1023px) */}
         <TabletLeaguesScroller leagues={leagues} />
 
         {/* Responsive Grid: 3-column desktop (260px 1fr 320px, gap 16px) */}
@@ -44,17 +45,13 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
           <LeftRail leagues={leagues} />
 
           {/* Center Column: Primary Page Content */}
-          <main id="main-content" className="min-w-0 flex-1 w-full pb-20 sm:pb-8">
+          <main id="main-content" className="min-w-0 flex-1 w-full">
             {children}
-
-            {/* Below Content Rail on Mobile & Tablet (< 1024px) */}
-            <div className="lg:hidden mt-8">
-              <RightRail movers={movers} news={news} />
-            </div>
           </main>
 
-          {/* Right Rail (Desktop >= 1024px) */}
-          <div className="hidden lg:block shrink-0">
+          {/* Right Rail: third grid column on desktop, stacked below content on
+              mobile & tablet. Rendered once so its widgets hydrate once. */}
+          <div className="mt-8 lg:mt-0 min-w-0 shrink-0 pb-8">
             <RightRail movers={movers} news={news} />
           </div>
         </div>
@@ -63,7 +60,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
       {/* Footer */}
       <Footer />
 
-      {/* Mobile Fixed Bottom Navigation (< 640px) */}
+      {/* Fixed Bottom Navigation for phones and tablets (< 1024px) */}
       <BottomNav />
     </div>
   );

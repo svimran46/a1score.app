@@ -38,7 +38,7 @@ export function ConsentBanner() {
     <aside
       role="region"
       aria-label="Privacy and cookies"
-      className="fixed bottom-4 inset-x-4 sm:left-auto sm:right-6 sm:bottom-6 sm:max-w-md z-50 bg-[var(--bg-card)] border border-[var(--divider)] rounded-[var(--card-radius)] p-4 sm:p-5 shadow-2xl transition-all duration-300 ease-out transform translate-y-0 opacity-100"
+      className="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom))] inset-x-4 sm:left-auto sm:right-6 lg:bottom-6 sm:max-w-md z-50 bg-[var(--bg-card)] border border-[var(--divider)] rounded-[var(--card-radius)] p-4 sm:p-5 shadow-2xl transition-all duration-300 ease-out transform translate-y-0 opacity-100"
     >
       <div className="flex items-start gap-3">
         <div className="p-2 rounded-xl bg-[var(--bg-chip)] border border-[var(--divider)] shrink-0 text-[var(--accent)] mt-0.5">

@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { CommandPalette } from "@/components/CommandPalette";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { useLiveMatchCount } from "@/hooks/useLiveMatchCount";
 
 export interface NavItem {
   name: string;
@@ -150,7 +151,7 @@ function TopNavContent() {
 
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [isMac, setIsMac] = useState(false);
-  const [liveCount, setLiveCount] = useState<number | null>(null);
+  const liveCount = useLiveMatchCount();
 
   // Detect Mac OS for keyboard shortcut representation
   useEffect(() => {
@@ -171,35 +172,10 @@ function TopNavContent() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // Poll live matches count
-  useEffect(() => {
-    let isMounted = true;
-    const fetchLiveCount = async () => {
-      try {
-        const res = await fetch("/api/matches?filter=live", { cache: "no-store" });
-        if (res.ok) {
-          const data = await res.json();
-          if (isMounted && typeof data.liveMatchesCount === "number") {
-            setLiveCount(data.liveMatchesCount);
-          }
-        }
-      } catch {
-        // Fallback gracefully on network error
-      }
-    };
-
-    fetchLiveCount();
-    const interval = setInterval(fetchLiveCount, 30_000);
-    return () => {
-      isMounted = false;
-      clearInterval(interval);
-    };
-  }, []);
-
   return (
     <>
       <header
-        className="sticky top-0 z-40 w-full bg-[var(--bg-page)]/90 backdrop-blur-xl border-b border-[var(--divider)] transition-colors"
+        className="sticky top-0 z-40 w-full bg-bg-page/90 backdrop-blur-xl border-b border-[var(--divider)] transition-colors"
         style={{
           height: "var(--nav-height)",
           paddingTop: "env(safe-area-inset-top, 0px)",
@@ -234,7 +210,8 @@ function TopNavContent() {
                 <Link
                   key={cat.href}
                   href={cat.href}
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
+                  aria-current={active ? "page" : undefined}
+                  className={`flex items-center gap-1.5 px-3 py-2 rounded-xl whitespace-nowrap transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
                     active
                       ? "text-[var(--accent)] bg-[var(--bg-chip)] font-bold shadow-xs"
                       : "text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] font-semibold"
@@ -246,7 +223,9 @@ function TopNavContent() {
                       <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-[var(--live)] animate-ping" />
                     )}
                   </span>
-                  <span>{cat.name}</span>
+                  {/* Short labels until 2xl so seven items + search fit on one line at 1280px */}
+                  <span className="2xl:hidden">{cat.shortName}</span>
+                  <span className="hidden 2xl:inline">{cat.name}</span>
                   {cat.isLiveMatches && liveCount !== null && liveCount > 0 && (
                     <span className="ml-0.5 px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-[var(--bg-chip)] text-[var(--live)]">
                       {liveCount}
@@ -308,7 +287,7 @@ export function TopNav() {
     <Suspense
       fallback={
         <header
-          className="sticky top-0 z-40 w-full bg-[var(--bg-page)]/90 backdrop-blur-xl border-b border-[var(--divider)]"
+          className="sticky top-0 z-40 w-full bg-bg-page/90 backdrop-blur-xl border-b border-[var(--divider)]"
           style={{ height: "var(--nav-height)" }}
         />
       }
