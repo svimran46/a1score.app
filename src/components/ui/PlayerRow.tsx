@@ -110,10 +110,11 @@ export function PlayerRow({
               </div>
             )}
             <span className="truncate">{clubName || "Free Agent"}</span>
+            {/* Phones keep the club readable instead of truncating both */}
             {position && (
               <>
-                <span className="text-[var(--divider)]">·</span>
-                <span className="truncate">{position}</span>
+                <span className="hidden sm:inline text-[var(--divider)]">·</span>
+                <span className="hidden sm:inline truncate">{position}</span>
               </>
             )}
           </div>
@@ -133,12 +134,12 @@ export function PlayerRow({
       {/* Right side: Value + Trend + FollowButton */}
       <div className="flex items-center gap-1 sm:gap-2 shrink-0 relative z-10">
         <div className="text-right pointer-events-none">
-          <div className="text-sm sm:text-base font-bold text-[var(--value-text)] tabular-nums leading-tight">
+          <div className="text-sm sm:text-base font-bold text-[var(--value-text)] figure tabular-nums leading-tight">
             {marketValue ? formatCompactEur(marketValue) : "—"}
           </div>
           {hasTrend && pctStr && (
             <div
-              className={`flex items-center justify-end gap-0.5 text-xs font-bold tabular-nums leading-tight mt-0.5 ${
+              className={`flex items-center justify-end gap-0.5 text-xs font-bold figure leading-tight mt-0.5 ${
                 isUp ? "text-[var(--trend-up)]" : "text-[var(--trend-down)]"
               }`}
             >

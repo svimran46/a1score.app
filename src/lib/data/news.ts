@@ -78,81 +78,6 @@ const ENTITY_DICTIONARY: Array<{
   { pattern: /\b(jamal musiala|musiala)\b/i, tag: "Jamal Musiala", type: "player", href: "/players/jamal-musiala-580195" },
 ];
 
-const FALLBACK_NEWS: NewsItem[] = [
-  {
-    id: "fb-1",
-    title: "European Transfer Window Review: Record valuations and commercial market trends",
-    snippet: "Analyzing top European club financial movements, squad valuations, and high-profile contract extensions across Europe's top 5 leagues.",
-    imageUrl: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=800&q=80",
-    source: "Sky Sports",
-    publishedAt: new Date(Date.now() - 1000 * 60 * 45).toISOString(),
-    url: "https://www.skysports.com/football/news",
-    tags: ["Transfers", "Premier League", "LaLiga"],
-    entityTags: [
-      { name: "Transfers", type: "topic", href: "/transfers" },
-      { name: "Premier League", type: "competition", href: "/leagues/premier-league" },
-    ],
-  },
-  {
-    id: "fb-2",
-    title: "Lamine Yamal reaches €180M valuation milestone following dominant campaign",
-    snippet: "Barcelona forward emerges as one of world football's most valuable players as proprietary algorithm factors in performance indicators and age curves.",
-    imageUrl: "https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=800&q=80",
-    source: "The Guardian",
-    publishedAt: new Date(Date.now() - 1000 * 60 * 120).toISOString(),
-    url: "https://www.theguardian.com/football",
-    tags: ["LaLiga", "Barcelona", "Lamine Yamal"],
-    entityTags: [
-      { name: "Barcelona", type: "club", href: "/clubs/barcelona" },
-      { name: "Lamine Yamal", type: "player", href: "/players/lamine-yamal-1051588" },
-      { name: "LaLiga", type: "competition", href: "/leagues/laliga" },
-    ],
-  },
-  {
-    id: "fb-3",
-    title: "Manchester City and Arsenal square off in title race valuation duel",
-    snippet: "Squad market values exceed €1 billion each as Premier League contenders prepare for decisive weekend fixture.",
-    imageUrl: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=800&q=80",
-    source: "Sky Sports",
-    publishedAt: new Date(Date.now() - 1000 * 60 * 180).toISOString(),
-    url: "https://www.skysports.com/football",
-    tags: ["Premier League", "Manchester City", "Arsenal"],
-    entityTags: [
-      { name: "Manchester City", type: "club", href: "/clubs/manchester-city" },
-      { name: "Arsenal", type: "club", href: "/clubs/arsenal" },
-      { name: "Premier League", type: "competition", href: "/leagues/premier-league" },
-    ],
-  },
-  {
-    id: "fb-4",
-    title: "Real Madrid evaluate squad depth ahead of European campaign return",
-    snippet: "Carlo Ancelotti manages player rotation and minutes allocation following intensive international schedule.",
-    imageUrl: "https://images.unsplash.com/photo-1517466787929-bc90951d0974?auto=format&fit=crop&w=800&q=80",
-    source: "The Independent",
-    publishedAt: new Date(Date.now() - 1000 * 60 * 240).toISOString(),
-    url: "https://www.independent.co.uk/sport/football",
-    tags: ["LaLiga", "Real Madrid", "Champions League"],
-    entityTags: [
-      { name: "Real Madrid", type: "club", href: "/clubs/real-madrid" },
-      { name: "Champions League", type: "competition", href: "/leagues/champions-league" },
-    ],
-  },
-  {
-    id: "fb-5",
-    title: "Bundesliga market values update: Young talents surge in German top flight",
-    snippet: "German clubs record substantial growth in domestic squad valuations with standout performances across youth academies.",
-    imageUrl: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=800&q=80",
-    source: "The Guardian",
-    publishedAt: new Date(Date.now() - 1000 * 60 * 360).toISOString(),
-    url: "https://www.theguardian.com/football",
-    tags: ["Bundesliga", "Bayern Munich"],
-    entityTags: [
-      { name: "Bundesliga", type: "competition", href: "/leagues/bundesliga" },
-      { name: "Bayern Munich", type: "club", href: "/clubs/bayern-munich" },
-    ],
-  },
-];
-
 /**
  * Clean HTML strings, decode entities, and strip CDATA.
  */
@@ -419,8 +344,9 @@ export async function getNews(category?: string): Promise<NewsItem[]> {
     const feedResults = await Promise.all(RSS_FEEDS.map((f) => fetchFeed(f)));
     const allFetched = feedResults.flat();
 
-    const merged = allFetched.length > 0 ? allFetched : FALLBACK_NEWS;
-    const sorted = deduplicateNews(merged).sort(
+    // No feed reachable means no headlines: the UI shows an empty state rather
+    // than invented stories attributed to real outlets.
+    const sorted = deduplicateNews(allFetched).sort(
       (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
     );
 
@@ -433,7 +359,7 @@ export async function getNews(category?: string): Promise<NewsItem[]> {
       item.tags.some((t) => t.toLowerCase().replace(/[\s\-_]+/g, "").includes(normCat))
     );
   } catch {
-    return FALLBACK_NEWS;
+    return [];
   }
 }
 

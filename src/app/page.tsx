@@ -30,96 +30,9 @@ interface HomeTransferItem {
   date?: string | null;
 }
 
-const FALLBACK_TRANSFERS: HomeTransferItem[] = [
-  {
-    id: "t1",
-    playerName: "Kylian Mbappé",
-    playerPosition: "Centre-Forward",
-    fromClubName: "Paris Saint-Germain",
-    toClubName: "Real Madrid",
-    fee: "Free",
-    date: "Jul 1, 2024",
-  },
-  {
-    id: "t2",
-    playerName: "Julián Álvarez",
-    playerPosition: "Centre-Forward",
-    fromClubName: "Manchester City",
-    toClubName: "Atlético Madrid",
-    fee: 75000000,
-    date: "Aug 12, 2024",
-  },
-  {
-    id: "t3",
-    playerName: "Dani Olmo",
-    playerPosition: "Attacking Midfield",
-    fromClubName: "RB Leipzig",
-    toClubName: "Barcelona",
-    fee: 55000000,
-    date: "Aug 9, 2024",
-  },
-  {
-    id: "t4",
-    playerName: "Pedro Neto",
-    playerPosition: "Right Winger",
-    fromClubName: "Wolverhampton Wanderers",
-    toClubName: "Chelsea",
-    fee: 60000000,
-    date: "Aug 11, 2024",
-  },
-  {
-    id: "t5",
-    playerName: "João Félix",
-    playerPosition: "Second Striker",
-    fromClubName: "Atlético Madrid",
-    toClubName: "Chelsea",
-    fee: 52000000,
-    date: "Aug 21, 2024",
-  },
-];
-
-const FALLBACK_TOP_CLUBS = [
-  {
-    id: "cmuihn2f40001b23f2qf4z79i",
-    name: "Real Madrid",
-    leagueName: "LaLiga",
-    country: "Spain",
-    squadSize: 24,
-    totalSquadValue: 1360000000,
-  },
-  {
-    id: "cmuihn2f40002b23f2qf4z79i",
-    name: "Manchester City",
-    leagueName: "Premier League",
-    country: "England",
-    squadSize: 23,
-    totalSquadValue: 1260000000,
-  },
-  {
-    id: "cmuihn2f40003b23f2qf4z79i",
-    name: "Arsenal",
-    leagueName: "Premier League",
-    country: "England",
-    squadSize: 24,
-    totalSquadValue: 1170000000,
-  },
-  {
-    id: "cmuihn2f40004b23f2qf4z79i",
-    name: "Barcelona",
-    leagueName: "LaLiga",
-    country: "Spain",
-    squadSize: 25,
-    totalSquadValue: 940000000,
-  },
-  {
-    id: "cmuihn2f40005b23f2qf4z79i",
-    name: "Bayern Munich",
-    leagueName: "Bundesliga",
-    country: "Germany",
-    squadSize: 25,
-    totalSquadValue: 940000000,
-  },
-];
+function CardNotice({ children }: { children: React.ReactNode }) {
+  return <p className="px-4 py-6 text-center text-sm text-[var(--text-muted)]">{children}</p>;
+}
 
 export default async function HomePage() {
   const [valuablePlayers, topClubs, matchesData, latestTransfersRes] = await Promise.all([
@@ -147,8 +60,8 @@ export default async function HomePage() {
       .order("date", { ascending: false, nullsFirst: false })
       .limit(5)
       .then(
-        (res) => res.data || [],
-        () => []
+        (res) => (res.error ? null : res.data || []),
+        () => null
       ),
   ]);
 
@@ -181,8 +94,8 @@ export default async function HomePage() {
     displayedMatches = (upcomingMatches.length > 0 ? upcomingMatches : allMatches).slice(0, 3);
   }
 
-  // Map database transfers or fallback
-  const transfers =
+  // Empty lists render an honest notice; never substitute sample data
+  const transfers: HomeTransferItem[] =
     latestTransfersRes && latestTransfersRes.length > 0
       ? latestTransfersRes.map((t: any) => {
           const rawPlayer = t.player;
@@ -199,10 +112,9 @@ export default async function HomePage() {
             date: t.date ? formatDate(t.date) : null,
           };
         })
-      : FALLBACK_TRANSFERS;
+      : [];
 
-  // Map top clubs or fallback
-  const clubs = topClubs && topClubs.length > 0 ? topClubs.slice(0, 5) : FALLBACK_TOP_CLUBS;
+  const clubs = topClubs.slice(0, 5);
 
   return (
     <div className="space-y-6 max-w-[720px] mx-auto">
@@ -234,9 +146,7 @@ export default async function HomePage() {
               />
             ))
           ) : (
-            <div className="px-4 py-6 text-center text-xs text-[var(--text-muted)]">
-              No live matches right now. Check upcoming fixtures.
-            </div>
+            <CardNotice>No fixtures to show right now.</CardNotice>
           )}
         </Card>
       </section>
@@ -249,6 +159,9 @@ export default async function HomePage() {
           actionLabel="See all"
         />
         <Card className="p-1 space-y-0.5">
+          {valuablePlayers.length === 0 && (
+            <CardNotice>Market values couldn&apos;t be loaded. Try again in a moment.</CardNotice>
+          )}
           {valuablePlayers.slice(0, 5).map((player, idx) => (
             <PlayerRow
               key={player.id}
@@ -274,6 +187,13 @@ export default async function HomePage() {
           actionLabel="See all"
         />
         <Card className="p-1 space-y-0.5">
+          {transfers.length === 0 && (
+            <CardNotice>
+              {latestTransfersRes
+                ? "No transfers recorded yet."
+                : "Transfers couldn't be loaded. Try again in a moment."}
+            </CardNotice>
+          )}
           {transfers.slice(0, 5).map((transfer) => (
             <TransferRow
               key={transfer.id}
@@ -298,6 +218,9 @@ export default async function HomePage() {
           actionLabel="See all"
         />
         <Card className="p-1 space-y-0.5">
+          {clubs.length === 0 && (
+            <CardNotice>Squad values couldn&apos;t be loaded. Try again in a moment.</CardNotice>
+          )}
           {clubs.map((club: any, idx: number) => (
             <ClubRow
               key={club.id}
