@@ -98,7 +98,7 @@ export function CompareFactsTable({ players, onRemovePlayer }: CompareFactsTable
                     type="button"
                     onClick={() => onRemovePlayer(player.slug)}
                     aria-label={`Remove ${player.fullName} from comparison`}
-                    className="absolute -top-1 -right-1 p-1.5 rounded-full text-[var(--text-muted)] hover:text-rose-400 hover:bg-rose-500/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
+                    className="absolute -top-1 -right-1 p-1.5 rounded-full text-[var(--text-muted)] hover:text-trend-down hover:bg-trend-down/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
                     title="Remove player"
                   >
                     <X className="w-4 h-4" />
@@ -134,7 +134,7 @@ export function CompareFactsTable({ players, onRemovePlayer }: CompareFactsTable
                       Current Market Value
                     </span>
                     <div className="flex items-baseline justify-between gap-2 flex-wrap">
-                      <span className="font-mono font-black text-xl sm:text-2xl text-[var(--value-text)] tabular-nums">
+                      <span className="font-mono font-black text-xl sm:text-2xl text-[var(--value-text)] figure tabular-nums">
                         {player.latestMarketValue > 0 ? formatCompactEur(player.latestMarketValue) : "—"}
                       </span>
                       {/* 12-Month Delta */}
@@ -142,9 +142,9 @@ export function CompareFactsTable({ players, onRemovePlayer }: CompareFactsTable
                         <div
                           className={`flex items-center gap-1 text-xs font-bold tabular-nums ${
                             change12M.isPositive
-                              ? "text-emerald-400"
+                              ? "text-trend-up"
                               : change12M.isNegative
-                              ? "text-rose-400"
+                              ? "text-trend-down"
                               : "text-[var(--text-muted)]"
                           }`}
                         >
@@ -188,7 +188,7 @@ export function CompareFactsTable({ players, onRemovePlayer }: CompareFactsTable
                   {/* 12M Change Details */}
                   <div className="flex items-center justify-between gap-2 py-1.5 border-b border-[var(--divider)]">
                     <span className="text-[var(--text-muted)] flex items-center gap-1.5 shrink-0">
-                      <Activity className="w-3.5 h-3.5 text-blue-400" />
+                      <Activity className="w-3.5 h-3.5 text-info" />
                       12M Change
                     </span>
                     <span className="font-mono font-bold text-right tabular-nums">
@@ -196,9 +196,9 @@ export function CompareFactsTable({ players, onRemovePlayer }: CompareFactsTable
                         <span
                           className={
                             change12M.isPositive
-                              ? "text-emerald-400"
+                              ? "text-trend-up"
                               : change12M.isNegative
-                              ? "text-rose-400"
+                              ? "text-trend-down"
                               : "text-[var(--text-muted)]"
                           }
                         >
@@ -215,7 +215,7 @@ export function CompareFactsTable({ players, onRemovePlayer }: CompareFactsTable
                   {/* Current Club */}
                   <div className="flex items-center justify-between gap-2 py-1.5 border-b border-[var(--divider)]">
                     <span className="text-[var(--text-muted)] flex items-center gap-1.5 shrink-0">
-                      <Layers className="w-3.5 h-3.5 text-purple-400" />
+                      <Layers className="w-3.5 h-3.5 text-highlight" />
                       Club
                     </span>
                     {club ? (
@@ -245,7 +245,7 @@ export function CompareFactsTable({ players, onRemovePlayer }: CompareFactsTable
                   {/* Age & Date of Birth */}
                   <div className="flex items-center justify-between gap-2 py-1.5 border-b border-[var(--divider)]">
                     <span className="text-[var(--text-muted)] flex items-center gap-1.5 shrink-0">
-                      <Calendar className="w-3.5 h-3.5 text-emerald-400" />
+                      <Calendar className="w-3.5 h-3.5 text-trend-up" />
                       Age
                     </span>
                     <span className="font-semibold text-[var(--text-primary)] text-right">
@@ -269,7 +269,7 @@ export function CompareFactsTable({ players, onRemovePlayer }: CompareFactsTable
                   {/* Nationality */}
                   <div className="flex items-center justify-between gap-2 py-1.5 border-b border-[var(--divider)]">
                     <span className="text-[var(--text-muted)] flex items-center gap-1.5 shrink-0">
-                      <Globe className="w-3.5 h-3.5 text-amber-400" />
+                      <Globe className="w-3.5 h-3.5 text-value-text" />
                       Nationality
                     </span>
                     <span className="font-semibold text-[var(--text-primary)] text-right truncate">
@@ -286,7 +286,7 @@ export function CompareFactsTable({ players, onRemovePlayer }: CompareFactsTable
                     <span className="font-semibold text-[var(--text-primary)] text-right">
                       {player.achievements && player.achievements.totalTitles > 0 ? (
                         <span className="inline-flex items-center gap-1.5">
-                          <span className="text-[var(--value-text)] font-bold">
+                          <span className="text-[var(--value-text)] figure font-bold">
                             {player.achievements.totalTitles} {player.achievements.totalTitles === 1 ? "title" : "titles"}
                           </span>
                           {player.achievements.topHonour && (

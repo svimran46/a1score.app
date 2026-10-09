@@ -53,16 +53,16 @@ export function StatsTab({ match }: StatsTabProps) {
         <div className="rounded-[var(--card-radius)] border border-[var(--border-subtle)] bg-[var(--bg-card)] p-4 sm:p-6 shadow-xs space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-[var(--divider)] flex-wrap gap-2">
             <div className="flex items-center gap-2">
-              <Crosshair className="w-4 h-4 text-emerald-400" />
+              <Crosshair className="w-4 h-4 text-trend-up" />
               <h3 className="text-xs sm:text-sm font-bold text-[var(--text-primary)] uppercase tracking-wider">
                 Shot Map & Expected Goals (xG)
               </h3>
             </div>
             <div className="flex items-center gap-4 text-xs font-mono font-bold tabular-nums">
-              <span className="text-emerald-400">
+              <span className="text-trend-up">
                 {homeTeam?.name}: {homeXG.toFixed(2)} xG
               </span>
-              <span className="text-blue-400">
+              <span className="text-info">
                 {awayTeam?.name}: {awayXG.toFixed(2)} xG
               </span>
             </div>
@@ -91,10 +91,10 @@ export function StatsTab({ match }: StatsTabProps) {
                   )} xG (${shot.eventType})`}
                   className={`absolute -translate-x-1/2 -translate-y-1/2 rounded-full flex items-center justify-center transition-transform hover:scale-125 cursor-pointer shadow-md ${
                     isGoal
-                      ? "ring-2 ring-emerald-400 bg-emerald-400 text-slate-950 font-black w-6 h-6 text-xs"
+                      ? "ring-2 ring-trend-up bg-trend-up text-accent-contrast font-black w-6 h-6 text-xs"
                       : isHome
-                      ? "bg-emerald-500/80 border border-white/60 w-4 h-4"
-                      : "bg-blue-500/80 border border-white/60 w-4 h-4"
+                      ? "bg-trend-up/80 border border-white/60 w-4 h-4"
+                      : "bg-info/80 border border-white/60 w-4 h-4"
                   }`}
                   style={{ left: `${posX}%`, top: `${posY}%` }}
                 >
@@ -172,7 +172,7 @@ export function StatsTab({ match }: StatsTabProps) {
                         <div className="flex items-center justify-between font-bold">
                           <span
                             className={`tabular-nums font-mono text-sm sm:text-base ${
-                              isHomeSuperior ? "text-emerald-400 font-extrabold" : "text-[var(--text-primary)]"
+                              isHomeSuperior ? "text-trend-up font-extrabold" : "text-[var(--text-primary)]"
                             }`}
                           >
                             {rawHome ?? "0"}
@@ -182,7 +182,7 @@ export function StatsTab({ match }: StatsTabProps) {
                           </span>
                           <span
                             className={`tabular-nums font-mono text-sm sm:text-base ${
-                              isAwaySuperior ? "text-blue-400 font-extrabold" : "text-[var(--text-primary)]"
+                              isAwaySuperior ? "text-info font-extrabold" : "text-[var(--text-primary)]"
                             }`}
                           >
                             {rawAway ?? "0"}
@@ -196,12 +196,12 @@ export function StatsTab({ match }: StatsTabProps) {
                           ) : (
                             <>
                               <div
-                                className="h-full bg-emerald-500 transition-all duration-300"
+                                className="h-full bg-trend-up transition-all duration-300"
                                 style={{ width: `${homePct}%` }}
                                 title={`${homeTeam?.name || "Home"}: ${homePct}%`}
                               />
                               <div
-                                className="h-full bg-blue-500 transition-all duration-300"
+                                className="h-full bg-info transition-all duration-300"
                                 style={{ width: `${awayPct}%` }}
                                 title={`${awayTeam?.name || "Away"}: ${awayPct}%`}
                               />

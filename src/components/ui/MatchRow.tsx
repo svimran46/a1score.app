@@ -76,7 +76,7 @@ export function MatchRow({
       <div className="flex flex-col items-center justify-center shrink-0 text-center px-1">
         {isLive ? (
           <>
-            <span className="text-sm sm:text-base font-bold text-[var(--text-primary)] tabular-nums leading-tight">
+            <span className="text-base sm:text-lg font-extrabold text-[var(--text-primary)] figure leading-tight">
               {homeScore ?? 0} - {awayScore ?? 0}
             </span>
             <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[var(--live)] leading-tight mt-0.5 tracking-tight">
@@ -86,7 +86,7 @@ export function MatchRow({
           </>
         ) : isFinished ? (
           <>
-            <span className="text-sm sm:text-base font-bold text-[var(--text-primary)] tabular-nums leading-tight">
+            <span className="text-base sm:text-lg font-extrabold text-[var(--text-primary)] figure leading-tight">
               {homeScore ?? 0} - {awayScore ?? 0}
             </span>
             <span className="text-[10px] font-semibold text-[var(--text-muted)] leading-tight mt-0.5 uppercase tracking-wider">
@@ -95,7 +95,7 @@ export function MatchRow({
           </>
         ) : hasScore ? (
           <>
-            <span className="text-sm sm:text-base font-bold text-[var(--text-primary)] tabular-nums leading-tight">
+            <span className="text-base sm:text-lg font-extrabold text-[var(--text-primary)] figure leading-tight">
               {homeScore} - {awayScore}
             </span>
             {statusText && (

@@ -1,4 +1,16 @@
 import type { Config } from "tailwindcss";
+import animate from "tailwindcss-animate";
+
+// Design tokens are hex values held in CSS variables, so Tailwind cannot apply
+// an opacity modifier to `bg-[var(--bg-card)]/95` (it silently emits nothing).
+// Named token colours fix that: solid classes stay a plain `var(--x)` (works in
+// every browser) and only explicit modifiers like `bg-bg-card/95` use color-mix().
+// Tailwind accepts colour functions at runtime; its types only declare strings.
+const token = (name: string) =>
+  (({ opacityValue }: { opacityValue?: string }) =>
+    opacityValue === undefined || opacityValue.includes("--tw-")
+      ? `var(--${name})`
+      : `color-mix(in srgb, var(--${name}) calc(${opacityValue} * 100%), transparent)`) as unknown as string;
 
 const config: Config = {
   darkMode: ["class"],
@@ -30,18 +42,23 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        "bg-page": "var(--bg-page)",
-        "bg-card": "var(--bg-card)",
-        "bg-chip": "var(--bg-chip)",
-        "bg-hover": "var(--bg-hover)",
-        divider: "var(--divider)",
-        "text-primary": "var(--text-primary)",
-        "text-muted": "var(--text-muted)",
-        "accent-contrast": "var(--accent-contrast)",
-        "value-text": "var(--value-text)",
-        "trend-up": "var(--trend-up)",
-        "trend-down": "var(--trend-down)",
-        live: "var(--live)",
+        "bg-page": token("bg-page"),
+        "bg-card": token("bg-card"),
+        "bg-chip": token("bg-chip"),
+        "bg-hover": token("bg-hover"),
+        "bg-elevated": token("bg-elevated"),
+        divider: token("divider"),
+        "border-subtle": token("border-subtle"),
+        "text-primary": token("text-primary"),
+        "text-secondary": token("text-secondary"),
+        "text-muted": token("text-muted"),
+        "accent-contrast": token("accent-contrast"),
+        "value-text": token("value-text"),
+        "trend-up": token("trend-up"),
+        "trend-down": token("trend-down"),
+        live: token("live"),
+        info: token("info"),
+        highlight: token("highlight"),
         ink: {
           950: "var(--ink-950)",
           900: "var(--ink-900)",
@@ -74,8 +91,8 @@ const config: Config = {
           700: "#047857",
         },
         accent: {
-          DEFAULT: "var(--accent)",
-          contrast: "var(--accent-contrast)",
+          DEFAULT: token("accent"),
+          contrast: token("accent-contrast"),
           50: "#eff6ff",
           100: "#dbeafe",
           500: "#3b82f6",
@@ -86,12 +103,24 @@ const config: Config = {
         card: "var(--card-radius)",
         chip: "var(--chip-radius)",
       },
+      boxShadow: {
+        xs: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+      },
+      backdropBlur: {
+        xs: "2px",
+      },
+      // Named so `duration-fast` stays unambiguous next to tailwindcss-animate's
+      // animation-duration utility (an arbitrary `duration-[var(--x)]` is not).
+      transitionDuration: {
+        fast: "var(--dur-fast)",
+        base: "var(--dur-base)",
+      },
       fontFamily: {
-        sans: ["var(--font-inter)", "var(--font-sans)", "system-ui", "sans-serif"],
+        sans: ["var(--font-sans)"],
         editorial: ["Georgia", "Cambria", "Times New Roman", "serif"],
       },
     },
   },
-  plugins: [],
+  plugins: [animate],
 };
 export default config;

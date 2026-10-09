@@ -9,11 +9,11 @@ export default function GlobalError({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className="bg-[var(--bg-page)] text-slate-100 min-h-screen flex flex-col font-sans antialiased">
+      <body className="bg-[var(--bg-page)] text-text-primary min-h-screen flex flex-col font-sans antialiased">
         <main className="flex-1 flex flex-col items-center justify-center px-4 text-center space-y-6">
-          <div className="w-16 h-16 rounded-2xl bg-red-500/10 border border-red-500/30 flex items-center justify-center">
+          <div className="w-16 h-16 rounded-2xl bg-trend-down/10 border border-trend-down/30 flex items-center justify-center">
             <svg
-              className="w-8 h-8 text-red-400"
+              className="w-8 h-8 text-trend-down"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -28,17 +28,17 @@ export default function GlobalError({
           </div>
 
           <div className="space-y-2">
-            <h1 className="text-2xl font-bold text-white">
+            <h1 className="text-2xl font-bold text-text-primary">
               Critical Error
             </h1>
-            <p className="text-sm text-slate-400 max-w-md">
+            <p className="text-sm text-text-muted max-w-md">
               Something went seriously wrong. Please try refreshing the page.
             </p>
           </div>
 
           <button
             onClick={reset}
-            className="px-5 py-2.5 rounded-xl bg-amber-500 text-[var(--accent-contrast)] text-sm font-bold hover:bg-amber-400 transition-colors"
+            className="px-5 py-2.5 rounded-xl bg-accent text-[var(--accent-contrast)] text-sm font-bold hover:bg-accent transition-colors"
           >
             Refresh Page
           </button>

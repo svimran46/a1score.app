@@ -121,7 +121,7 @@ export function ClubTransferLedger({
             <ArrowDownLeft className="w-3.5 h-3.5 text-[var(--value-text)]" />
             Top Inbound Investment
           </span>
-          <span className="font-bold text-[var(--value-text)] tabular-nums">
+          <span className="font-bold text-[var(--value-text)] figure tabular-nums">
             {formatCompactEur(totalArrivalsSpend)}
           </span>
         </div>

@@ -297,7 +297,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
 
                     <div className="text-right shrink-0 pl-3">
                       {p.latestMarketValue ? (
-                        <span className="text-xs font-bold text-[var(--value-text)] tabular-nums">
+                        <span className="text-xs font-bold text-[var(--value-text)] figure tabular-nums">
                           {formatCompactEur(p.latestMarketValue)}
                         </span>
                       ) : (
@@ -351,7 +351,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
 
         {/* Footer */}
         {query.trim() && (
-          <div className="p-3 bg-[var(--bg-page)]/80 border-t border-[var(--divider)] flex items-center justify-between text-[11px] text-[var(--text-muted)]">
+          <div className="p-3 bg-bg-page/80 border-t border-[var(--divider)] flex items-center justify-between text-[11px] text-[var(--text-muted)]">
             <span>Press Enter to view all results</span>
             <button
               type="button"

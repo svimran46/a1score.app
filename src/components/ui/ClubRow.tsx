@@ -86,7 +86,7 @@ export function ClubRow({
 
       {/* Right side: Squad Value (amber, tabular-nums, right-aligned, 700) */}
       <div className="text-right shrink-0">
-        <div className="text-sm sm:text-base font-bold text-[var(--value-text)] tabular-nums leading-tight">
+        <div className="text-sm sm:text-base font-bold text-[var(--value-text)] figure tabular-nums leading-tight">
           {squadValue ? formatCompactEur(squadValue) : "—"}
         </div>
         <div className="text-[10px] text-[var(--text-muted)] uppercase font-semibold leading-tight mt-0.5">

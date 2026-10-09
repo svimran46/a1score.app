@@ -74,16 +74,16 @@ export function EntityImage({
         aria-label={alt || `${resolvedType} icon`}
       >
         {resolvedType === "club" && (
-          <Shield className={`w-3/5 h-3/5 text-slate-400/90 ${fallbackIconClassName}`} />
+          <Shield className={`w-3/5 h-3/5 text-text-muted/90 ${fallbackIconClassName}`} />
         )}
         {resolvedType === "player" && (
-          <User className={`w-3/5 h-3/5 text-slate-400/90 ${fallbackIconClassName}`} />
+          <User className={`w-3/5 h-3/5 text-text-muted/90 ${fallbackIconClassName}`} />
         )}
         {resolvedType === "league" && (
-          <Trophy className={`w-3/5 h-3/5 text-slate-400/90 ${fallbackIconClassName}`} />
+          <Trophy className={`w-3/5 h-3/5 text-text-muted/90 ${fallbackIconClassName}`} />
         )}
         {resolvedType === "generic" && (
-          <Shield className={`w-3/5 h-3/5 text-slate-400/90 ${fallbackIconClassName}`} />
+          <Shield className={`w-3/5 h-3/5 text-text-muted/90 ${fallbackIconClassName}`} />
         )}
       </div>
     );

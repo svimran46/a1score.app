@@ -214,7 +214,7 @@ export function ClubSquadTable({
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <span className="text-xs sm:text-sm font-bold text-[var(--value-text)] tabular-nums">
+                  <span className="text-xs sm:text-sm font-bold text-[var(--value-text)] figure tabular-nums">
                     {formatCompactEur(subtotalVal)}
                   </span>
                   {isCollapsed ? (
@@ -230,7 +230,7 @@ export function ClubSquadTable({
                 <div className="overflow-x-auto border-t border-[var(--divider)]">
                   <table className="w-full text-left text-xs border-collapse">
                     <thead>
-                      <tr className="text-[var(--text-muted)] uppercase tracking-wider text-[10px] font-bold border-b border-[var(--divider)] bg-[var(--bg-page)]/40">
+                      <tr className="text-[var(--text-muted)] uppercase tracking-wider text-[10px] font-bold border-b border-[var(--divider)] bg-bg-page/40">
                         <th className="py-2 px-3 w-10 text-center">
                           <button
                             type="button"
@@ -358,7 +358,7 @@ export function ClubSquadTable({
                             )}
 
                             {/* Market Value */}
-                            <td className="py-2.5 px-3 sm:px-4 text-right text-[var(--value-text)] font-bold whitespace-nowrap text-sm tabular-nums">
+                            <td className="py-2.5 px-3 sm:px-4 text-right text-[var(--value-text)] figure font-bold whitespace-nowrap text-sm tabular-nums">
                               {player.latestMarketValue && player.latestMarketValue > 0
                                 ? formatCompactEur(player.latestMarketValue)
                                 : "—"}

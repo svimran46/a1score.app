@@ -15,10 +15,10 @@ export function TableTab({ match }: TableTabProps) {
 
   if (!table?.hasTable || standings.length === 0) {
     return (
-      <div className="rounded-3xl border border-slate-800 bg-slate-900/60 backdrop-blur-xl p-8 sm:p-12 text-center space-y-3 shadow-xl">
-        <Trophy className="w-10 h-10 text-slate-500 mx-auto" />
-        <h4 className="text-base font-bold text-white">Standings Unavailable</h4>
-        <p className="text-xs sm:text-sm text-slate-400 max-w-md mx-auto leading-relaxed">
+      <div className="rounded-3xl border border-divider bg-bg-card/60 backdrop-blur-xl p-8 sm:p-12 text-center space-y-3 shadow-xl">
+        <Trophy className="w-10 h-10 text-text-muted mx-auto" />
+        <h4 className="text-base font-bold text-text-primary">Standings Unavailable</h4>
+        <p className="text-xs sm:text-sm text-text-muted max-w-md mx-auto leading-relaxed">
           Standings table is not applicable for this fixture or competition format.
         </p>
       </div>
@@ -26,21 +26,21 @@ export function TableTab({ match }: TableTabProps) {
   }
 
   return (
-    <div className="rounded-3xl border border-slate-800 bg-slate-900/60 backdrop-blur-xl p-4 sm:p-6 shadow-xl space-y-4">
-      <div className="flex items-center justify-between pb-3 border-b border-slate-800/80">
+    <div className="rounded-3xl border border-divider bg-bg-card/60 backdrop-blur-xl p-4 sm:p-6 shadow-xl space-y-4">
+      <div className="flex items-center justify-between pb-3 border-b border-divider/80">
         <div className="flex items-center gap-2">
-          <Trophy className="w-4 h-4 text-amber-400" />
-          <h3 className="text-sm font-bold text-white uppercase tracking-wider">
+          <Trophy className="w-4 h-4 text-value-text" />
+          <h3 className="text-sm font-bold text-text-primary uppercase tracking-wider">
             {table.leagueName || "Group / League Standings"}
           </h3>
         </div>
-        <span className="text-[11px] text-slate-400">Current Table</span>
+        <span className="text-[11px] text-text-muted">Current Table</span>
       </div>
 
       <div className="overflow-x-auto no-scrollbar">
         <table className="w-full text-xs sm:text-sm text-left">
           <thead>
-            <tr className="border-b border-slate-800 text-[11px] uppercase tracking-wider text-slate-400">
+            <tr className="border-b border-divider text-[11px] uppercase tracking-wider text-text-muted">
               <th className="py-2.5 px-2 text-center w-8">#</th>
               <th className="py-2.5 px-3">Team</th>
               <th className="py-2.5 px-2 text-center w-8">P</th>
@@ -48,10 +48,10 @@ export function TableTab({ match }: TableTabProps) {
               <th className="py-2.5 px-2 text-center w-8">D</th>
               <th className="py-2.5 px-2 text-center w-8">L</th>
               <th className="py-2.5 px-2 text-center w-10">GD</th>
-              <th className="py-2.5 px-3 text-right font-black w-10 text-white">PTS</th>
+              <th className="py-2.5 px-3 text-right font-black w-10 text-text-primary">PTS</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-800/60 font-medium">
+          <tbody className="divide-y divide-divider/60 font-medium">
             {standings.map((row: any) => {
               const isHome = row.id === homeTeam?.id || row.name === homeTeam?.name;
               const isAway = row.id === awayTeam?.id || row.name === awayTeam?.name;
@@ -62,8 +62,8 @@ export function TableTab({ match }: TableTabProps) {
                   key={row.id || row.idx}
                   className={`transition-colors ${
                     isCurrentFixture
-                      ? "bg-amber-500/10 text-amber-400 font-bold"
-                      : "text-slate-300 hover:bg-slate-800/40"
+                      ? "bg-accent/10 text-value-text font-bold"
+                      : "text-text-secondary hover:bg-bg-chip/40"
                   }`}
                 >
                   {/* Position */}
@@ -71,8 +71,8 @@ export function TableTab({ match }: TableTabProps) {
                     <span
                       className={`inline-flex items-center justify-center w-6 h-6 rounded-md text-xs font-bold ${
                         row.idx <= 4
-                          ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
-                          : "text-slate-400"
+                          ? "bg-trend-up/15 text-trend-up border border-trend-up/30"
+                          : "text-text-muted"
                       }`}
                     >
                       {row.idx}
@@ -82,7 +82,7 @@ export function TableTab({ match }: TableTabProps) {
                   {/* Team Name + Crest */}
                   <td className="py-3 px-3">
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <div className="w-5 h-5 rounded bg-slate-800 p-0.5 shrink-0 flex items-center justify-center">
+                      <div className="w-5 h-5 rounded bg-bg-chip p-0.5 shrink-0 flex items-center justify-center">
                         <EntityImage
                           src={row.imageUrl}
                           alt={row.name}
@@ -94,7 +94,7 @@ export function TableTab({ match }: TableTabProps) {
                       </div>
                       <span className="truncate">{row.name}</span>
                       {isCurrentFixture && (
-                        <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                        <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-accent/20 text-value-text border border-accent/30">
                           Match
                         </span>
                       )}
@@ -102,22 +102,22 @@ export function TableTab({ match }: TableTabProps) {
                   </td>
 
                   {/* P, W, D, L, GD, PTS */}
-                  <td className="py-3 px-2 text-center tabular-nums text-slate-400">
+                  <td className="py-3 px-2 text-center tabular-nums text-text-muted">
                     {row.played}
                   </td>
-                  <td className="py-3 px-2 text-center tabular-nums text-slate-400">
+                  <td className="py-3 px-2 text-center tabular-nums text-text-muted">
                     {row.wins}
                   </td>
-                  <td className="py-3 px-2 text-center tabular-nums text-slate-400">
+                  <td className="py-3 px-2 text-center tabular-nums text-text-muted">
                     {row.draws}
                   </td>
-                  <td className="py-3 px-2 text-center tabular-nums text-slate-400">
+                  <td className="py-3 px-2 text-center tabular-nums text-text-muted">
                     {row.losses}
                   </td>
-                  <td className="py-3 px-2 text-center tabular-nums font-mono text-slate-300">
+                  <td className="py-3 px-2 text-center tabular-nums font-mono text-text-secondary">
                     {row.goalConDiff > 0 ? `+${row.goalConDiff}` : row.goalConDiff}
                   </td>
-                  <td className="py-3 px-3 text-right tabular-nums font-black text-white text-sm">
+                  <td className="py-3 px-3 text-right tabular-nums font-black text-text-primary text-sm">
                     {row.pts}
                   </td>
                 </tr>

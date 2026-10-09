@@ -85,14 +85,14 @@ export function OverviewTab({ match }: OverviewTabProps) {
                       <span
                         role="img"
                         aria-label="Goal"
-                        className="w-6 h-6 rounded-full bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-xs shrink-0"
+                        className="w-6 h-6 rounded-full bg-trend-up/15 border border-trend-up/30 flex items-center justify-center text-xs shrink-0"
                       >
                         ⚽
                       </span>
                     ) : isRedCard ? (
                       <span
                         title="Red Card"
-                        className="w-5 h-6 rounded bg-rose-500 border border-rose-400 shadow-xs shrink-0"
+                        className="w-5 h-6 rounded bg-trend-down border border-trend-down shadow-xs shrink-0"
                       />
                     ) : (
                       <span className="w-2 h-2 rounded-full bg-[var(--text-muted)] shrink-0" />
@@ -103,12 +103,12 @@ export function OverviewTab({ match }: OverviewTabProps) {
                     <div className="flex items-center gap-1.5 font-semibold text-[var(--text-primary)] truncate">
                       <span>{playerName}</span>
                       {event.ownGoal && (
-                        <span className="text-[10px] font-bold text-rose-400 bg-rose-500/15 px-1.5 py-0.5 rounded border border-rose-500/30">
+                        <span className="text-[10px] font-bold text-trend-down bg-trend-down/15 px-1.5 py-0.5 rounded border border-trend-down/30">
                           OG
                         </span>
                       )}
                       {event.isPenalty && (
-                        <span className="text-[10px] font-bold text-[var(--value-text)] bg-amber-500/15 px-1.5 py-0.5 rounded border border-amber-500/30">
+                        <span className="text-[10px] font-bold text-[var(--value-text)] bg-accent/15 px-1.5 py-0.5 rounded border border-accent/30">
                           PEN
                         </span>
                       )}
@@ -179,7 +179,7 @@ export function OverviewTab({ match }: OverviewTabProps) {
 
           {/* Date & Kickoff */}
           <div className="flex items-start gap-3 p-3 rounded-2xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)]">
-            <Calendar className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
+            <Calendar className="w-4 h-4 text-info shrink-0 mt-0.5" />
             <div className="min-w-0">
               <p className="text-[10px] uppercase font-bold text-[var(--text-muted)]">Date & Kickoff</p>
               <p className="font-semibold text-[var(--text-primary)] mt-0.5">
@@ -199,7 +199,7 @@ export function OverviewTab({ match }: OverviewTabProps) {
             const venueCity = venue?.city;
             return (
               <div className="flex items-start gap-3 p-3 rounded-2xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)]">
-                <MapPin className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+                <MapPin className="w-4 h-4 text-trend-down shrink-0 mt-0.5" />
                 <div className="min-w-0">
                   <p className="text-[10px] uppercase font-bold text-[var(--text-muted)]">Venue</p>
                   <p className="font-semibold text-[var(--text-primary)] mt-0.5 truncate">
@@ -223,7 +223,7 @@ export function OverviewTab({ match }: OverviewTabProps) {
             const refName = ref?.text || ref?.name || (typeof ref === "string" ? ref : "Match Official");
             return (
               <div className="flex items-start gap-3 p-3 rounded-2xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)]">
-                <User className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                <User className="w-4 h-4 text-trend-up shrink-0 mt-0.5" />
                 <div className="min-w-0">
                   <p className="text-[10px] uppercase font-bold text-[var(--text-muted)]">Match Referee</p>
                   <p className="font-semibold text-[var(--text-primary)] mt-0.5 truncate">
@@ -242,7 +242,7 @@ export function OverviewTab({ match }: OverviewTabProps) {
             const att = infoBox?.attendance || general?.attendance;
             return (
               <div className="flex items-start gap-3 p-3 rounded-2xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)]">
-                <Users className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
+                <Users className="w-4 h-4 text-highlight shrink-0 mt-0.5" />
                 <div className="min-w-0">
                   <p className="text-[10px] uppercase font-bold text-[var(--text-muted)]">Attendance</p>
                   <p className="font-semibold text-[var(--text-primary)] mt-0.5 tabular-nums">

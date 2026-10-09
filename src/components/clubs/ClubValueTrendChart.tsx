@@ -95,9 +95,9 @@ export function ClubValueTrendChart({ snapshots, clubName }: ClubValueTrendChart
           <div
             className={`px-2.5 py-1 rounded-lg text-xs font-bold tabular-nums border ${
               isGain
-                ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                ? "bg-trend-up/10 text-trend-up border-trend-up/20"
                 : delta < 0
-                ? "bg-rose-500/10 text-rose-400 border-rose-500/20"
+                ? "bg-trend-down/10 text-trend-down border-trend-down/20"
                 : "bg-[var(--bg-chip)] text-[var(--text-muted)] border-transparent"
             }`}
           >
@@ -154,7 +154,7 @@ export function ClubValueTrendChart({ snapshots, clubName }: ClubValueTrendChart
                     <p className="font-bold text-[var(--text-primary)] border-b border-[var(--divider)] pb-1">
                       {label}
                     </p>
-                    <p className="font-mono font-bold text-[var(--value-text)] text-sm tabular-nums">
+                    <p className="font-mono font-bold text-[var(--value-text)] figure text-sm tabular-nums">
                       {formatCompactEur(point.value)}
                     </p>
                     {point.squadSize && (
@@ -196,7 +196,7 @@ export function ClubValueTrendChart({ snapshots, clubName }: ClubValueTrendChart
               {validTimeline.map((row, idx) => (
                 <tr key={idx} className="hover:bg-[var(--bg-hover)]">
                   <td className="p-2 font-medium text-[var(--text-primary)]">{row.dateStr}</td>
-                  <td className="p-2 font-mono font-bold text-[var(--value-text)] tabular-nums">
+                  <td className="p-2 font-mono font-bold text-[var(--value-text)] figure tabular-nums">
                     {formatCompactEur(row.value)}
                   </td>
                   <td className="p-2 text-[var(--text-muted)] tabular-nums">

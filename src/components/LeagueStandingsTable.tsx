@@ -99,33 +99,33 @@ export function LeagueStandingsTable({
   }, [legend]);
 
   return (
-    <section className="rounded-2xl glass-panel p-6 border border-slate-800 space-y-4" aria-labelledby="standings-heading">
+    <section className="rounded-2xl glass-panel p-6 border border-divider space-y-4" aria-labelledby="standings-heading">
       {/* Header and Controls */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-divider">
         <div>
           <div className="flex items-center gap-2">
-            <h2 id="standings-heading" className="text-lg font-bold text-white tracking-tight">
+            <h2 id="standings-heading" className="text-lg font-bold text-text-primary tracking-tight">
               Competition Standings & Squad Capital
             </h2>
-            <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-trend-up/10 text-trend-up border border-trend-up/20">
               Season {season}
             </span>
           </div>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-text-muted mt-0.5">
             Synchronized match performance and Transfermarkt squad market valuations
           </p>
         </div>
 
         {/* View / Sort Toggles */}
         <div className="flex items-center gap-2">
-          <span className="text-xs text-slate-400 hidden sm:inline">Sort table:</span>
-          <div className="flex items-center gap-1 p-1 rounded-xl bg-slate-900 border border-slate-800">
+          <span className="text-xs text-text-muted hidden sm:inline">Sort table:</span>
+          <div className="flex items-center gap-1 p-1 rounded-xl bg-bg-card border border-divider">
             <button
               onClick={() => handleSort("points")}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                 sortField === "points"
-                  ? "bg-amber-400 text-slate-950 shadow"
-                  : "text-slate-400 hover:text-white"
+                  ? "bg-accent text-accent-contrast shadow"
+                  : "text-text-muted hover:text-text-primary"
               }`}
               aria-label="Sort by League Points"
             >
@@ -135,8 +135,8 @@ export function LeagueStandingsTable({
               onClick={() => handleSort("value")}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
                 sortField === "value"
-                  ? "bg-amber-400 text-slate-950 shadow"
-                : "text-slate-400 hover:text-white"
+                  ? "bg-accent text-accent-contrast shadow"
+                : "text-text-muted hover:text-text-primary"
               }`}
               aria-label="Sort by Squad Market Value"
             >
@@ -149,7 +149,7 @@ export function LeagueStandingsTable({
 
       {/* Table Container with Sticky Header */}
       <div
-        className="overflow-x-auto max-h-[700px] relative rounded-xl border border-slate-800/80"
+        className="overflow-x-auto max-h-[700px] relative rounded-xl border border-divider/80"
         role="region"
         aria-label={`${leagueName} Standings and Valuations Table`}
         tabIndex={0}
@@ -158,8 +158,8 @@ export function LeagueStandingsTable({
           <caption className="sr-only">
             {leagueName} Standings and Squad Market Values for Season {season}
           </caption>
-          <thead className="sticky top-0 bg-slate-950/95 backdrop-blur z-10 border-b border-slate-800">
-            <tr className="text-slate-400 uppercase tracking-wider text-[11px]">
+          <thead className="sticky top-0 bg-bg-page/95 backdrop-blur z-10 border-b border-divider">
+            <tr className="text-text-muted uppercase tracking-wider text-[11px]">
               <th scope="col" className="py-3 px-2 w-12 text-center font-semibold">
                 #
               </th>
@@ -169,7 +169,7 @@ export function LeagueStandingsTable({
               <th
                 scope="col"
                 onClick={() => handleSort("played")}
-                className="py-3 px-2 text-center font-semibold cursor-pointer hover:text-white transition-colors"
+                className="py-3 px-2 text-center font-semibold cursor-pointer hover:text-text-primary transition-colors"
                 title="Matches Played"
               >
                 P
@@ -192,7 +192,7 @@ export function LeagueStandingsTable({
               <th
                 scope="col"
                 onClick={() => handleSort("gd")}
-                className="py-3 px-2 text-center font-semibold cursor-pointer hover:text-white transition-colors"
+                className="py-3 px-2 text-center font-semibold cursor-pointer hover:text-text-primary transition-colors"
                 title="Goal Difference"
               >
                 GD
@@ -200,11 +200,11 @@ export function LeagueStandingsTable({
               <th
                 scope="col"
                 onClick={() => handleSort("value")}
-                className="py-3 px-3 text-right font-semibold cursor-pointer hover:text-amber-400 transition-colors"
+                className="py-3 px-3 text-right font-semibold cursor-pointer hover:text-value-text transition-colors"
               >
                 <div className="flex items-center justify-end gap-1">
                   <span>Squad Value</span>
-                  <ArrowUpDown className="w-3 h-3 text-slate-500" />
+                  <ArrowUpDown className="w-3 h-3 text-text-muted" />
                 </div>
               </th>
               <th scope="col" className="py-3 px-3 text-center font-semibold min-w-[120px]">
@@ -216,16 +216,16 @@ export function LeagueStandingsTable({
               <th
                 scope="col"
                 onClick={() => handleSort("points")}
-                className="py-3 px-3 text-right font-bold text-white cursor-pointer hover:text-amber-400 transition-colors"
+                className="py-3 px-3 text-right font-bold text-text-primary cursor-pointer hover:text-value-text transition-colors"
               >
                 <div className="flex items-center justify-end gap-1">
                   <span>Pts</span>
-                  <ArrowUpDown className="w-3 h-3 text-slate-500" />
+                  <ArrowUpDown className="w-3 h-3 text-text-muted" />
                 </div>
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-800/50">
+          <tbody className="divide-y divide-divider/50">
             {sortedRows.map((row) => {
               const gf = row.goalsFor ?? (row.scoresStr ? Number(row.scoresStr.split("-")[0]) : 0);
               const ga = row.goalsAgainst ?? (row.scoresStr ? Number(row.scoresStr.split("-")[1]) : 0);
@@ -233,10 +233,10 @@ export function LeagueStandingsTable({
               return (
                 <tr
                   key={row.id}
-                  className="hover:bg-slate-800/40 transition-colors group"
+                  className="hover:bg-bg-chip/40 transition-colors group"
                 >
                   {/* Position with Qualification Color Indicator */}
-                  <td className="py-3 px-2 text-center font-bold text-slate-400 whitespace-nowrap">
+                  <td className="py-3 px-2 text-center font-bold text-text-muted whitespace-nowrap">
                     <div className="flex items-center justify-center gap-1.5">
                       {row.qualColor ? (
                         <span
@@ -256,9 +256,9 @@ export function LeagueStandingsTable({
                     {row.clubId ? (
                       <Link
                         href={`/clubs/${getClubSlug({ id: row.clubId, name: row.name })}`}
-                        className="flex items-center gap-2.5 group-hover:text-amber-400 transition-colors"
+                        className="flex items-center gap-2.5 group-hover:text-value-text transition-colors"
                       >
-                        <div className="relative w-6 h-6 rounded-md bg-slate-800 p-0.5 flex-shrink-0 overflow-hidden">
+                        <div className="relative w-6 h-6 rounded-md bg-bg-chip p-0.5 flex-shrink-0 overflow-hidden">
                           <EntityImage
                             src={row.imageUrl}
                             alt=""
@@ -268,13 +268,13 @@ export function LeagueStandingsTable({
                             className="object-contain"
                           />
                         </div>
-                        <span className="text-white font-semibold group-hover:text-amber-400 transition-colors truncate max-w-[180px]" title={row.name}>
+                        <span className="text-text-primary font-semibold group-hover:text-value-text transition-colors truncate max-w-[180px]" title={row.name}>
                           {getClubDisplayName(row.name)}
                         </span>
                       </Link>
                     ) : (
                       <div className="flex items-center gap-2.5">
-                        <div className="relative w-6 h-6 rounded-md bg-slate-800 p-0.5 flex-shrink-0 overflow-hidden">
+                        <div className="relative w-6 h-6 rounded-md bg-bg-chip p-0.5 flex-shrink-0 overflow-hidden">
                           <EntityImage
                             src={row.imageUrl}
                             alt=""
@@ -284,7 +284,7 @@ export function LeagueStandingsTable({
                             className="object-contain"
                           />
                         </div>
-                        <span className="text-white font-semibold truncate max-w-[180px]" title={row.name}>
+                        <span className="text-text-primary font-semibold truncate max-w-[180px]" title={row.name}>
                           {getClubDisplayName(row.name)}
                         </span>
                       </div>
@@ -292,32 +292,32 @@ export function LeagueStandingsTable({
                   </td>
 
                   {/* Played */}
-                  <td className="py-3 px-2 text-center text-slate-300 tabular-nums">
+                  <td className="py-3 px-2 text-center text-text-secondary tabular-nums">
                     {row.played}
                   </td>
 
                   {/* Wins */}
-                  <td className="py-3 px-2 text-center text-slate-300 tabular-nums">
+                  <td className="py-3 px-2 text-center text-text-secondary tabular-nums">
                     {row.wins}
                   </td>
 
                   {/* Draws */}
-                  <td className="py-3 px-2 text-center text-slate-400 tabular-nums">
+                  <td className="py-3 px-2 text-center text-text-muted tabular-nums">
                     {row.draws}
                   </td>
 
                   {/* Losses */}
-                  <td className="py-3 px-2 text-center text-slate-400 tabular-nums">
+                  <td className="py-3 px-2 text-center text-text-muted tabular-nums">
                     {row.losses}
                   </td>
 
                   {/* GF */}
-                  <td className="py-3 px-2 text-center text-slate-300 tabular-nums">
+                  <td className="py-3 px-2 text-center text-text-secondary tabular-nums">
                     {gf}
                   </td>
 
                   {/* GA */}
-                  <td className="py-3 px-2 text-center text-slate-400 tabular-nums">
+                  <td className="py-3 px-2 text-center text-text-muted tabular-nums">
                     {ga}
                   </td>
 
@@ -326,10 +326,10 @@ export function LeagueStandingsTable({
                     <span
                       className={
                         row.goalConDiff > 0
-                          ? "text-emerald-400"
+                          ? "text-trend-up"
                           : row.goalConDiff < 0
-                          ? "text-rose-400"
-                          : "text-slate-400"
+                          ? "text-trend-down"
+                          : "text-text-muted"
                       }
                     >
                       {row.goalConDiff > 0 ? `+${row.goalConDiff}` : row.goalConDiff}
@@ -337,7 +337,7 @@ export function LeagueStandingsTable({
                   </td>
 
                   {/* Squad Value */}
-                  <td className="py-3 px-3 text-right text-amber-400 font-bold whitespace-nowrap tabular-nums">
+                  <td className="py-3 px-3 text-right text-value-text figure font-bold whitespace-nowrap tabular-nums">
                     {row.totalSquadValue > 0 ? formatCompactEur(row.totalSquadValue) : "N/A"}
                   </td>
 
@@ -348,10 +348,10 @@ export function LeagueStandingsTable({
                         {row.form.map((f, fIdx) => {
                           const bg =
                             f.result === "W"
-                              ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
+                              ? "bg-trend-up/20 text-trend-up border-trend-up/30"
                               : f.result === "D"
-                              ? "bg-slate-700/50 text-slate-300 border-slate-600/30"
-                              : "bg-rose-500/20 text-rose-400 border-rose-500/30";
+                              ? "bg-divider/50 text-text-secondary border-divider/30"
+                              : "bg-trend-down/20 text-trend-down border-trend-down/30";
                           return (
                             <span
                               key={fIdx}
@@ -364,7 +364,7 @@ export function LeagueStandingsTable({
                         })}
                       </div>
                     ) : (
-                      <span className="text-slate-600 text-[11px]">—</span>
+                      <span className="text-text-muted text-[11px]">—</span>
                     )}
                   </td>
 
@@ -372,20 +372,20 @@ export function LeagueStandingsTable({
                   <td className="py-3 px-3 text-left whitespace-nowrap text-[11px]">
                     {row.nextMatch ? (
                       <div className="flex items-center gap-1.5" title={`Next: vs ${row.nextMatch.opponent}`}>
-                        <span className="text-slate-300 truncate max-w-[90px]">
+                        <span className="text-text-secondary truncate max-w-[90px]">
                           {row.nextMatch.opponent}
                         </span>
-                        <span className="text-[9px] uppercase px-1 py-0.5 rounded bg-slate-800 text-slate-400 font-semibold">
+                        <span className="text-[9px] uppercase px-1 py-0.5 rounded bg-bg-chip text-text-muted font-semibold">
                           {row.nextMatch.isHome ? "H" : "A"}
                         </span>
                       </div>
                     ) : (
-                      <span className="text-slate-600">—</span>
+                      <span className="text-text-muted">—</span>
                     )}
                   </td>
 
                   {/* Pts */}
-                  <td className="py-3 px-3 text-right text-white font-black text-sm tabular-nums">
+                  <td className="py-3 px-3 text-right text-text-primary font-black text-sm tabular-nums">
                     {row.pts}
                   </td>
                 </tr>
@@ -397,8 +397,8 @@ export function LeagueStandingsTable({
 
       {/* Legend for Qualification & Relegation Zones */}
       {activeLegend.length > 0 && (
-        <div className="pt-2 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-slate-400 border-t border-slate-800/60">
-          <span className="font-semibold text-slate-500 uppercase tracking-wider text-[10px]">
+        <div className="pt-2 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-text-muted border-t border-divider/60">
+          <span className="font-semibold text-text-muted uppercase tracking-wider text-[10px]">
             Zone Legend:
           </span>
           {activeLegend.map((item, idx) => (
@@ -410,7 +410,7 @@ export function LeagueStandingsTable({
               <span>{item.title}</span>
             </div>
           ))}
-          <span className="ml-auto text-[11px] text-slate-500">
+          <span className="ml-auto text-[11px] text-text-muted">
             Click column headers to sort
           </span>
         </div>

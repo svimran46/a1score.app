@@ -24,7 +24,7 @@ export default async function PlayersPage() {
   return (
     <Suspense
       fallback={
-        <div className="rounded-3xl glass-panel p-12 border border-slate-800 text-center text-slate-400 text-sm">
+        <div className="rounded-3xl glass-panel p-12 border border-divider text-center text-text-muted text-sm">
           Loading player valuations...
         </div>
       }

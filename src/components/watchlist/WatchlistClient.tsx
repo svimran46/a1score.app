@@ -207,7 +207,7 @@ export function WatchlistClient() {
                     key={item.id}
                     className={`group relative flex items-center justify-between gap-3 p-3 sm:px-4 rounded-xl bg-[var(--bg-card)] hover:bg-[var(--bg-hover)] border shadow-xs transition-colors ${
                       isSelected
-                        ? "border-[var(--value-text)] ring-1 ring-[var(--value-text)]/30"
+                        ? "border-[var(--value-text)] ring-1 ring-value-text/30"
                         : "border-[var(--divider)]"
                     }`}
                   >
@@ -229,7 +229,7 @@ export function WatchlistClient() {
                         aria-label={`Select ${item.name} for comparison`}
                         className={`pointer-events-auto w-6 h-6 rounded-lg border flex items-center justify-center transition-all shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
                           isSelected
-                            ? "bg-[var(--value-text)] border-[var(--value-text)] text-black"
+                            ? "bg-[var(--value-text)] border-[var(--value-text)] text-[var(--accent-contrast)]"
                             : "border-[var(--border-subtle)] bg-[var(--bg-elevated)] hover:border-[var(--value-text)] text-transparent"
                         }`}
                       >
@@ -282,7 +282,7 @@ export function WatchlistClient() {
                     {/* Right: Value, Change Since Followed, and Remove Button */}
                     <div className="flex items-center gap-2 sm:gap-3 shrink-0 relative z-10">
                       <div className="text-right pointer-events-none">
-                        <div className="text-sm sm:text-base font-bold text-[var(--value-text)] tabular-nums leading-tight">
+                        <div className="text-sm sm:text-base font-bold text-[var(--value-text)] figure tabular-nums leading-tight">
                           {currentVal > 0 ? formatCompactEur(currentVal) : "—"}
                         </div>
                         {hasChange ? (
@@ -365,7 +365,7 @@ export function WatchlistClient() {
                     <div className="flex items-center gap-2 sm:gap-3 shrink-0 relative z-10">
                       {currentVal > 0 && (
                         <div className="text-right pointer-events-none">
-                          <div className="text-sm sm:text-base font-bold text-[var(--value-text)] tabular-nums leading-tight">
+                          <div className="text-sm sm:text-base font-bold text-[var(--value-text)] figure tabular-nums leading-tight">
                             {formatCompactEur(currentVal)}
                           </div>
                           <span className="text-[10px] text-[var(--text-muted)] font-medium">
@@ -393,7 +393,7 @@ export function WatchlistClient() {
 
       {/* 4. Sticky Compare Action Bar when players are selected */}
       {activeTab === "players" && selectedSlugs.length > 0 && (
-        <div className="sticky bottom-16 sm:bottom-4 z-30 p-3 sm:p-4 rounded-2xl bg-[var(--bg-card)] border border-[var(--value-text)]/40 ring-1 ring-[var(--value-text)]/20 shadow-2xl flex items-center justify-between gap-3 animate-fade-in">
+        <div className="sticky bottom-16 lg:bottom-4 z-30 p-3 sm:p-4 rounded-2xl bg-[var(--bg-card)] border border-value-text/40 ring-1 ring-value-text/20 shadow-2xl flex items-center justify-between gap-3 animate-in fade-in">
           <div className="flex items-center gap-2">
             <Scale className="w-4 h-4 text-[var(--value-text)] shrink-0" />
             <span className="text-xs sm:text-sm font-bold text-[var(--text-primary)]">
@@ -410,7 +410,7 @@ export function WatchlistClient() {
             </button>
             <Link
               href={`/compare?players=${selectedSlugs.join(",")}`}
-              className="inline-flex items-center gap-1.5 px-4 py-2 min-h-[40px] rounded-xl bg-[var(--value-text)] text-black font-bold text-xs hover:opacity-95 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] shadow-xs"
+              className="inline-flex items-center gap-1.5 px-4 py-2 min-h-[40px] rounded-xl bg-[var(--value-text)] text-[var(--accent-contrast)] font-bold text-xs hover:opacity-95 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] shadow-xs"
             >
               <Scale className="w-3.5 h-3.5" />
               <span>Compare ({selectedSlugs.length})</span>

@@ -114,16 +114,16 @@ export function MatchFinancialBarometer({
   if (!analysis || total === 0) return null;
 
   return (
-    <div className="rounded-3xl glass-panel p-4 sm:p-6 border border-slate-800 bg-gradient-to-r from-slate-900/60 via-slate-950/80 to-slate-900/60 shadow-xl space-y-4">
+    <div className="rounded-3xl glass-panel p-4 sm:p-6 border border-divider bg-gradient-to-r from-bg-card/60 via-bg-page/80 to-bg-card/60 shadow-xl space-y-4">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-3 border-b border-slate-800/80 gap-1 sm:gap-2">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-3 border-b border-divider/80 gap-1 sm:gap-2">
         <div className="flex items-center gap-2">
-          <Scale className="w-4 h-4 text-amber-400 shrink-0" />
-          <h3 className="text-sm font-bold text-white tracking-tight">
+          <Scale className="w-4 h-4 text-value-text shrink-0" />
+          <h3 className="text-sm font-bold text-text-primary tracking-tight">
             Financial Parity & Value-to-Pitch Index
           </h3>
         </div>
-        <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">
+        <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider">
           Starting XI Comparison
         </span>
       </div>
@@ -133,13 +133,13 @@ export function MatchFinancialBarometer({
         <div className="grid grid-cols-3 items-center text-xs gap-2">
           {/* Home */}
           <div className="space-y-0.5 min-w-0">
-            <span className="font-semibold text-slate-300 block truncate">{homeName}</span>
+            <span className="font-semibold text-text-secondary block truncate">{homeName}</span>
             <div className="flex flex-col sm:flex-row sm:items-baseline gap-0.5 sm:gap-1.5">
-              <span className="text-amber-400 font-black text-sm tabular-nums whitespace-nowrap">
+              <span className="text-value-text figure font-black text-sm tabular-nums whitespace-nowrap">
                 {formatCompactEur(hVal)}
               </span>
               {homeCoverage && (
-                <span className="text-[10px] text-slate-400 font-semibold tabular-nums whitespace-nowrap">
+                <span className="text-[10px] text-text-muted font-semibold tabular-nums whitespace-nowrap">
                   ({analysis.homeValued}/{analysis.homeTotalCount} valued)
                 </span>
               )}
@@ -148,23 +148,23 @@ export function MatchFinancialBarometer({
 
           {/* Ratio */}
           <div className="text-center min-w-0">
-            <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider block truncate">
+            <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider block truncate">
               Disparity
             </span>
-            <span className="text-xs font-black text-white px-2 py-0.5 rounded-md bg-slate-800 border border-slate-700 tabular-nums inline-block">
+            <span className="text-xs font-black text-text-primary px-2 py-0.5 rounded-md bg-bg-chip border border-divider tabular-nums inline-block">
               {analysis.isProvisional ? "~" : ""}{analysis.ratio}x
             </span>
           </div>
 
           {/* Away */}
           <div className="space-y-0.5 text-right min-w-0">
-            <span className="font-semibold text-slate-300 block truncate">{awayName}</span>
+            <span className="font-semibold text-text-secondary block truncate">{awayName}</span>
             <div className="flex flex-col sm:flex-row sm:items-baseline justify-end gap-0.5 sm:gap-1.5">
-              <span className="text-amber-400 font-black text-sm tabular-nums whitespace-nowrap">
+              <span className="text-value-text figure font-black text-sm tabular-nums whitespace-nowrap">
                 {formatCompactEur(aVal)}
               </span>
               {awayCoverage && (
-                <span className="text-[10px] text-slate-400 font-semibold tabular-nums whitespace-nowrap">
+                <span className="text-[10px] text-text-muted font-semibold tabular-nums whitespace-nowrap">
                   ({analysis.awayValued}/{analysis.awayTotalCount} valued)
                 </span>
               )}
@@ -173,13 +173,13 @@ export function MatchFinancialBarometer({
         </div>
 
         {/* Dual Bar */}
-        <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden flex">
+        <div className="w-full h-2 bg-bg-chip rounded-full overflow-hidden flex">
           <div
-            className="h-full bg-amber-500 transition-all"
+            className="h-full bg-accent transition-all"
             style={{ width: `${analysis.homePct}%` }}
           />
           <div
-            className="h-full bg-slate-600 transition-all"
+            className="h-full bg-divider transition-all"
             style={{ width: `${analysis.awayPct}%` }}
           />
         </div>
@@ -189,18 +189,18 @@ export function MatchFinancialBarometer({
       <div
         className={`p-3 rounded-2xl border text-xs flex items-center gap-2.5 ${
           analysis.isProvisional
-            ? "bg-slate-900/90 border-amber-500/30 text-amber-300/90"
+            ? "bg-bg-card/90 border-accent/30 text-value-text/90"
             : analysis.isUpset
-            ? "bg-amber-500/10 border-amber-500/30 text-amber-300"
-            : "bg-slate-900/80 border-slate-800/80 text-slate-300"
+            ? "bg-accent/10 border-accent/30 text-value-text"
+            : "bg-bg-card/80 border-divider/80 text-text-secondary"
         }`}
       >
         {analysis.isProvisional ? (
-          <Info className="w-4 h-4 text-amber-400 flex-shrink-0" />
+          <Info className="w-4 h-4 text-value-text flex-shrink-0" />
         ) : analysis.isUpset ? (
-          <AlertTriangle className="w-4 h-4 text-amber-400 flex-shrink-0" />
+          <AlertTriangle className="w-4 h-4 text-value-text flex-shrink-0" />
         ) : (
-          <ShieldCheck className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+          <ShieldCheck className="w-4 h-4 text-trend-up flex-shrink-0" />
         )}
         <span className="leading-relaxed font-medium">{analysis.verdict}</span>
       </div>

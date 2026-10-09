@@ -107,7 +107,7 @@ export function MatchTabs({ match, isScorecardOutOfView = false }: MatchTabsProp
         Sticky Container: Compact bar (when scrolled past scorecard) + Tabs row.
         Remains pinned under the app header (top-14 sm:top-16) at all times.
       */}
-      <div className="sticky top-14 sm:top-16 z-30 bg-[var(--bg-page)]/95 backdrop-blur-md border-b border-[var(--divider)] -mx-3 sm:-mx-6 lg:-mx-8 px-3 sm:px-6 lg:px-8 transition-all">
+      <div className="sticky top-14 sm:top-16 z-30 bg-bg-page/95 backdrop-blur-md border-b border-[var(--divider)] -mx-3 sm:-mx-6 lg:-mx-8 px-3 sm:px-6 lg:px-8 transition-all">
         {/* Compact bar reveals when scorecard scrolls out of view */}
         {isScorecardOutOfView && (
           <div className="border-b border-[var(--divider)] pb-1">
@@ -139,7 +139,7 @@ export function MatchTabs({ match, isScorecardOutOfView = false }: MatchTabsProp
                   onKeyDown={(e) => handleKeyDown(e, idx)}
                   className={`min-h-[44px] px-3.5 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-semibold flex items-center gap-2 shrink-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
                     isActive
-                      ? "bg-amber-500/15 text-[var(--value-text)] border border-amber-500/40 shadow-xs"
+                      ? "bg-accent/15 text-[var(--value-text)] border border-accent/40 shadow-xs"
                       : "text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] border border-transparent"
                   }`}
                 >

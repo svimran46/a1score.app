@@ -152,7 +152,7 @@ export function ClubTabsContainer({
                   {details.venue.capacity && (
                     <div className="p-2.5 rounded-xl bg-[var(--bg-elevated)]">
                       <span className="text-[var(--text-muted)] block uppercase text-[10px] font-bold">Capacity</span>
-                      <span className="text-[var(--value-text)] font-extrabold tabular-nums">
+                      <span className="text-[var(--value-text)] figure font-extrabold tabular-nums">
                         {details.venue.capacity.toLocaleString("en-US")} seats
                       </span>
                     </div>
@@ -204,7 +204,7 @@ export function ClubTabsContainer({
               <div className="pt-2 border-t border-[var(--divider)]">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-[var(--text-muted)]">League Standing:</span>
-                  <span className="font-bold text-[var(--value-text)]">
+                  <span className="font-bold text-[var(--value-text)] figure">
                     Rank #{details.leagueTable.rank} in {leagueName || "League"}
                   </span>
                 </div>
@@ -262,9 +262,9 @@ export function ClubTabsContainer({
                         <span
                           className={`w-6 h-6 rounded-lg flex items-center justify-center font-black text-xs ${
                             isWin
-                              ? "bg-[var(--trend-positive)]/15 text-[var(--trend-positive)]"
+                              ? "bg-trend-up/15 text-[var(--trend-positive)]"
                               : isLoss
-                              ? "bg-[var(--trend-negative)]/15 text-[var(--trend-negative)]"
+                              ? "bg-trend-down/15 text-[var(--trend-negative)]"
                               : "bg-[var(--bg-chip)] text-[var(--text-muted)]"
                           }`}
                         >

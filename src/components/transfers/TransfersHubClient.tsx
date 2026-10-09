@@ -112,7 +112,7 @@ export function TransfersHubClient({
               onClick={() => setSelectedTypeFilter("all")}
               className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
                 selectedTypeFilter === "all"
-                  ? "bg-[var(--accent)] text-white"
+                  ? "bg-[var(--accent)] text-accent-contrast"
                   : "bg-[var(--bg-chip)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
               }`}
             >
@@ -123,7 +123,7 @@ export function TransfersHubClient({
               onClick={() => setSelectedTypeFilter("permanent")}
               className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
                 selectedTypeFilter === "permanent"
-                  ? "bg-[var(--accent)] text-white"
+                  ? "bg-[var(--accent)] text-accent-contrast"
                   : "bg-[var(--bg-chip)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
               }`}
             >
@@ -134,7 +134,7 @@ export function TransfersHubClient({
               onClick={() => setSelectedTypeFilter("loan")}
               className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
                 selectedTypeFilter === "loan"
-                  ? "bg-[var(--accent)] text-white"
+                  ? "bg-[var(--accent)] text-accent-contrast"
                   : "bg-[var(--bg-chip)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
               }`}
             >
@@ -145,7 +145,7 @@ export function TransfersHubClient({
               onClick={() => setSelectedTypeFilter("free")}
               className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
                 selectedTypeFilter === "free"
-                  ? "bg-[var(--accent)] text-white"
+                  ? "bg-[var(--accent)] text-accent-contrast"
                   : "bg-[var(--bg-chip)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
               }`}
             >
