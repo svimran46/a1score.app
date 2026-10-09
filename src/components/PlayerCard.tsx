@@ -34,11 +34,11 @@ export function PlayerCard({ player }: PlayerCardProps) {
   return (
     <Link
       href={`/players/${slug}`}
-      className="group block rounded-2xl glass-panel glass-panel-hover p-2.5 sm:p-3 border border-slate-800/80 hover:border-amber-500/30 transition-all overflow-hidden h-[88px] sm:h-[92px] max-h-[96px] flex items-center"
+      className="group block rounded-2xl glass-panel glass-panel-hover p-2.5 sm:p-3 border border-divider/80 hover:border-accent/30 transition-all overflow-hidden h-[88px] sm:h-[92px] max-h-[96px] flex items-center"
     >
       <div className="flex items-center gap-3 w-full min-w-0">
         {/* Photo Container (48px / 52px) */}
-        <div className="relative w-12 h-12 sm:w-13 sm:h-13 rounded-xl bg-slate-800 shrink-0 overflow-hidden border border-slate-700/60 group-hover:scale-105 transition-transform duration-200">
+        <div className="relative w-12 h-12 sm:w-13 sm:h-13 rounded-xl bg-bg-chip shrink-0 overflow-hidden border border-divider/60 group-hover:scale-105 transition-transform duration-200">
           <EntityImage
             src={player.photoUrl}
             alt=""
@@ -52,21 +52,21 @@ export function PlayerCard({ player }: PlayerCardProps) {
         {/* Player Details */}
         <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
           <div className="flex items-center justify-between gap-2">
-            <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.2 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 whitespace-nowrap">
+            <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.2 rounded bg-accent/10 text-value-text border border-accent/20 whitespace-nowrap">
               {player.position}
             </span>
             {player.latestMarketValue ? (
-              <span className="text-xs sm:text-sm font-black text-amber-400 tabular-nums whitespace-nowrap">
+              <span className="text-xs sm:text-sm font-black text-value-text figure tabular-nums whitespace-nowrap">
                 {formatCompactEur(player.latestMarketValue)}
               </span>
             ) : null}
           </div>
 
-          <h3 className="text-xs sm:text-sm font-bold text-white tracking-tight truncate mt-0.5 group-hover:text-amber-300 transition-colors">
+          <h3 className="text-xs sm:text-sm font-bold text-text-primary tracking-tight truncate mt-0.5 group-hover:text-value-text transition-colors">
             {player.commonName || player.fullName}
           </h3>
 
-          <div className="flex items-center gap-1.5 text-[11px] text-slate-400 truncate mt-0.5">
+          <div className="flex items-center gap-1.5 text-[11px] text-text-muted truncate mt-0.5">
             {player.currentClub && (
               <div className="flex items-center gap-1 truncate min-w-0">
                 {player.currentClub.logoUrl && (
@@ -87,7 +87,7 @@ export function PlayerCard({ player }: PlayerCardProps) {
               </div>
             )}
             {player.nationality && player.nationality.length > 0 && (
-              <span className="text-slate-500 shrink-0">• {player.nationality[0]}</span>
+              <span className="text-text-muted shrink-0">• {player.nationality[0]}</span>
             )}
           </div>
         </div>

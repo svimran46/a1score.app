@@ -69,7 +69,7 @@ export function StatsTable({ stats }: StatsTableProps) {
                 {hasRating ? (
                   <td className="py-2.5 text-center">
                     {s.rating ? (
-                      <span className="px-2 py-0.5 rounded-lg font-bold text-[var(--value-text)] bg-[var(--bg-chip)]">
+                      <span className="px-2 py-0.5 rounded-lg font-bold text-[var(--value-text)] figure bg-[var(--bg-chip)]">
                         {s.rating.toFixed(2)}
                       </span>
                     ) : (

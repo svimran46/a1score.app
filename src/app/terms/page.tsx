@@ -20,30 +20,30 @@ export default function TermsPage() {
       <div className="space-y-4">
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs text-text-muted hover:text-text-primary transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5" /> Back to Home
         </Link>
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400">
+          <div className="p-2.5 rounded-2xl bg-accent/10 border border-accent/20 text-value-text">
             <FileText className="w-6 h-6" />
           </div>
           <div>
-            <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-black text-text-primary tracking-tight">
               Terms of Service
             </h1>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-text-muted">
               Last updated: {lastUpdated} • User Agreement & Disclaimer
             </p>
           </div>
         </div>
       </div>
 
-      <div className="rounded-3xl glass-panel p-6 sm:p-8 border border-slate-800 bg-slate-900/40 space-y-6 text-sm text-slate-300 leading-relaxed">
+      <div className="rounded-3xl glass-panel p-6 sm:p-8 border border-divider bg-bg-card/40 space-y-6 text-sm text-text-secondary leading-relaxed">
         {/* Section 1 */}
         <section className="space-y-2">
-          <h2 className="text-base font-bold text-white flex items-center gap-2">
-            <Scale className="w-4 h-4 text-amber-400" /> 1. Acceptance of Terms
+          <h2 className="text-base font-bold text-text-primary flex items-center gap-2">
+            <Scale className="w-4 h-4 text-value-text" /> 1. Acceptance of Terms
           </h2>
           <p>
             By accessing or using a1score.app (&quot;the Service&quot;), you acknowledge that you have read, understood, and agree to be bound by these Terms of Service. If you do not agree, please discontinue use of the platform.
@@ -52,21 +52,21 @@ export default function TermsPage() {
 
         {/* Section 2 */}
         <section className="space-y-2">
-          <h2 className="text-base font-bold text-white flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 text-amber-400" /> 2. Analytical & Informational Disclaimer
+          <h2 className="text-base font-bold text-text-primary flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 text-value-text" /> 2. Analytical & Informational Disclaimer
           </h2>
           <p>
             All market valuations, squad financial disparity ratios, and historical trajectories presented on a1score.app are provided strictly for informational, educational, and analytical enjoyment.
           </p>
-          <p className="text-amber-300 bg-amber-500/10 border border-amber-500/20 p-3 rounded-xl text-xs">
+          <p className="text-value-text bg-accent/10 border border-accent/20 p-3 rounded-xl text-xs">
             <strong>Disclaimer of Financial & Betting Advice:</strong> Market values are crowd-sourced and algorithmic estimates derived from Transfermarkt. They do not represent certified financial statements, formal appraisal audits, contractual buyout release fees, or betting recommendations.
           </p>
         </section>
 
         {/* Section 3 */}
         <section className="space-y-2">
-          <h2 className="text-base font-bold text-white flex items-center gap-2">
-            <ShieldAlert className="w-4 h-4 text-amber-400" /> 3. No Official Affiliation
+          <h2 className="text-base font-bold text-text-primary flex items-center gap-2">
+            <ShieldAlert className="w-4 h-4 text-value-text" /> 3. No Official Affiliation
           </h2>
           <p>
             a1score.app is an independent research and analytics platform. We are not officially affiliated with, endorsed by, or sponsored by FIFA, UEFA, the Premier League, LaLiga, Serie A, Bundesliga, Ligue 1, or any individual football club or player.
@@ -78,8 +78,8 @@ export default function TermsPage() {
 
         {/* Section 4 */}
         <section className="space-y-2">
-          <h2 className="text-base font-bold text-white flex items-center gap-2">
-            <FileText className="w-4 h-4 text-amber-400" /> 4. Service Availability & Changes
+          <h2 className="text-base font-bold text-text-primary flex items-center gap-2">
+            <FileText className="w-4 h-4 text-value-text" /> 4. Service Availability & Changes
           </h2>
           <p>
             We strive to provide uninterrupted service, but make no warranties regarding 100% server uptime, live match latency guarantees, or continuous third-party API availability. We reserve the right to modify or discontinue any metric or visualization at any time.

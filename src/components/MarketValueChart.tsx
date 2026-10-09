@@ -124,7 +124,7 @@ export function MarketValueChart({
             Valuation History
           </span>
           {overallPeak && (
-            <span className="text-sm font-bold text-[var(--value-text)] tabular-nums mt-0.5 block">
+            <span className="text-sm font-bold text-[var(--value-text)] figure tabular-nums mt-0.5 block">
               Peak: {formatCompactEur(overallPeak.value)} ({overallPeak.dateStr})
             </span>
           )}
@@ -180,7 +180,7 @@ export function MarketValueChart({
                   const d = payload[0].payload;
                   return (
                     <div className="p-3 rounded-xl bg-[var(--bg-elevated)] border border-[var(--divider)] shadow-lg text-xs">
-                      <div className="font-extrabold text-sm text-[var(--value-text)] tabular-nums">
+                      <div className="font-extrabold text-sm text-[var(--value-text)] figure tabular-nums">
                         {formatCompactEur(d.value)}
                       </div>
                       <div className="mt-1 text-[var(--text-muted)] font-medium">

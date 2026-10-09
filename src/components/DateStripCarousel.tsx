@@ -86,7 +86,7 @@ export function DateStripCarousel({
       {/* Desktop Prev Arrow */}
       <Link
         href={`/matches?date=${prevDateStr}&filter=${activeFilter}${scope ? `&scope=${scope}` : ""}`}
-        className="hidden md:flex min-w-[36px] min-h-[44px] items-center justify-center rounded-xl bg-slate-900/90 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 transition-colors shrink-0"
+        className="hidden md:flex min-w-[36px] min-h-[44px] items-center justify-center rounded-xl bg-bg-card/90 border border-divider text-text-muted hover:text-text-primary hover:border-divider transition-colors shrink-0"
         aria-label="Previous Day"
       >
         <ChevronLeft className="w-4 h-4" />
@@ -106,8 +106,8 @@ export function DateStripCarousel({
             href={`/matches?date=${item.dateStr}&filter=${activeFilter}${scope ? `&scope=${scope}` : ""}`}
             className={`flex-shrink-0 snap-center flex flex-col items-center justify-center min-w-[64px] sm:min-w-[72px] h-[52px] sm:h-[56px] px-2 sm:px-3 rounded-xl border text-xs transition-all active:scale-95 ${
               item.isActive
-                ? "bg-amber-500/15 border-amber-500/40 text-amber-400 font-bold shadow-md shadow-amber-500/5"
-                : "bg-slate-900/80 border-slate-800/80 text-slate-400 hover:text-white hover:bg-slate-800"
+                ? "bg-accent/15 border-accent/40 text-value-text font-bold shadow-md shadow-accent/5"
+                : "bg-bg-card/80 border-divider/80 text-text-muted hover:text-text-primary hover:bg-bg-chip"
             }`}
           >
             <time
@@ -118,7 +118,7 @@ export function DateStripCarousel({
               <span className="text-[11px] font-bold tracking-tight">
                 {item.weekdayShort}
               </span>
-              <span className="text-[10px] text-slate-400 font-medium tabular-nums mt-0.5">
+              <span className="text-[10px] text-text-muted font-medium tabular-nums mt-0.5">
                 {item.dayMonth}
               </span>
             </time>
@@ -129,15 +129,15 @@ export function DateStripCarousel({
       {/* Desktop Next Arrow */}
       <Link
         href={`/matches?date=${nextDateStr}&filter=${activeFilter}${scope ? `&scope=${scope}` : ""}`}
-        className="hidden md:flex min-w-[36px] min-h-[44px] items-center justify-center rounded-xl bg-slate-900/90 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 transition-colors shrink-0"
+        className="hidden md:flex min-w-[36px] min-h-[44px] items-center justify-center rounded-xl bg-bg-card/90 border border-divider text-text-muted hover:text-text-primary hover:border-divider transition-colors shrink-0"
         aria-label="Next Day"
       >
         <ChevronRight className="w-4 h-4" />
       </Link>
 
       {/* Full Date Small Label (small pill or label on desktop) */}
-      <div className="hidden lg:flex items-center shrink-0 pl-2 border-l border-slate-800">
-        <span className="text-xs font-semibold text-slate-400 whitespace-nowrap">
+      <div className="hidden lg:flex items-center shrink-0 pl-2 border-l border-divider">
+        <span className="text-xs font-semibold text-text-muted whitespace-nowrap">
           {displayDateStr || activeDayLabel}
         </span>
       </div>

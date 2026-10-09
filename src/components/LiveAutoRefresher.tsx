@@ -85,25 +85,25 @@ export function LiveAutoRefresher({
   if (!showControls) return null;
 
   return (
-    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs shadow-sm backdrop-blur-md select-none">
+    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-bg-card/90 border border-divider text-xs shadow-sm backdrop-blur-md select-none">
       <span className="relative flex h-2 w-2">
         {enabled && (
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75" />
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-trend-down opacity-75" />
         )}
         <span
           className={`relative inline-flex rounded-full h-2 w-2 ${
-            enabled ? "bg-rose-500" : "bg-slate-600"
+            enabled ? "bg-trend-down" : "bg-divider"
           }`}
         />
       </span>
 
-      <span className="text-slate-400 font-medium whitespace-nowrap">
+      <span className="text-text-muted font-medium whitespace-nowrap">
         {enabled ? (
           <>
-            Next update in <span className="text-rose-400 font-bold tabular-nums">{secondsRemaining}s</span>
+            Next update in <span className="text-trend-down font-bold tabular-nums">{secondsRemaining}s</span>
           </>
         ) : (
-          <span className="text-slate-500">Updates paused</span>
+          <span className="text-text-muted">Updates paused</span>
         )}
       </span>
 
@@ -112,18 +112,18 @@ export function LiveAutoRefresher({
         onClick={() => triggerRefresh()}
         disabled={isPending || inFlightRef.current}
         title="Refresh now"
-        className="p-1 rounded text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+        className="p-1 rounded text-text-muted hover:text-text-primary hover:bg-bg-chip transition-colors"
       >
-        <RefreshCw className={`w-3 h-3 ${isPending ? "animate-spin text-rose-400" : ""}`} />
+        <RefreshCw className={`w-3 h-3 ${isPending ? "animate-spin text-trend-down" : ""}`} />
       </button>
 
       <button
         type="button"
         onClick={() => setEnabled((prev) => !prev)}
         title={enabled ? "Pause auto-sync" : "Resume auto-sync"}
-        className="p-1 rounded text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+        className="p-1 rounded text-text-muted hover:text-text-primary hover:bg-bg-chip transition-colors"
       >
-        {enabled ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3 text-rose-400" />}
+        {enabled ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3 text-trend-down" />}
       </button>
     </div>
   );

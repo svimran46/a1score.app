@@ -33,7 +33,7 @@ export function MatchCard({
   return (
     <Link
       href={`/matches/${match.id}`}
-      className="group block rounded-2xl glass-panel glass-panel-hover p-2.5 sm:p-3 border border-slate-800/80 hover:border-amber-500/30 transition-all max-h-[96px] h-[92px] flex flex-col justify-between overflow-hidden"
+      className="group block rounded-2xl glass-panel glass-panel-hover p-2.5 sm:p-3 border border-divider/80 hover:border-accent/30 transition-all max-h-[96px] h-[92px] flex flex-col justify-between overflow-hidden"
     >
       <div className="flex items-center justify-between gap-3 min-w-0">
         {/* Teams and Scores (2 compact rows) */}
@@ -58,16 +58,16 @@ export function MatchCard({
                   match.home.score !== undefined &&
                   match.away.score !== undefined &&
                   match.home.score > match.away.score
-                    ? "text-white"
-                    : "text-slate-300"
+                    ? "text-text-primary"
+                    : "text-text-secondary"
                 }`}
               >
                 {getClubDisplayName(match.home.name)}
               </span>
             </div>
             <span
-              className={`text-xs sm:text-sm font-black tabular-nums px-1 ${
-                isLive ? "text-amber-400" : isFinished ? "text-white" : "text-slate-500"
+              className={`text-xs sm:text-sm font-black figure px-1 ${
+                isLive ? "text-value-text" : isFinished ? "text-text-primary" : "text-text-muted"
               }`}
             >
               {isLive || isFinished ? match.home.score ?? 0 : "-"}
@@ -94,16 +94,16 @@ export function MatchCard({
                   match.away.score !== undefined &&
                   match.home.score !== undefined &&
                   match.away.score > match.home.score
-                    ? "text-white"
-                    : "text-slate-300"
+                    ? "text-text-primary"
+                    : "text-text-secondary"
                 }`}
               >
                 {getClubDisplayName(match.away.name)}
               </span>
             </div>
             <span
-              className={`text-xs sm:text-sm font-black tabular-nums px-1 ${
-                isLive ? "text-amber-400" : isFinished ? "text-white" : "text-slate-500"
+              className={`text-xs sm:text-sm font-black figure px-1 ${
+                isLive ? "text-value-text" : isFinished ? "text-text-primary" : "text-text-muted"
               }`}
             >
               {isLive || isFinished ? match.away.score ?? 0 : "-"}
@@ -112,22 +112,22 @@ export function MatchCard({
         </div>
 
         {/* Right Status Badge */}
-        <div className="shrink-0 flex flex-col items-end justify-center pl-2 border-l border-slate-800/80 min-w-[68px]">
+        <div className="shrink-0 flex flex-col items-end justify-center pl-2 border-l border-divider/80 min-w-[68px]">
           {isLive ? (
-            <div className="font-bold px-2 py-0.5 rounded-md text-[11px] tabular-nums bg-rose-500/15 border border-rose-500/30 flex items-center">
+            <div className="font-bold px-2 py-0.5 rounded-md text-[11px] tabular-nums bg-trend-down/15 border border-trend-down/30 flex items-center">
               <LiveMinute
                 shortTime={match.status.liveTime?.short}
                 longTime={match.status.liveTime?.long}
                 isLive={true}
                 isHT={isHT}
                 showPulsingDot={true}
-                className="text-[11px] text-rose-400 font-bold"
+                className="text-[11px] text-trend-down font-bold"
               />
             </div>
           ) : (
             <span
               className={`font-bold px-2 py-0.5 rounded-md text-[11px] tabular-nums ${
-                isFinished ? "bg-slate-800/80 text-slate-300" : "bg-slate-800/40 text-slate-400"
+                isFinished ? "bg-bg-chip/80 text-text-secondary" : "bg-bg-chip/40 text-text-muted"
               }`}
             >
               {isFinished ? (
@@ -141,7 +141,7 @@ export function MatchCard({
               )}
             </span>
           )}
-          <span className="text-[10px] text-slate-500 mt-1 truncate max-w-[80px]">
+          <span className="text-[10px] text-text-muted mt-1 truncate max-w-[80px]">
             {match.leagueName || "Match"}
           </span>
         </div>
@@ -149,9 +149,9 @@ export function MatchCard({
 
       {/* Disparity Bar (if available) or footer line */}
       {hasSquadValues ? (
-        <div className="w-full h-1 bg-slate-800 rounded-full overflow-hidden flex mt-1">
+        <div className="w-full h-1 bg-bg-chip rounded-full overflow-hidden flex mt-1">
           <div
-            className="h-full bg-amber-500/80 transition-all"
+            className="h-full bg-accent/80 transition-all"
             style={{
               width: `${Math.round(
                 (homeSquadValue! / (homeSquadValue! + awaySquadValue!)) * 100
@@ -159,7 +159,7 @@ export function MatchCard({
             }}
           />
           <div
-            className="h-full bg-slate-700 transition-all"
+            className="h-full bg-divider transition-all"
             style={{
               width: `${
                 100 -
@@ -171,9 +171,9 @@ export function MatchCard({
           />
         </div>
       ) : (
-        <div className="flex items-center justify-between text-[10px] text-slate-500 mt-1">
+        <div className="flex items-center justify-between text-[10px] text-text-muted mt-1">
           <span className="truncate">{match.leagueName || "Match Details"}</span>
-          <span className="text-amber-400/80 font-medium">Details →</span>
+          <span className="text-value-text/80 font-medium">Details →</span>
         </div>
       )}
     </Link>

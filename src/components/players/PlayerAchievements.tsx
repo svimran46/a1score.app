@@ -39,7 +39,7 @@ function AchievementTile({ item }: AchievementTileProps) {
         <div className="flex items-center gap-3 min-w-0 pr-2">
           {/* Badge / Count */}
           <div className="w-10 h-10 rounded-xl bg-[var(--bg-chip)] border border-[var(--border-subtle)] flex items-center justify-center shrink-0">
-            <span className="text-sm font-black text-[var(--value-text)] tabular-nums">
+            <span className="text-sm font-black text-[var(--value-text)] figure tabular-nums">
               {item.titleCount}x
             </span>
           </div>

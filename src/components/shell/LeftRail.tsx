@@ -12,8 +12,10 @@ import {
   Users,
   BookOpen,
   Star,
+  Newspaper,
 } from "lucide-react";
 import { getLeagueSlug } from "@/lib/slugs";
+import { useLiveMatchCount } from "@/hooks/useLiveMatchCount";
 
 export interface LeagueItem {
   id: string;
@@ -41,11 +43,13 @@ const QUICK_LINKS = [
   { name: "Transfers", href: "/transfers", icon: ArrowLeftRight },
   { name: "Clubs Directory", href: "/clubs", icon: Shield },
   { name: "Players Directory", href: "/players", icon: Users },
+  { name: "News", href: "/news", icon: Newspaper },
   { name: "Methodology", href: "/methodology", icon: BookOpen },
 ];
 
 export function LeftRail({ leagues }: { leagues?: LeagueItem[] }) {
   const pathname = usePathname();
+  const liveCount = useLiveMatchCount();
   const displayLeagues = leagues && leagues.length > 0 ? leagues.slice(0, 8) : DEFAULT_TOP_LEAGUES;
 
   return (
@@ -77,6 +81,7 @@ export function LeftRail({ leagues }: { leagues?: LeagueItem[] }) {
               <Link
                 key={league.id}
                 href={href}
+                aria-current={isActive ? "page" : undefined}
                 className={`group flex items-center gap-3 px-2.5 py-2 rounded-xl transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
                   isActive
                     ? "bg-[var(--bg-chip)] text-[var(--accent)] font-semibold"
@@ -126,6 +131,7 @@ export function LeftRail({ leagues }: { leagues?: LeagueItem[] }) {
               <Link
                 key={link.href}
                 href={link.href}
+                aria-current={isActive ? "page" : undefined}
                 className={`flex items-center gap-3 px-2.5 py-2 rounded-xl text-xs font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
                   isActive
                     ? "bg-[var(--bg-chip)] text-[var(--accent)] font-bold"
@@ -134,7 +140,7 @@ export function LeftRail({ leagues }: { leagues?: LeagueItem[] }) {
               >
                 <span className="relative flex items-center justify-center shrink-0">
                   <Icon className="w-4 h-4" />
-                  {link.pulse && (
+                  {link.pulse && liveCount !== null && liveCount > 0 && (
                     <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-[var(--live)]" />
                   )}
                 </span>

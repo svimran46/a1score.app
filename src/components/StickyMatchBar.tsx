@@ -22,7 +22,7 @@ export function StickyMatchBar({ match, isVisible }: StickyMatchBarProps) {
 
   return (
     <div
-      className="w-full bg-[var(--bg-page)]/95 border-b border-[var(--divider)] backdrop-blur-md py-2 px-3 transition-all duration-200 shadow-xs animate-in fade-in slide-in-from-top-2"
+      className="w-full bg-bg-page/95 border-b border-[var(--divider)] backdrop-blur-md py-2 px-3 transition-all duration-200 shadow-xs animate-in fade-in slide-in-from-top-2"
       aria-label="Compact Live Score"
     >
       <div className="max-w-4xl mx-auto flex items-center justify-between gap-2">
@@ -48,7 +48,7 @@ export function StickyMatchBar({ match, isVisible }: StickyMatchBarProps) {
           {isUpcoming ? (
             <span className="text-xs font-bold text-[var(--text-secondary)]">VS</span>
           ) : (
-            <div className="flex items-center gap-1.5 font-black text-sm sm:text-base">
+            <div className="flex items-center gap-1.5 font-black figure text-sm sm:text-base">
               <span className={isLive ? "text-[var(--value-text)]" : "text-[var(--text-primary)]"}>
                 {homeTeam?.score ?? 0}
               </span>

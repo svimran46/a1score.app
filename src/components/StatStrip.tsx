@@ -38,7 +38,7 @@ export function StatStrip({ items, className = "", onClick }: StatStripProps) {
             key={item.label || idx}
             onClick={item.onClick || onClick}
             className={`flex-1 py-3 px-2 text-center flex flex-col items-center justify-center min-w-0 ${
-              isClickable ? "cursor-pointer hover:bg-white/5 active:scale-[0.99] transition-all" : ""
+              isClickable ? "cursor-pointer hover:bg-bg-hover active:scale-[0.99] transition-all" : ""
             }`}
             style={{ borderColor: "var(--color-border)" }}
           >

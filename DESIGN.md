@@ -44,8 +44,10 @@ The design system uses a 3-layer token architecture: **Primitives** → **Semant
 /* Radii Scale */
 --radius-sm: 10px;  --radius-md: 14px;  --radius-lg: 20px;  --radius-pill: 999px;
 
-/* Typography Scale */
---font-sans: "Inter", "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+/* Typography Scale (see section 2a) */
+--font-sans: var(--font-archivo), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+--stretch-heading: 87.5%;  /* semi-condensed: h1, h2, section titles */
+--stretch-figure: 80%;     /* condensed: scores, fees, market values */
 --text-xs: 0.75rem;    --text-sm: 0.875rem;  --text-base: 1rem;
 --text-lg: 1.125rem;   --text-xl: 1.375rem;  --text-2xl: 1.75rem;
 
@@ -64,15 +66,42 @@ The design system uses a 3-layer token architecture: **Primitives** → **Semant
 | `--bg-chip` | `#181b22` | `#eceef3` | Filter chips, pills, badges |
 | `--bg-hover` | `#181b22` | `#f0f1f5` | Interactive hover highlight |
 | `--divider` | `#232733` | `#e1e4ea` | Hairline dividers and rules |
+| `--bg-elevated` | `#181b22` | `#f3f4f7` | Inset panels inside a card (value boxes, skeletons) |
+| `--border-subtle` | = `--divider` | = `--divider` | Hairline outlines where a border is unavoidable |
 | `--text-primary` | `#f4f5f7` (17.5:1) | `#0f1116` (18.5:1) | Headings, titles, primary labels |
+| `--text-secondary` | `#c4c9d2` (11.4:1) | `#3f4654` (9.5:1) | Supporting copy, entity metadata lines |
 | `--text-muted` | `#9aa1ae` (7.1:1) | `#5b6372` (5.9:1) | Timestamps, subtitles, secondary metadata |
 | `--accent` | `#ffb020` (10.3:1) | `#b45309` (5.6:1) | Active chips, logo accent, key links |
 | `--accent-contrast`| `#07080b` | `#ffffff` | Text inside solid accent fills |
 | `--value-text` | `#ffb020` | `#b45309` | Player & club market values |
-| `--trend-up` | `#2ecc71` | `#16a34a` | Positive valuation movements |
-| `--trend-down` | `#ff5a5f` | `#dc2626` | Negative valuation movements |
-| `--live` | `#2ecc71` | `#16a34a` | Live match minute & pulse dot |
+| `--trend-up` (alias `--trend-positive`) | `#2ecc71` | `#15803d` (5.0:1) | Positive valuation movements |
+| `--trend-down` (alias `--trend-negative`) | `#ff5a5f` | `#b91c1c` (6.5:1) | Negative valuation movements |
+| `--live` | `#2ecc71` | `#15803d` | Live match minute & pulse dot |
+| `--info` | `#60a5fa` | `#1d4ed8` | Neutral highlights: dates, stat icons, away side |
+| `--highlight` | `#c084fc` | `#7e22ce` | Rare one-off emphasis (VAR reviews) |
 | `--focus-ring` | `#ffb020` | `#b45309` | 2px visible keyboard focus indicator |
+
+Light-mode trend, live, focus and chart colours are redefined explicitly: the dark-theme
+greens, reds and amber fall to 1.8–3:1 on white.
+
+### Layer 2a: Typography
+
+**Archivo** (Omnibus-Type, SIL OFL) is the single family, loaded by `next/font/google` in
+`src/app/layout.tsx` as a variable font with weight (100–900) and width (62–125) axes.
+One family, two voices:
+
+| Role | Width | Weight | Where |
+| :--- | :--- | :--- | :--- |
+| UI and body copy | 100% (normal) | 400–600 | Everything by default |
+| Headings | `--stretch-heading` (87.5%) | 700–900 | `h1`, `h2` (base layer), with `text-wrap: balance` |
+| Figures | `--stretch-figure` (80%) | 700–900 | `.figure` utility: scores, fees, market values |
+
+- Why Archivo: a grotesque with sports/broadcast character whose width axis gives a
+  condensed scoreboard voice for numbers without loading a second family, and it ships
+  tabular lining figures, so live scores and valuations never jitter.
+- Only the `latin` subset is preloaded (~90 kB). The generated `@font-face` rules also
+  cover `latin-ext`, which downloads on demand for names such as Modrić or Aktürkoğlu.
+- Use `.figure` on any bold number in `--value-text` and on scores; don't use it on labels.
 
 ### Layer 3: Component Dimensions
 
@@ -106,16 +135,23 @@ Desktop (>= 1024px):
 | Footer (Explore links, legal, data sources)                             |
 +--------------------------------------------------------------------------+
 
-Tablet (640px to 1023px):
+Note: Tailwind's `sm` breakpoint is 480px in this project (see tailwind.config.ts).
+
+Desktop (1024px to 1279px):
+- TopNav links are hidden; the LeftRail Quick Links carry primary navigation.
+- TopNav links appear at 1280px, with short labels until 2xl (1536px).
+
+Tablet (480px to 1023px):
 - Left and right rails collapse.
 - Horizontal TabletLeaguesScroller appears below TopNav.
+- Fixed BottomNav stays visible (content width capped at 576px).
 - Right rail widgets stack below main content.
 
-Mobile (< 640px):
+Mobile (< 480px):
 - Single column feed.
-- Fixed BottomNav (56px) with 5 primary touch destinations.
+- Fixed BottomNav (56px) with 5 primary touch destinations and a live-match badge.
 - Expandable "More" sheet drawer for secondary destinations.
-- Main container padding bottom (`pb-20`) prevents bottom nav overlap.
+- AppShell bottom padding (56px + safe-area inset) keeps content and footer clear of the BottomNav below 1024px.
 ```
 
 ---
@@ -189,6 +225,12 @@ All shared primitive components reside under `src/components/ui/` and are showca
   npm run lint:colors
   ```
   This scans all 80+ component files to ensure 100% compliance with CSS variables.
+- **Token Integrity Test:** `tests/design-tokens.test.ts` (part of `npm run test:unit`) fails when
+  - a `var(--x)` is used but never defined (it would silently resolve to inherit/initial),
+  - an arbitrary colour carries an opacity modifier such as `bg-[var(--bg-card)]/95` (Tailwind 3 emits nothing for it),
+  - a raw palette class (`text-slate-400`, `bg-emerald-500/15`) appears outside the pitch graphics.
+- **Opacity on tokens:** Use the named Tailwind colours, which go through `color-mix()`, for example
+  `bg-bg-card/95`, `border-divider/60`, `bg-trend-up/15`, `ring-value-text/40`.
 
 ---
 

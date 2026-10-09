@@ -110,7 +110,7 @@ export function MatchRow({
               {scoreText || "0 - 0"}
             </span>
             {freshness.isUnconfirmed ? (
-              <span className="text-[10px] font-semibold text-amber-400/90 leading-tight mt-0.5 tracking-tight">
+              <span className="text-[10px] font-semibold text-value-text/90 leading-tight mt-0.5 tracking-tight">
                 Status unconfirmed
               </span>
             ) : (

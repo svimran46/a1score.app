@@ -55,7 +55,7 @@ export default async function TransfersPage() {
           </span>
           <span>Excludes internal youth academy progressions</span>
         </div>
-        <p className="text-[10px] text-[var(--text-muted)]/80 flex items-center gap-1">
+        <p className="text-[10px] text-text-muted/80 flex items-center gap-1">
           <Info className="w-3 h-3 shrink-0" />
           Historical records and transaction valuations are based on documented commercial fees from Transfermarkt.
         </p>

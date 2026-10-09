@@ -42,7 +42,7 @@ export function NewsCardHero({ item, className = "" }: NewsCardHeroProps) {
           )}
 
           {/* Source badge overlay */}
-          <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[var(--bg-card)]/90 backdrop-blur-md text-[11px] font-bold text-[var(--text-primary)] shadow-sm">
+          <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-bg-card/90 backdrop-blur-md text-[11px] font-bold text-[var(--text-primary)] shadow-sm">
             <span>{item.source}</span>
             <span>•</span>
             <span className="text-[var(--text-muted)] font-medium">{relativeTime}</span>

@@ -50,12 +50,12 @@ export function InjuriesTable({ injuries }: InjuriesTableProps) {
                   <td className="py-2.5 text-[var(--text-secondary)] whitespace-nowrap">{injury.endDate ? formatDate(injury.endDate) : "Ongoing"}</td>
                   <td className="py-2.5 text-right">
                     {isActive ? (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[var(--trend-negative)]/10 text-[var(--trend-negative)]">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-trend-down/10 text-[var(--trend-negative)]">
                         <AlertCircle className="w-3 h-3" />
                         Active
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[var(--trend-positive)]/10 text-[var(--trend-positive)]">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-trend-up/10 text-[var(--trend-positive)]">
                         <CheckCircle2 className="w-3 h-3" />
                         Recovered
                       </span>

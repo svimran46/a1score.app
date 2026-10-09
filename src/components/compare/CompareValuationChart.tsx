@@ -128,7 +128,7 @@ export function CompareValuationChart({ players }: CompareValuationChartProps) {
               <span className="text-[10px] text-[var(--text-muted)] font-mono">
                 ({config.dashName})
               </span>
-              <span className="font-mono font-bold text-[var(--value-text)] tabular-nums ml-0.5">
+              <span className="font-mono font-bold text-[var(--value-text)] figure tabular-nums ml-0.5">
                 {formatCompactEur(p.currentValue)}
               </span>
             </div>
@@ -175,7 +175,7 @@ export function CompareValuationChart({ players }: CompareValuationChartProps) {
                             <span style={{ color: config.stroke }}>{config.symbol}</span>
                             <span className="text-[var(--text-secondary)]">{player?.name || entry.dataKey}</span>
                           </div>
-                          <span className="font-mono font-bold text-[var(--value-text)] tabular-nums">
+                          <span className="font-mono font-bold text-[var(--value-text)] figure tabular-nums">
                             {formatCompactEur(entry.value)}
                           </span>
                         </div>

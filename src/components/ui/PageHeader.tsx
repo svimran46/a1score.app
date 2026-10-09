@@ -144,7 +144,7 @@ export function PageHeader({
                 {/* Primary Valuation (e.g. Squad Value or Player Value) inline on mobile */}
                 {value && (
                   <div className="flex items-center gap-1.5 tabular-nums shrink-0">
-                    <span className="text-base sm:text-xl font-black text-[var(--value-text)] tracking-tight">
+                    <span className="text-base sm:text-xl font-black text-[var(--value-text)] figure tracking-tight">
                       {value}
                     </span>
                     {valueTrend}
@@ -173,7 +173,7 @@ export function PageHeader({
               <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)]">
                 {valueLabel || (variant === "player" ? "Current Market Value" : "Competition Value")}
               </span>
-              <span className="text-xl sm:text-2xl font-black text-[var(--value-text)] tabular-nums tracking-tight mt-0.5">
+              <span className="text-xl sm:text-2xl font-black text-[var(--value-text)] figure tabular-nums tracking-tight mt-0.5">
                 {value}
               </span>
               <div className="flex items-center gap-1.5 mt-0.5">
@@ -203,7 +203,7 @@ export function PageHeader({
         )}
 
         {/* Bottom Row: Honours / Extra Content (Left) + Actions in Single Row (Right) */}
-        <div className="flex items-center justify-between gap-2.5 pt-1 border-t border-[var(--border-subtle)]/50 flex-wrap sm:flex-nowrap">
+        <div className="flex items-center justify-between gap-2.5 pt-1 border-t border-border-subtle/50 flex-wrap sm:flex-nowrap">
           {/* Left Area: Honours (Club) or Status / Extra content */}
           <div className="min-w-0 flex-1">{extraContent}</div>
 

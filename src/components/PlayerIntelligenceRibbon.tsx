@@ -118,44 +118,44 @@ export function PlayerIntelligenceRibbon({
   const age = dateOfBirth ? calculateAge(dateOfBirth) : null;
 
   return (
-    <div className="rounded-3xl glass-panel p-6 border border-slate-800 bg-gradient-to-r from-slate-900/60 via-slate-950/80 to-slate-900/60 shadow-xl space-y-4">
-      <div className="flex items-center justify-between pb-3 border-b border-slate-800/80">
+    <div className="rounded-3xl glass-panel p-6 border border-divider bg-gradient-to-r from-bg-card/60 via-bg-page/80 to-bg-card/60 shadow-xl space-y-4">
+      <div className="flex items-center justify-between pb-3 border-b border-divider/80">
         <div className="flex items-center gap-2">
-          <Zap className="w-4 h-4 text-amber-400" />
-          <h3 className="text-sm font-bold text-white tracking-tight">
+          <Zap className="w-4 h-4 text-value-text" />
+          <h3 className="text-sm font-bold text-text-primary tracking-tight">
             Valuation Intelligence & Performance Correlation
           </h3>
         </div>
-        <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">
+        <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider">
           Valuation & form insights
         </span>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {/* Metric 1: Valuation Velocity */}
-        <div className="p-3 rounded-2xl bg-slate-900/80 border border-slate-800/80 space-y-1">
-          <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider flex items-center gap-1">
-            <TrendingUp className="w-3 h-3 text-amber-400" /> Valuation Shift
+        <div className="p-3 rounded-2xl bg-bg-card/80 border border-divider/80 space-y-1">
+          <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider flex items-center gap-1">
+            <TrendingUp className="w-3 h-3 text-value-text" /> Valuation Shift
           </span>
-          <div className="text-base sm:text-lg font-black text-white tabular-nums flex items-center gap-1.5">
+          <div className="text-base sm:text-lg font-black text-text-primary tabular-nums flex items-center gap-1.5">
             {valuationDelta ? (
               <span
                 className={
                   valuationDelta.isGain
-                    ? "text-emerald-400"
+                    ? "text-trend-up"
                     : valuationDelta.isLoss
-                    ? "text-rose-400"
-                    : "text-slate-200"
+                    ? "text-trend-down"
+                    : "text-text-primary"
                 }
               >
                 {valuationDelta.isGain ? "+" : ""}
                 {formatCompactEur(valuationDelta.diff)}
               </span>
             ) : (
-              <span className="text-slate-400">Stable</span>
+              <span className="text-text-muted">Stable</span>
             )}
           </div>
-          <div className="text-[11px] text-slate-500 tabular-nums">
+          <div className="text-[11px] text-text-muted tabular-nums">
             {valuationDelta
               ? `${valuationDelta.isGain ? "+" : ""}${valuationDelta.pct.toFixed(1)}% latest window`
               : "Historical baseline"}
@@ -163,14 +163,14 @@ export function PlayerIntelligenceRibbon({
         </div>
 
         {/* Metric 2: Peak Status */}
-        <div className="p-3 rounded-2xl bg-slate-900/80 border border-slate-800/80 space-y-1">
-          <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider flex items-center gap-1">
-            <Sparkles className="w-3 h-3 text-amber-400" /> Peak Status
+        <div className="p-3 rounded-2xl bg-bg-card/80 border border-divider/80 space-y-1">
+          <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider flex items-center gap-1">
+            <Sparkles className="w-3 h-3 text-value-text" /> Peak Status
           </span>
-          <div className="text-base sm:text-lg font-black text-amber-400">
+          <div className="text-base sm:text-lg font-black text-value-text">
             {peakAnalysis ? (peakAnalysis.isAtPeak ? "All-Time High" : "Near Peak") : "Baseline"}
           </div>
-          <div className="text-[11px] text-slate-500 tabular-nums">
+          <div className="text-[11px] text-text-muted tabular-nums">
             {peakAnalysis
               ? peakAnalysis.isAtPeak
                 ? `Max recorded ${formatCompactEur(peakAnalysis.peakValue)}`
@@ -180,14 +180,14 @@ export function PlayerIntelligenceRibbon({
         </div>
 
         {/* Metric 3: Output Efficiency */}
-        <div className="p-3 rounded-2xl bg-slate-900/80 border border-slate-800/80 space-y-1">
-          <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider flex items-center gap-1">
-            <Target className="w-3 h-3 text-emerald-400" /> G+A Contributions
+        <div className="p-3 rounded-2xl bg-bg-card/80 border border-divider/80 space-y-1">
+          <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider flex items-center gap-1">
+            <Target className="w-3 h-3 text-trend-up" /> G+A Contributions
           </span>
-          <div className="text-base sm:text-lg font-black text-emerald-400 tabular-nums">
+          <div className="text-base sm:text-lg font-black text-trend-up tabular-nums">
             {seasonTotals && seasonTotals.apps > 0 ? `${seasonTotals.goals + seasonTotals.assists} Goals & Assists` : "No data yet"}
           </div>
-          <div className="text-[11px] text-slate-500 tabular-nums">
+          <div className="text-[11px] text-text-muted tabular-nums">
             {seasonTotals && seasonTotals.apps > 0 && seasonTotals.goalContribPer90
               ? `${seasonTotals.goalContribPer90} per 90 mins • ${seasonTotals.apps} apps`
               : seasonTotals && seasonTotals.apps > 0
@@ -197,18 +197,18 @@ export function PlayerIntelligenceRibbon({
         </div>
 
         {/* Metric 4: Form & Rating */}
-        <div className="p-3 rounded-2xl bg-slate-900/80 border border-slate-800/80 space-y-1">
-          <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider flex items-center gap-1">
-            <Flame className="w-3 h-3 text-rose-400" /> Match Rating
+        <div className="p-3 rounded-2xl bg-bg-card/80 border border-divider/80 space-y-1">
+          <span className="text-[10px] uppercase font-bold text-text-muted tracking-wider flex items-center gap-1">
+            <Flame className="w-3 h-3 text-trend-down" /> Match Rating
           </span>
-          <div className="text-base sm:text-lg font-black text-white tabular-nums">
+          <div className="text-base sm:text-lg font-black text-text-primary tabular-nums">
             {seasonTotals?.avgRating ? (
-              <span className="text-amber-400 font-extrabold">{seasonTotals.avgRating} / 10</span>
+              <span className="text-value-text font-extrabold">{seasonTotals.avgRating} / 10</span>
             ) : (
-              <span className="text-slate-400">N/A</span>
+              <span className="text-text-muted">N/A</span>
             )}
           </div>
-          <div className="text-[11px] text-slate-500">
+          <div className="text-[11px] text-text-muted">
             {age ? `${age} y/o • ${position}` : position}
           </div>
         </div>

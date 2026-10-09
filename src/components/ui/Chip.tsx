@@ -23,7 +23,7 @@ export function Chip({
   children,
   ...props
 }: ChipProps) {
-  const baseClasses = `inline-flex items-center justify-center gap-2 min-h-[44px] sm:min-h-[40px] h-10 px-4 rounded-[var(--chip-radius)] text-sm font-semibold whitespace-nowrap cursor-pointer select-none transition-[background-color,opacity] duration-[var(--dur-fast)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-page)] ${
+  const baseClasses = `inline-flex items-center justify-center gap-2 min-h-[44px] sm:min-h-[40px] h-10 px-4 rounded-[var(--chip-radius)] text-sm font-semibold whitespace-nowrap cursor-pointer select-none transition-[background-color,opacity] duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-page)] ${
     active
       ? "bg-[var(--accent)] text-[var(--accent-contrast)] shadow-xs"
       : "bg-[var(--bg-chip)] text-[var(--text-primary)] hover:bg-[var(--bg-hover)]"

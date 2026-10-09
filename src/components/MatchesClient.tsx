@@ -240,7 +240,7 @@ export function MatchesClient({
         [Live 2] [Finished 3] [Upcoming 55] [Top leagues / All].
         Toggle behaviour; none selected = all. Counts global.
       */}
-      <div className="sticky top-14 z-20 -mx-4 px-4 py-2 bg-[var(--color-bg)]/95 backdrop-blur-md flex items-center justify-between gap-2 overflow-x-auto scrollbar-none edge-fade-x">
+      <div className="sticky top-14 z-20 -mx-4 px-4 py-2 bg-bg-page/95 backdrop-blur-md flex items-center justify-between gap-2 overflow-x-auto scrollbar-none edge-fade-x">
         <div className="flex items-center gap-1.5 shrink-0 text-[13px]">
           {/* Live Pill */}
           <button

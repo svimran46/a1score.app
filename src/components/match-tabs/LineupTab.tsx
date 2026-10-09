@@ -76,7 +76,7 @@ export function LineupTab({ match }: LineupTabProps) {
           onClick={() => setActiveSide("home")}
           className={`min-h-[44px] p-3 sm:p-4 rounded-2xl border text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
             activeSide === "home"
-              ? "bg-[var(--bg-card)] border-[var(--value-text)] ring-1 ring-[var(--value-text)]/40 shadow-xs"
+              ? "bg-[var(--bg-card)] border-[var(--value-text)] ring-1 ring-value-text/40 shadow-xs"
               : "bg-[var(--bg-elevated)] border-[var(--border-subtle)] hover:bg-[var(--bg-hover)] text-[var(--text-muted)]"
           }`}
         >
@@ -99,7 +99,7 @@ export function LineupTab({ match }: LineupTabProps) {
             <span className="text-[11px] text-[var(--text-muted)] font-medium">
               {homeLineup.formation ? `Formation: ${homeLineup.formation}` : "Starting XI"}
             </span>
-            <span className="font-black text-xs sm:text-sm text-[var(--value-text)] tabular-nums">
+            <span className="font-black text-xs sm:text-sm text-[var(--value-text)] figure tabular-nums">
               {homeTotalVal > 0 ? formatCompactEur(homeTotalVal) : "—"}
             </span>
           </div>
@@ -111,7 +111,7 @@ export function LineupTab({ match }: LineupTabProps) {
           onClick={() => setActiveSide("away")}
           className={`min-h-[44px] p-3 sm:p-4 rounded-2xl border text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
             activeSide === "away"
-              ? "bg-[var(--bg-card)] border-[var(--value-text)] ring-1 ring-[var(--value-text)]/40 shadow-xs"
+              ? "bg-[var(--bg-card)] border-[var(--value-text)] ring-1 ring-value-text/40 shadow-xs"
               : "bg-[var(--bg-elevated)] border-[var(--border-subtle)] hover:bg-[var(--bg-hover)] text-[var(--text-muted)]"
           }`}
         >
@@ -134,7 +134,7 @@ export function LineupTab({ match }: LineupTabProps) {
             <span className="text-[11px] text-[var(--text-muted)] font-medium">
               {awayLineup.formation ? `Formation: ${awayLineup.formation}` : "Starting XI"}
             </span>
-            <span className="font-black text-xs sm:text-sm text-[var(--value-text)] tabular-nums">
+            <span className="font-black text-xs sm:text-sm text-[var(--value-text)] figure tabular-nums">
               {awayTotalVal > 0 ? formatCompactEur(awayTotalVal) : "—"}
             </span>
           </div>
@@ -153,7 +153,7 @@ export function LineupTab({ match }: LineupTabProps) {
             </p>
           </div>
           {currentTeamTotalVal > 0 && (
-            <span className="px-2.5 py-1 rounded-xl text-xs font-bold bg-amber-500/15 text-[var(--value-text)] border border-amber-500/30 tabular-nums">
+            <span className="px-2.5 py-1 rounded-xl text-xs font-bold bg-accent/15 text-[var(--value-text)] figure border border-accent/30 tabular-nums">
               Starting XI Value: {formatCompactEur(currentTeamTotalVal)}
             </span>
           )}
@@ -196,7 +196,7 @@ export function LineupTab({ match }: LineupTabProps) {
 
                 {/* Market Value chip (valuation-first in amber with tabular numbers) */}
                 {player.marketValue && Number(player.marketValue) > 0 ? (
-                  <span className="text-[9px] font-bold text-[var(--value-text)] tabular-nums bg-amber-950/90 border border-amber-500/40 px-1 rounded shadow-xs -mt-0.5">
+                  <span className="text-[9px] font-bold text-[var(--value-text)] figure tabular-nums bg-amber-950/90 border border-amber-500/40 px-1 rounded shadow-xs -mt-0.5">
                     {formatCompactEur(Number(player.marketValue))}
                   </span>
                 ) : null}
@@ -233,13 +233,13 @@ export function LineupTab({ match }: LineupTabProps) {
                     {player.name || "Player"}
                   </span>
                   {player.performance?.rating && (
-                    <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-500/15 text-blue-400 shrink-0">
+                    <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-info/15 text-info shrink-0">
                       ★ {Number(player.performance.rating).toFixed(1)}
                     </span>
                   )}
                 </div>
                 {player.marketValue && Number(player.marketValue) > 0 ? (
-                  <span className="font-bold text-[var(--value-text)] tabular-nums text-xs shrink-0">
+                  <span className="font-bold text-[var(--value-text)] figure tabular-nums text-xs shrink-0">
                     {formatCompactEur(Number(player.marketValue))}
                   </span>
                 ) : (
@@ -264,7 +264,7 @@ export function LineupTab({ match }: LineupTabProps) {
         {currentCoach && (
           <div className="p-3 rounded-2xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] flex items-center justify-between text-xs sm:text-sm">
             <div className="flex items-center gap-2.5">
-              <User className="w-4 h-4 text-emerald-400" />
+              <User className="w-4 h-4 text-trend-up" />
               <div>
                 <span className="font-semibold text-[var(--text-primary)]">{currentCoach.name}</span>
                 {currentCoach.countryName && (
@@ -296,7 +296,7 @@ export function LineupTab({ match }: LineupTabProps) {
                   <span className="font-medium text-[var(--text-primary)] truncate">{sub.name || "Player"}</span>
                 </div>
                 {sub.marketValue && Number(sub.marketValue) > 0 ? (
-                  <span className="font-bold text-[var(--value-text)] tabular-nums text-xs shrink-0">
+                  <span className="font-bold text-[var(--value-text)] figure tabular-nums text-xs shrink-0">
                     {formatCompactEur(Number(sub.marketValue))}
                   </span>
                 ) : (

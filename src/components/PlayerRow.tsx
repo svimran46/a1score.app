@@ -147,7 +147,7 @@ export function PlayerRow({
       {/* 3. Right side: Value + Trend + FollowButton */}
       <div className="flex items-center gap-1 sm:gap-2 shrink-0 relative z-10">
         <div className="text-right pointer-events-none">
-          <div className="text-sm sm:text-base font-bold text-[var(--value-text)] tabular-nums leading-tight">
+          <div className="text-sm sm:text-base font-bold text-[var(--value-text)] figure tabular-nums leading-tight">
             {marketValue ? formatCompactEur(marketValue) : "—"}
           </div>
           {hasTrend && trendStr && (

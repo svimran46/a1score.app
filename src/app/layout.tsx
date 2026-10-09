@@ -1,9 +1,18 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Archivo } from "next/font/google";
 import "./globals.css";
 import { SITE_URL } from "@/lib/metadata";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
+// Variable font with both axes: weight for hierarchy, width for the condensed
+// heading/figure voice (see --stretch-heading / --stretch-figure in tokens.css).
+// Only latin is preloaded; the generated @font-face rules still include
+// latin-ext, fetched on demand for names such as Modrić, Šeško or Aktürkoğlu.
+const archivo = Archivo({
+  subsets: ["latin"],
+  axes: ["wdth"],
+  variable: "--font-archivo",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -82,7 +91,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} dark`} data-theme="dark" suppressHydrationWarning>
+    <html lang="en" className={`${archivo.variable} dark`} data-theme="dark" suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{

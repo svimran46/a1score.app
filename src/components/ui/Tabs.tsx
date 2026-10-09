@@ -88,7 +88,7 @@ export function Tabs({
             tabIndex={isSelected ? 0 : -1}
             onClick={() => onChange(tab.id)}
             onKeyDown={(e) => handleKeyDown(e, idx)}
-            className={`inline-flex items-center justify-center gap-2 min-h-[44px] sm:min-h-[40px] h-10 px-4 rounded-[var(--chip-radius)] text-sm font-semibold whitespace-nowrap cursor-pointer transition-[background-color,opacity] duration-[var(--dur-fast)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-page)] ${
+            className={`inline-flex items-center justify-center gap-2 min-h-[44px] sm:min-h-[40px] h-10 px-4 rounded-[var(--chip-radius)] text-sm font-semibold whitespace-nowrap cursor-pointer transition-[background-color,opacity] duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-page)] ${
               isSelected
                 ? "bg-[var(--accent)] text-[var(--accent-contrast)] shadow-xs"
                 : "bg-[var(--bg-chip)] text-[var(--text-primary)] hover:bg-[var(--bg-hover)]"
@@ -100,7 +100,7 @@ export function Tabs({
               <span
                 className={`text-xs px-1.5 py-0.5 rounded-full font-bold tabular-nums ${
                   isSelected
-                    ? "bg-[var(--accent-contrast)]/20 text-[var(--accent-contrast)]"
+                    ? "bg-accent-contrast/20 text-[var(--accent-contrast)]"
                     : "bg-[var(--bg-card)] text-[var(--text-muted)]"
                 }`}
               >

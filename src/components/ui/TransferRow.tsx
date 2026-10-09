@@ -51,6 +51,8 @@ export function TransferRow({
         : formatCompactEur(fee)
       : fee || transferType || "Undisclosed";
 
+  const hasClubs = Boolean(fromClubName || toClubName);
+
   return (
     <Link
       href={href}
@@ -77,16 +79,23 @@ export function TransferRow({
           <div className="text-sm font-semibold text-[var(--text-primary)] group-hover:text-[var(--accent)] truncate transition-colors">
             {playerName}
           </div>
+          {/* Phones: the crest block is hidden, so name the clubs instead */}
+          {hasClubs && (
+            <div className="sm:hidden text-xs text-[var(--text-muted)] mt-0.5 truncate">
+              {fromClubName || "Unknown"} <span aria-hidden="true">→</span>
+              <span className="sr-only">to</span> {toClubName || "Unknown"}
+            </div>
+          )}
           {playerPosition && (
-            <div className="text-xs text-[var(--text-muted)] mt-0.5 truncate">
+            <div className={`${hasClubs ? "hidden sm:block" : ""} text-xs text-[var(--text-muted)] mt-0.5 truncate`}>
               {playerPosition}
             </div>
           )}
         </div>
       </div>
 
-      {/* 2. From-Club Crest -> To-Club Crest */}
-      <div className="flex items-center gap-2 shrink-0 px-2 sm:px-4">
+      {/* 2. From-Club Crest -> To-Club Crest (480px+) */}
+      <div className="hidden sm:flex items-center gap-2 shrink-0 px-2 sm:px-4">
         {/* From club */}
         <div
           className="w-7 h-7 rounded-lg bg-[var(--bg-chip)] flex items-center justify-center shrink-0 overflow-hidden relative"
@@ -130,7 +139,7 @@ export function TransferRow({
 
       {/* 3. Fee (amber, tabular-nums) | Date (muted) */}
       <div className="text-right shrink-0">
-        <div className="text-sm sm:text-base font-bold text-[var(--value-text)] tabular-nums leading-tight">
+        <div className="text-sm sm:text-base font-bold text-[var(--value-text)] figure tabular-nums leading-tight">
           {feeDisplay}
         </div>
         {isAgreedFutureDeal ? (

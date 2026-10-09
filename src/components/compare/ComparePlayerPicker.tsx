@@ -174,7 +174,7 @@ export function ComparePlayerPicker({
                           Added
                         </span>
                       ) : (
-                        <span className="font-mono text-xs font-bold text-[var(--value-text)] tabular-nums">
+                        <span className="font-mono text-xs font-bold text-[var(--value-text)] figure tabular-nums">
                           {player.latestMarketValue ? formatCompactEur(player.latestMarketValue) : "—"}
                         </span>
                       )}

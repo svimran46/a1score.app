@@ -44,32 +44,32 @@ export function TimelineTab({ match }: TimelineTabProps) {
         return {
           icon: <span className="text-sm">⚽</span>,
           label: event.ownGoal ? "Own Goal" : event.isPenalty ? "Penalty Goal" : "Goal",
-          badgeClass: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
+          badgeClass: "bg-trend-up/15 text-trend-up border-trend-up/30",
         };
       case "Card":
         if (event.card === "Yellow") {
           return {
-            icon: <div className="w-3.5 h-4.5 rounded bg-amber-400 border border-amber-300 shadow-xs" />,
+            icon: <div className="w-3.5 h-4.5 rounded bg-accent border border-accent shadow-xs" />,
             label: "Yellow Card",
-            badgeClass: "bg-amber-500/15 text-[var(--value-text)] border-amber-500/30",
+            badgeClass: "bg-accent/15 text-[var(--value-text)] border-accent/30",
           };
         }
         return {
-          icon: <div className="w-3.5 h-4.5 rounded bg-rose-500 border border-rose-400 shadow-xs" />,
+          icon: <div className="w-3.5 h-4.5 rounded bg-trend-down border border-trend-down shadow-xs" />,
           label: event.card === "YellowRed" ? "Second Yellow (Red)" : "Red Card",
-          badgeClass: "bg-rose-500/15 text-rose-400 border-rose-500/30",
+          badgeClass: "bg-trend-down/15 text-trend-down border-trend-down/30",
         };
       case "Substitution":
         return {
-          icon: <ArrowRightLeft className="w-3.5 h-3.5 text-blue-400" />,
+          icon: <ArrowRightLeft className="w-3.5 h-3.5 text-info" />,
           label: "Substitution",
-          badgeClass: "bg-blue-500/15 text-blue-400 border-blue-500/30",
+          badgeClass: "bg-info/15 text-info border-info/30",
         };
       case "VAR":
         return {
-          icon: <Video className="w-3.5 h-3.5 text-purple-400" />,
+          icon: <Video className="w-3.5 h-3.5 text-highlight" />,
           label: "VAR Review",
-          badgeClass: "bg-purple-500/15 text-purple-400 border-purple-500/30",
+          badgeClass: "bg-highlight/15 text-highlight border-highlight/30",
         };
       default:
         return {
@@ -158,12 +158,12 @@ export function TimelineTab({ match }: TimelineTabProps) {
                         {label}
                       </span>
                       {event.isPenalty && event.type === "Goal" && (
-                        <span className="text-[10px] font-bold text-[var(--value-text)] bg-amber-500/15 px-1.5 py-0.5 rounded border border-amber-500/30">
+                        <span className="text-[10px] font-bold text-[var(--value-text)] bg-accent/15 px-1.5 py-0.5 rounded border border-accent/30">
                           Penalty
                         </span>
                       )}
                       {event.ownGoal && (
-                        <span className="text-[10px] font-bold text-rose-400 bg-rose-500/15 px-1.5 py-0.5 rounded border border-rose-500/30">
+                        <span className="text-[10px] font-bold text-trend-down bg-trend-down/15 px-1.5 py-0.5 rounded border border-trend-down/30">
                           Own Goal
                         </span>
                       )}

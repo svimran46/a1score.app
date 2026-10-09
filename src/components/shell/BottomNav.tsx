@@ -17,9 +17,11 @@ import {
   Star,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { useLiveMatchCount } from "@/hooks/useLiveMatchCount";
 
-export function BottomNav({ liveCount }: { liveCount?: number | null }) {
+export function BottomNav() {
   const pathname = usePathname();
+  const liveCount = useLiveMatchCount();
   const [isMoreOpen, setIsMoreOpen] = useState(false);
 
   // Close sheet on route navigation
@@ -57,21 +59,22 @@ export function BottomNav({ liveCount }: { liveCount?: number | null }) {
     <>
       <nav
         aria-label="Mobile Bottom Navigation"
-        className="fixed bottom-0 left-0 right-0 z-40 sm:hidden bg-[var(--bg-card)]/95 border-t border-[var(--divider)] backdrop-blur-xl transition-transform duration-200"
+        className="fixed bottom-0 left-0 right-0 z-40 lg:hidden bg-bg-card/95 border-t border-[var(--divider)] backdrop-blur-xl transition-transform duration-200"
         style={{
           paddingBottom: "env(safe-area-inset-bottom, 0px)",
         }}
       >
-        <div className="grid grid-cols-5 h-14 items-center">
+        <div className="grid grid-cols-5 h-14 items-center max-w-xl mx-auto">
           {/* 1. Matches */}
           <Link
             href="/matches"
-            className={`flex flex-col items-center justify-center min-h-[44px] h-full py-1 text-[10px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
+            className={`flex flex-col items-center justify-center min-h-[44px] h-full py-1 text-[11px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
               isMatchesActive
                 ? "text-[var(--accent)] font-bold"
                 : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
             }`}
             aria-label="Matches"
+            aria-current={isMatchesActive ? "page" : undefined}
           >
             <div className="relative flex items-center justify-center">
               <Radio className="w-5 h-5" />
@@ -87,12 +90,13 @@ export function BottomNav({ liveCount }: { liveCount?: number | null }) {
           {/* 2. Players */}
           <Link
             href="/players"
-            className={`flex flex-col items-center justify-center min-h-[44px] h-full py-1 text-[10px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
+            className={`flex flex-col items-center justify-center min-h-[44px] h-full py-1 text-[11px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
               isPlayersActive
                 ? "text-[var(--accent)] font-bold"
                 : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
             }`}
             aria-label="Players"
+            aria-current={isPlayersActive ? "page" : undefined}
           >
             <Users className="w-5 h-5" />
             <span className="tracking-tight mt-0.5">Players</span>
@@ -101,12 +105,13 @@ export function BottomNav({ liveCount }: { liveCount?: number | null }) {
           {/* 3. Clubs */}
           <Link
             href="/clubs"
-            className={`flex flex-col items-center justify-center min-h-[44px] h-full py-1 text-[10px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
+            className={`flex flex-col items-center justify-center min-h-[44px] h-full py-1 text-[11px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
               isClubsActive
                 ? "text-[var(--accent)] font-bold"
                 : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
             }`}
             aria-label="Clubs"
+            aria-current={isClubsActive ? "page" : undefined}
           >
             <Shield className="w-5 h-5" />
             <span className="tracking-tight mt-0.5">Clubs</span>
@@ -115,12 +120,13 @@ export function BottomNav({ liveCount }: { liveCount?: number | null }) {
           {/* 4. Values */}
           <Link
             href="/values"
-            className={`flex flex-col items-center justify-center min-h-[44px] h-full py-1 text-[10px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
+            className={`flex flex-col items-center justify-center min-h-[44px] h-full py-1 text-[11px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
               isValuesActive
                 ? "text-[var(--accent)] font-bold"
                 : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
             }`}
             aria-label="Market Values"
+            aria-current={isValuesActive ? "page" : undefined}
           >
             <TrendingUp className="w-5 h-5" />
             <span className="tracking-tight mt-0.5">Values</span>
@@ -130,7 +136,7 @@ export function BottomNav({ liveCount }: { liveCount?: number | null }) {
           <button
             type="button"
             onClick={() => setIsMoreOpen((prev) => !prev)}
-            className={`flex flex-col items-center justify-center min-h-[44px] h-full py-1 text-[10px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
+            className={`flex flex-col items-center justify-center min-h-[44px] h-full py-1 text-[11px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
               isMoreActive
                 ? "text-[var(--accent)] font-bold"
                 : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
@@ -150,7 +156,7 @@ export function BottomNav({ liveCount }: { liveCount?: number | null }) {
           {/* Backdrop */}
           <div
             onClick={() => setIsMoreOpen(false)}
-            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs transition-opacity sm:hidden"
+            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs transition-opacity lg:hidden"
             aria-hidden="true"
           />
 
@@ -159,7 +165,7 @@ export function BottomNav({ liveCount }: { liveCount?: number | null }) {
             role="dialog"
             aria-modal="true"
             aria-label="More Navigation"
-            className="fixed bottom-0 left-0 right-0 z-50 rounded-t-[var(--card-radius)] bg-[var(--bg-card)] p-5 space-y-4 max-h-[85vh] overflow-y-auto animate-in slide-in-from-bottom duration-200 shadow-2xl sm:hidden"
+            className="fixed bottom-0 left-0 right-0 mx-auto max-w-lg z-50 rounded-t-[var(--card-radius)] bg-[var(--bg-card)] p-5 space-y-4 max-h-[85vh] overflow-y-auto animate-in slide-in-from-bottom duration-200 shadow-2xl lg:hidden"
             style={{
               paddingBottom: "max(1.5rem, env(safe-area-inset-bottom, 0px))",
             }}

@@ -288,7 +288,7 @@ export function SquadValuationPyramid({
             <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)] block">
               Top Asset Concentration
             </span>
-            <div className="text-lg font-black text-[var(--value-text)] tracking-tight tabular-nums">
+            <div className="text-lg font-black text-[var(--value-text)] figure tracking-tight tabular-nums">
               {demographics.topAssetRatio}%
             </div>
             <span className="text-[10px] text-[var(--text-muted)] truncate block">
@@ -328,7 +328,7 @@ export function SquadValuationPyramid({
                 Squad Valuation Pyramid
               </h3>
             </div>
-            <span className="text-xs font-bold text-[var(--value-text)] tabular-nums">
+            <span className="text-xs font-bold text-[var(--value-text)] figure tabular-nums">
               Total {formatCompactEur(totalSquadValue)}
             </span>
           </div>
@@ -439,7 +439,7 @@ export function SquadValuationPyramid({
                             {p.commonName || p.fullName}
                           </span>
                         </div>
-                        <span className="text-[11px] font-bold text-[var(--value-text)] tabular-nums ml-2 shrink-0">
+                        <span className="text-[11px] font-bold text-[var(--value-text)] figure tabular-nums ml-2 shrink-0">
                           {formatCompactEur(p.latestMarketValue || 0)}
                         </span>
                       </Link>

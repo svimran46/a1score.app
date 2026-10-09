@@ -28,141 +28,6 @@ export interface MoversData {
   fallers: MoverItem[];
 }
 
-const DEFAULT_MOVERS: MoversData = {
-  risers: [
-    {
-      id: "yamal",
-      fullName: "Lamine Yamal",
-      slug: "lamine-yamal-1051588",
-      position: "Right Winger",
-      currentClub: { name: "Barcelona" },
-      latestValue: 180000000,
-      prevValue: 150000000,
-      diff: 30000000,
-      percentage: 20.0,
-    },
-    {
-      id: "haaland",
-      fullName: "Erling Haaland",
-      slug: "erling-haaland-418560",
-      position: "Centre-Forward",
-      currentClub: { name: "Manchester City" },
-      latestValue: 200000000,
-      prevValue: 180000000,
-      diff: 20000000,
-      percentage: 11.1,
-    },
-    {
-      id: "vinicius",
-      fullName: "Vinicius Junior",
-      slug: "vinicius-junior-371998",
-      position: "Left Winger",
-      currentClub: { name: "Real Madrid" },
-      latestValue: 200000000,
-      prevValue: 180000000,
-      diff: 20000000,
-      percentage: 11.1,
-    },
-    {
-      id: "wirtz",
-      fullName: "Florian Wirtz",
-      slug: "florian-wirtz-598577",
-      position: "Attacking Midfield",
-      currentClub: { name: "Bayer Leverkusen" },
-      latestValue: 130000000,
-      prevValue: 110000000,
-      diff: 20000000,
-      percentage: 18.2,
-    },
-    {
-      id: "palmer",
-      fullName: "Cole Palmer",
-      slug: "cole-palmer-568177",
-      position: "Attacking Midfield",
-      currentClub: { name: "Chelsea" },
-      latestValue: 110000000,
-      prevValue: 90000000,
-      diff: 20000000,
-      percentage: 22.2,
-    },
-  ],
-  fallers: [
-    {
-      id: "neymar",
-      fullName: "Neymar Jr",
-      slug: "neymar-68290",
-      position: "Left Winger",
-      currentClub: { name: "Al-Hilal" },
-      latestValue: 15000000,
-      prevValue: 30000000,
-      diff: -15000000,
-      percentage: -50.0,
-    },
-    {
-      id: "sterling",
-      fullName: "Raheem Sterling",
-      slug: "raheem-sterling-134425",
-      position: "Left Winger",
-      currentClub: { name: "Arsenal" },
-      latestValue: 25000000,
-      prevValue: 35000000,
-      diff: -10000000,
-      percentage: -28.6,
-    },
-    {
-      id: "casemiro",
-      fullName: "Casemiro",
-      slug: "casemiro-16306",
-      position: "Defensive Midfield",
-      currentClub: { name: "Manchester United" },
-      latestValue: 12000000,
-      prevValue: 20000000,
-      diff: -8000000,
-      percentage: -40.0,
-    },
-    {
-      id: "rashford",
-      fullName: "Marcus Rashford",
-      slug: "marcus-rashford-258027",
-      position: "Left Winger",
-      currentClub: { name: "Manchester United" },
-      latestValue: 50000000,
-      prevValue: 60000000,
-      diff: -10000000,
-      percentage: -16.7,
-    },
-    {
-      id: "coman",
-      fullName: "Kingsley Coman",
-      slug: "kingsley-coman-243714",
-      position: "Left Winger",
-      currentClub: { name: "Bayern Munich" },
-      latestValue: 40000000,
-      prevValue: 50000000,
-      diff: -10000000,
-      percentage: -20.0,
-    },
-  ],
-};
-
-const NEWS_PLACEHOLDERS = [
-  {
-    tag: "Market Values",
-    title: "2025 Market Value Updates: European wonderkids see major surges",
-    time: "2h ago",
-  },
-  {
-    tag: "Transfers",
-    title: "Summer Window Preview: Top targets, release clauses and negotiations",
-    time: "4h ago",
-  },
-  {
-    tag: "Champions League",
-    title: "UCL Quarter-Final matchups, projected paths, and squad valuations",
-    time: "6h ago",
-  },
-];
-
 export function RightRail({
   movers,
   news,
@@ -172,13 +37,10 @@ export function RightRail({
 }) {
   const [activeTab, setActiveTab] = useState<"risers" | "fallers">("risers");
 
-  const effectiveRisers =
-    movers?.risers && movers.risers.length > 0 ? movers.risers.slice(0, 5) : DEFAULT_MOVERS.risers;
-  const effectiveFallers =
-    movers?.fallers && movers.fallers.length > 0 ? movers.fallers.slice(0, 5) : DEFAULT_MOVERS.fallers;
-
-  const currentMovers = activeTab === "risers" ? effectiveRisers : effectiveFallers;
-  const displayNews = news && news.length > 0 ? news.slice(0, 4) : null;
+  const risers = movers?.risers?.slice(0, 5) ?? [];
+  const fallers = movers?.fallers?.slice(0, 5) ?? [];
+  const currentMovers = activeTab === "risers" ? risers : fallers;
+  const displayNews = news?.slice(0, 4) ?? [];
 
   return (
     <aside aria-label="News and market value movers" className="flex flex-col gap-4 w-full">
@@ -204,49 +66,37 @@ export function RightRail({
         </div>
 
         <div className="flex flex-col space-y-2">
-          {displayNews
-            ? displayNews.map((item) => (
-                <a
-                  key={item.id}
-                  href={item.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group block p-2.5 -mx-2.5 rounded-xl hover:bg-[var(--bg-hover)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
-                >
-                  <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-[var(--value-text)]">
-                    <span className="truncate max-w-[170px]">
-                      {item.entityTags?.[0]?.name || item.tags?.[0] || "Football"}
-                    </span>
-                    <span className="text-[var(--text-muted)] font-normal shrink-0">
-                      {formatRelativeTime(item.publishedAt)}
-                    </span>
-                  </div>
-                  <div className="text-xs font-semibold text-[var(--text-primary)] group-hover:text-[var(--accent)] line-clamp-2 mt-0.5 leading-snug transition-colors">
-                    {item.title}
-                  </div>
-                  <div className="flex items-center justify-between text-[10px] text-[var(--text-muted)] mt-1">
-                    <span>{item.source}</span>
-                    <ExternalLink className="w-2.5 h-2.5 opacity-60 group-hover:text-[var(--accent)] transition-colors" />
-                  </div>
-                </a>
-              ))
-            : NEWS_PLACEHOLDERS.map((item, idx) => (
-                <Link
-                  key={idx}
-                  href="/news"
-                  className="group block p-2.5 -mx-2.5 rounded-xl hover:bg-[var(--bg-hover)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
-                >
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-[var(--accent)]">
-                    {item.tag}
-                  </div>
-                  <div className="text-xs font-semibold text-[var(--text-primary)] group-hover:text-[var(--accent)] line-clamp-2 mt-0.5 leading-snug transition-colors">
-                    {item.title}
-                  </div>
-                  <div className="text-[10px] text-[var(--text-muted)] mt-1">
-                    {item.time}
-                  </div>
-                </Link>
-              ))}
+          {displayNews.length > 0 ? (
+            displayNews.map((item) => (
+              <a
+                key={item.id}
+                href={item.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group block p-2.5 -mx-2.5 rounded-xl hover:bg-[var(--bg-hover)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
+              >
+                <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-[var(--value-text)]">
+                  <span className="truncate max-w-[170px]">
+                    {item.entityTags?.[0]?.name || item.tags?.[0] || "Football"}
+                  </span>
+                  <span className="text-[var(--text-muted)] font-normal shrink-0">
+                    {formatRelativeTime(item.publishedAt)}
+                  </span>
+                </div>
+                <div className="text-xs font-semibold text-[var(--text-primary)] group-hover:text-[var(--accent)] line-clamp-2 mt-0.5 leading-snug transition-colors">
+                  {item.title}
+                </div>
+                <div className="flex items-center justify-between text-[10px] text-[var(--text-muted)] mt-1">
+                  <span>{item.source}</span>
+                  <ExternalLink className="w-2.5 h-2.5 opacity-60 group-hover:text-[var(--accent)] transition-colors" />
+                </div>
+              </a>
+            ))
+          ) : (
+            <p className="px-1 py-2 text-xs text-[var(--text-muted)]">
+              Headlines are unavailable right now.
+            </p>
+          )}
         </div>
       </div>
 
@@ -270,7 +120,8 @@ export function RightRail({
           <button
             type="button"
             onClick={() => setActiveTab("risers")}
-            className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-[var(--chip-radius)] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
+            aria-pressed={activeTab === "risers"}
+            className={`flex-1 flex items-center justify-center gap-1.5 min-h-[44px] lg:min-h-[32px] rounded-[var(--chip-radius)] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
               activeTab === "risers"
                 ? "bg-[var(--bg-card)] text-[var(--text-primary)] shadow-xs font-bold"
                 : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
@@ -282,7 +133,8 @@ export function RightRail({
           <button
             type="button"
             onClick={() => setActiveTab("fallers")}
-            className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-[var(--chip-radius)] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
+            aria-pressed={activeTab === "fallers"}
+            className={`flex-1 flex items-center justify-center gap-1.5 min-h-[44px] lg:min-h-[32px] rounded-[var(--chip-radius)] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
               activeTab === "fallers"
                 ? "bg-[var(--bg-card)] text-[var(--text-primary)] shadow-xs font-bold"
                 : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
@@ -295,9 +147,15 @@ export function RightRail({
 
         {/* Top 5 list */}
         <div className="flex flex-col space-y-1">
+          {currentMovers.length === 0 && (
+            <p className="px-1 py-2 text-xs text-[var(--text-muted)]">
+              No value changes recorded yet.
+            </p>
+          )}
           {currentMovers.map((player, idx) => {
             const isRiser = player.diff >= 0;
-            const sign = isRiser ? "+" : "";
+            // Sign + arrow + colour: direction never relies on colour alone
+            const sign = isRiser ? "+" : "\u2212";
             const pct = typeof player.percentage === "number" ? Math.abs(player.percentage).toFixed(1) : "0.0";
 
             return (
@@ -323,7 +181,7 @@ export function RightRail({
                 </div>
 
                 <div className="text-right shrink-0">
-                  <div className="text-xs font-bold text-[var(--value-text)] tabular-nums">
+                  <div className="text-xs font-bold text-[var(--value-text)] figure tabular-nums">
                     {formatCompactEur(player.latestValue)}
                   </div>
                   <div

@@ -31,7 +31,7 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="w-full border-t border-[var(--divider)] bg-[var(--bg-page)]/90 backdrop-blur-xl pt-6 sm:pt-8 pb-24 md:pb-8 mt-12 sm:mt-16 text-[var(--text-secondary)] text-xs sm:text-sm">
+    <footer className="w-full border-t border-[var(--divider)] bg-bg-page/90 backdrop-blur-xl pt-6 sm:pt-8 pb-8 mt-12 sm:mt-16 text-[var(--text-secondary)] text-xs sm:text-sm">
       <div className="max-w-[var(--container-max)] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 sm:gap-8 lg:gap-16 mb-6 sm:mb-8">
           {/* Brand Block */}

@@ -29,9 +29,9 @@ export function H2HTab({ match }: H2HTabProps) {
 
   const getFormColor = (resStr: string) => {
     const r = resStr?.toUpperCase();
-    if (r === "W") return "bg-emerald-500 text-white shadow-xs";
-    if (r === "D") return "bg-amber-500 text-slate-950 font-black shadow-xs";
-    if (r === "L") return "bg-rose-500 text-white shadow-xs";
+    if (r === "W") return "bg-trend-up text-accent-contrast shadow-xs";
+    if (r === "D") return "bg-accent text-accent-contrast font-black shadow-xs";
+    if (r === "L") return "bg-trend-down text-accent-contrast shadow-xs";
     return "bg-[var(--bg-chip)] text-[var(--text-muted)]";
   };
 
@@ -147,13 +147,13 @@ export function H2HTab({ match }: H2HTabProps) {
               <p className="text-[10px] uppercase font-bold text-[var(--text-muted)] truncate">
                 {homeTeam?.name || "Home"} Wins
               </p>
-              <p className="text-xl sm:text-3xl font-black text-emerald-400 tabular-nums mt-0.5">
+              <p className="text-xl sm:text-3xl font-black text-trend-up tabular-nums mt-0.5">
                 {homeWins}
               </p>
             </div>
             <div className="p-3 rounded-2xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)]">
               <p className="text-[10px] uppercase font-bold text-[var(--text-muted)]">Draws</p>
-              <p className="text-xl sm:text-3xl font-black text-[var(--value-text)] tabular-nums mt-0.5">
+              <p className="text-xl sm:text-3xl font-black text-[var(--value-text)] figure tabular-nums mt-0.5">
                 {draws}
               </p>
             </div>
@@ -161,7 +161,7 @@ export function H2HTab({ match }: H2HTabProps) {
               <p className="text-[10px] uppercase font-bold text-[var(--text-muted)] truncate">
                 {awayTeam?.name || "Away"} Wins
               </p>
-              <p className="text-xl sm:text-3xl font-black text-blue-400 tabular-nums mt-0.5">
+              <p className="text-xl sm:text-3xl font-black text-info tabular-nums mt-0.5">
                 {awayWins}
               </p>
             </div>
@@ -170,17 +170,17 @@ export function H2HTab({ match }: H2HTabProps) {
           {/* Proportional Record Bar */}
           <div className="w-full h-2.5 rounded-full bg-[var(--bg-chip)] overflow-hidden flex shadow-inner">
             <div
-              className="h-full bg-emerald-500 transition-all duration-300"
+              className="h-full bg-trend-up transition-all duration-300"
               style={{ width: `${(homeWins / totalMeetings) * 100}%` }}
               title={`${homeTeam?.name || "Home"}: ${homeWins} wins`}
             />
             <div
-              className="h-full bg-amber-500 transition-all duration-300"
+              className="h-full bg-accent transition-all duration-300"
               style={{ width: `${(draws / totalMeetings) * 100}%` }}
               title={`Draws: ${draws}`}
             />
             <div
-              className="h-full bg-blue-500 transition-all duration-300"
+              className="h-full bg-info transition-all duration-300"
               style={{ width: `${(awayWins / totalMeetings) * 100}%` }}
               title={`${awayTeam?.name || "Away"}: ${awayWins} wins`}
             />
@@ -224,7 +224,7 @@ export function H2HTab({ match }: H2HTabProps) {
                     <span className="text-[var(--text-primary)] font-semibold truncate max-w-[100px] text-right">
                       {m.home?.name || "Home"}
                     </span>
-                    <span className="px-2 py-0.5 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border-subtle)] font-mono font-bold text-[var(--value-text)] tabular-nums text-xs">
+                    <span className="px-2 py-0.5 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border-subtle)] font-mono font-bold text-[var(--value-text)] figure tabular-nums text-xs">
                       {homeScore} - {awayScore}
                     </span>
                     <span className="text-[var(--text-primary)] font-semibold truncate max-w-[100px]">

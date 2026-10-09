@@ -70,6 +70,28 @@
   [data-tabular="true"] {
     font-variant-numeric: tabular-nums;
   }
+
+  /* Headings use Archivo's semi-condensed width: denser, more "scoreboard",
+     and long club/player names fit on one line more often. */
+  h1,
+  h2 {
+    font-stretch: var(--stretch-heading);
+    text-wrap: balance;
+  }
+
+  h1 {
+    letter-spacing: -0.015em;
+  }
+}
+
+@layer utilities {
+  /* Scores, fees and market values: condensed, lining, tabular figures so
+     live-updating numbers never jitter and big money reads at a glance. */
+  .figure {
+    font-stretch: var(--stretch-figure);
+    font-variant-numeric: tabular-nums lining-nums;
+    letter-spacing: -0.005em;
+  }
 }
 
 /* Fluid Typography and Spacing Variables */
@@ -192,13 +214,33 @@
   }
 }
 
-/* Hide all scrollbars globally (scrollbar-width:none; ::-webkit-scrollbar{display:none}) */
-* {
-  scrollbar-width: none !important;
-  -ms-overflow-style: none !important;
+/* Scrollbars: hidden on touch screens, where swiping is the affordance. With a
+   mouse or trackpad a thin, token-coloured bar stays visible so wide tables
+   (standings, squads, ledgers) still read as horizontally scrollable. */
+@media (pointer: coarse) {
+  * {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  *::-webkit-scrollbar {
+    display: none;
+  }
 }
-*::-webkit-scrollbar {
-  display: none !important;
+
+@media (pointer: fine) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--divider) transparent;
+  }
+}
+
+/* Chip rows and carousels never show a bar, whatever the pointer */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 /* Edge fade on horizontal scrollers */

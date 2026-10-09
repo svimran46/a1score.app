@@ -105,7 +105,7 @@ export function LiveMinute({
   if (freshness.isUnconfirmed) {
     return (
       <span
-        className={`inline-flex items-center gap-1 font-semibold text-amber-400/90 text-xs tracking-tight ${className}`}
+        className={`inline-flex items-center gap-1 font-semibold text-value-text/90 text-xs tracking-tight ${className}`}
         title="Live event feed delayed or minute unconfirmed"
       >
         <span>Status unconfirmed</span>
@@ -114,16 +114,16 @@ export function LiveMinute({
   }
 
   if (isFinished) {
-    return <span className={`text-slate-400 font-semibold ${className}`}>FT</span>;
+    return <span className={`text-text-muted font-semibold ${className}`}>FT</span>;
   }
 
   if (isHT) {
     return (
-      <span className={`inline-flex items-center gap-1.5 font-bold text-amber-400 ${className}`}>
+      <span className={`inline-flex items-center gap-1.5 font-bold text-value-text ${className}`}>
         {showPulsingDot && (
           <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500" />
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-accent" />
           </span>
         )}
         <span>HT</span>
@@ -133,12 +133,12 @@ export function LiveMinute({
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 font-bold text-emerald-400 tabular-nums ${className}`}
+      className={`inline-flex items-center gap-1.5 font-bold text-trend-up tabular-nums ${className}`}
     >
       {showPulsingDot && isLive && (
         <span className="relative flex h-2 w-2">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-trend-up opacity-75" />
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-trend-up" />
         </span>
       )}
       <span>{displayText}</span>

@@ -197,13 +197,13 @@ export function MatchScorecard({
                 <div
                   className={`flex items-center gap-2 sm:gap-4 lg:gap-6 tabular-nums transition-all duration-300 ${
                     goalHighlight
-                      ? "ring-2 ring-emerald-400 bg-emerald-500/10 rounded-2xl px-4 py-1 scale-105"
+                      ? "ring-2 ring-trend-up bg-trend-up/10 rounded-2xl px-4 py-1 scale-105"
                       : ""
                   }`}
                   aria-live="polite"
                 >
                   <span
-                    className={`text-4xl sm:text-6xl lg:text-7xl font-black tabular-nums tracking-tight ${
+                    className={`text-4xl sm:text-6xl lg:text-7xl font-black figure tracking-tight ${
                       isLive ? "text-[var(--value-text)]" : "text-[var(--text-primary)]"
                     }`}
                   >
@@ -213,7 +213,7 @@ export function MatchScorecard({
                     -
                   </span>
                   <span
-                    className={`text-4xl sm:text-6xl lg:text-7xl font-black tabular-nums tracking-tight ${
+                    className={`text-4xl sm:text-6xl lg:text-7xl font-black figure tracking-tight ${
                       isLive ? "text-[var(--value-text)]" : "text-[var(--text-primary)]"
                     }`}
                   >
@@ -224,7 +224,7 @@ export function MatchScorecard({
                 {/* Status Line directly under score */}
                 <div className="pt-1 flex flex-col items-center gap-1">
                   {isCancelled ? (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-500/15 text-rose-400 border border-rose-500/30">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-trend-down/15 text-trend-down border border-trend-down/30">
                       <AlertCircle className="w-3.5 h-3.5" />
                       Postponed / Cancelled
                     </span>

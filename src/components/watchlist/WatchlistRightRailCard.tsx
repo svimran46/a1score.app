@@ -39,7 +39,7 @@ export function WatchlistRightRailCard() {
       </div>
 
       {topPlayers.length === 0 ? (
-        <div className="p-3 text-center rounded-xl bg-[var(--bg-elevated)]/50">
+        <div className="p-3 text-center rounded-xl bg-bg-elevated/50">
           <p className="text-xs text-[var(--text-muted)] leading-relaxed">
             You&apos;re not following anyone yet. Tap the star on a player or club to add them.
           </p>
@@ -93,7 +93,7 @@ export function WatchlistRightRailCard() {
                 </div>
 
                 <div className="text-right shrink-0">
-                  <div className="text-xs font-bold text-[var(--value-text)] tabular-nums">
+                  <div className="text-xs font-bold text-[var(--value-text)] figure tabular-nums">
                     {currentVal > 0 ? formatCompactEur(currentVal) : "—"}
                   </div>
                   {hasChange && (
