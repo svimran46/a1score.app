@@ -1,212 +1,150 @@
-"use client";
+import React from "react";
+import type { PlayerProfileVM, ProfileTransfer } from "@/lib/data/playerProfile.types";
+import { formatFeeLabel } from "@/lib/transfers";
+import { formatDateGB, formatMonthYear, formatValueEur, spokenEur } from "@/lib/format-value";
+import { ValueFigure } from "@/components/players/ValueFigure";
+import { NotRecorded, ProfileDisclosure, ProfileSection } from "@/components/players/ProfileSection";
 
-import { useState } from "react";
-import { formatDate } from "@/lib/utils";
-import { isYouthMove, formatTransferFee } from "@/lib/transfers";
-import { ArrowRight, GraduationCap } from "lucide-react";
-import { Card } from "@/components/ui";
+/** Senior rows shown before the "earlier transfers" disclosure. */
+export const TRANSFERS_VISIBLE = 6;
 
-interface TransferItem {
-  id: string;
-  fromClubName?: string | null;
-  toClubName?: string | null;
-  date: string | Date;
-  feeEur?: number | null;
-  transferType?: string | null;
+function ClubName({ name }: { name: string | null }) {
+  return name ? <>{name}</> : <NotRecorded sr="club not recorded" />;
 }
 
-interface TransfersTableProps {
-  transfers: TransferItem[];
-}
-
-export function TransfersTable({ transfers }: TransfersTableProps) {
-  const [filter, setFilter] = useState<"all" | "senior">("senior");
-
-  if (!transfers || transfers.length === 0) {
-    return (
-      <Card className="p-6 text-center text-xs text-[var(--text-muted)]">
-        No recorded transfers for this player.
-      </Card>
-    );
+function Fee({ t }: { t: ProfileTransfer }) {
+  if (t.feeStatus === "disclosed" && formatValueEur(t.feeEur)) {
+    return <ValueFigure eur={t.feeEur} size="md" srLabel="Fee" />;
   }
+  const fee = formatFeeLabel(t.feeStatus, t.feeEur);
+  if (fee.srLabel) return <NotRecorded mark={fee.label} sr={fee.srLabel} />;
+  return (
+    <span className={t.feeStatus === "undisclosed" ? "text-text-muted" : "text-text-secondary"}>{fee.label}</span>
+  );
+}
 
-  const youthCount = transfers.filter((t) =>
-    isYouthMove(t.fromClubName, t.toClubName, t.transferType)
-  ).length;
+/** Context money: the amount in .figure but secondary, never amber. */
+function ValueThen({ v }: { v: NonNullable<ProfileTransfer["valueThen"]> }) {
+  return (
+    <span className="text-xs leading-4 text-text-secondary">
+      {"Market value then "}
+      <span className="figure font-semibold">
+        <span aria-hidden="true">{formatValueEur(v.valueEur)}</span>
+        <span className="sr-only">{spokenEur(v.valueEur)}</span>
+      </span>
+      {` (${formatMonthYear(v.date)})`}
+    </span>
+  );
+}
 
-  const displayedTransfers =
-    filter === "senior"
-      ? transfers.filter(
-          (t) => !isYouthMove(t.fromClubName, t.toClubName, t.transferType)
-        )
-      : transfers;
+
+/**
+ * One move. Narrow: stacked (date / move / value then, fee on the right).
+ * Wide: one grid row, Date | Move | Value then | Fee.
+ */
+function TransferRow({ t }: { t: ProfileTransfer }) {
+  return (
+    <li
+      className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-0.5 border-b border-divider/60 py-3 last:border-b-0 @[560px]/profile:min-h-14 @[560px]/profile:grid-cols-[96px_minmax(0,1fr)_140px_96px] @[560px]/profile:items-center @[560px]/profile:py-2"
+    >
+      <time
+        dateTime={t.date}
+        className="col-start-1 row-start-1 text-xs leading-4 tabular-nums text-text-muted @[560px]/profile:col-start-1"
+      >
+        {formatDateGB(t.date)}
+      </time>
+      <p
+        className="col-start-1 row-start-2 truncate text-sm leading-5 text-text-primary @[560px]/profile:col-start-2 @[560px]/profile:row-start-1"
+      >
+        <ClubName name={t.fromName} />
+        <span aria-hidden="true" className="text-text-muted">{" → "}</span>
+        <span className="sr-only">{" to "}</span>
+        <ClubName name={t.toName} />
+      </p>
+      {t.valueThen ? (
+        <p className="col-start-1 row-start-3 min-w-0 @[560px]/profile:col-start-3 @[560px]/profile:row-start-1">
+          <ValueThen v={t.valueThen} />
+        </p>
+      ) : null}
+      <p
+        className="col-start-2 row-span-2 row-start-1 self-center whitespace-nowrap text-right text-sm leading-5 @[560px]/profile:col-start-4 @[560px]/profile:row-span-1 @[560px]/profile:row-start-1"
+      >
+        <Fee t={t} />
+      </p>
+    </li>
+  );
+}
+
+function TransferList({ rows }: { rows: ProfileTransfer[] }) {
+  return (
+    <ol className="list-none">
+      {rows.map((t) => (
+        <TransferRow key={t.id} t={t} />
+      ))}
+    </ol>
+  );
+}
+
+function SummaryMeta({ summary }: { summary: NonNullable<PlayerProfileVM["transferSummary"]> }) {
+  const { totalEur, count, record } = summary;
+  const recordFee = formatValueEur(record.feeEur);
+  const year = record.date ? new Date(record.date).getUTCFullYear() : null;
+  const recordContext = [record.toName, year && Number.isFinite(year) ? String(year) : null].filter(Boolean).join(", ");
+  return (
+    <>
+      <ValueFigure eur={totalEur} size="sm" srLabel="Total" />
+      {count === 1 ? " from 1 disclosed fee" : ` across ${count} disclosed fees`}
+      {count > 1 && recordFee ? (
+        <span className="hidden @[560px]/profile:inline">
+          {" · record "}
+          <ValueFigure eur={record.feeEur} size="sm" />
+          {recordContext ? ` (${recordContext})` : ""}
+        </span>
+      ) : null}
+    </>
+  );
+}
+
+/**
+ * Transfers (#transfers): senior moves newest first with the fee as the
+ * source states it and the market value at the time. Server-rendered, no JS:
+ * older and youth moves sit in native <details> and stay in the HTML.
+ */
+export function TransfersSection({ vm }: { vm: PlayerProfileVM }) {
+  const all = vm.transfers;
+  if (!all || all.length === 0) return null;
+
+  const senior = all.filter((t) => !t.isYouth);
+  const youth = all.filter((t) => t.isYouth);
+  // Only youth moves: they are the record, so show them as normal rows.
+  const main = senior.length > 0 ? senior : youth;
+  const visible = main.slice(0, TRANSFERS_VISIBLE);
+  const earlier = main.slice(TRANSFERS_VISIBLE);
+  const youthDisclosure = senior.length > 0 ? youth : [];
 
   return (
-    <Card className="p-4 sm:p-5 overflow-hidden">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-[var(--divider)] gap-3">
-        <div>
-          <h3 className="text-sm sm:text-base font-bold text-[var(--text-primary)] tracking-tight">
-            Transfer History
-          </h3>
-          <p className="text-xs text-[var(--text-muted)] mt-0.5">
-            Career moves, loan spells, and record fees
-          </p>
-        </div>
-
-        {youthCount > 0 && (
-          <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[var(--bg-page)] text-xs">
-            <button
-              type="button"
-              onClick={() => setFilter("senior")}
-              className={`px-3 py-1 rounded-lg font-bold transition-all cursor-pointer ${
-                filter === "senior"
-                  ? "bg-[var(--accent)] text-[var(--accent-contrast)] shadow-xs"
-                  : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
-              }`}
-            >
-              Senior Only
-            </button>
-            <button
-              type="button"
-              onClick={() => setFilter("all")}
-              className={`px-3 py-1 rounded-lg font-bold transition-all cursor-pointer ${
-                filter === "all"
-                  ? "bg-[var(--accent)] text-[var(--accent-contrast)] shadow-xs"
-                  : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
-              }`}
-            >
-              All Moves ({transfers.length})
-            </button>
-          </div>
-        )}
-      </div>
-
-      <div className="mt-3">
-        {displayedTransfers.length === 0 ? (
-          <div className="py-6 text-center text-[var(--text-muted)] text-xs">
-            No senior transfers recorded. (All moves were internal academy promotions)
-          </div>
-        ) : (
-          <>
-            {/* Mobile Stacked Cards (<md) */}
-            <div className="md:hidden space-y-2.5">
-              {displayedTransfers.map((t) => {
-                const feeInfo = formatTransferFee(t.feeEur, t.transferType);
-                const isYouth = isYouthMove(t.fromClubName, t.toClubName, t.transferType);
-
-                return (
-                  <div
-                    key={t.id}
-                    className="p-3 rounded-xl bg-[var(--bg-elevated)] space-y-2 text-xs"
-                  >
-                    <div className="flex items-center justify-between text-[var(--text-muted)]">
-                      <span className="font-semibold text-[var(--text-primary)]">
-                        {formatDate(t.date)}
-                      </span>
-                      <span className="px-2 py-0.5 rounded-md bg-[var(--bg-chip)] text-[10px] font-semibold text-[var(--text-secondary)]">
-                        {isYouth ? "Promotion" : t.transferType || "Transfer"}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-1.5 min-w-0 flex-1">
-                        <span className="truncate text-[var(--text-secondary)] font-medium">
-                          {t.fromClubName || "Unknown"}
-                        </span>
-                        <ArrowRight className="w-3 h-3 text-[var(--text-muted)] shrink-0" />
-                        <span className="truncate text-[var(--text-primary)] font-bold">
-                          {t.toClubName || "Unknown"}
-                        </span>
-                        {isYouth && (
-                          <span
-                            title="Academy / Youth Move"
-                            className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-[9px] font-bold bg-[var(--bg-chip)] text-[var(--value-text)] shrink-0"
-                          >
-                            <GraduationCap className="w-2.5 h-2.5" />
-                            Youth
-                          </span>
-                        )}
-                      </div>
-
-                      <div className="shrink-0 text-right">
-                        <span
-                          className={`font-black tabular-nums whitespace-nowrap ${
-                            feeInfo.isAmount ? "text-[var(--value-text)] text-sm" : "text-[var(--text-muted)] text-xs font-normal"
-                          }`}
-                        >
-                          {feeInfo.label}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Desktop & Tablet Full Table (md+) with Sticky First Column */}
-            <div className="hidden md:block overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead>
-                  <tr className="text-[var(--text-muted)] uppercase tracking-wider border-b border-[var(--divider)] text-[11px] font-bold">
-                    <th className="pb-2.5 font-bold sticky left-0 bg-[var(--bg-card)] z-10 pr-4">Date</th>
-                    <th className="pb-2.5 font-bold">From Club</th>
-                    <th className="pb-2.5 text-center"></th>
-                    <th className="pb-2.5 font-bold">To Club</th>
-                    <th className="pb-2.5 font-bold text-right">Fee</th>
-                    <th className="pb-2.5 font-bold text-right">Type</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[var(--divider)]">
-                  {displayedTransfers.map((t) => {
-                    const feeInfo = formatTransferFee(t.feeEur, t.transferType);
-                    const isYouth = isYouthMove(t.fromClubName, t.toClubName, t.transferType);
-
-                    return (
-                      <tr key={t.id} className="hover:bg-[var(--bg-hover)] transition-colors">
-                        <td className="py-2.5 text-[var(--text-secondary)] font-medium whitespace-nowrap sticky left-0 bg-[var(--bg-card)] z-10 pr-4">
-                          {formatDate(t.date)}
-                        </td>
-                        <td className="py-2.5 text-[var(--text-secondary)] font-medium truncate max-w-[140px]">
-                          {t.fromClubName || "Unknown"}
-                        </td>
-                        <td className="py-2.5 text-center text-[var(--text-muted)] px-2">
-                          <ArrowRight className="w-3.5 h-3.5 mx-auto" />
-                        </td>
-                        <td className="py-2.5 text-[var(--text-primary)] font-semibold truncate max-w-[140px]">
-                          <div className="flex items-center gap-1.5">
-                            <span>{t.toClubName || "Unknown"}</span>
-                            {isYouth && (
-                              <span
-                                title="Academy / Youth Move"
-                                className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-[var(--bg-chip)] text-[var(--value-text)]"
-                              >
-                                <GraduationCap className="w-2.5 h-2.5" />
-                                Youth
-                              </span>
-                            )}
-                          </div>
-                        </td>
-                        <td
-                          className={`py-2.5 text-right font-bold whitespace-nowrap tabular-nums ${
-                            feeInfo.isAmount ? "text-[var(--value-text)]" : "text-[var(--text-muted)] font-normal"
-                          }`}
-                        >
-                          {feeInfo.label}
-                        </td>
-                        <td className="py-2.5 text-right text-[var(--text-muted)] capitalize whitespace-nowrap">
-                          <span className="px-2 py-0.5 rounded bg-[var(--bg-chip)] text-[11px] text-[var(--text-secondary)] font-medium">
-                            {isYouth ? "Promotion" : t.transferType || "Transfer"}
-                          </span>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </>
-        )}
-      </div>
-    </Card>
+    <ProfileSection
+      id="transfers"
+      navLabel="Transfers"
+      meta={vm.transferSummary ? <SummaryMeta summary={vm.transferSummary} /> : null}
+    >
+      <TransferList rows={visible} />
+      {earlier.length > 0 ? (
+        <ProfileDisclosure
+          summary={`${earlier.length} earlier ${earlier.length === 1 ? "transfer" : "transfers"}`}
+          className="mt-1 border-t border-divider/60"
+        >
+          <TransferList rows={earlier} />
+        </ProfileDisclosure>
+      ) : null}
+      {youthDisclosure.length > 0 ? (
+        <ProfileDisclosure
+          summary={`Youth and reserve moves (${youthDisclosure.length})`}
+          className="mt-1 border-t border-divider/60"
+        >
+          <TransferList rows={youthDisclosure} />
+        </ProfileDisclosure>
+      ) : null}
+    </ProfileSection>
   );
 }

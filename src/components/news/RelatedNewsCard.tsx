@@ -3,6 +3,8 @@ import { NewsItem } from "@/types/news";
 import { NewsCardRow } from "./NewsCardRow";
 import { Card } from "@/components/ui";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { ProfileSection } from "@/components/players/ProfileSection";
+import type { PlayerProfileVM } from "@/lib/data/playerProfile.types";
 
 interface RelatedNewsCardProps {
   items: NewsItem[];
@@ -44,5 +46,26 @@ export function RelatedNewsCard({
         </div>
       </Card>
     </section>
+  );
+}
+
+/**
+ * News (#news) on the player profile: at most 3 rows, no count badge.
+ * The heading says honestly when every story only mentions the club.
+ */
+export function NewsSection({ vm }: { vm: PlayerProfileVM }) {
+  const items = vm.news?.items.slice(0, 3) ?? [];
+  if (items.length === 0) return null;
+  const clubOnly = vm.news?.scope === "club" && vm.club;
+  const title = clubOnly ? `News mentioning ${vm.club!.shortName || vm.club!.name}` : "News";
+
+  return (
+    <ProfileSection id="news" navLabel="News" title={title}>
+      <div className="-mx-3 divide-y divide-[var(--divider)]">
+        {items.map((item) => (
+          <NewsCardRow key={item.id} item={item} />
+        ))}
+      </div>
+    </ProfileSection>
   );
 }

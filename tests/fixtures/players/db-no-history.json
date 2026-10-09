@@ -1,0 +1,22 @@
+{
+  "_note": "Supabase path with no valuation history and no current value.",
+  "id": "cmnohistory00000000000000",
+  "transfermarktId": null,
+  "fullName": "Sample Unvalued",
+  "commonName": "Sample Unvalued",
+  "dateOfBirth": null,
+  "nationality": [],
+  "position": "Unknown",
+  "subPosition": null,
+  "preferredFoot": null,
+  "heightCm": null,
+  "photoUrl": null,
+  "currentClub": null,
+  "parentClub": null,
+  "loanUntil": null,
+  "marketValues": [],
+  "latestMarketValue": 0,
+  "transfers": [],
+  "seasonStats": [],
+  "injuries": []
+}

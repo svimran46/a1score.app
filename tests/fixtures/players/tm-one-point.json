@@ -1,0 +1,40 @@
+{
+  "_note": "TM path, a single valuation on record.",
+  "id": "100003",
+  "sourceId": "100003",
+  "fullName": "Sample Prospect",
+  "commonName": "Sample Prospect",
+  "dateOfBirth": "2008-09-10T00:00:00.000Z",
+  "nationality": [
+    "Brazil"
+  ],
+  "position": "Left Winger",
+  "subPosition": null,
+  "preferredFoot": "left",
+  "heightCm": 172,
+  "contractUntil": null,
+  "clubStatusText": null,
+  "photoUrl": null,
+  "currentClubId": "999",
+  "currentClub": {
+    "id": "999",
+    "name": "Santos FC",
+    "logoUrl": "/img/club/999",
+    "league": {
+      "id": "BRA1",
+      "name": "Série A"
+    }
+  },
+  "marketValues": [
+    {
+      "id": "tm-val-o1",
+      "date": "2026-02-04T00:00:00.000Z",
+      "valueEur": 2000000,
+      "clubName": "Santos FC"
+    }
+  ],
+  "latestMarketValue": 2000000,
+  "transfers": [],
+  "seasonStats": [],
+  "injuries": []
+}

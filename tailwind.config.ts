@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss";
 import animate from "tailwindcss-animate";
+import containerQueries from "@tailwindcss/container-queries";
 
 // Design tokens are hex values held in CSS variables, so Tailwind cannot apply
 // an opacity modifier to `bg-[var(--bg-card)]/95` (it silently emits nothing).
@@ -121,6 +122,6 @@ const config: Config = {
       },
     },
   },
-  plugins: [animate],
+  plugins: [animate, containerQueries],
 };
 export default config;

@@ -864,6 +864,20 @@ export async function getFotmobTeamDetails(teamId: number): Promise<FotmobTeamDe
   }
 }
 
+export interface FotmobSeasonStatRow {
+  id: string;
+  season: string;
+  competition: string;
+  clubName: string;
+  appearances: number | null;
+  goals: number | null;
+  assists: number | null;
+  minutesPlayed: number | null;
+  yellowCards: number | null;
+  redCards: number | null;
+  rating: number | null;
+}
+
 /**
  * Fetch player performance intelligence and career tournament breakdown
  */
@@ -886,44 +900,50 @@ export async function getFotmobPlayerStats(playerNameOrId: string | number) {
 
   if (!data) return null;
 
-  const seasonStatsList: Array<{
-    id: string;
-    season: string;
-    competition: string;
-    clubName: string;
-    appearances: number;
-    goals: number;
-    assists: number;
-    minutesPlayed: number | null;
-    yellowCards: number | null;
-    redCards: number | null;
-    rating?: number | null;
-  }> = [];
+  const seasonStatsList: FotmobSeasonStatRow[] = [];
+
+  // Missing numbers stay null (never 0) and rows without a team, season or
+  // competition are skipped rather than labelled with placeholders.
+  const countOrNull = (v: unknown): number | null => {
+    if (v == null || v === "") return null;
+    const n = Number(v);
+    return Number.isFinite(n) ? n : null;
+  };
+  const ratingOrNull = (r: any): number | null => {
+    const n = countOrNull(r?.rating);
+    return n != null && n > 0 ? n : null;
+  };
+  const textOrNull = (v: unknown): string | null =>
+    typeof v === "string" && v.trim() ? v.trim() : null;
 
   const seniorCareer = data.careerHistory?.careerItems?.senior;
   if (seniorCareer && Array.isArray(seniorCareer.teamEntries)) {
     for (const teamEntry of seniorCareer.teamEntries) {
-      const teamName = teamEntry.team || "Club";
-      const seasonEntries = teamEntry.seasonEntries || [];
+      const teamName = textOrNull(teamEntry?.team);
+      if (!teamName) continue;
+      const seasonEntries = Array.isArray(teamEntry.seasonEntries) ? teamEntry.seasonEntries : [];
 
       for (const season of seasonEntries) {
-        const seasonName = season.seasonName || "Current";
-        const tournamentStats = season.tournamentStats || [];
+        const seasonName = textOrNull(season?.seasonName);
+        if (!seasonName) continue;
+        const tournamentStats = Array.isArray(season.tournamentStats) ? season.tournamentStats : [];
 
         if (tournamentStats.length > 0) {
           for (const tour of tournamentStats) {
+            const competition = textOrNull(tour?.leagueName);
+            if (!competition) continue;
             seasonStatsList.push({
               id: `fotmob-${fotmobId}-${tour.leagueId || tour.tournamentId}-${seasonName}`,
               season: seasonName,
-              competition: tour.leagueName || "League",
+              competition,
               clubName: teamName,
-              appearances: Number(tour.appearances) || 0,
-              goals: Number(tour.goals) || 0,
-              assists: Number(tour.assists) || 0,
+              appearances: countOrNull(tour.appearances),
+              goals: countOrNull(tour.goals),
+              assists: countOrNull(tour.assists),
               minutesPlayed: null,
               yellowCards: null,
               redCards: null,
-              rating: tour.rating?.rating ? Number(tour.rating.rating) : null,
+              rating: ratingOrNull(tour.rating),
             });
           }
         } else {
@@ -932,13 +952,13 @@ export async function getFotmobPlayerStats(playerNameOrId: string | number) {
             season: seasonName,
             competition: "All Competitions",
             clubName: teamName,
-            appearances: Number(season.appearances) || 0,
-            goals: Number(season.goals) || 0,
-            assists: Number(season.assists) || 0,
+            appearances: countOrNull(season.appearances),
+            goals: countOrNull(season.goals),
+            assists: countOrNull(season.assists),
             minutesPlayed: null,
             yellowCards: null,
             redCards: null,
-            rating: season.rating?.rating ? Number(season.rating.rating) : null,
+            rating: ratingOrNull(season.rating),
           });
         }
       }

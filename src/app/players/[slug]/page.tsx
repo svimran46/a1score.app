@@ -1,18 +1,20 @@
+import { Suspense } from "react";
 import { notFound, permanentRedirect } from "next/navigation";
-import { EntityImage } from "@/components/EntityImage";
-import Link from "next/link";
-import { getPlayerBySlugOrId } from "@/lib/data/players";
-import { calculateAge, formatCompactEur, formatDate, formatUpdateAge } from "@/lib/utils";
-import { getClubShortName } from "@/lib/data/clubs";
-import { getClubSlug, getLeagueSlug, getPlayerSlug } from "@/lib/slugs";
-import { constructMetadata, SITE_URL } from "@/lib/metadata";
-import { Card, ValuationFreshness, Breadcrumbs, PageHeader } from "@/components/ui";
-import { PlayerTabsContainer } from "@/components/PlayerTabsContainer";
-import { FollowButton } from "@/components/watchlist/FollowButton";
-import { getRelatedNews } from "@/lib/data/news";
-import { getPlayerAchievements } from "@/lib/data/playerAchievements";
-import { Scale } from "lucide-react";
 import type { Metadata } from "next";
+import { getPlayerProfile } from "@/lib/data/playerProfile";
+import { formatValueEur } from "@/lib/format-value";
+import { constructMetadata, SITE_URL } from "@/lib/metadata";
+import { Breadcrumbs } from "@/components/ui";
+import { PlayerHero } from "@/components/players/PlayerHero";
+import { ProfileSectionNav } from "@/components/players/ProfileSectionNav";
+import { ValueSection } from "@/components/players/ValueSection";
+import { TransfersSection } from "@/components/TransfersTable";
+import { SeasonSection, SeasonSkeleton } from "@/components/players/SeasonSection";
+import { InjuriesSection } from "@/components/InjuriesTable";
+import { HonoursSection } from "@/components/players/HonoursSection";
+import { ProfileFactsSection } from "@/components/KeyFacts";
+import { NewsSection } from "@/components/news/RelatedNewsCard";
+import type { PlayerProfileVM } from "@/lib/data/playerProfile.types";
 
 export const revalidate = 3600; // ISR revalidation every hour
 export const runtime = "edge";
@@ -24,8 +26,8 @@ interface PlayerPageProps {
 }
 
 export async function generateMetadata({ params }: PlayerPageProps): Promise<Metadata> {
-  const player = await getPlayerBySlugOrId(params.slug);
-  if (!player) {
+  const vm = await getPlayerProfile(params.slug);
+  if (!vm) {
     return constructMetadata({
       title: "Player Not Found | a1score",
       description: "The requested football player profile could not be located.",
@@ -33,147 +35,78 @@ export async function generateMetadata({ params }: PlayerPageProps): Promise<Met
     });
   }
 
-  const canonicalSlug = getPlayerSlug(player);
-  const formattedVal = player.latestMarketValue
-    ? formatCompactEur(player.latestMarketValue)
-    : "";
-  const clubName = player.currentClub?.name || "Free Agent";
-  const displayName = player.fullName || "Player Profile";
-  const displayPos = player.position || "Footballer";
+  const { displayName, fullName, position, slug } = vm.identity;
+  const value = formatValueEur(vm.valuation.current?.valueEur);
+  // Segments are omitted when unknown; never "Free Agent" or "Footballer".
+  const context = [position, vm.club?.name].filter(Boolean).join(", ");
+  const who = context ? `${fullName || displayName} (${context})` : fullName || displayName;
 
-  const rawTitle = `${displayName} market value, club and transfer history | a1score`;
-  const desc = formattedVal
-    ? `${displayName} (${displayPos}, ${clubName}) is valued at ${formattedVal}. See value history, transfers and club details.`
-    : `${displayName} (${displayPos}, ${clubName}). See value history, transfers and club details.`;
+  const rawTitle = `${fullName || displayName} market value, club and transfer history | a1score`;
+  const desc = value
+    ? `${who} is valued at ${value}. See value history, transfers and club details.`
+    : `${who}. See value history, transfers and club details.`;
 
   return constructMetadata({
     title: rawTitle,
     description: desc.length > 155 ? desc.slice(0, 152) + "..." : desc,
-    path: `/players/${canonicalSlug}`,
-    image: `/players/${canonicalSlug}/opengraph-image`,
+    path: `/players/${slug}`,
+    image: `/players/${slug}/opengraph-image`,
   });
 }
 
-export default async function PlayerPage({ params }: PlayerPageProps) {
-  const player = await getPlayerBySlugOrId(params.slug);
+/** Sections known on the server, in DOM order. Season streams in and adds its own chip. */
+function navSections(vm: PlayerProfileVM) {
+  const s: { id: string; label: string }[] = [];
+  if (vm.valuation.points.length > 0) s.push({ id: "value", label: "Value" });
+  if (vm.transfers.length > 0) s.push({ id: "transfers", label: "Transfers" });
+  if (vm.injuries.length > 0) s.push({ id: "injuries", label: "Injuries" });
+  if (vm.honours && vm.honours.totalTitles > 0) s.push({ id: "honours", label: "Honours" });
+  const facts = [
+    vm.identity.dob,
+    vm.identity.heightCm,
+    vm.identity.preferredFoot,
+    vm.identity.nationality,
+    vm.identity.fullName && vm.identity.fullName !== vm.identity.displayName ? vm.identity.fullName : null,
+    vm.identity.alsoPlays,
+  ].filter(Boolean).length;
+  if (facts >= 2) s.push({ id: "profile", label: "Profile" });
+  if (vm.news && vm.news.items.length > 0) s.push({ id: "news", label: "News" });
+  return s;
+}
 
-  if (!player) {
+export default async function PlayerPage({ params }: PlayerPageProps) {
+  const vm = await getPlayerProfile(params.slug);
+
+  if (!vm) {
     notFound();
   }
 
   // 301 redirect any non-canonical slug, accent-stripped legacy slug, or raw ID to canonical slug URL
-  const canonicalSlug = getPlayerSlug(player);
+  const canonicalSlug = vm.identity.slug;
   if (params.slug !== canonicalSlug) {
     permanentRedirect(`/players/${canonicalSlug}`);
   }
 
-  const age = calculateAge(player.dateOfBirth);
-  const mvs = Array.isArray(player.marketValues) ? player.marketValues : [];
-  const latestValuation = mvs.length > 0 ? mvs[mvs.length - 1] : undefined;
-  const prevValuation = mvs.length > 1 ? mvs[mvs.length - 2] : undefined;
-
-  const rawClub = player.currentClub;
-  const currentClub = Array.isArray(rawClub) ? rawClub[0] || null : rawClub || null;
-  const clubShort = currentClub ? getClubShortName(currentClub.shortName || currentClub.name || "") : null;
-
-  const tagsToMatch = [player.fullName, player.commonName, currentClub?.name].filter(Boolean) as string[];
-  const [relatedNews, achievements] = await Promise.all([
-    getRelatedNews(tagsToMatch, 3).catch(() => []),
-    getPlayerAchievements(player.id).catch(() => ({
-      majorHonours: [],
-      domesticCupsAndOther: [],
-      individualAwards: [],
-      all: [],
-      totalTitles: 0,
-    })),
-  ]);
-
-  const awardsList = achievements.all.map(
-    (a) => `${a.titleCount}x ${a.competitionName}`
-  );
-
-  const validDob =
-    player.dateOfBirth && !isNaN(new Date(player.dateOfBirth).getTime())
-      ? new Date(player.dateOfBirth)
-      : null;
-
-  // Change computation with trend arrow + %
-  const currentVal = player.latestMarketValue || latestValuation?.valueEur || 0;
-  let changeElement: React.ReactNode = null;
-  if (prevValuation && prevValuation.valueEur > 0 && currentVal > 0) {
-    const diff = currentVal - prevValuation.valueEur;
-    if (diff !== 0) {
-      const isPos = diff > 0;
-      const trendSymbol = isPos ? "▲" : "▼";
-      const sign = isPos ? "+" : "−";
-      const absDiff = Math.abs(diff);
-      const pct = Math.abs((diff / prevValuation.valueEur) * 100).toFixed(1);
-      const trendColorClass = isPos ? "text-[var(--trend-positive)]" : "text-[var(--trend-negative)]";
-
-      changeElement = (
-        <div className={`flex items-center gap-1 text-xs font-bold tabular-nums ${trendColorClass}`}>
-          <span>{trendSymbol}</span>
-          <span>{`${sign}${pct}%`}</span>
-          <span className="text-[var(--text-muted)] font-normal ml-0.5">
-            ({sign}{formatCompactEur(absDiff)})
-          </span>
-        </div>
-      );
-    }
-  }
-
-  // Update age
-  const updateAgeText = formatUpdateAge(latestValuation?.date || player.updatedAt);
-
-  // Nationality
-  const nationalityText =
-    Array.isArray(player.nationality) && player.nationality.length > 0
-      ? player.nationality.join(", ")
-      : typeof player.nationality === "string" && player.nationality
-      ? player.nationality
-      : null;
-
-  // KeyFacts items
-  const keyFactsItems = [
-    {
-      label: "Age",
-      value: age ? `${age} (${validDob ? formatDate(validDob) : ""})`.trim() : null,
-    },
-    {
-      label: "Nationality",
-      value: nationalityText,
-    },
-    {
-      label: "Height",
-      value: player.heightCm ? `${player.heightCm} cm` : null,
-    },
-    {
-      label: "Foot",
-      value: player.preferredFoot || null,
-    },
-    {
-      label: "Contract",
-      value: player.contractUntil ? formatDate(player.contractUntil) : null,
-    },
-  ];
-
   const baseUrl = SITE_URL;
   const canonicalUrl = `${baseUrl}/players/${canonicalSlug}`;
+  const { identity, club, honours } = vm;
+
+  const awardsList = (honours?.all ?? []).map((a) => `${a.titleCount}x ${a.competitionName}`);
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Person",
-    name: player.fullName,
-    ...(player.photoUrl ? { image: player.photoUrl } : {}),
-    ...(nationalityText ? { nationality: nationalityText } : {}),
-    ...(validDob ? { birthDate: validDob.toISOString().split("T")[0] } : {}),
+    name: identity.fullName,
+    ...(identity.photoUrl ? { image: identity.photoUrl } : {}),
+    ...(identity.nationality ? { nationality: identity.nationality } : {}),
+    ...(identity.dob ? { birthDate: identity.dob.split("T")[0] } : {}),
     ...(awardsList.length > 0 ? { award: awardsList } : {}),
-    ...(currentClub
+    ...(club
       ? {
           affiliation: {
             "@type": "SportsTeam",
-            name: currentClub.name,
-            url: `${baseUrl}/clubs/${getClubSlug(currentClub)}`,
+            name: club.name,
+            ...(club.href ? { url: `${baseUrl}${club.href}` } : {}),
           },
         }
       : {}),
@@ -185,118 +118,41 @@ export default async function PlayerPage({ params }: PlayerPageProps) {
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home", item: baseUrl },
       { "@type": "ListItem", position: 2, name: "Market Values", item: `${baseUrl}/values` },
-      { "@type": "ListItem", position: 3, name: player.fullName, item: canonicalUrl },
+      { "@type": "ListItem", position: 3, name: identity.fullName, item: canonicalUrl },
     ],
   };
 
-  const breadcrumbItems = [
-    { label: "Home", href: "/" },
-    { label: "Market Values", href: "/values" },
-    { label: player.fullName },
-  ];
+  const sections = navSections(vm);
 
   return (
-    <div className="space-y-4 max-w-[720px] mx-auto">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
-      <Breadcrumbs items={breadcrumbItems} />
+    <article id="top" aria-labelledby="player-name" className="@container/profile max-w-[720px] mx-auto">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
 
-      {/* 1. Header Card */}
-      <PageHeader
-        variant="player"
-        imageUrl={player.photoUrl}
-        imageAlt={player.fullName || "Player"}
-        entityType="player"
-        imageShape="circle"
-        categoryLabel={player.position || "Footballer"}
-        title={player.fullName}
-        value={currentVal > 0 ? formatCompactEur(currentVal) : null}
-        valueLabel="Current Market Value"
-        valueTrend={changeElement}
-        valueUpdatedAt={latestValuation?.date}
-        checkedAt={player.updatedAt}
-        freshnessTimestamp={latestValuation?.date || player.updatedAt}
-        metaItems={[
-          nationalityText ? <span key="nat">{nationalityText}</span> : null,
-          currentClub ? (
-            <Link
-              key="club"
-              href={`/clubs/${getClubSlug(currentClub)}`}
-              className="flex items-center gap-1.5 hover:text-[var(--accent)] transition-colors truncate"
-            >
-              {currentClub.logoUrl && (
-                <span className="relative w-4 h-4 shrink-0 inline-block overflow-hidden">
-                  <EntityImage
-                    src={currentClub.logoUrl}
-                    alt=""
-                    fill
-                    sizes="16px"
-                    entityType="club"
-                    className="object-contain"
-                  />
-                </span>
-              )}
-              <span className="font-semibold">{clubShort}</span>
-            </Link>
-          ) : null,
-          currentClub?.league ? (
-            <Link
-              key="league"
-              href={`/leagues/${getLeagueSlug(currentClub.league)}`}
-              className="hover:text-[var(--accent)] transition-colors truncate"
-            >
-              {currentClub.league.name}
-            </Link>
-          ) : null,
-          age ? <span key="age">{age} yrs</span> : null,
-        ].filter(Boolean)}
-        actions={
-          <div className="flex items-center gap-2">
-            <Link
-              href={`/compare?players=${params.slug}`}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 min-h-[44px] rounded-xl text-xs font-semibold bg-[var(--bg-elevated)] border border-[var(--border-subtle)] hover:bg-[var(--bg-hover)] text-[var(--text-primary)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] shrink-0"
-              title={`Compare ${player.fullName} with other players`}
-              aria-label={`Compare ${player.fullName}`}
-            >
-              <Scale className="w-3.5 h-3.5 text-[var(--value-text)]" />
-              <span>Compare</span>
-            </Link>
-            <FollowButton
-              variant="button"
-              id={player.id}
-              type="player"
-              name={player.fullName}
-              slug={params.slug}
-              avatarUrl={player.photoUrl}
-              clubName={clubShort}
-              clubCrest={currentClub?.logoUrl}
-              position={player.position}
-              marketValue={currentVal}
-            />
-          </div>
-        }
-        shareTitle={`${player.fullName} market valuation & stats | a1score`}
-        shareUrl={canonicalUrl}
+      <Breadcrumbs
+        className="hidden sm:flex mb-2"
+        items={[
+          { label: "Home", href: "/" },
+          { label: "Market values", href: "/values" },
+          { label: identity.displayName },
+        ]}
       />
 
-      {/* 2. Tabs: Overview, Transfers, Value history, Achievements */}
-      <PlayerTabsContainer
-        keyFactsItems={keyFactsItems}
-        mvs={mvs}
-        playerName={player.fullName}
-        dateOfBirth={validDob}
-        seasonStats={player.seasonStats}
-        transfers={player.transfers}
-        injuries={player.injuries}
-        relatedNews={relatedNews}
-        achievements={achievements}
-      />
-    </div>
+      <PlayerHero vm={vm} canonicalUrl={canonicalUrl} />
+
+      <ProfileSectionNav sections={sections} valueEur={vm.valuation.current?.valueEur ?? null} />
+
+      <div className="space-y-8 pt-4 @[560px]/profile:pt-6">
+        <ValueSection vm={vm} />
+        <TransfersSection vm={vm} />
+        <Suspense fallback={<SeasonSkeleton />}>
+          <SeasonSection vm={vm} />
+        </Suspense>
+        <InjuriesSection vm={vm} />
+        <HonoursSection vm={vm} />
+        <ProfileFactsSection vm={vm} />
+        <NewsSection vm={vm} />
+      </div>
+    </article>
   );
 }

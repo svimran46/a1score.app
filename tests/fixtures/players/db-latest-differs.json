@@ -1,0 +1,120 @@
+{
+  "_note": "Supabase path: latestMarketValue (180M) differs from the last history point (150M). Includes a legacy synthetic 'latest-' point that must be ignored.",
+  "id": "cmdbplayer000000000000000",
+  "transfermarktId": "580195",
+  "sourceId": "580195",
+  "fullName": "Jamal Musiala",
+  "commonName": "Jamal Musiala",
+  "dateOfBirth": "2003-02-26T00:00:00.000Z",
+  "nationality": [
+    "Germany"
+  ],
+  "position": "Attack",
+  "subPosition": "Attacking Midfield",
+  "preferredFoot": null,
+  "heightCm": 184,
+  "contractUntil": "2030-06-30",
+  "status": "first_team",
+  "lastSeason": 2025,
+  "photoUrl": "/img/player/580195",
+  "currentClub": {
+    "id": "cmliverpool00000000000000",
+    "name": "Liverpool FC",
+    "logoUrl": "/img/club/cmliverpool00000000000000",
+    "league": {
+      "id": "cmpremleague0000000000000",
+      "name": "Premier League",
+      "country": "England"
+    }
+  },
+  "parentClub": null,
+  "loanUntil": null,
+  "marketValues": [
+    {
+      "id": "mv1",
+      "playerId": "cmdbplayer000000000000000",
+      "date": "2024-12-15T00:00:00.000Z",
+      "valueEur": 120000000,
+      "clubName": "Bayern Munich"
+    },
+    {
+      "id": "mv2",
+      "playerId": "cmdbplayer000000000000000",
+      "date": "2025-12-15T00:00:00.000Z",
+      "valueEur": 150000000,
+      "clubName": "Bayern Munich"
+    },
+    {
+      "id": "latest-cmdbplayer000000000000000",
+      "playerId": "cmdbplayer000000000000000",
+      "date": "2026-10-09T11:00:00.000Z",
+      "valueEur": 180000000,
+      "clubName": "Liverpool FC"
+    }
+  ],
+  "latestMarketValue": 180000000,
+  "transfers": [
+    {
+      "id": "t1",
+      "playerId": "cmdbplayer000000000000000",
+      "date": "2026-07-01T00:00:00.000Z",
+      "fromClubName": "Bayern Munich",
+      "toClubName": "Liverpool FC",
+      "feeEur": 50000000,
+      "transferType": "permanent",
+      "feeStatus": "disclosed"
+    },
+    {
+      "id": "t2",
+      "playerId": "cmdbplayer000000000000000",
+      "date": "2020-07-01T00:00:00.000Z",
+      "fromClubName": "Chelsea U18",
+      "toClubName": "Bayern Munich U19",
+      "feeEur": 0,
+      "transferType": "free",
+      "feeStatus": "not_recorded"
+    },
+    {
+      "id": "t3",
+      "playerId": "cmdbplayer000000000000000",
+      "date": "2021-01-01T00:00:00.000Z",
+      "fromClubName": "Bayern Munich II",
+      "toClubName": "Bayern Munich",
+      "feeEur": null,
+      "transferType": "permanent"
+    }
+  ],
+  "seasonStats": [
+    {
+      "id": "ss1",
+      "playerId": "cmdbplayer000000000000000",
+      "season": "2025/2026",
+      "competition": "Bundesliga",
+      "clubName": "Bayern Munich",
+      "appearances": 30,
+      "goals": 12,
+      "assists": null,
+      "minutesPlayed": null,
+      "yellowCards": null,
+      "redCards": null
+    }
+  ],
+  "injuries": [
+    {
+      "id": "inj1",
+      "playerId": "cmdbplayer000000000000000",
+      "type": "Hamstring injury",
+      "startDate": "2026-09-20T00:00:00.000Z",
+      "endDate": null,
+      "status": "active"
+    },
+    {
+      "id": "inj2",
+      "playerId": "cmdbplayer000000000000000",
+      "type": "Ankle injury",
+      "startDate": "2025-01-10T00:00:00.000Z",
+      "endDate": "2025-02-20T00:00:00.000Z",
+      "status": "recovered"
+    }
+  ]
+}

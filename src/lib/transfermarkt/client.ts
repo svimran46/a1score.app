@@ -11,6 +11,8 @@ import {
   validateTmMarketValueGraph,
   validateTmTransferHistory,
 } from "@/lib/validation/upstream-shapes";
+import { parseEurValue } from "@/lib/transfermarkt/parse";
+import { feeStatusFromTmFee } from "@/lib/transfers";
 
 const TM_BASE = "https://www.transfermarkt.com";
 
@@ -21,24 +23,7 @@ const TM_HEADERS = {
   Referer: "https://www.transfermarkt.com/",
 };
 
-export function parseEurValue(str: string | null | undefined): number {
-  if (!str) return 0;
-  const m = str.match(/([\d\.,]+)\s*(bn|b|m|k|th\.)?/i);
-  if (!m) return 0;
-  const num = parseFloat(m[1].replace(/,/g, "."));
-  if (isNaN(num)) return 0;
-  const unit = (m[2] || "").toLowerCase();
-  if (unit === "bn" || unit === "b") {
-    return Math.round(num * 1_000_000_000);
-  }
-  if (unit === "m") {
-    return Math.round(num * 1_000_000);
-  }
-  if (unit === "k" || unit === "th.") {
-    return Math.round(num * 1_000);
-  }
-  return Math.round(num);
-}
+export { parseEurValue };
 
 async function tmFetch(path: string, isJson = false, revalidate = 3600): Promise<any | null> {
   const url = path.startsWith("http") ? path : `${TM_BASE}${path}`;
@@ -255,9 +240,10 @@ export async function tmGetPlayer(slugOrId: string) {
     // 1. Extract Biographical Details from HTML or fallback to Meta
     let fullName = slugOrId;
     let photoUrl: string | null = null;
-    let currentClubName = "Unknown";
+    let currentClubName: string | null = null;
     let currentClubId: string | null = null;
-    let position = "Unknown";
+    let clubStatusText: "Without Club" | "Retired" | null = null;
+    let position: string | null = null;
     let subPosition: string | null = null;
     let dateOfBirth: Date | null = null;
     let nationalities: string[] = [];
@@ -282,7 +268,22 @@ export async function tmGetPlayer(slugOrId: string) {
         html.match(/class="data-header__club"[^>]*>[\s\S]*?<a[^>]*href="\/[^\/]+\/startseite\/verein\/(\d+)"[^>]*>([^<]+)<\/a>/i);
       if (clubAnchor) {
         currentClubId = clubAnchor[1];
-        currentClubName = clubAnchor[2].trim();
+        currentClubName = clubAnchor[2].replace(/&nbsp;/gi, " ").replace(/\s+/g, " ").trim() || null;
+      }
+
+      // TM renders the free-agent and retired states as a pseudo club in the header
+      const headerClubText = (
+        html.match(/class="data-header__club"[^>]*>([\s\S]*?)<\/span>/i)?.[1] ?? currentClubName ?? ""
+      )
+        .replace(/<[^>]+>/g, " ")
+        .replace(/\s+/g, " ")
+        .trim()
+        .toLowerCase();
+      if (/\bwithout club\b/.test(headerClubText)) clubStatusText = "Without Club";
+      else if (/\bretired\b/.test(headerClubText)) clubStatusText = "Retired";
+      if (clubStatusText || (currentClubName && /^unknown$/i.test(currentClubName))) {
+        currentClubName = null;
+        currentClubId = null;
       }
 
       // League
@@ -304,7 +305,7 @@ export async function tmGetPlayer(slugOrId: string) {
 
       // Position
       const mainPosMatch = html.match(/Main position:[\s\S]*?<dd class="detail-position__position">([^<]+)<\/dd>/i);
-      if (mainPosMatch) position = mainPosMatch[1].trim();
+      if (mainPosMatch) position = mainPosMatch[1].trim() || null;
 
       const otherPosMatch = html.match(/Other position:[\s\S]*?<dd class="detail-position__position">([^<]+)<\/dd>/i);
       if (otherPosMatch) subPosition = otherPosMatch[1].trim();
@@ -381,31 +382,37 @@ export async function tmGetPlayer(slugOrId: string) {
     const latestValuation =
       marketValues.length > 0 ? marketValues[marketValues.length - 1].valueEur : 0;
 
-    // 3. Map Transfers safely
+    // 3. Map Transfers safely. Rows with an invalid or future date are dropped,
+    // never re-dated; the fee status comes from the raw fee string.
     const transfers: any[] = [];
     if (transferData && Array.isArray(transferData.transfers)) {
+      const nowMs = Date.now();
       for (let i = 0; i < transferData.transfers.length; i++) {
         const t = transferData.transfers[i];
         if (!t) continue;
         const dateStr = t.dateUnformatted || t.date;
-        let d = dateStr ? new Date(dateStr) : null;
-        if (!d || isNaN(d.getTime())) {
-          d = new Date();
-        }
-        const feeVal = parseEurValue(t.fee);
+        const d = dateStr ? new Date(dateStr) : null;
+        if (!d || isNaN(d.getTime()) || d.getTime() > nowMs) continue;
+        const { feeStatus, feeEur } = feeStatusFromTmFee(typeof t.fee === "string" ? t.fee : null);
+        const clubName = (side: unknown): string | null => {
+          const raw = typeof side === "string" ? side : (side as { clubName?: unknown } | null)?.clubName;
+          return typeof raw === "string" && raw.trim() ? raw.trim() : null;
+        };
 
         transfers.push({
           id: `tm-tf-${pId}-${i}`,
           playerId: pId,
           date: d.toISOString(),
-          fromClubName: t.from?.clubName || null,
-          toClubName: t.to?.clubName || null,
-          feeEur: feeVal > 0 ? feeVal : null,
-          transferType: t.fee?.toLowerCase()?.includes("loan")
-            ? "loan"
-            : feeVal === 0
-            ? "free"
-            : "permanent",
+          fromClubName: clubName(t.from),
+          toClubName: clubName(t.to),
+          feeEur,
+          feeStatus,
+          transferType:
+            feeStatus === "loan" || feeStatus === "loan_fee" || feeStatus === "loan_return"
+              ? "loan"
+              : feeStatus === "free"
+              ? "free"
+              : "permanent",
         });
       }
     }
@@ -426,11 +433,12 @@ export async function tmGetPlayer(slugOrId: string) {
       commonName: fullName || "Player Profile",
       dateOfBirth: safeDob,
       nationality: Array.isArray(nationalities) ? nationalities : [],
-      position: position || "Unknown",
+      position,
       subPosition,
       preferredFoot,
       heightCm,
       contractUntil,
+      clubStatusText,
       photoUrl: sanitizeImageUrl(photoUrl, "player", pId),
       currentClubId,
       currentClub: currentClubName

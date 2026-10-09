@@ -86,7 +86,7 @@ class LocalStorageWatchlistAdapter implements WatchlistAdapter {
     const fullItem: WatchlistItem = {
       ...item,
       savedAt: item.savedAt || new Date().toISOString(),
-      initialValueEur: item.initialValueEur ?? item.currentValueEur ?? 0,
+      initialValueEur: item.initialValueEur ?? item.currentValueEur ?? undefined,
     };
 
     const current = this.getFavorites();

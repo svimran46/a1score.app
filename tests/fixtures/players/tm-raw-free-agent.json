@@ -1,0 +1,16 @@
+{
+  "_note": "Raw Transfermarkt responses for a player whose header club reads 'Without Club'; no position row.",
+  "html": "<div class=\"data-header\"><h1 class=\"data-header__headline-wrapper\">Sample Unattached</h1><span class=\"data-header__club\"><a title=\"Without Club\" href=\"/vereinslos/startseite/verein/515\">Without Club</a></span></div>",
+  "graph": {
+    "list": [
+      {
+        "x": 1748822400000,
+        "y": 2000000,
+        "verein": "Getafe CF"
+      }
+    ]
+  },
+  "transfers": {
+    "transfers": []
+  }
+}
