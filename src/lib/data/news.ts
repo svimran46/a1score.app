@@ -363,24 +363,62 @@ export async function getNews(category?: string): Promise<NewsItem[]> {
   }
 }
 
+export type RelatedNewsItem = NewsItem & {
+  /** Which target matched: the player's name or only their club. Set when targets are grouped. */
+  matchedOn?: "player" | "club";
+};
+
+export interface RelatedNewsTargets {
+  player?: string[];
+  club?: string[];
+}
+
+/** Tags, titles and targets all go through the same normalisation. */
+function normalizeNewsTarget(text: string): string {
+  return normalizeHeadline(text);
+}
+
+function itemMatches(item: NewsItem, targets: string[]): boolean {
+  if (targets.length === 0) return false;
+  const tags = item.tags.map(normalizeNewsTarget);
+  const title = ` ${normalizeNewsTarget(item.title)} `;
+  return targets.some((target) => tags.includes(target) || title.includes(` ${target} `));
+}
+
+function cleanTargets(list: Array<string | null | undefined> | undefined): string[] {
+  const out = new Set<string>();
+  for (const t of list ?? []) {
+    const n = typeof t === "string" ? normalizeNewsTarget(t) : "";
+    if (n.length >= 3) out.add(n);
+  }
+  return Array.from(out);
+}
+
 /**
- * Retrieve related news items for a specific player or club by matching tags.
+ * Retrieve related news items for a specific player or club by matching tags
+ * and headlines as whole words. Pass `{ player, club }` to get `matchedOn` per
+ * item ("player" wins when both match); a plain array keeps the old behaviour.
  */
-export async function getRelatedNews(tags: string[], limit = 3): Promise<NewsItem[]> {
-  if (!tags || tags.length === 0) return [];
+export async function getRelatedNews(
+  tags: string[] | RelatedNewsTargets,
+  limit = 3
+): Promise<RelatedNewsItem[]> {
+  const grouped = !Array.isArray(tags);
+  const playerTargets = grouped ? cleanTargets((tags as RelatedNewsTargets).player) : [];
+  const clubTargets = grouped ? cleanTargets((tags as RelatedNewsTargets).club) : cleanTargets(tags as string[]);
+  if (playerTargets.length === 0 && clubTargets.length === 0) return [];
 
   const allNews = await getNews();
-  const normalizedTargets = tags.map((t) => t.toLowerCase().replace(/[\s\-_]+/g, ""));
-
-  const matched = allNews.filter((item) => {
-    const itemTags = item.tags.map((t) => t.toLowerCase().replace(/[\s\-_]+/g, ""));
-    const titleNorm = item.title.toLowerCase();
-    return normalizedTargets.some(
-      (target) => itemTags.includes(target) || titleNorm.includes(target)
-    );
-  });
-
-  return matched.slice(0, limit);
+  const matched: RelatedNewsItem[] = [];
+  for (const item of allNews) {
+    if (matched.length >= limit) break;
+    if (itemMatches(item, playerTargets)) {
+      matched.push({ ...item, matchedOn: "player" });
+    } else if (itemMatches(item, clubTargets)) {
+      matched.push(grouped ? { ...item, matchedOn: "club" } : item);
+    }
+  }
+  return matched;
 }
 
 /**

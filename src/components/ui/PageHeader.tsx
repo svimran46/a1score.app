@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { EntityImage } from "@/components/EntityImage";
 import { Card } from "./Card";
@@ -8,7 +6,8 @@ import { ShareButton } from "./ShareButton";
 import { Trophy } from "lucide-react";
 
 export interface PageHeaderProps {
-  variant?: "player" | "club" | "league" | "directory";
+  /** Players use PlayerHero (src/components/players/PlayerHero.tsx). */
+  variant?: "club" | "league" | "directory";
 
   // Visual Anchor / Image
   imageUrl?: string | null;
@@ -95,8 +94,9 @@ export function PageHeader({
     );
   }
 
-  // Determine shape: players default to circle, clubs and leagues default to rounded
-  const shape = imageShape || (variant === "player" ? "circle" : "rounded");
+  const shape = imageShape || "rounded";
+  // League headers repeat the value in a side box from sm up, so the inline copy hides there.
+  const hasSideValue = !!value && variant === "league";
   const shapeClass = shape === "circle" ? "rounded-full" : "rounded-2xl";
 
   const resolvedImageAlt = imageAlt || title;
@@ -143,7 +143,7 @@ export function PageHeader({
 
                 {/* Primary Valuation (e.g. Squad Value or Player Value) inline on mobile */}
                 {value && (
-                  <div className="flex items-center gap-1.5 tabular-nums shrink-0">
+                  <div className={`flex items-center gap-1.5 tabular-nums shrink-0 ${hasSideValue ? "sm:hidden" : ""}`}>
                     <span className="text-base sm:text-xl font-black text-[var(--value-text)] figure tracking-tight">
                       {value}
                     </span>
@@ -168,10 +168,10 @@ export function PageHeader({
           </div>
 
           {/* Desktop Right Side Valuation Box (hidden on mobile to keep under 220px height) */}
-          {value && (variant === "player" || variant === "league") && (
+          {hasSideValue && (
             <div className="hidden sm:flex flex-col items-end justify-center shrink-0 p-3 rounded-2xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] min-w-[140px]">
               <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)]">
-                {valueLabel || (variant === "player" ? "Current Market Value" : "Competition Value")}
+                {valueLabel || "Competition Value"}
               </span>
               <span className="text-xl sm:text-2xl font-black text-[var(--value-text)] figure tabular-nums tracking-tight mt-0.5">
                 {value}

@@ -1,319 +1,183 @@
 import React from "react";
 import { ImageResponse } from "next/og";
-import { getPlayerBySlugOrId } from "@/lib/data/players";
-import { formatCompactEur } from "@/lib/utils";
-import { calculate12MonthChange } from "@/lib/compare";
+import { getPlayerProfile } from "@/lib/data/playerProfile";
 import { OG_COLORS } from "@/lib/og/colors";
+import { playerShareCardModel, type PlayerShareCardModel } from "@/components/players/playerCardModel";
 
 export const runtime = "edge";
-export const alt = "Player Market Valuation | a1score";
+export const alt = "Player market value | a1score";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 export const revalidate = 3600; // Hourly revalidation
 
-function getInitials(name: string): string {
-  if (!name) return "P";
-  const parts = name.trim().split(/\s+/);
-  if (parts.length >= 2) {
-    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+const FONT = "system-ui, -apple-system, sans-serif";
+const PHOTO_TIMEOUT_MS = 1500;
+const PHOTO_MAX_BYTES = 1_500_000;
+
+/**
+ * Fetches the photo ourselves so a slow image host can never hold the card
+ * past 1.5s; returns a data URL, or null so the initials monogram is used.
+ */
+async function loadPhoto(url: string | null): Promise<string | null> {
+  if (!url || !/^https?:\/\//i.test(url)) return null;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), PHOTO_TIMEOUT_MS);
+  try {
+    const res = await fetch(url, { signal: controller.signal });
+    const type = res.headers.get("content-type") || "";
+    if (!res.ok || !/^image\/(png|jpe?g|webp|gif)/i.test(type)) return null;
+    const buf = new Uint8Array(await res.arrayBuffer());
+    if (buf.byteLength === 0 || buf.byteLength > PHOTO_MAX_BYTES) return null;
+    let binary = "";
+    for (let i = 0; i < buf.length; i += 0x8000) {
+      binary += String.fromCharCode(...Array.from(buf.subarray(i, i + 0x8000)));
+    }
+    return `data:${type.split(";")[0]};base64,${btoa(binary)}`;
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timer);
   }
-  return name.slice(0, 2).toUpperCase();
+}
+
+function BrandCard() {
+  return (
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        backgroundColor: OG_COLORS.bgPage,
+        padding: "64px",
+        fontFamily: FONT,
+      }}
+    >
+      <div style={{ display: "flex", fontSize: "88px", fontWeight: 800, color: OG_COLORS.textPrimary }}>a1score</div>
+      <div style={{ display: "flex", fontSize: "40px", color: OG_COLORS.textSecondary, marginTop: "16px" }}>
+        Money meets the pitch
+      </div>
+    </div>
+  );
+}
+
+function PlayerCard({ model, photo }: { model: PlayerShareCardModel; photo: string | null }) {
+  const deltaColor =
+    model.delta?.direction === "up"
+      ? OG_COLORS.trendUp
+      : model.delta?.direction === "down"
+        ? OG_COLORS.trendDown
+        : OG_COLORS.textSecondary;
+
+  return (
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        backgroundColor: OG_COLORS.bgPage,
+        padding: "64px",
+        fontFamily: FONT,
+        color: OG_COLORS.textPrimary,
+      }}
+    >
+      {/* Identity */}
+      <div style={{ display: "flex", alignItems: "center", gap: "40px" }}>
+        <div
+          style={{
+            width: "200px",
+            height: "200px",
+            borderRadius: "100px",
+            overflow: "hidden",
+            backgroundColor: OG_COLORS.bgChip,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexShrink: 0,
+          }}
+        >
+          {photo ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={photo} alt="" width={200} height={200} style={{ objectFit: "cover", width: "100%", height: "100%" }} />
+          ) : (
+            <span style={{ fontSize: "72px", fontWeight: 700, color: OG_COLORS.textSecondary }}>{model.initials}</span>
+          )}
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 0 }}>
+          <div
+            style={{
+              display: "block",
+              lineClamp: 2,
+              fontSize: `${model.nameSize}px`,
+              fontWeight: 800,
+              lineHeight: 1.08,
+              color: OG_COLORS.textPrimary,
+            }}
+          >
+            {model.name}
+          </div>
+          {model.meta && (
+            <div style={{ display: "flex", fontSize: "28px", color: OG_COLORS.textSecondary, marginTop: "12px" }}>
+              {model.meta}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Value */}
+      {model.value ? (
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <div style={{ display: "flex", fontSize: "26px", color: OG_COLORS.textMuted }}>{model.label}</div>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "baseline",
+              fontSize: "150px",
+              fontWeight: 800,
+              lineHeight: 1,
+              letterSpacing: "-0.02em",
+              color: OG_COLORS.valueText,
+            }}
+          >
+            <span style={{ fontSize: "93px", fontWeight: 700 }}>{model.value.currency}</span>
+            <span>{model.value.number}</span>
+            {model.value.suffix && <span style={{ fontSize: "93px", fontWeight: 700 }}>{model.value.suffix}</span>}
+          </div>
+          {model.delta && (
+            <div style={{ display: "flex", fontSize: "32px", marginTop: "8px" }}>
+              <span style={{ fontWeight: 700, color: deltaColor }}>{model.delta.lead}</span>
+              {model.delta.basis && (
+                <span style={{ color: OG_COLORS.textMuted, whiteSpace: "pre" }}>{model.delta.basis}</span>
+              )}
+            </div>
+          )}
+        </div>
+      ) : (
+        <div style={{ display: "flex", fontSize: "44px", color: OG_COLORS.textMuted }}>No market value on record</div>
+      )}
+
+      {/* Footer */}
+      <div style={{ display: "flex", justifyContent: "space-between", fontSize: "24px", color: OG_COLORS.textMuted }}>
+        <span>{model.freshness ?? ""}</span>
+        <span style={{ color: OG_COLORS.textSecondary, fontWeight: 700 }}>a1score.app</span>
+      </div>
+    </div>
+  );
 }
 
 export default async function Image({ params }: { params: { slug: string } }) {
   const resolvedParams = await Promise.resolve(params);
-  const player = await getPlayerBySlugOrId(resolvedParams.slug).catch(() => null);
+  const vm = await getPlayerProfile(resolvedParams.slug).catch(() => null);
 
-  const displayName = player?.fullName || player?.commonName || resolvedParams.slug.replace(/-/g, " ");
-  const clubName = player?.currentClub?.name || "Independent / Free Agent";
-  const clubLogo = player?.currentClub?.logoUrl;
-  const photoUrl = player?.photoUrl;
-  const position = player?.position || "Footballer";
-
-  const mvs = Array.isArray(player?.marketValues) ? player!.marketValues : [];
-  const rawCurrent = player?.latestMarketValue || (mvs.length > 0 ? (mvs[mvs.length - 1].valueEur || mvs[mvs.length - 1].value) : 0);
-  const currentVal = Number(rawCurrent) || 0;
-  const formattedVal = currentVal > 0 ? formatCompactEur(currentVal) : "Pending";
-
-  const change = calculate12MonthChange(mvs, currentVal);
-
-  let changeLabel = "Stable (12m)";
-  let changeColor: string = OG_COLORS.textMuted;
-  if (change.diff > 0) {
-    changeLabel = `▲ +${formatCompactEur(change.diff)} (+${change.pct.toFixed(1)}%)`;
-    changeColor = OG_COLORS.trendUp;
-  } else if (change.diff < 0) {
-    changeLabel = `▼ -${formatCompactEur(Math.abs(change.diff))} (-${change.pct.toFixed(1)}%)`;
-    changeColor = OG_COLORS.trendDown;
+  if (!vm) {
+    return new ImageResponse(<BrandCard />, { ...size });
   }
 
-  const initials = getInitials(displayName);
+  const model = playerShareCardModel(vm);
+  const photo = await loadPhoto(model.photoUrl);
 
-  return new ImageResponse(
-    (
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          backgroundColor: OG_COLORS.bgPage,
-          backgroundImage: `radial-gradient(circle at 25px 25px, ${OG_COLORS.divider} 1.5%, transparent 0%)`,
-          backgroundSize: "40px 40px",
-          padding: "48px 56px",
-          fontFamily: "system-ui, -apple-system, sans-serif",
-          color: OG_COLORS.textPrimary,
-        }}
-      >
-        {/* Top Header Bar */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            width: "100%",
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
-            <div
-              style={{
-                width: "44px",
-                height: "44px",
-                borderRadius: "12px",
-                background: `linear-gradient(135deg, ${OG_COLORS.amber400}, ${OG_COLORS.amber500})`,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: OG_COLORS.bgPage,
-                fontWeight: 900,
-                fontSize: "22px",
-              }}
-            >
-              A1
-            </div>
-            <span style={{ fontSize: "26px", fontWeight: 800, color: OG_COLORS.white }}>
-              a1score<span style={{ color: OG_COLORS.amber400 }}>.app</span>
-            </span>
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              padding: "8px 18px",
-              borderRadius: "999px",
-              backgroundColor: OG_COLORS.bgElevated,
-              border: `1px solid ${OG_COLORS.divider}`,
-              color: OG_COLORS.amber400,
-              fontSize: "13px",
-              fontWeight: 800,
-              letterSpacing: "1.5px",
-              textTransform: "uppercase",
-            }}
-          >
-            Player Valuation Intelligence
-          </div>
-        </div>
-
-        {/* Center Content Section */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: "48px",
-            width: "100%",
-            flex: 1,
-            marginTop: "16px",
-            marginBottom: "16px",
-          }}
-        >
-          {/* Left Column: Player Identity & Club */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              flex: 1,
-              minWidth: 0,
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: "24px", marginBottom: "20px" }}>
-              {/* Photo with Fallback Monogram */}
-              <div
-                style={{
-                  width: "110px",
-                  height: "110px",
-                  borderRadius: "55px",
-                  overflow: "hidden",
-                  backgroundColor: OG_COLORS.bgElevated,
-                  border: `3px solid ${OG_COLORS.divider}`,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0,
-                }}
-              >
-                {photoUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={photoUrl}
-                    alt={displayName}
-                    width={110}
-                    height={110}
-                    style={{ objectFit: "cover", width: "100%", height: "100%" }}
-                  />
-                ) : (
-                  <span style={{ fontSize: "40px", fontWeight: 800, color: OG_COLORS.amber400 }}>
-                    {initials}
-                  </span>
-                )}
-              </div>
-
-              {/* Club Crest if reliably available */}
-              {clubLogo ? (
-                <div
-                  style={{
-                    width: "64px",
-                    height: "64px",
-                    borderRadius: "16px",
-                    backgroundColor: OG_COLORS.bgElevated,
-                    border: `1.5px solid ${OG_COLORS.divider}`,
-                    padding: "8px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexShrink: 0,
-                  }}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={clubLogo}
-                    alt={clubName}
-                    width={48}
-                    height={48}
-                    style={{ objectFit: "contain", maxWidth: "100%", maxHeight: "100%" }}
-                  />
-                </div>
-              ) : null}
-            </div>
-
-            {/* Player Name */}
-            <h1
-              style={{
-                fontSize: displayName.length > 20 ? "44px" : "54px",
-                fontWeight: 900,
-                lineHeight: 1.1,
-                margin: "0 0 10px 0",
-                color: OG_COLORS.textPrimary,
-                letterSpacing: "-0.03em",
-                textOverflow: "ellipsis",
-                overflow: "hidden",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {displayName}
-            </h1>
-
-            {/* Position and Club Meta Ribbon */}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "10px",
-                fontSize: "20px",
-                fontWeight: 600,
-                color: OG_COLORS.textMuted,
-              }}
-            >
-              <span>{clubName}</span>
-              <span>•</span>
-              <span style={{ color: OG_COLORS.amber400 }}>{position}</span>
-            </div>
-          </div>
-
-          {/* Right Column: Valuation Card */}
-          <div
-            style={{
-              backgroundColor: OG_COLORS.bgCard,
-              border: `2px solid ${OG_COLORS.divider}`,
-              borderRadius: "28px",
-              padding: "36px 44px",
-              minWidth: "400px",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              textAlign: "center",
-              flexShrink: 0,
-            }}
-          >
-            <span
-              style={{
-                fontSize: "13px",
-                fontWeight: 800,
-                color: OG_COLORS.textMuted,
-                letterSpacing: "2.5px",
-                textTransform: "uppercase",
-              }}
-            >
-              Current Market Value
-            </span>
-
-            <span
-              style={{
-                fontSize: "68px",
-                fontWeight: 900,
-                color: OG_COLORS.valueText,
-                lineHeight: 1.05,
-                margin: "14px 0 16px 0",
-                letterSpacing: "-0.03em",
-              }}
-            >
-              {formattedVal}
-            </span>
-
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                padding: "8px 20px",
-                borderRadius: "999px",
-                backgroundColor: OG_COLORS.bgElevated,
-                border: `1px solid ${OG_COLORS.divider}`,
-                fontSize: "16px",
-                fontWeight: 800,
-                color: changeColor,
-              }}
-            >
-              {changeLabel}
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom Footer Bar */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            width: "100%",
-            borderTop: `1px solid ${OG_COLORS.divider}`,
-            paddingTop: "18px",
-            fontSize: "15px",
-            color: OG_COLORS.textMuted,
-          }}
-        >
-          <span>Grounded in Transfermarkt valuations & FotMob intelligence</span>
-          <span>12-Month Financial Movement & Player Profile</span>
-        </div>
-      </div>
-    ),
-    {
-      ...size,
-    }
-  );
+  return new ImageResponse(<PlayerCard model={model} photo={photo} />, { ...size });
 }

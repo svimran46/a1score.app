@@ -1,0 +1,52 @@
+{
+  "_note": "TM path where the latest valuation repeats the previous value. Contract is ISO.",
+  "id": "100004",
+  "sourceId": "100004",
+  "fullName": "Sample Steady",
+  "commonName": "Sample Steady",
+  "dateOfBirth": "1999-11-30T00:00:00.000Z",
+  "nationality": [
+    "Italy"
+  ],
+  "position": "Centre-Back",
+  "subPosition": null,
+  "preferredFoot": "right",
+  "heightCm": 188,
+  "contractUntil": "2028-06-30T00:00:00.000Z",
+  "clubStatusText": null,
+  "photoUrl": null,
+  "currentClubId": "46",
+  "currentClub": {
+    "id": "46",
+    "name": "Inter",
+    "logoUrl": "/img/club/46",
+    "league": {
+      "id": "IT1",
+      "name": "Serie A"
+    }
+  },
+  "marketValues": [
+    {
+      "id": "tm-val-z1",
+      "date": "2024-11-01T00:00:00.000Z",
+      "valueEur": 40000000,
+      "clubName": "Inter"
+    },
+    {
+      "id": "tm-val-z2",
+      "date": "2025-11-01T00:00:00.000Z",
+      "valueEur": 50000000,
+      "clubName": "Inter"
+    },
+    {
+      "id": "tm-val-z3",
+      "date": "2026-04-01T00:00:00.000Z",
+      "valueEur": 50000000,
+      "clubName": "Inter"
+    }
+  ],
+  "latestMarketValue": 50000000,
+  "transfers": [],
+  "seasonStats": [],
+  "injuries": []
+}

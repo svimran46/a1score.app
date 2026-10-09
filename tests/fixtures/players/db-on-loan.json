@@ -1,0 +1,62 @@
+{
+  "_note": "Supabase path, on loan (parentClub set). loanUntil is a backfill placeholder and must never surface.",
+  "id": "cmloanplayer0000000000000",
+  "transfermarktId": "937958",
+  "sourceId": "937958",
+  "fullName": "Sample Loanee",
+  "commonName": null,
+  "dateOfBirth": "2006-03-21T00:00:00.000Z",
+  "nationality": [
+    "England"
+  ],
+  "position": "Midfield",
+  "subPosition": "Central Midfield",
+  "preferredFoot": null,
+  "heightCm": 178,
+  "status": "loan",
+  "lastSeason": 2025,
+  "photoUrl": null,
+  "currentClub": {
+    "id": "cmipswich0000000000000000",
+    "name": "Ipswich Town",
+    "logoUrl": null,
+    "league": null
+  },
+  "parentClub": {
+    "id": "cmarsenal0000000000000000",
+    "name": "Arsenal FC",
+    "logoUrl": null,
+    "league": {
+      "id": "cmpremleague0000000000000",
+      "name": "Premier League"
+    }
+  },
+  "loanUntil": "2027-06-30T00:00:00.000Z",
+  "marketValues": [
+    {
+      "id": "l1",
+      "date": "2025-09-01T00:00:00.000Z",
+      "valueEur": 25000000,
+      "clubName": "Arsenal FC"
+    },
+    {
+      "id": "l2",
+      "date": "2026-06-01T00:00:00.000Z",
+      "valueEur": 30000000,
+      "clubName": "Arsenal FC"
+    }
+  ],
+  "latestMarketValue": 30000000,
+  "transfers": [
+    {
+      "id": "lt1",
+      "date": "2026-08-15T00:00:00.000Z",
+      "fromClubName": "Arsenal FC",
+      "toClubName": "Ipswich Town",
+      "feeEur": null,
+      "transferType": "loan"
+    }
+  ],
+  "seasonStats": [],
+  "injuries": []
+}

@@ -81,7 +81,7 @@ export default async function ComparePage({ searchParams }: ComparePageProps) {
         photoUrl: p.photoUrl,
         dateOfBirth: p.dateOfBirth,
         nationality: p.nationality,
-        position: p.position || "Forward",
+        position: p.position || "",
         currentClub: p.currentClub
           ? {
               id: p.currentClub.id,

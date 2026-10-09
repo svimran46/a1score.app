@@ -1,0 +1,38 @@
+{
+  "_note": "TM path, header club reads 'Without Club'.",
+  "id": "100001",
+  "sourceId": "100001",
+  "fullName": "Sample Unattached",
+  "commonName": "Sample Unattached",
+  "dateOfBirth": "1994-05-01T00:00:00.000Z",
+  "nationality": [
+    "Spain"
+  ],
+  "position": null,
+  "subPosition": null,
+  "preferredFoot": "right",
+  "heightCm": null,
+  "contractUntil": null,
+  "clubStatusText": "Without Club",
+  "photoUrl": null,
+  "currentClubId": null,
+  "currentClub": null,
+  "marketValues": [
+    {
+      "id": "tm-val-a",
+      "date": "2025-06-01T00:00:00.000Z",
+      "valueEur": 3000000,
+      "clubName": "Getafe CF"
+    },
+    {
+      "id": "tm-val-b",
+      "date": "2026-02-01T00:00:00.000Z",
+      "valueEur": 2000000,
+      "clubName": null
+    }
+  ],
+  "latestMarketValue": 2000000,
+  "transfers": [],
+  "seasonStats": [],
+  "injuries": []
+}

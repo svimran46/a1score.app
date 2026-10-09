@@ -1,72 +1,60 @@
-import { formatDate } from "@/lib/utils";
-import { AlertCircle, CheckCircle2 } from "lucide-react";
-import { Card } from "@/components/ui";
+import React from "react";
+import type { PlayerProfileVM, ProfileInjury } from "@/lib/data/playerProfile.types";
+import { formatDateGB } from "@/lib/format-value";
+import { ProfileDisclosure, ProfileSection } from "@/components/players/ProfileSection";
 
-interface InjuryItem {
-  id: string;
-  type: string;
-  startDate: string | Date;
-  endDate?: string | Date | null;
-  status: string;
+export const INJURIES_VISIBLE = 3;
+
+function InjuryRow({ injury }: { injury: ProfileInjury }) {
+  // Start dates are trusted from our own records only.
+  const since = injury.source === "db" && injury.since ? formatDateGB(injury.since) : "";
+  return (
+    <li className="border-b border-divider/60 py-3 last:border-b-0">
+      <div className="flex min-w-0 items-center gap-2">
+        <p className="min-w-0 truncate text-sm font-medium leading-5 text-text-primary">{injury.type}</p>
+        <span className="inline-flex h-6 shrink-0 items-center rounded-full bg-bg-chip px-2 text-xs font-medium text-text-secondary">
+          {injury.isActive ? "Out" : "Returned"}
+        </span>
+      </div>
+      {since || injury.expectedReturn ? (
+        <p className="mt-0.5 text-xs leading-4 text-text-muted">
+          {since ? `Since ${since}` : null}
+          {since && injury.expectedReturn ? <span aria-hidden="true">{" · "}</span> : null}
+          {injury.expectedReturn ? `Expected return: ${injury.expectedReturn}` : null}
+        </p>
+      ) : null}
+    </li>
+  );
 }
 
-interface InjuriesTableProps {
-  injuries: InjuryItem[];
+function InjuryList({ rows }: { rows: ProfileInjury[] }) {
+  return (
+    <ul className="list-none">
+      {rows.map((injury) => (
+        <InjuryRow key={injury.id} injury={injury} />
+      ))}
+    </ul>
+  );
 }
 
-export function InjuriesTable({ injuries }: InjuriesTableProps) {
-  if (!injuries || injuries.length === 0) {
-    return null;
-  }
+/** Injuries (#injuries): sourced records only, neutral tags, hidden when there are none. */
+export function InjuriesSection({ vm }: { vm: PlayerProfileVM }) {
+  const injuries = vm.injuries ?? [];
+  if (injuries.length === 0) return null;
+  const visible = injuries.slice(0, INJURIES_VISIBLE);
+  const more = injuries.slice(INJURIES_VISIBLE);
 
   return (
-    <Card className="p-4 sm:p-5 overflow-hidden">
-      <div className="pb-3 border-b border-[var(--divider)]">
-        <h3 className="text-sm sm:text-base font-bold text-[var(--text-primary)] tracking-tight">
-          Injury History
-        </h3>
-        <p className="text-xs text-[var(--text-muted)] mt-0.5">
-          Absence records and recovery timeline
-        </p>
-      </div>
-
-      <div className="mt-3 overflow-x-auto">
-        <table className="w-full text-left text-xs">
-          <thead>
-            <tr className="text-[var(--text-muted)] uppercase tracking-wider border-b border-[var(--divider)] text-[11px] font-bold">
-              <th className="pb-2.5 font-bold">Injury Type</th>
-              <th className="pb-2.5 font-bold">From</th>
-              <th className="pb-2.5 font-bold">Until</th>
-              <th className="pb-2.5 text-right font-bold">Status</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[var(--divider)]">
-            {injuries.map((injury) => {
-              const isActive = injury.status?.toLowerCase() === "active" || !injury.endDate;
-              return (
-                <tr key={injury.id} className="hover:bg-[var(--bg-hover)] transition-colors">
-                  <td className="py-2.5 text-[var(--text-primary)] font-medium">{injury.type}</td>
-                  <td className="py-2.5 text-[var(--text-secondary)] whitespace-nowrap">{formatDate(injury.startDate)}</td>
-                  <td className="py-2.5 text-[var(--text-secondary)] whitespace-nowrap">{injury.endDate ? formatDate(injury.endDate) : "Ongoing"}</td>
-                  <td className="py-2.5 text-right">
-                    {isActive ? (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-trend-down/10 text-[var(--trend-negative)]">
-                        <AlertCircle className="w-3 h-3" />
-                        Active
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-trend-up/10 text-[var(--trend-positive)]">
-                        <CheckCircle2 className="w-3 h-3" />
-                        Recovered
-                      </span>
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-    </Card>
+    <ProfileSection id="injuries" navLabel="Injuries">
+      <InjuryList rows={visible} />
+      {more.length > 0 ? (
+        <ProfileDisclosure
+          summary={`${more.length} more ${more.length === 1 ? "injury" : "injuries"}`}
+          className="border-t border-divider/60"
+        >
+          <InjuryList rows={more} />
+        </ProfileDisclosure>
+      ) : null}
+    </ProfileSection>
   );
 }

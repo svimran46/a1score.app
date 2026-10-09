@@ -1,5 +1,8 @@
 import React from "react";
 import { Card } from "@/components/ui";
+import type { PlayerProfileVM } from "@/lib/data/playerProfile.types";
+import { formatDateGB } from "@/lib/format-value";
+import { ProfileSection } from "@/components/players/ProfileSection";
 
 export interface KeyFactItem {
   label: string;
@@ -63,5 +66,41 @@ export function KeyFacts({ items, className = "" }: KeyFactsProps) {
         ))}
       </dl>
     </Card>
+  );
+}
+
+const capitalise = (s: string) => s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+
+/** Reference facts that the hero does not already show; each row is omitted when unknown. */
+export function profileFacts(vm: PlayerProfileVM): { label: string; value: string }[] {
+  const id = vm.identity;
+  const born = formatDateGB(id.dob);
+  const full = id.fullName?.trim();
+  const rows: { label: string; value: string | null }[] = [
+    { label: "Born", value: born || null },
+    { label: "Height", value: id.heightCm != null && id.heightCm > 0 ? `${id.heightCm} cm` : null },
+    { label: "Foot", value: id.preferredFoot?.trim() ? capitalise(id.preferredFoot.trim()) : null },
+    { label: "Nationality", value: id.nationality?.trim() || null },
+    { label: "Full name", value: full && full !== id.displayName.trim() ? full : null },
+    { label: "Also plays", value: id.alsoPlays?.trim() || null },
+  ];
+  return rows.filter((r): r is { label: string; value: string } => !!r.value);
+}
+
+/** Profile (#profile): hidden when fewer than two facts are on record. */
+export function ProfileFactsSection({ vm }: { vm: PlayerProfileVM }) {
+  const facts = profileFacts(vm);
+  if (facts.length < 2) return null;
+  return (
+    <ProfileSection id="profile" navLabel="Profile">
+      <dl className="grid grid-cols-2 gap-x-4 gap-y-4 @[560px]/profile:grid-cols-3">
+        {facts.map((f) => (
+          <div key={f.label} className="min-w-0">
+            <dt className="text-xs font-medium leading-4 text-text-muted">{f.label}</dt>
+            <dd className="mt-0.5 break-words text-[15px] font-medium leading-[22px] text-text-primary">{f.value}</dd>
+          </div>
+        ))}
+      </dl>
+    </ProfileSection>
   );
 }

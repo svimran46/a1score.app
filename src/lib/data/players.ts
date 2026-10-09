@@ -9,6 +9,7 @@ import { sanitizeImageUrl } from "@/lib/image-sanitize";
 
 import { getCanonicalPosition } from "@/lib/positions";
 import { getPlayerSlug } from "@/lib/slugs";
+import { feeStatusFromDb } from "@/lib/transfers";
 
 export async function getMostValuablePlayers(limit = 40, positionFilter?: string) {
   // Fetch DB clubs to map TM club IDs to canonical DB club IDs
@@ -134,7 +135,16 @@ export async function getMostValuablePlayers(limit = 40, positionFilter?: string
   }
 }
 
-export async function getPlayerBySlugOrId(slugOrId: string) {
+export interface GetPlayerOptions {
+  /**
+   * Enrich with FotMob season stats (and, on the DB path, a FotMob injury) when
+   * the source has none. The player profile passes false and streams verified
+   * season stats separately (src/lib/data/playerSeason.ts).
+   */
+  withFotmob?: boolean;
+}
+
+export async function getPlayerBySlugOrId(slugOrId: string, { withFotmob = true }: GetPlayerOptions = {}) {
   if (!slugOrId) return null;
 
   // 1. First, attempt to fetch live profile + valuation graph + transfers via TM proxy
@@ -161,7 +171,7 @@ export async function getPlayerBySlugOrId(slugOrId: string) {
         }
       }
 
-      if (!livePlayer.seasonStats || livePlayer.seasonStats.length === 0) {
+      if (withFotmob && (!livePlayer.seasonStats || livePlayer.seasonStats.length === 0)) {
         try {
           const fotmobData = await getFotmobPlayerStats(livePlayer.commonName || livePlayer.fullName);
           if (fotmobData && fotmobData.seasonStats && fotmobData.seasonStats.length > 0) {
@@ -321,26 +331,15 @@ export async function getPlayerBySlugOrId(slugOrId: string) {
       }))
       .sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-    // Ensure sortedMarketValues aligns with authoritative latestMarketValue
-    if (player.latestMarketValue && Number(player.latestMarketValue) > 0) {
-      const currentValNum = Number(player.latestMarketValue);
-      const lastPoint = sortedMarketValues[sortedMarketValues.length - 1];
-      if (!lastPoint || lastPoint.valueEur !== currentValNum) {
-        sortedMarketValues.push({
-          id: `latest-${player.id}`,
-          playerId: player.id,
-          date: new Date().toISOString(),
-          valueEur: currentValNum,
-          clubName: player.currentClub?.name || null,
-        });
-      }
-    }
+    // latestMarketValue may come from another source and time than the history;
+    // it is returned as-is and never appended as a point dated today.
 
     // Sort transfers chronologically (desc), safely handling null/invalid dates
     const sortedTransfers = (player.transfers || [])
       .map((t: any) => ({
         ...t,
         feeEur: t.feeEur ? Number(t.feeEur) : null,
+        feeStatus: feeStatusFromDb(t.feeEur),
       }))
       .sort((a: any, b: any) => {
         const da = a.date ? new Date(a.date).getTime() : 0;
@@ -355,7 +354,7 @@ export async function getPlayerBySlugOrId(slugOrId: string) {
 
     // If seasonStats is empty, enrich with authentic FotMob tournament statistics
     let injuries = player.injuries || [];
-    if (sortedSeasonStats.length === 0) {
+    if (withFotmob && sortedSeasonStats.length === 0) {
       try {
         const fotmobData = await getFotmobPlayerStats(player.commonName || player.fullName);
         if (fotmobData && fotmobData.seasonStats && fotmobData.seasonStats.length > 0) {
@@ -415,6 +414,62 @@ export async function getPlayerBySlugOrId(slugOrId: string) {
     };
   } catch (error) {
     console.error(`Error fetching player ${slugOrId} from DB:`, error);
+    return null;
+  }
+}
+
+export interface DbPlayerIdentity {
+  id: string;
+  status: string | null;
+  lastSeason: number | null;
+  parentClub: { id: string; name: string; logoUrl: string | null } | null;
+  injuries: Array<{
+    id: string;
+    type: string;
+    startDate: string | null;
+    endDate: string | null;
+    status: string | null;
+  }>;
+  /** DB SeasonStats rows, so the profile can prefer them over FotMob on the TM path. */
+  seasonStats: any[];
+}
+
+/**
+ * DB-only facts for a player loaded from the Transfermarkt proxy: the cuid
+ * (achievements, follow key), status, loan parent club, injuries and stats.
+ * Null when the player is not in the database or the lookup fails.
+ */
+export async function getDbPlayerByTransfermarktId(tmId: string | number | null | undefined): Promise<DbPlayerIdentity | null> {
+  const id = String(tmId ?? "").trim();
+  if (!/^\d+$/.test(id)) return null;
+  try {
+    const { data, error } = await supabase
+      .from("Player")
+      .select(`
+        id,
+        status,
+        lastSeason,
+        parentClub:Club!Player_parentClubId_fkey ( id, name, logoUrl ),
+        injuries:Injury ( id, type, startDate, endDate, status ),
+        seasonStats:SeasonStats ( * )
+      `)
+      .eq("transfermarktId", id)
+      .maybeSingle();
+    if (error || !data) return null;
+    const row = data as any;
+    const parentRaw = Array.isArray(row.parentClub) ? row.parentClub[0] ?? null : row.parentClub ?? null;
+    return {
+      id: String(row.id),
+      status: row.status ?? null,
+      lastSeason: row.lastSeason != null ? Number(row.lastSeason) : null,
+      parentClub: parentRaw && parentRaw.id && parentRaw.name
+        ? { id: String(parentRaw.id), name: String(parentRaw.name), logoUrl: parentRaw.logoUrl ?? null }
+        : null,
+      injuries: Array.isArray(row.injuries) ? row.injuries : [],
+      seasonStats: Array.isArray(row.seasonStats) ? row.seasonStats : [],
+    };
+  } catch (err) {
+    console.warn(`[Data Layer] DB identity lookup failed for TM id ${id}:`, err);
     return null;
   }
 }

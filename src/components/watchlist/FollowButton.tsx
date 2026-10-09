@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { Star, Loader2 } from "lucide-react";
 import { useWatchlist } from "@/lib/watchlist/useWatchlist";
 
@@ -14,7 +14,7 @@ export interface FollowButtonProps {
   clubCrest?: string | null;
   position?: string | null;
   marketValue?: number | null;
-  variant?: "icon" | "button";
+  variant?: "icon" | "button" | "chip";
   desktopHoverOnly?: boolean;
   className?: string;
 }
@@ -43,6 +43,9 @@ export function FollowButton({
     e.preventDefault();
     e.stopPropagation();
 
+    // Never store a missing or zero value: the watchlist shows "—" for it.
+    const value = marketValue != null && Number.isFinite(marketValue) && marketValue > 0 ? marketValue : undefined;
+
     setIsLoading(true);
     toggle({
       id,
@@ -53,8 +56,8 @@ export function FollowButton({
       clubName,
       clubCrest,
       position,
-      currentValueEur: marketValue || 0,
-      initialValueEur: marketValue || 0,
+      currentValueEur: value,
+      initialValueEur: value,
     });
 
     if (!following && type === "player" && typeof window !== "undefined") {
@@ -72,6 +75,29 @@ export function FollowButton({
   };
 
   const label = following ? `Unfollow ${name}` : `Follow ${name}`;
+
+  if (variant === "chip") {
+    // Constant name plus aria-pressed; the fixed min-width (wide layout) keeps the
+    // row still when the label swaps to "Following".
+    return (
+      <button
+        type="button"
+        onClick={handleClick}
+        disabled={isLoading}
+        aria-pressed={following}
+        className={`inline-flex h-11 items-center justify-center gap-1.5 rounded-full bg-bg-chip px-2 text-sm font-semibold text-text-primary hover:bg-bg-hover @[560px]/profile:px-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-bg-card select-none ${
+          isLoading ? "cursor-wait" : ""
+        } ${className}`}
+      >
+        <Star
+          aria-hidden="true"
+          className={`size-4 shrink-0 ${following ? "fill-current text-text-primary" : "fill-none text-text-muted"}`}
+        />
+        <span>{following ? "Following" : "Follow"}</span>
+        <span className="sr-only">{` ${name}`}</span>
+      </button>
+    );
+  }
 
   if (variant === "button") {
     return (

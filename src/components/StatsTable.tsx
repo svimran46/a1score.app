@@ -1,95 +1,114 @@
-import { Card } from "@/components/ui";
+import React from "react";
+import type { SeasonStatRow } from "@/lib/data/playerProfile.types";
+import { formatCount } from "@/lib/format-value";
 
-interface SeasonStatItem {
-  id: string;
-  season: string;
-  competition: string;
-  clubName: string;
-  appearances?: number | null;
-  goals?: number | null;
-  assists?: number | null;
-  minutesPlayed?: number | null;
-  yellowCards?: number | null;
-  redCards?: number | null;
-  rating?: number | null;
+type StatKey = "competition" | "clubName" | "appearances" | "goals" | "assists" | "minutesPlayed" | "yellowCards" | "redCards" | "rating";
+
+const COLUMNS: { key: StatKey; label: string; srLabel?: string; numeric: boolean }[] = [
+  { key: "competition", label: "Competition", numeric: false },
+  { key: "clubName", label: "Club", numeric: false },
+  { key: "appearances", label: "Apps", srLabel: "Appearances", numeric: true },
+  { key: "goals", label: "Goals", numeric: true },
+  { key: "assists", label: "Assists", numeric: true },
+  { key: "minutesPlayed", label: "Minutes", numeric: true },
+  { key: "yellowCards", label: "YC", srLabel: "Yellow cards", numeric: true },
+  { key: "redCards", label: "RC", srLabel: "Red cards", numeric: true },
+  { key: "rating", label: "Rating", numeric: true },
+];
+
+function NotAvailable() {
+  return (
+    <>
+      <span aria-hidden="true" className="text-text-muted">–</span>
+      <span className="sr-only">not available</span>
+    </>
+  );
 }
 
-interface StatsTableProps {
-  stats: SeasonStatItem[];
+function cell(row: SeasonStatRow, key: StatKey): React.ReactNode {
+  const v = row[key];
+  if (v == null || v === "") return <NotAvailable />;
+  if (key === "rating" && typeof v === "number") return v.toFixed(1);
+  if (typeof v === "number") return formatCount(v);
+  return v;
 }
 
-export function StatsTable({ stats }: StatsTableProps) {
-  if (!stats || stats.length === 0) {
-    return null;
-  }
+export interface StatsTableProps {
+  rows: SeasonStatRow[];
+  caption?: string;
+  /** Surface the table sits on, so the sticky first column covers what scrolls under it. */
+  surface?: "card" | "page";
+}
 
-  const hasRating = stats.some((s) => typeof s.rating === "number" && s.rating > 0);
+/**
+ * Career stats: a plain, honest table. A missing figure is "–" (read as
+ * "not available"), never 0; a column with no data at all is dropped.
+ * Counts are ordinary tabular text, not the money or trend voice.
+ */
+export function StatsTable({ rows, caption = "Career stats by season and competition", surface = "card" }: StatsTableProps) {
+  if (!rows || rows.length === 0) return null;
+
+  const columns = COLUMNS.filter((c) => rows.some((r) => r[c.key] != null && r[c.key] !== ""));
+  const stickyBg = surface === "card" ? "bg-bg-card" : "bg-bg-page";
+  const ring = surface === "card" ? "focus-visible:ring-offset-[var(--bg-card)]" : "focus-visible:ring-offset-[var(--bg-page)]";
 
   return (
-    <Card className="p-4 sm:p-5 overflow-hidden">
-      <div className="pb-3 border-b border-[var(--divider)]">
-        <h3 className="text-sm sm:text-base font-bold text-[var(--text-primary)] tracking-tight">
-          Career & Season Statistics
-        </h3>
-        <p className="text-xs text-[var(--text-muted)] mt-0.5">
-          Competition breakdowns and performance records
-        </p>
-      </div>
-
-      <div className="mt-3 overflow-x-auto">
-        <table className="w-full text-left text-xs tabular-nums">
-          <thead>
-            <tr className="text-[var(--text-muted)] uppercase tracking-wider border-b border-[var(--divider)] text-[11px] font-bold">
-              <th className="pb-2.5 font-bold">Season</th>
-              <th className="pb-2.5 font-bold">Competition</th>
-              <th className="pb-2.5 font-bold">Club</th>
-              <th className="pb-2.5 text-center font-bold">Apps</th>
-              <th className="pb-2.5 text-center font-bold text-[var(--trend-positive)]">Goals</th>
-              <th className="pb-2.5 text-center font-bold text-[var(--accent)]">Assists</th>
-              {hasRating ? (
-                <th className="pb-2.5 text-center font-bold text-[var(--value-text)]">Rating</th>
-              ) : (
-                <>
-                  <th className="pb-2.5 text-center font-bold text-[var(--value-text)]">YC</th>
-                  <th className="pb-2.5 text-center font-bold text-[var(--trend-negative)]">RC</th>
-                </>
-              )}
-              <th className="pb-2.5 text-right font-bold">Mins</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[var(--divider)]">
-            {stats.map((s) => (
-              <tr key={s.id} className="hover:bg-[var(--bg-hover)] transition-colors">
-                <td className="py-2.5 text-[var(--text-primary)] font-medium whitespace-nowrap">{s.season}</td>
-                <td className="py-2.5 text-[var(--text-secondary)] truncate max-w-[140px]">{s.competition}</td>
-                <td className="py-2.5 text-[var(--text-secondary)] truncate max-w-[130px]">{s.clubName}</td>
-                <td className="py-2.5 text-center text-[var(--text-primary)] font-semibold">{s.appearances ?? "-"}</td>
-                <td className="py-2.5 text-center text-[var(--trend-positive)] font-bold">{s.goals ?? 0}</td>
-                <td className="py-2.5 text-center text-[var(--accent)] font-bold">{s.assists ?? 0}</td>
-                {hasRating ? (
-                  <td className="py-2.5 text-center">
-                    {s.rating ? (
-                      <span className="px-2 py-0.5 rounded-lg font-bold text-[var(--value-text)] figure bg-[var(--bg-chip)]">
-                        {s.rating.toFixed(2)}
-                      </span>
-                    ) : (
-                      "-"
-                    )}
-                  </td>
-                ) : (
+    <div
+      role="region"
+      aria-label="Career stats"
+      tabIndex={0}
+      className={`overflow-x-auto overscroll-x-contain rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] focus-visible:ring-offset-2 ${ring}`}
+    >
+      <table className="w-full min-w-max border-collapse text-left text-sm tabular-nums">
+        <caption className="sr-only">{caption}</caption>
+        <thead>
+          <tr className="border-b border-divider/60">
+            <th scope="col" className={`sticky left-0 z-10 ${stickyBg} py-2 pr-4 text-xs font-medium leading-4 text-text-muted`}>
+              Season
+            </th>
+            {columns.map((c) => (
+              <th
+                key={c.key}
+                scope="col"
+                className={`py-2 pr-4 text-xs font-medium leading-4 text-text-muted last:pr-0 ${c.numeric ? "text-right" : ""}`}
+              >
+                {c.srLabel ? (
                   <>
-                    <td className="py-2.5 text-center text-[var(--value-text)] font-semibold">{s.yellowCards ?? 0}</td>
-                    <td className="py-2.5 text-center text-[var(--trend-negative)] font-semibold">{s.redCards ?? 0}</td>
+                    <span aria-hidden="true">{c.label}</span>
+                    <span className="sr-only">{c.srLabel}</span>
                   </>
+                ) : (
+                  c.label
                 )}
-                <td className="py-2.5 text-right text-[var(--text-muted)] whitespace-nowrap">
-                  {s.minutesPlayed ? `${s.minutesPlayed}'` : "-"}
-                </td>
-              </tr>
+              </th>
             ))}
-          </tbody>
-        </table>
-      </div>
-    </Card>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r, i) => (
+            <tr key={`${r.season}-${r.competition ?? ""}-${r.clubName ?? ""}-${i}`} className="border-b border-divider/60 last:border-b-0">
+              <th
+                scope="row"
+                className={`sticky left-0 z-10 ${stickyBg} whitespace-nowrap py-2 pr-4 font-medium text-text-primary`}
+              >
+                {r.season}
+              </th>
+              {columns.map((c) => (
+                <td
+                  key={c.key}
+                  className={`py-2 pr-4 last:pr-0 ${
+                    c.numeric
+                      ? "whitespace-nowrap text-right font-semibold text-text-primary"
+                      : "max-w-[11rem] truncate text-text-secondary"
+                  }`}
+                >
+                  {cell(r, c.key)}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }

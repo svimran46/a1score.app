@@ -1,0 +1,38 @@
+{
+  "_note": "TM path, header club reads 'Retired'. Last valuation is over a year old.",
+  "id": "100002",
+  "sourceId": "100002",
+  "fullName": "Sample Retired Player",
+  "commonName": "Sample Retired Player",
+  "dateOfBirth": "1985-01-15T00:00:00.000Z",
+  "nationality": [
+    "France"
+  ],
+  "position": "Goalkeeper",
+  "subPosition": null,
+  "preferredFoot": "right",
+  "heightCm": 190,
+  "contractUntil": "30/06/2029",
+  "clubStatusText": "Retired",
+  "photoUrl": null,
+  "currentClubId": null,
+  "currentClub": null,
+  "marketValues": [
+    {
+      "id": "tm-val-r1",
+      "date": "2021-06-01T00:00:00.000Z",
+      "valueEur": 4000000,
+      "clubName": "Olympique Lyon"
+    },
+    {
+      "id": "tm-val-r2",
+      "date": "2023-06-15T00:00:00.000Z",
+      "valueEur": 1000000,
+      "clubName": "Olympique Lyon"
+    }
+  ],
+  "latestMarketValue": 1000000,
+  "transfers": [],
+  "seasonStats": [],
+  "injuries": []
+}
