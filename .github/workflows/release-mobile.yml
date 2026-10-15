@@ -65,11 +65,26 @@ jobs:
 
       - name: Build Android APKs
         run: |
-          set -e
           set -o pipefail
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug assembleRelease --no-daemon --stacktrace -x lint -x lintVitalRelease -x test 2>&1 | tee gradle-build.log
+          ./gradlew assembleDebug assembleRelease --no-daemon --stacktrace -x lint -x lintVitalRelease -x test 2>&1 | tee gradle-build.log || {
+            EXIT_CODE=$?
+            echo "## ❌ Gradle Build Error Log (Exit Code: $EXIT_CODE)" >> $GITHUB_STEP_SUMMARY
+            echo '```text' >> $GITHUB_STEP_SUMMARY
+            tail -n 120 gradle-build.log >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+
+            cd ..
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git checkout -B ci-error-log
+            git add -f android/gradle-build.log
+            git commit -m "ci: dump gradle error log" || true
+            git push origin ci-error-log -f || true
+
+            exit $EXIT_CODE
+          }
 
       - name: Prepare and Sign Release APKs
         run: |
