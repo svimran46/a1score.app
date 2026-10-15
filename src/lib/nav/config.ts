@@ -20,7 +20,8 @@ export type NavIconKey =
   | "clubs"
   | "notifications"
   | "settings"
-  | "methodology";
+  | "methodology"
+  | "tv";
 
 export interface BottomTab {
   key: "matches" | "news" | "leagues" | "following" | "more";
@@ -44,6 +45,7 @@ const MORE_ROUTES = [
   "/settings",
   "/values",
   "/transfers",
+  "/tv",
   "/compare",
   "/players",
   "/clubs",
@@ -119,6 +121,12 @@ export const MORE_FEATURES: MoreItem[] = [
     description: "Latest confirmed transfers, loans and fees",
     href: "/transfers",
     icon: "transfers",
+  },
+  {
+    key: "tv",
+    label: "TV schedules",
+    href: "/tv",
+    icon: "tv",
   },
   {
     key: "compare",

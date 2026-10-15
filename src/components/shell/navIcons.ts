@@ -11,6 +11,7 @@ import {
   Star,
   TrendingUp,
   Trophy,
+  Tv,
   Users,
   type LucideIcon,
 } from "lucide-react";
@@ -30,4 +31,5 @@ export const NAV_ICONS: Record<NavIconKey, LucideIcon> = {
   notifications: Bell,
   settings: Settings,
   methodology: BookOpen,
+  tv: Tv,
 };

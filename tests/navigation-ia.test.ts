@@ -39,6 +39,7 @@ test("exactly one bottom tab is active for each route", () => {
     "/settings/notifications": "more",
     "/values": "more",
     "/transfers": "more",
+    "/tv": "more",
     "/compare": "more",
     "/players/erling-haaland-1": "more",
     "/clubs/arsenal-2": "more",
@@ -60,7 +61,7 @@ test("isUnder matches the route and its children but not lookalike prefixes", ()
 
 test("More hub lists every feature and account row with a route", () => {
   const keys = [...MORE_FEATURES, ...MORE_ACCOUNT].map((i) => i.key);
-  assert.deepEqual(keys, ["values", "transfers", "compare", "players", "clubs", "notifications", "settings"]);
+  assert.deepEqual(keys, ["values", "transfers", "tv", "compare", "players", "clubs", "notifications", "settings"]);
   assert.equal(new Set([...MORE_FEATURES, ...MORE_ACCOUNT].map((i) => i.href)).size, keys.length);
 });
 

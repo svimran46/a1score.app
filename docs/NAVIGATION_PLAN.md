@@ -14,7 +14,7 @@ Out of scope by decision: **Follow us** and **Redeem code**.
 | More: account card | "Saved on this device" note (no accounts yet) | `/more` |
 | More: FotMob+, Lineup Builder, Predict | Market Values, Compare Players (Predict / Lineup Builder are later phases) | `/values` `/compare` |
 | More: Transfer Centre (Filter ▾, Sort ▾) | Transfer Centre: Latest / Record fees / Contract ends, filter by type, league, fee and following, sort by date or fee | `/transfers` |
-| More: TV schedules | Later phase (needs a broadcast data source) | — |
+| More: TV schedules (country) | TV schedules by country, day tabs, channels per match (unofficial source for now) | `/tv` |
 | More: Notifications | Notifications (push opt-in + what you follow) | `/settings/notifications` |
 | More: Settings | Settings | `/settings` |
 | Settings: Theme | Theme: System default / Light / Dark | `/settings` |
@@ -60,13 +60,14 @@ new screens are checked at 390px in dark and light themes.
 - **Measurement system** (cm / ft-in) for player height.
 - **Following group at the top of Matches**: uses the existing FotMob team id → a1score club id table (`FOTMOB_TEAM_MAPPINGS`, 132 clubs), so a followed club only matches its own fixtures. Clubs not in that table don't appear until they are mapped.
 
-### Phase 5 — Transfer Centre ✅ (TV schedules waiting on a data source)
+### Phase 5 — Transfer Centre and TV schedules ✅
 - Transfer Centre tabs: Latest, Record fees, Contract ends.
 - Filter menu: type (Loan includes loans with an option to buy), league, fee ≥ €10M (label shown in the display currency), following only. Active filters show as removable chips.
 - Sort menu: newest first, highest fee.
 - League and following filters use club ids: transfer club names are matched exactly to tracked clubs in the data layer. Moves between untracked clubs only appear under "All leagues".
 - Not built: the FotMob bell for transfer news. a1score has no transfer alerts to subscribe to yet; it belongs with Phase 6 notifications.
-- TV schedules by country: not built. The FotMob feed used here has no broadcast data, and listings need a licensed source (e.g. a sports-data provider's TV guide API). Decide on a source first.
+- **TV schedules** (`/tv?country=XX`): day tabs in the viewer's timezone, kick-off time, teams with crests, and every TV channel / stream per match; 33 countries. Opens the saved country, else one guessed from the browser language; More shows it ("TV schedules · Malaysia").
+  - **Temporary unofficial source:** FotMob's public `/api/data/tvlistings` endpoint, behind a `TvProvider` interface (`src/lib/tv`). To move to an official provider, implement `TvProvider` and change one line in `src/lib/tv/index.ts`; the page credits the source and stays out of search results (`noindex`) until then.
 
 ### Phase 6 — Accounts and games
 - Sign in to sync follows and settings across devices (Supabase Auth); migrates the device's local follows on first sign-in.
