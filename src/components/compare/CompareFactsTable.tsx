@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { EntityImage } from "@/components/EntityImage";
-import { formatCompactEur, formatDate, calculateAge } from "@/lib/utils";
+import { formatDate, calculateAge } from "@/lib/utils";
 import { getClubSlug } from "@/lib/slugs";
 import { calculate12MonthChange, calculatePeakValuation } from "@/lib/compare";
 import {
@@ -17,6 +17,7 @@ import {
   Activity,
   Layers,
 } from "lucide-react";
+import { useMoney } from "@/lib/useMoney";
 
 export interface ComparePlayerFact {
   id: string;
@@ -48,6 +49,7 @@ interface CompareFactsTableProps {
 }
 
 export function CompareFactsTable({ players, onRemovePlayer }: CompareFactsTableProps) {
+  const money = useMoney();
   if (!players || players.length === 0) return null;
 
   return (
@@ -135,7 +137,7 @@ export function CompareFactsTable({ players, onRemovePlayer }: CompareFactsTable
                     </span>
                     <div className="flex items-baseline justify-between gap-2 flex-wrap">
                       <span className="font-mono font-black text-xl sm:text-2xl text-[var(--value-text)] figure tabular-nums">
-                        {player.latestMarketValue > 0 ? formatCompactEur(player.latestMarketValue) : "—"}
+                        {player.latestMarketValue > 0 ? money.compact(player.latestMarketValue) : "—"}
                       </span>
                       {/* 12-Month Delta */}
                       {change12M.baselineValue > 0 && (
@@ -175,7 +177,7 @@ export function CompareFactsTable({ players, onRemovePlayer }: CompareFactsTable
                     </span>
                     <span className="font-bold text-[var(--text-primary)] text-right">
                       <span className="font-mono text-[var(--value-text)] tabular-nums">
-                        {peak.peakValue > 0 ? formatCompactEur(peak.peakValue) : "—"}
+                        {peak.peakValue > 0 ? money.compact(peak.peakValue) : "—"}
                       </span>
                       {peak.peakDate && (
                         <span className="text-[11px] text-[var(--text-muted)] block font-normal">
@@ -203,7 +205,7 @@ export function CompareFactsTable({ players, onRemovePlayer }: CompareFactsTable
                           }
                         >
                           {change12M.isPositive ? "+" : ""}
-                          {formatCompactEur(change12M.diff)} ({change12M.isPositive ? "+" : ""}
+                          {money.compact(change12M.diff)} ({change12M.isPositive ? "+" : ""}
                           {change12M.pct.toFixed(1)}%)
                         </span>
                       ) : (

@@ -12,10 +12,13 @@ import {
   Calendar as CalendarIcon,
   X,
   Radio,
+  Star,
 } from "lucide-react";
 import type { FotmobLeagueGroup, FotmobMatch } from "@/lib/fotmob/client";
 import { MatchesOverflowMenu } from "./matches/MatchesOverflowMenu";
 import { sortMatchesByTime } from "@/lib/matches/byTime";
+import { followedMatches, type MappedMatch } from "@/lib/matches/following";
+import { useWatchlist } from "@/lib/watchlist/useWatchlist";
 
 const COLLAPSED_KEY = "a1_collapsed_leagues";
 const BY_TIME_KEY = "a1_matches_by_time";
@@ -32,6 +35,8 @@ interface MatchesClientProps {
   upcomingScopedMatchesCount: number;
   totalAllMatchesCount: number;
   fetchedAt?: string | null;
+  /** Matches with an a1score-mapped club, for the Following group (see lib/matches/following). */
+  followCandidates?: MappedMatch[];
 }
 
 function formatDateString(dateStr: string): string {
@@ -80,7 +85,13 @@ export function MatchesClient({
   upcomingScopedMatchesCount,
   totalAllMatchesCount,
   fetchedAt,
+  followCandidates = [],
 }: MatchesClientProps) {
+  const { clubFavorites } = useWatchlist();
+  const following = followedMatches(
+    followCandidates,
+    clubFavorites.map((c) => c.id)
+  );
   const router = useRouter();
   const pathname = usePathname();
 
@@ -139,6 +150,7 @@ export function MatchesClient({
     setCollapsedLeagues((prev) => {
       const next = { ...prev };
       for (const league of leagues) next[String(league.id)] = collapsed;
+      next.following = collapsed;
       saveCollapsed(next);
       return next;
     });
@@ -356,6 +368,46 @@ export function MatchesClient({
         MatchRow list inside ONE card per league with 1px dividers.
       */}
       <div className="space-y-3">
+        {/* Following: matches of clubs the user follows, from every league, in kick-off order */}
+        {following.length > 0 && (
+          <div className="rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)] overflow-hidden">
+            <button
+              type="button"
+              onClick={() => toggleLeagueCollapse("following")}
+              className="w-full h-11 flex items-center justify-between px-3 sm:px-4 bg-[var(--color-surface)] hover:bg-[var(--color-surface-2)] transition-colors text-left"
+              aria-expanded={!collapsedLeagues.following}
+            >
+              <span className="flex items-center gap-2.5 min-w-0">
+                <Star aria-hidden="true" className="w-4 h-4 shrink-0 fill-current text-[var(--color-text)]" />
+                <span className="text-[15px] font-semibold text-[var(--color-text)] tracking-tight">Following</span>
+              </span>
+              <span className="flex items-center gap-2 shrink-0">
+                <span className="text-[13px] font-normal text-[var(--color-text-secondary)] tabular-nums">
+                  {following.length}
+                </span>
+                <ChevronDown
+                  aria-hidden="true"
+                  className={`w-4 h-4 text-[var(--color-text-secondary)] transition-transform duration-200 ${
+                    collapsedLeagues.following ? "-rotate-90" : "rotate-0"
+                  }`}
+                />
+              </span>
+            </button>
+            {!collapsedLeagues.following && (
+              <div className="divide-y divide-[var(--color-border)] border-t border-[var(--color-border)]">
+                {following.map(({ match, leagueName }) => (
+                  <div key={match.id}>
+                    <p className="px-3 sm:px-4 pt-2 -mb-1 text-[11px] font-medium text-[var(--color-text-secondary)] truncate">
+                      {leagueName}
+                    </p>
+                    <MatchRow match={match} />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
         {byTime && leagues.length > 0 ? (
           <div className="rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)] overflow-hidden divide-y divide-[var(--color-border)]">
             {sortMatchesByTime(leagues).map(({ match, leagueName }) => (

@@ -10,8 +10,9 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
-import { formatCompactEur, formatDate } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 import { TrendingUp, Eye, EyeOff } from "lucide-react";
+import { useMoney } from "@/lib/useMoney";
 
 export interface ClubSnapshotPoint {
   id?: string;
@@ -26,6 +27,7 @@ interface ClubValueTrendChartProps {
 }
 
 export function ClubValueTrendChart({ snapshots, clubName }: ClubValueTrendChartProps) {
+  const money = useMoney();
   const [showTable, setShowTable] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
 
@@ -102,7 +104,7 @@ export function ClubValueTrendChart({ snapshots, clubName }: ClubValueTrendChart
             }`}
           >
             {isGain ? "+" : ""}
-            {formatCompactEur(delta)} ({isGain ? "+" : ""}
+            {money.compact(delta)} ({isGain ? "+" : ""}
             {deltaPct.toFixed(1)}%)
           </div>
 
@@ -142,7 +144,7 @@ export function ClubValueTrendChart({ snapshots, clubName }: ClubValueTrendChart
               fontSize={11}
               tickLine={false}
               axisLine={{ stroke: "var(--border-subtle)" }}
-              tickFormatter={(v) => formatCompactEur(v)}
+              tickFormatter={(v) => money.compact(v)}
               width={55}
             />
             <Tooltip
@@ -155,7 +157,7 @@ export function ClubValueTrendChart({ snapshots, clubName }: ClubValueTrendChart
                       {label}
                     </p>
                     <p className="font-mono font-bold text-[var(--value-text)] figure text-sm tabular-nums">
-                      {formatCompactEur(point.value)}
+                      {money.compact(point.value)}
                     </p>
                     {point.squadSize && (
                       <p className="text-[11px] text-[var(--text-muted)]">
@@ -197,7 +199,7 @@ export function ClubValueTrendChart({ snapshots, clubName }: ClubValueTrendChart
                 <tr key={idx} className="hover:bg-[var(--bg-hover)]">
                   <td className="p-2 font-medium text-[var(--text-primary)]">{row.dateStr}</td>
                   <td className="p-2 font-mono font-bold text-[var(--value-text)] figure tabular-nums">
-                    {formatCompactEur(row.value)}
+                    {money.compact(row.value)}
                   </td>
                   <td className="p-2 text-[var(--text-muted)] tabular-nums">
                     {row.squadSize ? `${row.squadSize} players` : "—"}

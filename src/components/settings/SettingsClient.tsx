@@ -1,11 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Bell,
   BookOpen,
   Check,
   ChevronDown,
+  Coins,
+  Ruler,
+  type LucideIcon,
   FileText,
   HelpCircle,
   Info,
@@ -23,26 +26,41 @@ import {
   themeLabel,
   type ThemePreference,
 } from "@/lib/theme";
+import { CURRENCIES, currencyMeta } from "@/lib/currency";
+import { ensureRates, setCurrency } from "@/lib/currency-store";
+import { useCurrencySetting } from "@/lib/useMoney";
+import { MEASUREMENT_OPTIONS } from "@/lib/units";
+import { setMeasurementSystem, useMeasurementSystem } from "@/lib/useUnits";
+import { formatDateGB } from "@/lib/format-value";
 
 export const SUPPORT_EMAIL = "admin@a1score.app";
 
-function ThemeSetting() {
-  const [pref, setPref] = useState<ThemePreference | null>(null);
+/** A settings row that expands into a single-choice list. */
+function ChoiceSetting<T extends string>({
+  icon,
+  label,
+  value,
+  options,
+  onChange,
+  note,
+}: {
+  icon: LucideIcon;
+  label: string;
+  /** null until the stored value has been read on the client. */
+  value: T | null;
+  options: { value: T; label: string }[];
+  onChange: (value: T) => void;
+  note?: React.ReactNode;
+}) {
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    const sync = () => setPref(readThemePreference());
-    sync();
-    window.addEventListener(THEME_CHANGE_EVENT, sync);
-    return () => window.removeEventListener(THEME_CHANGE_EVENT, sync);
-  }, []);
+  const current = options.find((o) => o.value === value)?.label;
 
   return (
     <div>
       <MenuRow
-        icon={SunMoon}
-        label="Theme"
-        description={pref ? themeLabel(pref) : " "}
+        icon={icon}
+        label={label}
+        description={current ?? "\u00a0"}
         onClick={() => setOpen((o) => !o)}
         ariaExpanded={open}
         trailing={
@@ -53,34 +71,108 @@ function ThemeSetting() {
         }
       />
       {open && (
-        <div role="radiogroup" aria-label="Theme" className="px-4 pb-3 pl-[58px] space-y-1">
-          {THEME_OPTIONS.map((opt) => {
-            const selected = pref === opt.value;
-            return (
-              <button
-                key={opt.value}
-                type="button"
-                role="radio"
-                aria-checked={selected}
-                onClick={() => {
-                  setThemePreference(opt.value);
-                  setPref(opt.value);
-                }}
-                className={`w-full flex items-center justify-between min-h-[44px] px-3 rounded-xl text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
-                  selected
-                    ? "bg-[var(--bg-chip)] text-[var(--text-primary)] font-semibold"
-                    : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]"
-                }`}
-              >
-                <span>{opt.label}</span>
-                {selected && <Check aria-hidden="true" className="w-4 h-4 text-[var(--accent)]" />}
-              </button>
-            );
-          })}
+        <div className="px-4 pb-3 pl-[58px] space-y-1">
+          <div role="radiogroup" aria-label={label} className="space-y-1">
+            {options.map((opt) => {
+              const selected = value === opt.value;
+              return (
+                <button
+                  key={opt.value}
+                  type="button"
+                  role="radio"
+                  aria-checked={selected}
+                  onClick={() => onChange(opt.value)}
+                  className={`w-full flex items-center justify-between min-h-[44px] px-3 rounded-xl text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
+                    selected
+                      ? "bg-[var(--bg-chip)] text-[var(--text-primary)] font-semibold"
+                      : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]"
+                  }`}
+                >
+                  <span>{opt.label}</span>
+                  {selected && <Check aria-hidden="true" className="w-4 h-4 text-[var(--accent)]" />}
+                </button>
+              );
+            })}
+          </div>
+          {note && <p className="px-3 pt-1 text-xs leading-relaxed text-[var(--text-muted)]">{note}</p>}
         </div>
       )}
     </div>
   );
+}
+
+function ThemeSetting() {
+  const [pref, setPref] = useState<ThemePreference | null>(null);
+
+  useEffect(() => {
+    const sync = () => setPref(readThemePreference());
+    sync();
+    window.addEventListener(THEME_CHANGE_EVENT, sync);
+    return () => window.removeEventListener(THEME_CHANGE_EVENT, sync);
+  }, []);
+
+  return (
+    <ChoiceSetting
+      icon={SunMoon}
+      label="Theme"
+      value={pref}
+      options={THEME_OPTIONS}
+      onChange={(v) => {
+        setThemePreference(v);
+        setPref(v);
+      }}
+    />
+  );
+}
+
+function CurrencySetting() {
+  const mounted = useMounted();
+  const { code, fx, status } = useCurrencySetting();
+
+  // Loading rates here means the note can show their date even before a switch.
+  useEffect(() => {
+    void ensureRates();
+  }, []);
+
+  const note =
+    code === "EUR"
+      ? "Market values and fees are recorded in euros."
+      : fx?.rates[code]
+        ? `Converted from euros at the European Central Bank reference rate of ${formatDateGB(fx.date)} (€1 = ${currencyMeta(code).symbol}${fx.rates[code]!.toFixed(4)}). Values are recorded in euros.`
+        : status === "failed"
+          ? "Exchange rates are unavailable right now, so values are shown in euros."
+          : "Loading exchange rates…";
+
+  return (
+    <ChoiceSetting
+      icon={Coins}
+      label="Currency"
+      value={mounted ? code : null}
+      options={CURRENCIES.map((c) => ({ value: c.code, label: c.label }))}
+      onChange={setCurrency}
+      note={note}
+    />
+  );
+}
+
+function MeasurementSetting() {
+  const mounted = useMounted();
+  const system = useMeasurementSystem();
+  return (
+    <ChoiceSetting
+      icon={Ruler}
+      label="Measurement system"
+      value={mounted ? system : null}
+      options={MEASUREMENT_OPTIONS}
+      onChange={setMeasurementSystem}
+    />
+  );
+}
+
+function useMounted(): boolean {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  return mounted;
 }
 
 function ShareRow() {
@@ -122,6 +214,8 @@ export function SettingsClient({ appVersion }: { appVersion: string }) {
     <div className="space-y-6">
       <MenuGroup>
         <ThemeSetting />
+        <CurrencySetting />
+        <MeasurementSetting />
         <MenuRow
           icon={Bell}
           label="Notifications"

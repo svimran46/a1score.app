@@ -3,11 +3,11 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { EntityImage } from "@/components/EntityImage";
-import { formatCompactEur } from "@/lib/utils";
 import { getClubSlug } from "@/lib/slugs";
 import { getClubDisplayName } from "@/lib/data/clubs";
 import { ArrowUpDown, Trophy, Calendar, Sparkles } from "lucide-react";
 import type { LeagueLegendItem } from "@/lib/fotmob/client";
+import { useMoney } from "@/lib/useMoney";
 
 export interface LeagueStandingsRowData {
   idx: number;
@@ -58,6 +58,7 @@ export function LeagueStandingsTable({
   season = "2026/2027",
   legend = [],
 }: LeagueStandingsTableProps) {
+  const money = useMoney();
   const [sortField, setSortField] = useState<SortField>("points");
   const [sortAsc, setSortAsc] = useState<boolean>(false);
 
@@ -338,7 +339,7 @@ export function LeagueStandingsTable({
 
                   {/* Squad Value */}
                   <td className="py-3 px-3 text-right text-value-text figure font-bold whitespace-nowrap tabular-nums">
-                    {row.totalSquadValue > 0 ? formatCompactEur(row.totalSquadValue) : "N/A"}
+                    {row.totalSquadValue > 0 ? money.compact(row.totalSquadValue) : "N/A"}
                   </td>
 
                   {/* Recent Form (Last 5) */}

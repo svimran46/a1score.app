@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { EntityImage } from "./EntityImage";
-import { formatCompactEur } from "@/lib/utils";
 import { getClubDisplayName } from "@/lib/data/clubs";
 import { getPlayerSlug } from "@/lib/slugs";
+import { Money } from "@/components/ui/Money";
 
 interface PlayerCardProps {
   player: {
@@ -57,7 +57,7 @@ export function PlayerCard({ player }: PlayerCardProps) {
             </span>
             {player.latestMarketValue ? (
               <span className="text-xs sm:text-sm font-black text-value-text figure tabular-nums whitespace-nowrap">
-                {formatCompactEur(player.latestMarketValue)}
+                <Money eur={player.latestMarketValue} />
               </span>
             ) : null}
           </div>

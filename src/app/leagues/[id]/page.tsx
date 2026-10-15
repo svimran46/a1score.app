@@ -1,6 +1,6 @@
 import { notFound, permanentRedirect } from "next/navigation";
 import { getLeagueById } from "@/lib/data/leagues";
-import { formatCompactEur, formatDate } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 import { getLeagueSlug, getClubSlug } from "@/lib/slugs";
 
 import { LeagueFinancialParity } from "@/components/LeagueFinancialParity";
@@ -10,6 +10,7 @@ import { constructMetadata, SITE_URL } from "@/lib/metadata";
 import { Breadcrumbs, PageHeader } from "@/components/ui";
 import { FollowButton } from "@/components/watchlist/FollowButton";
 import type { Metadata } from "next";
+import { Money } from "@/components/ui/Money";
 
 export const revalidate = 3600;
 export const runtime = "edge";
@@ -108,7 +109,7 @@ export default async function LeaguePage({ params }: LeaguePageProps) {
         imageShape="rounded"
         categoryLabel={`${league.country} • Tier ${league.tier || 1}`}
         title={league.name}
-        value={formatCompactEur(totalLeagueValue)}
+        value={<Money eur={totalLeagueValue} />}
         valueLabel="Total Competition Value"
         metaItems={[
           <span key="clubs">{league.clubCount} Clubs</span>,

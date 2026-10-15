@@ -1,5 +1,7 @@
+"use client";
+
 import React from "react";
-import { describeDelta } from "@/lib/format-value";
+import { useMoney } from "@/lib/useMoney";
 import type { ValueDelta } from "@/lib/data/playerProfile.types";
 
 export interface TrendDeltaProps {
@@ -26,7 +28,8 @@ const SIZE_CLASS: Record<NonNullable<TrendDeltaProps["size"]>, string> = {
  *   compact  ▲ +12.5%
  */
 export function TrendDelta({ delta, size = "md", basis, className = "" }: TrendDeltaProps) {
-  const d = describeDelta(delta);
+  const money = useMoney();
+  const d = money.delta(delta);
   const showBasis = (basis ?? (size === "hero" ? "since" : "none")) === "since";
   const sizeClass = SIZE_CLASS[size];
 

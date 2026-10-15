@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { EntityImage } from "./EntityImage";
 import Link from "next/link";
-import { formatCompactEur } from "@/lib/utils";
 import { formatTransferFee } from "@/lib/transfers";
 import { getPlayerSlug } from "@/lib/slugs";
 import { Card } from "@/components/ui";
@@ -14,6 +13,7 @@ import {
   Building2,
   ShieldCheck,
 } from "lucide-react";
+import { useMoney } from "@/lib/useMoney";
 
 export interface ClubTransferRecord {
   id: string;
@@ -45,6 +45,7 @@ export function ClubTransferLedger({
   recordDepartures,
   clubName,
 }: ClubTransferLedgerProps) {
+  const money = useMoney();
   const [activeTab, setActiveTab] = useState<"arrivals" | "departures">("arrivals");
 
   const hasArrivals = recordArrivals && recordArrivals.length > 0;
@@ -122,7 +123,7 @@ export function ClubTransferLedger({
             Top Inbound Investment
           </span>
           <span className="font-bold text-[var(--value-text)] figure tabular-nums">
-            {formatCompactEur(totalArrivalsSpend)}
+            {money.compact(totalArrivalsSpend)}
           </span>
         </div>
         <div className="p-2.5 rounded-xl bg-[var(--bg-elevated)] flex items-center justify-between">
@@ -131,7 +132,7 @@ export function ClubTransferLedger({
             Top Outbound Realized
           </span>
           <span className="font-bold text-[var(--trend-positive)] tabular-nums">
-            {formatCompactEur(totalDeparturesIncome)}
+            {money.compact(totalDeparturesIncome)}
           </span>
         </div>
       </div>
@@ -145,7 +146,7 @@ export function ClubTransferLedger({
             ? p.slug || getPlayerSlug({ ...p, transfermarktId: extId })
             : null;
           const counterparty = activeTab === "arrivals" ? t.fromClubName : t.toClubName;
-          const feeInfo = formatTransferFee(t.feeEur, t.transferType);
+          const feeInfo = formatTransferFee(t.feeEur, t.transferType, money.ctx);
 
           return (
             <div
@@ -288,7 +289,7 @@ export function ClubTransferLedger({
                   </td>
                   <td className="py-2.5 text-right font-bold whitespace-nowrap text-sm tabular-nums">
                     {(() => {
-                      const feeInfo = formatTransferFee(t.feeEur, t.transferType);
+                      const feeInfo = formatTransferFee(t.feeEur, t.transferType, money.ctx);
                       return (
                         <span
                           className={

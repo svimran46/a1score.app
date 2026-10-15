@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Shield } from "lucide-react";
-import { formatCompactEur } from "@/lib/utils";
+import { Money } from "@/components/ui/Money";
 
 export interface ClubRowProps {
   rank?: number | string;
@@ -87,7 +87,7 @@ export function ClubRow({
       {/* Right side: Squad Value (amber, tabular-nums, right-aligned, 700) */}
       <div className="text-right shrink-0">
         <div className="text-sm sm:text-base font-bold text-[var(--value-text)] figure tabular-nums leading-tight">
-          {squadValue ? formatCompactEur(squadValue) : "—"}
+          {squadValue ? <Money eur={squadValue} /> : "—"}
         </div>
         <div className="text-[10px] text-[var(--text-muted)] uppercase font-semibold leading-tight mt-0.5">
           Squad Value

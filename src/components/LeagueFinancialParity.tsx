@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 import { EntityImage } from "./EntityImage";
 import Link from "next/link";
-import { formatCompactEur } from "@/lib/utils";
 import { getClubSlug } from "@/lib/slugs";
 import {
   Scale,
@@ -16,6 +15,7 @@ import {
   AlertTriangle,
   Info,
 } from "lucide-react";
+import { useMoney } from "@/lib/useMoney";
 
 export interface LeagueClubValuation {
   id: string;
@@ -55,6 +55,7 @@ export function LeagueFinancialParity({
   totalLeagueValue,
   leagueName,
 }: LeagueFinancialParityProps) {
+  const money = useMoney();
   const [activeTab, setActiveTab] = useState<"parity" | "efficiency">("parity");
 
   // 1. Wealth Concentration & Disparity Metrics
@@ -86,11 +87,11 @@ export function LeagueFinancialParity({
         const v = num % 100;
         return num + (s[(v - 20) % 10] || s[v] || s[0]);
       };
-      medianDetail = `average of ${ordinal(pos1)} & ${ordinal(pos2)}: ${c1.name} (${formatCompactEur(c1.totalSquadValue)}) & ${c2.name} (${formatCompactEur(c2.totalSquadValue)})`;
+      medianDetail = `average of ${ordinal(pos1)} & ${ordinal(pos2)}: ${c1.name} (${money.compact(c1.totalSquadValue)}) & ${c2.name} (${money.compact(c2.totalSquadValue)})`;
     } else {
       const c = sortedByVal[Math.floor(n / 2)];
       medianClubValue = c.totalSquadValue;
-      medianDetail = `${c.name} (${formatCompactEur(c.totalSquadValue)})`;
+      medianDetail = `${c.name} (${money.compact(c.totalSquadValue)})`;
     }
 
     // Top 3 Concentration
@@ -115,7 +116,7 @@ export function LeagueFinancialParity({
       medianRatio,
       sortedClubs: sortedByVal,
     };
-  }, [clubs, totalLeagueValue]);
+  }, [clubs, totalLeagueValue, money]);
 
   // 2. Valuation Efficiency (Points per €10M Squad Value)
   const efficiencyMetrics = useMemo(() => {
@@ -223,7 +224,7 @@ export function LeagueFinancialParity({
             {medianRatio}x
           </div>
           <p className="text-[10px] text-text-muted leading-relaxed">
-            {topClub.name} ({formatCompactEur(topClub.totalSquadValue)}) is valued at {medianRatio}x the median club value ({formatCompactEur(medianClubValue)}, {medianDetail}).
+            {topClub.name} ({money.compact(topClub.totalSquadValue)}) is valued at {medianRatio}x the median club value ({money.compact(medianClubValue)}, {medianDetail}).
           </p>
         </div>
 
@@ -233,7 +234,7 @@ export function LeagueFinancialParity({
             Total Competition Value
           </span>
           <div className="text-2xl font-black text-text-primary tracking-tight tabular-nums">
-            {formatCompactEur(totalLeagueValue)}
+            {money.compact(totalLeagueValue)}
           </div>
           <p className="text-[10px] text-text-muted leading-relaxed">
             Cumulative player transfer market value across all {clubs.length} registered clubs.
@@ -301,7 +302,7 @@ export function LeagueFinancialParity({
 
                     <div className="text-right flex-shrink-0">
                       <span className="text-xs font-extrabold text-value-text figure tabular-nums">
-                        {formatCompactEur(club.totalSquadValue)}
+                        {money.compact(club.totalSquadValue)}
                       </span>
                       <span className="text-[11px] text-text-muted tabular-nums ml-2">
                         {pct}%
@@ -365,7 +366,7 @@ export function LeagueFinancialParity({
                         <div>
                           <span className="font-bold text-text-primary block">{c.name}</span>
                           <span className="text-[10px] text-text-muted">
-                            Table #{c.idx} • {c.pts} pts • {formatCompactEur(c.totalSquadValue || 0)}
+                            Table #{c.idx} • {c.pts} pts • {money.compact(c.totalSquadValue || 0)}
                           </span>
                         </div>
                       </div>
@@ -403,7 +404,7 @@ export function LeagueFinancialParity({
                         <div>
                           <span className="font-bold text-text-primary block">{c.name}</span>
                           <span className="text-[10px] text-text-muted">
-                            Table #{c.idx} • {c.pts} pts • {formatCompactEur(c.totalSquadValue || 0)}
+                            Table #{c.idx} • {c.pts} pts • {money.compact(c.totalSquadValue || 0)}
                           </span>
                         </div>
                       </div>

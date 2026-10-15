@@ -18,6 +18,7 @@ import { FollowButton } from "@/components/watchlist/FollowButton";
 
 import { constructMetadata, SITE_URL } from "@/lib/metadata";
 import type { Metadata } from "next";
+import { Money } from "@/components/ui/Money";
 
 export const revalidate = 3600;
 export const runtime = "edge";
@@ -176,7 +177,7 @@ export default async function ClubPage({ params }: ClubPageProps) {
         subtitle={
           club.name && club.name !== getClubDisplayName(club) ? club.name : undefined
         }
-        value={formatCompactEur(club.totalSquadValue)}
+        value={<Money eur={club.totalSquadValue} />}
         valueLabel="Total Squad Valuation"
         freshnessTimestamp={
           club.lastSyncedAt ||

@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { formatCompactEur } from "@/lib/utils";
 import { Users, LayoutGrid, Shield, Sparkles } from "lucide-react";
+import { useMoney } from "@/lib/useMoney";
 
 interface StarterPlayer {
   id: number | string;
@@ -38,6 +38,7 @@ export function PitchLineup({
   homeName,
   awayName,
 }: PitchLineupProps) {
+  const money = useMoney();
   const [viewMode, setViewMode] = useState<"pitch" | "list">("pitch");
   const [activeTeamTab, setActiveTeamTab] = useState<"home" | "away">("home");
 
@@ -185,7 +186,7 @@ export function PitchLineup({
                   </span>
                 </div>
                 <span className="text-base font-black text-amber-400 tabular-nums">
-                  {formatCompactEur(activeTeamTab === "home" ? homeTotalVal : awayTotalVal)}
+                  {money.compact(activeTeamTab === "home" ? homeTotalVal : awayTotalVal)}
                 </span>
               </div>
             </div>
@@ -307,7 +308,7 @@ export function PitchLineup({
                     {/* Market Value Pill */}
                     {starter.marketValue ? (
                       <span className="mt-0.5 px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-amber-500/20 text-amber-400 border border-amber-500/30 tabular-nums">
-                        {formatCompactEur(starter.marketValue)}
+                        {money.compact(starter.marketValue)}
                       </span>
                     ) : (
                       <span className="mt-0.5 px-1.5 py-0.5 rounded text-[9px] font-semibold bg-slate-900/80 text-slate-500 border border-slate-800">
@@ -347,7 +348,7 @@ export function PitchLineup({
               </div>
               {homeTotalVal > 0 && (
                 <span className="text-amber-400 font-extrabold tabular-nums">
-                  {formatCompactEur(homeTotalVal)}
+                  {money.compact(homeTotalVal)}
                 </span>
               )}
             </div>
@@ -368,7 +369,7 @@ export function PitchLineup({
                   </div>
                   {player.marketValue ? (
                     <span className="text-[11px] font-bold text-amber-400 tabular-nums">
-                      {formatCompactEur(player.marketValue)}
+                      {money.compact(player.marketValue)}
                     </span>
                   ) : (
                     <span className="text-[11px] font-medium text-slate-500">
@@ -402,7 +403,7 @@ export function PitchLineup({
               </div>
               {awayTotalVal > 0 && (
                 <span className="text-amber-400 font-extrabold tabular-nums">
-                  {formatCompactEur(awayTotalVal)}
+                  {money.compact(awayTotalVal)}
                 </span>
               )}
             </div>
@@ -423,7 +424,7 @@ export function PitchLineup({
                   </div>
                   {player.marketValue ? (
                     <span className="text-[11px] font-bold text-amber-400 tabular-nums">
-                      {formatCompactEur(player.marketValue)}
+                      {money.compact(player.marketValue)}
                     </span>
                   ) : (
                     <span className="text-[11px] font-medium text-slate-500">

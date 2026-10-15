@@ -1,8 +1,8 @@
 "use client";
 
 import { useMemo } from "react";
-import { formatCompactEur } from "@/lib/utils";
 import { Scale, AlertTriangle, ShieldCheck, Info } from "lucide-react";
+import { useMoney } from "@/lib/useMoney";
 
 export interface TeamLineupCoverage {
   valuedCount: number;
@@ -36,6 +36,7 @@ export function MatchFinancialBarometer({
   isFinished,
   isUpcoming,
 }: MatchFinancialBarometerProps) {
+  const money = useMoney();
   const hVal = homeValue || 0;
   const aVal = awayValue || 0;
 
@@ -76,13 +77,13 @@ export function MatchFinancialBarometer({
       if (hScore === aScore) {
         verdict =
           gapEur > 50000000
-            ? `Tactical Resistance: ${lowerValTeam} holding parity despite a €${formatCompactEur(gapEur)} squad disparity.`
+            ? `Tactical Resistance: ${lowerValTeam} holding parity despite a ${money.compact(gapEur)} squad disparity.`
             : "Evenly balanced tactical battle mirroring near-equal market valuations.";
       } else {
         const winningTeam = hScore > aScore ? homeName : awayName;
         if (winningTeam === lowerValTeam) {
           isUpset = true;
-          verdict = `🔥 Underdog Value Resistance: ${winningTeam} outperforming a ${ratio}x (€${formatCompactEur(gapEur)}) squad valuation deficit!`;
+          verdict = `🔥 Underdog Value Resistance: ${winningTeam} outperforming a ${ratio}x (${money.compact(gapEur)}) squad valuation deficit!`;
         } else {
           verdict = `Expected Market Superiority: ${higherValTeam} capitalizing on their ${ratio}x financial depth advantage.`;
         }
@@ -90,7 +91,7 @@ export function MatchFinancialBarometer({
     } else {
       verdict =
         gapEur > 50000000
-          ? `Pre-match financial disparity: ${higherValTeam} holds a ${ratio}x (€${formatCompactEur(gapEur)}) squad valuation edge.`
+          ? `Pre-match financial disparity: ${higherValTeam} holds a ${ratio}x (${money.compact(gapEur)}) squad valuation edge.`
           : `Evenly priced fixture: Both squads enter with comparable market valuation depth.`;
     }
 
@@ -109,7 +110,7 @@ export function MatchFinancialBarometer({
       awayValued,
       awayTotalCount,
     };
-  }, [hVal, aVal, total, homeName, awayName, homeScore, awayScore, isUpcoming, homeCoverage, awayCoverage]);
+  }, [hVal, aVal, total, homeName, awayName, homeScore, awayScore, isUpcoming, homeCoverage, awayCoverage, money]);
 
   if (!analysis || total === 0) return null;
 
@@ -136,7 +137,7 @@ export function MatchFinancialBarometer({
             <span className="font-semibold text-text-secondary block truncate">{homeName}</span>
             <div className="flex flex-col sm:flex-row sm:items-baseline gap-0.5 sm:gap-1.5">
               <span className="text-value-text figure font-black text-sm tabular-nums whitespace-nowrap">
-                {formatCompactEur(hVal)}
+                {money.compact(hVal)}
               </span>
               {homeCoverage && (
                 <span className="text-[10px] text-text-muted font-semibold tabular-nums whitespace-nowrap">
@@ -161,7 +162,7 @@ export function MatchFinancialBarometer({
             <span className="font-semibold text-text-secondary block truncate">{awayName}</span>
             <div className="flex flex-col sm:flex-row sm:items-baseline justify-end gap-0.5 sm:gap-1.5">
               <span className="text-value-text figure font-black text-sm tabular-nums whitespace-nowrap">
-                {formatCompactEur(aVal)}
+                {money.compact(aVal)}
               </span>
               {awayCoverage && (
                 <span className="text-[10px] text-text-muted font-semibold tabular-nums whitespace-nowrap">

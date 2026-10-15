@@ -4,11 +4,11 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { TrendingUp, TrendingDown, ArrowRight, Newspaper, ExternalLink } from "lucide-react";
-import { formatCompactEur } from "@/lib/utils";
 import { NewsItem } from "@/types/news";
 import { formatRelativeTime } from "@/lib/data/news";
 import { WatchlistRightRailCard } from "@/components/watchlist/WatchlistRightRailCard";
 import { isUnder } from "@/lib/nav/config";
+import { useMoney } from "@/lib/useMoney";
 
 export interface MoverItem {
   id: string;
@@ -37,6 +37,7 @@ export function RightRail({
   movers?: MoversData;
   news?: NewsItem[];
 }) {
+  const money = useMoney();
   const [activeTab, setActiveTab] = useState<"risers" | "fallers">("risers");
   // The Following page already is this list; don't repeat it underneath.
   const onFollowingPage = isUnder(usePathname() ?? "", "/following");
@@ -186,7 +187,7 @@ export function RightRail({
 
                 <div className="text-right shrink-0">
                   <div className="text-xs font-bold text-[var(--value-text)] figure tabular-nums">
-                    {formatCompactEur(player.latestValue)}
+                    {money.compact(player.latestValue)}
                   </div>
                   <div
                     className={`text-[10px] font-bold flex items-center justify-end gap-0.5 tabular-nums ${

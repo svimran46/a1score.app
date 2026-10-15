@@ -2,10 +2,10 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { formatCompactEur } from "@/lib/utils";
 import { EntityImage } from "@/components/EntityImage";
 import { Users, User, ExternalLink } from "lucide-react";
 import { slugify } from "@/lib/slugs";
+import { useMoney } from "@/lib/useMoney";
 
 interface LineupTabProps {
   match: any;
@@ -22,6 +22,7 @@ function getPlayerProfileUrl(player: any): string {
 }
 
 export function LineupTab({ match }: LineupTabProps) {
+  const money = useMoney();
   const { lineup = {}, teams = {} } = match || {};
   const homeTeam = teams?.home || {};
   const awayTeam = teams?.away || {};
@@ -100,7 +101,7 @@ export function LineupTab({ match }: LineupTabProps) {
               {homeLineup.formation ? `Formation: ${homeLineup.formation}` : "Starting XI"}
             </span>
             <span className="font-black text-xs sm:text-sm text-[var(--value-text)] figure tabular-nums">
-              {homeTotalVal > 0 ? formatCompactEur(homeTotalVal) : "—"}
+              {homeTotalVal > 0 ? money.compact(homeTotalVal) : "—"}
             </span>
           </div>
         </button>
@@ -135,7 +136,7 @@ export function LineupTab({ match }: LineupTabProps) {
               {awayLineup.formation ? `Formation: ${awayLineup.formation}` : "Starting XI"}
             </span>
             <span className="font-black text-xs sm:text-sm text-[var(--value-text)] figure tabular-nums">
-              {awayTotalVal > 0 ? formatCompactEur(awayTotalVal) : "—"}
+              {awayTotalVal > 0 ? money.compact(awayTotalVal) : "—"}
             </span>
           </div>
         </button>
@@ -154,7 +155,7 @@ export function LineupTab({ match }: LineupTabProps) {
           </div>
           {currentTeamTotalVal > 0 && (
             <span className="px-2.5 py-1 rounded-xl text-xs font-bold bg-accent/15 text-[var(--value-text)] figure border border-accent/30 tabular-nums">
-              Starting XI Value: {formatCompactEur(currentTeamTotalVal)}
+              Starting XI Value: {money.compact(currentTeamTotalVal)}
             </span>
           )}
         </div>
@@ -197,7 +198,7 @@ export function LineupTab({ match }: LineupTabProps) {
                 {/* Market Value chip (valuation-first in amber with tabular numbers) */}
                 {player.marketValue && Number(player.marketValue) > 0 ? (
                   <span className="text-[9px] font-bold text-[var(--value-text)] figure tabular-nums bg-amber-950/90 border border-amber-500/40 px-1 rounded shadow-xs -mt-0.5">
-                    {formatCompactEur(Number(player.marketValue))}
+                    {money.compact(Number(player.marketValue))}
                   </span>
                 ) : null}
               </Link>
@@ -240,7 +241,7 @@ export function LineupTab({ match }: LineupTabProps) {
                 </div>
                 {player.marketValue && Number(player.marketValue) > 0 ? (
                   <span className="font-bold text-[var(--value-text)] figure tabular-nums text-xs shrink-0">
-                    {formatCompactEur(Number(player.marketValue))}
+                    {money.compact(Number(player.marketValue))}
                   </span>
                 ) : (
                   <span className="text-[10px] text-[var(--text-muted)] shrink-0">—</span>
@@ -297,7 +298,7 @@ export function LineupTab({ match }: LineupTabProps) {
                 </div>
                 {sub.marketValue && Number(sub.marketValue) > 0 ? (
                   <span className="font-bold text-[var(--value-text)] figure tabular-nums text-xs shrink-0">
-                    {formatCompactEur(Number(sub.marketValue))}
+                    {money.compact(Number(sub.marketValue))}
                   </span>
                 ) : (
                   <span className="text-[10px] text-[var(--text-muted)] shrink-0">—</span>

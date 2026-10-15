@@ -2,42 +2,15 @@ import React from "react";
 import Link from "next/link";
 import type { PlayerProfileVM, ValuationPoint, ValueChartProps } from "@/lib/data/playerProfile.types";
 import { toValueChartProps } from "@/lib/data/playerProfile";
-import { describeDelta, formatDateGB, formatMonthYear, formatValueEur } from "@/lib/format-value";
+import { formatDateGB, formatMonthYear, formatValueEur } from "@/lib/format-value";
+import { Money } from "@/components/ui/Money";
+import { ValueSummary } from "@/components/players/ValueSummary";
 import { SectionErrorBoundary } from "@/components/SectionErrorBoundary";
 import { ValueChartLazy } from "@/components/players/ValueChartLazy";
 import { chartSlots } from "@/components/players/ChartSkeleton";
 import { ValueFigure } from "@/components/players/ValueFigure";
 import { TrendDelta } from "@/components/players/TrendDelta";
 import { NotRecorded, ProfileDisclosure, ProfileSection, focusRing } from "@/components/players/ProfileSection";
-
-/** Text alternative for the chart; server-rendered so it exists without JS. */
-export function valueSummary(vm: PlayerProfileVM, chart: ValueChartProps): string {
-  const { points, peak, first, current } = vm.valuation;
-  const name = vm.identity.displayName;
-  const last = points[points.length - 1];
-  const parts = [
-    `Market value history for ${name}: ${points.length} valuations from ${formatMonthYear(points[0].date)} to ${formatDateGB(last.date)}.`,
-    `Latest valuation ${formatValueEur(last.valueEur)} on ${formatDateGB(last.date)}.`,
-  ];
-  if (peak) {
-    parts.push(`Peak ${formatValueEur(peak.valueEur)} in ${formatMonthYear(peak.date)}.`);
-    if (!peak.isCurrent && current && Math.round(peak.pctBelow) > 0) {
-      parts.push(`The current value is ${Math.round(peak.pctBelow)}% below the peak.`);
-    }
-  }
-  if (first) parts.push(`First on record ${formatValueEur(first.valueEur)} in ${formatMonthYear(first.date)}.`);
-  if (chart.markers.length > 0) {
-    const fees = chart.markers.map(([t, fee, to]) => {
-      const amount = formatValueEur(fee);
-      return `${amount}${to ? ` to ${to}` : ""} (${formatMonthYear(new Date(t))})`;
-    });
-    parts.push(`Transfers with a disclosed fee: ${fees.join(", ")}.`);
-  }
-  if (chartSlots(chart).chips) {
-    parts.push(`Chart ranges count back from the latest valuation on ${formatDateGB(last.date)}.`);
-  }
-  return parts.join(" ");
-}
 
 function KeyNumber({ label, children, note }: { label: string; children: React.ReactNode; note?: React.ReactNode }) {
   return (
@@ -85,13 +58,9 @@ function ValuationsTable({ points }: { points: ValuationPoint[] }) {
         <tbody>
           {rows.map(({ p, prev }) => {
             const diff = prev ? p.valueEur - prev.valueEur : null;
-            const d =
+            const delta =
               prev && diff != null
-                ? describeDelta({
-                    diffEur: diff,
-                    pct: prev.valueEur > 0 ? (diff / prev.valueEur) * 100 : null,
-                    basisDate: prev.date,
-                  })
+                ? { diffEur: diff, pct: prev.valueEur > 0 ? (diff / prev.valueEur) * 100 : null, basisDate: prev.date }
                 : null;
             return (
               <tr key={p.date} className="border-b border-divider/60 last:border-b-0">
@@ -102,23 +71,10 @@ function ValuationsTable({ points }: { points: ValuationPoint[] }) {
                   <ValueFigure eur={p.valueEur} size="sm" />
                 </td>
                 <td className="whitespace-nowrap py-2 pr-3 text-right">
-                  {!d ? (
+                  {!delta ? (
                     <span className="text-xs text-text-muted">First on record</span>
-                  ) : d.direction === "flat" ? (
-                    <span className="text-text-secondary">
-                      <span aria-hidden="true">Unchanged</span>
-                      <span className="sr-only">{d.spoken}</span>
-                    </span>
                   ) : (
-                    <>
-                      <span
-                        aria-hidden="true"
-                        className={`figure font-bold ${d.direction === "up" ? "text-trend-up" : "text-trend-down"}`}
-                      >
-                        {`${d.arrow} ${d.amount}${d.pct ? ` ${d.pct}` : ""}`}
-                      </span>
-                      <span className="sr-only">{d.spoken}</span>
-                    </>
+                    <TrendDelta delta={delta} size="md" basis="none" />
                   )}
                 </td>
                 <td className="max-w-[12rem] truncate py-2 text-text-secondary">
@@ -144,7 +100,7 @@ export function ValueSection({ vm }: { vm: PlayerProfileVM }) {
   const chart = toValueChartProps(vm);
   const single = points.length === 1 ? points[0] : null;
   const showUndatedNote = !!chart && !!current && current.asOf == null;
-  const currentLabel = formatValueEur(current?.valueEur);
+  const hasCurrentValue = !!formatValueEur(current?.valueEur);
 
   const compare = (
     <Link
@@ -210,7 +166,9 @@ export function ValueSection({ vm }: { vm: PlayerProfileVM }) {
 
       {chart ? (
         <>
-          <p className="sr-only">{valueSummary(vm, chart)}</p>
+          <p className="sr-only">
+            <ValueSummary vm={{ identity: { displayName: vm.identity.displayName }, valuation: vm.valuation }} chart={chart} />
+          </p>
           <div className="mt-4">
             <SectionErrorBoundary sectionName="value chart" fallbackMessage="Couldn't load the chart right now.">
               <ValueChartLazy {...chart} />
@@ -219,9 +177,11 @@ export function ValueSection({ vm }: { vm: PlayerProfileVM }) {
         </>
       ) : null}
 
-      {showUndatedNote && currentLabel ? (
+      {showUndatedNote && hasCurrentValue ? (
         <p className="mt-2 text-xs leading-4 text-text-muted">
-          {`The current value of ${currentLabel} has no recorded valuation date, so it isn't plotted.`}
+          {"The current value of "}
+          <Money eur={current?.valueEur} kind="value" />
+          {" has no recorded valuation date, so it isn't plotted."}
         </p>
       ) : null}
 

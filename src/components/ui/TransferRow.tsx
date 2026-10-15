@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { User, ArrowRight, Shield } from "lucide-react";
-import { formatCompactEur } from "@/lib/utils";
+import { Money } from "@/components/ui/Money";
 
 export interface TransferRowProps {
   id?: string;
@@ -48,7 +48,7 @@ export function TransferRow({
     typeof fee === "number"
       ? fee === 0
         ? transferType || "Free"
-        : formatCompactEur(fee)
+        : <Money eur={fee} />
       : fee || transferType || "Undisclosed";
 
   const hasClubs = Boolean(fromClubName || toClubName);

@@ -1,11 +1,11 @@
 import React from "react";
 import Link from "next/link";
 import { EntityImage } from "./EntityImage";
-import { formatCompactEur } from "@/lib/utils";
 import { getClubShortName } from "@/lib/data/clubs";
 import { getPositionAbbreviation } from "@/lib/positions";
 import { TrendingUp, TrendingDown } from "lucide-react";
 import { FollowButton } from "@/components/watchlist/FollowButton";
+import { Money } from "@/components/ui/Money";
 
 export interface PlayerRowProps {
   rank?: number | string;
@@ -72,7 +72,7 @@ export function PlayerRow({
     typeof trendPercentage === "number"
       ? `${isUp ? "+" : ""}${trendPercentage.toFixed(1)}%`
       : typeof diffVal === "number" && diffVal !== 0
-      ? `${sign}${formatCompactEur(Math.abs(diffVal))}`
+      ? <>{sign}<Money eur={Math.abs(diffVal)} /></>
       : null;
 
   const natStr = Array.isArray(nationality) ? nationality[0] : nationality;
@@ -148,7 +148,7 @@ export function PlayerRow({
       <div className="flex items-center gap-1 sm:gap-2 shrink-0 relative z-10">
         <div className="text-right pointer-events-none">
           <div className="text-sm sm:text-base font-bold text-[var(--value-text)] figure tabular-nums leading-tight">
-            {marketValue ? formatCompactEur(marketValue) : "—"}
+            {marketValue ? <Money eur={marketValue} /> : "—"}
           </div>
           {hasTrend && trendStr && (
             <div

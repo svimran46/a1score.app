@@ -7,6 +7,8 @@
  * client islands always agree.
  */
 
+import { EUR_CONTEXT, currencyMeta, type MoneyContext } from "./currency";
+
 const MINUS = "−";
 
 function compactMagnitude(abs: number): { num: string; suffix: "B" | "M" | "K" | "" } {
@@ -20,31 +22,37 @@ function compactMagnitude(abs: number): { num: string; suffix: "B" | "M" | "K" |
   return { num: String(Math.round(abs)), suffix: "" };
 }
 
-/** "€180M", "€1.5M", "€750K", "€1.25B"; null for null, NaN, 0 or negative. */
-export function formatValueEur(value: number | null | undefined): string | null {
+/**
+ * "€180M", "€1.5M", "€750K", "€1.25B"; null for null, NaN, 0 or negative.
+ * All inputs are euros; `ctx` (see useMoney) converts for display.
+ */
+export function formatValueEur(value: number | null | undefined, ctx: MoneyContext = EUR_CONTEXT): string | null {
   if (value == null || !Number.isFinite(value) || value <= 0) return null;
-  const { num, suffix } = compactMagnitude(value);
-  return `€${num}${suffix}`;
+  const { num, suffix } = compactMagnitude(value * ctx.rate);
+  return `${ctx.symbol}${num}${suffix}`;
 }
 
 /** Parts for typographic treatment: { currency: "€", number: "180", suffix: "M" } */
-export function valueEurParts(value: number | null | undefined): { currency: string; number: string; suffix: string } | null {
+export function valueEurParts(
+  value: number | null | undefined,
+  ctx: MoneyContext = EUR_CONTEXT
+): { currency: string; number: string; suffix: string } | null {
   if (value == null || !Number.isFinite(value) || value <= 0) return null;
-  const { num, suffix } = compactMagnitude(value);
-  return { currency: "€", number: num, suffix };
+  const { num, suffix } = compactMagnitude(value * ctx.rate);
+  return { currency: ctx.symbol, number: num, suffix };
 }
 
 /** Axis labels: like formatValueEur but renders 0 as "€0". */
-export function formatAxisEur(value: number): string {
-  if (!Number.isFinite(value) || value <= 0) return "€0";
-  return formatValueEur(value) ?? "€0";
+export function formatAxisEur(value: number, ctx: MoneyContext = EUR_CONTEXT): string {
+  if (!Number.isFinite(value) || value <= 0) return `${ctx.symbol}0`;
+  return formatValueEur(value, ctx) ?? `${ctx.symbol}0`;
 }
 
 /** "+€20M", "−€5M", "€0" */
-export function formatSignedEur(diff: number): string {
-  if (!Number.isFinite(diff) || diff === 0) return "€0";
-  const { num, suffix } = compactMagnitude(Math.abs(diff));
-  return `${diff > 0 ? "+" : MINUS}€${num}${suffix}`;
+export function formatSignedEur(diff: number, ctx: MoneyContext = EUR_CONTEXT): string {
+  if (!Number.isFinite(diff) || diff === 0) return `${ctx.symbol}0`;
+  const { num, suffix } = compactMagnitude(Math.abs(diff * ctx.rate));
+  return `${diff > 0 ? "+" : MINUS}${ctx.symbol}${num}${suffix}`;
 }
 
 /** "+12.5%", "−3.2%", "0%" (one decimal, trailing ".0" kept for alignment) */
@@ -54,13 +62,14 @@ export function formatSignedPct(pct: number): string {
 }
 
 /** Screen-reader amount: "180 million euros", "1.5 million euros", "750 thousand euros". */
-export function spokenEur(value: number): string {
-  const abs = Math.abs(value);
+export function spokenEur(value: number, ctx: MoneyContext = EUR_CONTEXT): string {
+  const abs = Math.abs(value * ctx.rate);
+  const unit = currencyMeta(ctx.code).spoken;
   const trim = (n: number) => String(Number(n.toFixed(2)));
-  if (abs >= 1_000_000_000) return `${trim(abs / 1_000_000_000)} billion euros`;
-  if (abs >= 1_000_000) return `${trim(abs / 1_000_000)} million euros`;
-  if (abs >= 1_000) return `${trim(abs / 1_000)} thousand euros`;
-  return `${Math.round(abs)} euros`;
+  if (abs >= 1_000_000_000) return `${trim(abs / 1_000_000_000)} billion ${unit}`;
+  if (abs >= 1_000_000) return `${trim(abs / 1_000_000)} million ${unit}`;
+  if (abs >= 1_000) return `${trim(abs / 1_000)} thousand ${unit}`;
+  return `${Math.round(abs)} ${unit}`;
 }
 
 function toDate(input: string | Date | null | undefined): Date | null {
@@ -118,7 +127,10 @@ export interface DeltaDescription {
  * valuation table, share card). Arrow + sign + percentage + basis date always
  * travel together so direction never relies on colour alone.
  */
-export function describeDelta(delta: { diffEur: number; pct: number | null; basisDate: string }): DeltaDescription {
+export function describeDelta(
+  delta: { diffEur: number; pct: number | null; basisDate: string },
+  ctx: MoneyContext = EUR_CONTEXT
+): DeltaDescription {
   const basisMonth = formatMonthYear(delta.basisDate);
   const basisDay = formatDateGB(delta.basisDate);
   const basisLong = formatDateLong(delta.basisDate);
@@ -126,7 +138,7 @@ export function describeDelta(delta: { diffEur: number; pct: number | null; basi
     return {
       direction: "flat",
       arrow: null,
-      amount: "€0",
+      amount: `${ctx.symbol}0`,
       pct: null,
       basisMonth,
       basisDay,
@@ -135,7 +147,7 @@ export function describeDelta(delta: { diffEur: number; pct: number | null; basi
     };
   }
   const up = delta.diffEur > 0;
-  const amount = formatSignedEur(delta.diffEur);
+  const amount = formatSignedEur(delta.diffEur, ctx);
   const pct = delta.pct == null || !Number.isFinite(delta.pct) ? null : formatSignedPct(delta.pct);
   const arrow = up ? "▲" : "▼";
   const spokenPct = pct ? `, ${Math.abs(delta.pct as number).toFixed(1)} percent` : "";
@@ -147,6 +159,6 @@ export function describeDelta(delta: { diffEur: number; pct: number | null; basi
     basisMonth,
     basisDay,
     text: `${arrow} ${amount}${pct ? ` (${pct})` : ""} since ${basisMonth}`,
-    spoken: `${up ? "Up" : "Down"} ${spokenEur(Math.abs(delta.diffEur))}${spokenPct}, since ${basisLong}`,
+    spoken: `${up ? "Up" : "Down"} ${spokenEur(Math.abs(delta.diffEur), ctx)}${spokenPct}, since ${basisLong}`,
   };
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { formatCompactEur, calculateAge } from "@/lib/utils";
+import { calculateAge } from "@/lib/utils";
 import {
   TrendingUp,
   Activity,
@@ -11,6 +11,7 @@ import {
   Target,
   Sparkles,
 } from "lucide-react";
+import { useMoney } from "@/lib/useMoney";
 
 interface SeasonStatItem {
   id: string;
@@ -44,6 +45,7 @@ export function PlayerIntelligenceRibbon({
   dateOfBirth,
   position = "Player",
 }: PlayerIntelligenceRibbonProps) {
+  const money = useMoney();
   // Sort market values chronologically, filtering out invalid dates
   const sortedValues = useMemo(() => {
     return (marketValues || [])
@@ -149,7 +151,7 @@ export function PlayerIntelligenceRibbon({
                 }
               >
                 {valuationDelta.isGain ? "+" : ""}
-                {formatCompactEur(valuationDelta.diff)}
+                {money.compact(valuationDelta.diff)}
               </span>
             ) : (
               <span className="text-text-muted">Stable</span>
@@ -173,8 +175,8 @@ export function PlayerIntelligenceRibbon({
           <div className="text-[11px] text-text-muted tabular-nums">
             {peakAnalysis
               ? peakAnalysis.isAtPeak
-                ? `Max recorded ${formatCompactEur(peakAnalysis.peakValue)}`
-                : `-${formatCompactEur(peakAnalysis.delta)} from peak`
+                ? `Max recorded ${money.compact(peakAnalysis.peakValue)}`
+                : `-${money.compact(peakAnalysis.delta)} from peak`
               : "Valuation baseline"}
           </div>
         </div>

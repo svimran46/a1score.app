@@ -13,14 +13,9 @@ import {
   YAxis,
 } from "recharts";
 import type { ValueChartProps } from "@/lib/data/playerProfile.types";
-import {
-  describeDelta,
-  formatAxisEur,
-  formatDateGB,
-  formatDateLong,
-  formatValueEur,
-  spokenEur,
-} from "@/lib/format-value";
+import { formatDateGB, formatDateLong } from "@/lib/format-value";
+import { useMoney } from "@/lib/useMoney";
+import type { BoundMoney } from "@/lib/money";
 import {
   CHART_RANGES,
   CHART_TICKS_H,
@@ -155,10 +150,10 @@ function ReadoutSync({
 }
 
 /** Change vs the previous real point (which may sit before the range window). */
-function deltaVsPrevious(cur: Datum, prev: [number, number, number] | undefined) {
+function deltaVsPrevious(cur: Datum, prev: [number, number, number] | undefined, money: BoundMoney) {
   if (!prev) return null;
   const diffEur = cur.v - prev[1];
-  return describeDelta({
+  return money.delta({
     diffEur,
     pct: prev[1] > 0 ? (diffEur / prev[1]) * 100 : null,
     basisDate: new Date(prev[0]).toISOString(),
@@ -316,6 +311,7 @@ function YTick({
   payload?: { value: number };
   hidden?: Set<number>;
 }) {
+  const money = useMoney();
   if (x == null || y == null || !payload || hidden?.has(payload.value)) return null;
   return (
     <text
@@ -328,7 +324,7 @@ function YTick({
       strokeWidth={3}
       paintOrder="stroke"
     >
-      {formatAxisEur(payload.value)}
+      {money.axis(payload.value)}
     </text>
   );
 }
@@ -336,6 +332,7 @@ function YTick({
 /* ------------------------------------------------------------------- chart */
 
 export function MarketValueChart({ points, clubs, markers, playerName, ended }: ValueChartProps) {
+  const money = useMoney();
   const figureRef = useRef<HTMLElement>(null);
   const [wide, setWide] = useState(false);
   const [plotSize, setPlotSize] = useState({ w: 0, h: 0 });
@@ -388,13 +385,13 @@ export function MarketValueChart({ points, clubs, markers, playerName, ended }: 
   const latest = data[data.length - 1];
   const shownIndex = active != null && data[active] ? active : data.length - 1;
   const shown = data[shownIndex];
-  const delta = shown ? deltaVsPrevious(shown, points[shown.g - 1]) : null;
+  const delta = shown ? deltaVsPrevious(shown, points[shown.g - 1], money) : null;
   const isOverallLast = shown != null && shown.g === points.length - 1;
   const clubOf = (d: Datum) => (d.c >= 0 && d.c < clubs.length ? clubs[d.c] || null : null);
   const shownClub = shown ? clubOf(shown) : null;
 
   const sentence = shown
-    ? `${formatDateLong(new Date(shown.t))}${shownClub ? `, ${shownClub}` : ""}: ${spokenEur(shown.v)}. ${
+    ? `${formatDateLong(new Date(shown.t))}${shownClub ? `, ${shownClub}` : ""}: ${money.spoken(shown.v)}. ${
         delta ? `${delta.spoken}.` : "First valuation on record."
       }`
     : "";
@@ -415,21 +412,21 @@ export function MarketValueChart({ points, clubs, markers, playerName, ended }: 
   const { ticks: xTicks, unit } = timeTicks(model.t0, model.t1, innerWidth, effectiveRange === "1y");
   const peakLabel =
     effectiveRange !== "all" && model.peak.v < model.allTimeMax
-      ? `Peak in range ${formatValueEur(model.peak.v) ?? ""}`
-      : `Peak ${formatValueEur(model.peak.v) ?? ""}`;
+      ? `Peak in range ${money.value(model.peak.v) ?? ""}`
+      : `Peak ${money.value(model.peak.v) ?? ""}`;
 
   const plotTop = MARGIN.top;
   const plotBottom = plotSize.h - CHART_TICKS_H - MARGIN.bottom;
   const xOf = (t: number) => plotLeft + ((t - model.t0) / (model.t1 - model.t0)) * innerWidth;
   const yOf = (v: number) => plotTop + (1 - v / top) * (plotBottom - plotTop);
   const markerText = (m: [number, number, string | null]) =>
-    `${m[2] ? `→ ${shortName(m[2])} ` : ""}${formatValueEur(m[1]) ?? ""}`;
+    `${m[2] ? `→ ${shortName(m[2])} ` : ""}${money.value(m[1]) ?? ""}`;
   const layout = layoutAnnotations({
     plotLeft,
     plotRight,
     plotTop,
     peak: { x: xOf(model.peak.t), y: yOf(model.peak.v), label: peakLabel },
-    ticks: yTicks.map((v) => ({ value: v, y: yOf(v), label: formatAxisEur(v) })),
+    ticks: yTicks.map((v) => ({ value: v, y: yOf(v), label: money.axis(v) })),
     markers: wide && innerWidth > 0 ? model.labelled.map((m) => ({ t: m[0], x: xOf(m[0]), label: markerText(m) })) : [],
   });
 
@@ -460,7 +457,7 @@ export function MarketValueChart({ points, clubs, markers, playerName, ended }: 
           {shownClub ? ` · ${shownClub}` : ""}
         </p>
         <p className="flex min-w-0 items-baseline gap-2 whitespace-nowrap leading-6">
-          <span className="figure text-[18px] font-extrabold text-value-text">{formatValueEur(shown.v)}</span>
+          <span className="figure text-[18px] font-extrabold text-value-text">{money.value(shown.v)}</span>
           {delta ? (
             delta.direction === "flat" ? (
               <span className="truncate text-[13px] text-text-secondary">
@@ -530,7 +527,7 @@ export function MarketValueChart({ points, clubs, markers, playerName, ended }: 
             />
             {model.inRange.map((m) => {
               const place = layout.markers.get(m[0]);
-              const fee = formatValueEur(m[1]);
+              const fee = money.value(m[1]);
               return (
                 <ReferenceLine
                   key={`m-${m[0]}-${m[1]}`}

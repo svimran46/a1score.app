@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { EntityImage } from "./EntityImage";
-import { formatCompactEur, calculateAge } from "@/lib/utils";
+import { calculateAge } from "@/lib/utils";
 import type { PositionalPeer } from "@/lib/data/players";
 import { Users, User, Shield, ArrowUpRight, ArrowDownRight, Award } from "lucide-react";
+import { useMoney } from "@/lib/useMoney";
 
 interface PositionalPeersProps {
   currentMarketValue: number;
@@ -17,6 +18,7 @@ export function PositionalPeers({
   currentPosition,
   peers,
 }: PositionalPeersProps) {
+  const money = useMoney();
   if (!peers || peers.length === 0) {
     return null;
   }
@@ -108,7 +110,7 @@ export function PositionalPeers({
               {/* Valuation & Delta from Subject */}
               <div className="flex items-center sm:flex-col items-end justify-between sm:justify-center flex-shrink-0 text-right space-y-1 pl-9 sm:pl-0">
                 <span className="text-base font-black text-value-text figure tabular-nums">
-                  {formatCompactEur(peer.latestMarketValue)}
+                  {money.compact(peer.latestMarketValue)}
                 </span>
 
                 {diff !== 0 ? (
@@ -118,7 +120,7 @@ export function PositionalPeers({
                     }`}
                   >
                     {isHigher ? "+" : "-"}
-                    {formatCompactEur(Math.abs(diff))} vs profile
+                    {money.compact(Math.abs(diff))} vs profile
                   </span>
                 ) : (
                   <span className="text-xs font-medium text-text-muted">Equal valuation</span>

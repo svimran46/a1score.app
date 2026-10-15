@@ -3,6 +3,7 @@ import { Card } from "@/components/ui";
 import type { PlayerProfileVM } from "@/lib/data/playerProfile.types";
 import { formatDateGB } from "@/lib/format-value";
 import { ProfileSection } from "@/components/players/ProfileSection";
+import { Height } from "@/components/players/Height";
 
 export interface KeyFactItem {
   label: string;
@@ -97,7 +98,10 @@ export function ProfileFactsSection({ vm }: { vm: PlayerProfileVM }) {
         {facts.map((f) => (
           <div key={f.label} className="min-w-0">
             <dt className="text-xs font-medium leading-4 text-text-muted">{f.label}</dt>
-            <dd className="mt-0.5 break-words text-[15px] font-medium leading-[22px] text-text-primary">{f.value}</dd>
+            <dd className="mt-0.5 break-words text-[15px] font-medium leading-[22px] text-text-primary">
+              {/* Height follows the visitor's measurement setting; the server text is the metric fallback. */}
+              {f.label === "Height" && vm.identity.heightCm ? <Height cm={vm.identity.heightCm} /> : f.value}
+            </dd>
           </div>
         ))}
       </dl>

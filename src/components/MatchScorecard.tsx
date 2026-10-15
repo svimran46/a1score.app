@@ -5,9 +5,9 @@ import Link from "next/link";
 import { EntityImage } from "@/components/EntityImage";
 import { LiveMinute } from "@/components/LiveMinute";
 import { KickoffTime } from "@/components/KickoffTime";
-import { formatCompactEur } from "@/lib/utils";
 import { ArrowLeft, Trophy, AlertCircle } from "lucide-react";
 import { ShareButton } from "@/components/ui/ShareButton";
+import { useMoney } from "@/lib/useMoney";
 
 interface ScorerItem {
   player: string;
@@ -25,6 +25,7 @@ export function MatchScorecard({
   goalHighlight = false,
   lastUpdatedTime = null,
 }: MatchScorecardProps) {
+  const money = useMoney();
   const { general = {}, status = {}, teams = {}, scorers = {} } = match || {};
   const homeTeam = teams?.home || {};
   const awayTeam = teams?.away || {};
@@ -93,7 +94,7 @@ export function MatchScorecard({
     const parts: string[] = [];
     const val = team === homeTeam ? homeVal : awayVal;
     if (val > 0) {
-      parts.push(`XI ${formatCompactEur(val)}`);
+      parts.push(`XI ${money.compact(val)}`);
     }
     if (team?.fifaRank) {
       parts.push(`#${team.fifaRank} FIFA`);

@@ -7,10 +7,10 @@ import { AlertCircle, Plus, Scale, Shield, Star, TrendingDown, TrendingUp, User,
 import { useWatchlist } from "@/lib/watchlist/useWatchlist";
 import type { WatchlistItem } from "@/lib/watchlist/storage";
 import { followValueChange } from "@/lib/watchlist/valueChange";
-import { formatCompactEur } from "@/lib/utils";
 import { openSearch } from "@/lib/nav/search";
 import { UnderlineTabs } from "@/components/ui/UnderlineTabs";
 import { EmptyState } from "@/components/ui";
+import { useMoney } from "@/lib/useMoney";
 
 type Tab = "teams" | "players";
 
@@ -31,6 +31,7 @@ function RemoveButton({ item, onRemove }: { item: WatchlistItem; onRemove: () =>
 }
 
 function TeamCard({ item, editing, onRemove }: { item: WatchlistItem; editing: boolean; onRemove: () => void }) {
+  const money = useMoney();
   const crest = item.avatarUrl || item.clubCrest;
   const value = item.currentValueEur || item.initialValueEur || 0;
   return (
@@ -54,7 +55,7 @@ function TeamCard({ item, editing, onRemove }: { item: WatchlistItem; editing: b
       <p className="mt-1 text-xs text-[var(--text-muted)] pointer-events-none">
         {value > 0 ? (
           <>
-            <span className="font-bold text-[var(--value-text)] figure tabular-nums">{formatCompactEur(value)}</span>
+            <span className="font-bold text-[var(--value-text)] figure tabular-nums">{money.compact(value)}</span>
             {" squad value"}
           </>
         ) : (
@@ -66,6 +67,7 @@ function TeamCard({ item, editing, onRemove }: { item: WatchlistItem; editing: b
 }
 
 function PlayerCard({ item, editing, onRemove }: { item: WatchlistItem; editing: boolean; onRemove: () => void }) {
+  const money = useMoney();
   const { current, pct } = followValueChange(item);
   const up = pct != null && pct > 0;
   return (
@@ -94,7 +96,7 @@ function PlayerCard({ item, editing, onRemove }: { item: WatchlistItem; editing:
       </p>
       <p className="mt-1 flex items-baseline gap-2 pointer-events-none">
         <span className="text-sm font-bold text-[var(--value-text)] figure tabular-nums">
-          {current > 0 ? formatCompactEur(current) : "—"}
+          {current > 0 ? money.compact(current) : "—"}
         </span>
         {pct != null && (
           <span
