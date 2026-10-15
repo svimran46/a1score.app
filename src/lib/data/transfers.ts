@@ -29,6 +29,11 @@ export interface TransferRecord {
   feeEur: number | null;
   transferType: TransferCategoryType;
   displayType: string;
+  /** a1score club ids, when the club name matches a club we track. */
+  fromClubId?: string | null;
+  toClubId?: string | null;
+  /** Leagues of the matched from/to clubs (for the league filter). */
+  leagueIds?: string[];
   player: {
     id: string;
     sourceId: string | null;
@@ -661,9 +666,57 @@ export async function getTransfersHubData() {
     (a, b) => (b.feeEur || 0) - (a.feeEur || 0)
   );
 
+  // Enough moves for the Transfer Centre filters to have something to work on.
+  const recentCommercial = commercialMoves.slice(0, 100);
+  const recentEnds = contractEndsAndRetirements.slice(0, 30);
+  const leagues = await attachClubsAndLeagues([...recentCommercial, ...recentEnds]).catch((err) => {
+    console.warn("[transfers] club/league lookup failed:", err);
+    return [] as TransferLeague[];
+  });
+
   return {
     allTimeRecords,
-    recentCommercial: commercialMoves.slice(0, 30),
-    contractEndsAndRetirements: contractEndsAndRetirements.slice(0, 30),
+    recentCommercial,
+    contractEndsAndRetirements: recentEnds,
+    leagues,
   };
+}
+
+export interface TransferLeague {
+  id: string;
+  name: string;
+}
+
+/**
+ * Transfers store club names only. Resolve them to tracked clubs (exact name
+ * match) so the league and "following" filters use ids, not fuzzy names.
+ * Mutates the records and returns the leagues that appear, by league value.
+ */
+async function attachClubsAndLeagues(records: TransferRecord[]): Promise<TransferLeague[]> {
+  const names = Array.from(
+    new Set(records.flatMap((r) => [r.fromClubName, r.toClubName]).filter((n): n is string => !!n))
+  );
+  if (names.length === 0) return [];
+
+  const { data: clubs, error } = await supabase.from("Club").select("id, name, leagueId").in("name", names);
+  if (error || !clubs) throw error ?? new Error("no clubs");
+  const byName = new Map(clubs.map((c) => [c.name as string, { id: c.id as string, leagueId: c.leagueId as string | null }]));
+
+  const seenLeagues = new Set<string>();
+  for (const r of records) {
+    const from = r.fromClubName ? byName.get(r.fromClubName) : undefined;
+    const to = r.toClubName ? byName.get(r.toClubName) : undefined;
+    r.fromClubId = from?.id ?? null;
+    r.toClubId = to?.id ?? null;
+    r.leagueIds = Array.from(new Set([from?.leagueId, to?.leagueId].filter((l): l is string => !!l)));
+    r.leagueIds.forEach((l) => seenLeagues.add(l));
+  }
+  if (seenLeagues.size === 0) return [];
+
+  const { data: leagues } = await supabase
+    .from("League")
+    .select("id, name, totalMarketValue")
+    .in("id", Array.from(seenLeagues))
+    .order("totalMarketValue", { ascending: false });
+  return (leagues ?? []).map((l) => ({ id: l.id as string, name: l.name as string }));
 }
