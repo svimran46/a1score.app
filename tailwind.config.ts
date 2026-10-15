@@ -8,10 +8,12 @@ import containerQueries from "@tailwindcss/container-queries";
 // every browser) and only explicit modifiers like `bg-bg-card/95` use color-mix().
 // Tailwind accepts colour functions at runtime; its types only declare strings.
 const token = (name: string) =>
-  (({ opacityValue }: { opacityValue?: string }) =>
-    opacityValue === undefined || opacityValue.includes("--tw-")
-      ? `var(--${name})`
-      : `color-mix(in srgb, var(--${name}) calc(${opacityValue} * 100%), transparent)`) as unknown as string;
+  (({ opacityValue }: { opacityValue?: number | string }) => {
+    if (opacityValue === undefined) return `var(--${name})`;
+    const op = String(opacityValue);
+    if (op.includes("--tw-")) return `var(--${name})`;
+    return `color-mix(in srgb, var(--${name}) calc(${op} * 100%), transparent)`;
+  }) as unknown as string;
 
 const config: Config = {
   darkMode: ["class"],
