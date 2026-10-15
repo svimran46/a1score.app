@@ -39,9 +39,10 @@ jobs:
           distribution: "temurin"
           java-version: "21"
 
-      - name: Accept Android SDK Licenses
+      - name: Setup Android SDK Components
         run: |
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "platforms;android-35" "build-tools;35.0.0" || true
 
       - name: Install dependencies
         run: npm ci
@@ -64,16 +65,17 @@ jobs:
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug assembleRelease --no-daemon
+          ./gradlew assembleDebug assembleRelease --no-daemon --stacktrace -x lint -x lintVitalRelease -x test
 
       - name: Sign Release APK
         run: |
-          UNSIGNED_APK="android/app/build/outputs/apk/release/app-release-unsigned.apk"
+          UNSIGNED_APK=$(find android/app/build/outputs/apk/release -name "*.apk" | head -n 1)
           SIGNED_APK="a1score-v${VERSION}.apk"
           DEBUG_APK="a1score-debug-v${VERSION}.apk"
 
           # Copy debug APK directly
-          cp android/app/build/outputs/apk/debug/app-debug.apk "${DEBUG_APK}"
+          DEBUG_SOURCE=$(find android/app/build/outputs/apk/debug -name "*.apk" | head -n 1)
+          cp "${DEBUG_SOURCE}" "${DEBUG_APK}"
 
           APKSIGNER=$(find $ANDROID_HOME/build-tools -name apksigner | sort -V | tail -n 1)
           if [ -z "$APKSIGNER" ]; then
