@@ -8,6 +8,7 @@ import { LeagueStandingsTable } from "@/components/LeagueStandingsTable";
 import { LeagueLeaders } from "@/components/LeagueLeaders";
 import { constructMetadata, SITE_URL } from "@/lib/metadata";
 import { Breadcrumbs, PageHeader } from "@/components/ui";
+import { FollowButton } from "@/components/watchlist/FollowButton";
 import type { Metadata } from "next";
 
 export const revalidate = 3600;
@@ -118,6 +119,16 @@ export default async function LeaguePage({ params }: LeaguePageProps) {
             </time>
           ) : null,
         ].filter(Boolean)}
+        actions={
+          <FollowButton
+            variant="button"
+            id={league.id}
+            type="league"
+            name={league.name}
+            slug={canonicalSlug}
+            avatarUrl={league.logoUrl}
+          />
+        }
         shareTitle={`${league.name} standings & valuations | a1score`}
         shareUrl={`${SITE_URL}/leagues/${canonicalSlug}`}
       />

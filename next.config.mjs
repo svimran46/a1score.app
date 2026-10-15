@@ -5,6 +5,13 @@ const nextConfig = {
     loader: 'custom',
     loaderFile: './src/lib/image-loader.ts',
   },
+  async redirects() {
+    return [
+      // The Watchlist became the Following tab; keep old links and push
+      // notifications that still point at /watchlist working.
+      { source: '/watchlist', destination: '/following', permanent: true },
+    ];
+  },
   async headers() {
     return [
       {

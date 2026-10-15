@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { watchlistAdapter, WatchlistItem } from "./storage";
+import { watchlistAdapter, WatchlistItem, WatchlistType } from "./storage";
 import { trackEvent } from "@/lib/analytics";
 
 export function useWatchlist() {
@@ -34,8 +34,13 @@ export function useWatchlist() {
     [favorites]
   );
 
+  const leagueFavorites = useMemo(
+    () => favorites.filter((f) => f.type === "league"),
+    [favorites]
+  );
+
   const isFollowing = useCallback(
-    (id: string, type: "player" | "club") => {
+    (id: string, type: WatchlistType) => {
       if (!isMounted) return false;
       return favorites.some((f) => f.id === id && f.type === type);
     },
@@ -50,7 +55,7 @@ export function useWatchlist() {
     []
   );
 
-  const unfollow = useCallback((id: string, type: "player" | "club") => {
+  const unfollow = useCallback((id: string, type: WatchlistType) => {
     watchlistAdapter.removeFavorite(id, type);
   }, []);
 
@@ -66,7 +71,7 @@ export function useWatchlist() {
     []
   );
 
-  const clearAll = useCallback((type?: "player" | "club") => {
+  const clearAll = useCallback((type?: WatchlistType) => {
     watchlistAdapter.clearFavorites(type);
   }, []);
 
@@ -75,6 +80,7 @@ export function useWatchlist() {
     favorites,
     playerFavorites,
     clubFavorites,
+    leagueFavorites,
     isFollowing,
     follow,
     unfollow,

@@ -4,9 +4,11 @@
  * so it can be swapped for an authenticated server-backed API in future phases.
  */
 
+export type WatchlistType = "player" | "club" | "league";
+
 export interface WatchlistItem {
   id: string;
-  type: "player" | "club";
+  type: WatchlistType;
   name: string;
   slug?: string;
   avatarUrl?: string | null;
@@ -22,9 +24,9 @@ export interface WatchlistItem {
 export interface WatchlistAdapter {
   getFavorites(): WatchlistItem[];
   addFavorite(item: Omit<WatchlistItem, "savedAt"> & { savedAt?: string }): boolean;
-  removeFavorite(id: string, type: "player" | "club"): boolean;
-  isFavorite(id: string, type: "player" | "club"): boolean;
-  clearFavorites(type?: "player" | "club"): boolean;
+  removeFavorite(id: string, type: WatchlistType): boolean;
+  isFavorite(id: string, type: WatchlistType): boolean;
+  clearFavorites(type?: WatchlistType): boolean;
   isStorageAvailable(): boolean;
   subscribe(callback: () => void): () => void;
 }
@@ -111,7 +113,7 @@ class LocalStorageWatchlistAdapter implements WatchlistAdapter {
     }
   }
 
-  removeFavorite(id: string, type: "player" | "club"): boolean {
+  removeFavorite(id: string, type: WatchlistType): boolean {
     const current = this.getFavorites();
     const next = current.filter((f) => !(f.id === id && f.type === type));
 
@@ -133,12 +135,12 @@ class LocalStorageWatchlistAdapter implements WatchlistAdapter {
     }
   }
 
-  isFavorite(id: string, type: "player" | "club"): boolean {
+  isFavorite(id: string, type: WatchlistType): boolean {
     const current = this.getFavorites();
     return current.some((f) => f.id === id && f.type === type);
   }
 
-  clearFavorites(type?: "player" | "club"): boolean {
+  clearFavorites(type?: WatchlistType): boolean {
     let next: WatchlistItem[] = [];
     if (type) {
       const current = this.getFavorites();

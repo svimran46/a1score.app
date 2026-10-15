@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { TrendingUp, TrendingDown, ArrowRight, Newspaper, ExternalLink } from "lucide-react";
 import { formatCompactEur } from "@/lib/utils";
 import { NewsItem } from "@/types/news";
 import { formatRelativeTime } from "@/lib/data/news";
 import { WatchlistRightRailCard } from "@/components/watchlist/WatchlistRightRailCard";
+import { isUnder } from "@/lib/nav/config";
 
 export interface MoverItem {
   id: string;
@@ -36,6 +38,8 @@ export function RightRail({
   news?: NewsItem[];
 }) {
   const [activeTab, setActiveTab] = useState<"risers" | "fallers">("risers");
+  // The Following page already is this list; don't repeat it underneath.
+  const onFollowingPage = isUnder(usePathname() ?? "", "/following");
 
   const risers = movers?.risers?.slice(0, 5) ?? [];
   const fallers = movers?.fallers?.slice(0, 5) ?? [];
@@ -44,8 +48,8 @@ export function RightRail({
 
   return (
     <aside aria-label="News and market value movers" className="flex flex-col gap-4 w-full">
-      {/* Watchlist Widget Card */}
-      <WatchlistRightRailCard />
+      {/* Following Widget Card */}
+      {!onFollowingPage && <WatchlistRightRailCard />}
 
       {/* News Widget Card */}
       <div className="bg-[var(--bg-card)] rounded-[var(--card-radius)] p-[var(--card-padding)] shadow-xs">
