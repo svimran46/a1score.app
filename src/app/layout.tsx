@@ -86,6 +86,7 @@ import { AnalyticsProvider } from "@/components/analytics/AnalyticsProvider";
 import { ConsentBanner } from "@/components/privacy/ConsentBanner";
 import { AppShell } from "@/components/AppShell";
 import { AccountSync } from "@/components/auth/AccountSync";
+import { CapacitorBridge } from "@/components/mobile/CapacitorBridge";
 
 export default function RootLayout({
   children,
@@ -98,6 +99,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />
       </head>
       <body className="min-h-screen flex flex-col font-sans antialiased transition-colors duration-200" style={{ backgroundColor: "var(--bg-page)", color: "var(--text-primary)", fontFamily: "var(--font-sans)" }}>
+        <CapacitorBridge />
         <AnalyticsProvider />
         <ConsentBanner />
         <ServiceWorkerRegister />

@@ -1,0 +1,130 @@
+name: Build & Release Mobile App (Android APK)
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release Version (e.g. 1.0.0)"
+        required: true
+        default: "1.0.0"
+      release_notes:
+        description: "Release Notes / Changelog"
+        required: false
+        default: "New standalone mobile release for a1score."
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-android:
+    name: Build Android APK & Publish Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+
+      - name: Setup Java JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "21"
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Sync Capacitor Android
+        run: npx cap sync android
+
+      - name: Determine Version
+        id: get_version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            VERSION="${GITHUB_REF_NAME#v}"
+          fi
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          echo "tag=v${VERSION}" >> $GITHUB_OUTPUT
+
+      - name: Build Android APKs
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug assembleRelease --no-daemon
+
+      - name: Sign Release APK
+        run: |
+          UNSIGNED_APK="android/app/build/outputs/apk/release/app-release-unsigned.apk"
+          SIGNED_APK="a1score-v${VERSION}.apk"
+          DEBUG_APK="a1score-debug-v${VERSION}.apk"
+
+          # Copy debug APK directly
+          cp android/app/build/outputs/apk/debug/app-debug.apk "${DEBUG_APK}"
+
+          if [ -n "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" ]; then
+            echo "Signing with repository secret keystore..."
+            echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > release.keystore
+            $ANDROID_HOME/build-tools/35.0.0/apksigner sign --ks release.keystore \
+              --ks-pass "pass:${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" \
+              --key-pass "pass:${{ secrets.ANDROID_KEY_PASSWORD }}" \
+              --ks-key-alias "${{ secrets.ANDROID_KEY_ALIAS }}" \
+              --out "${SIGNED_APK}" "${UNSIGNED_APK}"
+          else
+            echo "Generating automated release signing key..."
+            keytool -genkey -v -keystore auto-release.keystore -alias a1score-key \
+              -keyalg RSA -keysize 2048 -validity 10000 \
+              -storepass a1scorepass -keypass a1scorepass \
+              -dname "CN=a1score, OU=Mobile, O=a1score, L=Global, S=Global, C=US"
+
+            $ANDROID_HOME/build-tools/35.0.0/apksigner sign --ks auto-release.keystore \
+              --ks-pass "pass:a1scorepass" \
+              --key-pass "pass:a1scorepass" \
+              --ks-key-alias a1score-key \
+              --out "${SIGNED_APK}" "${UNSIGNED_APK}"
+          fi
+
+          echo "APK build and signing completed:"
+          ls -lh a1score*.apk
+
+      - name: Upload Artifacts to Workflow Run
+        uses: actions/upload-artifact@v4
+        with:
+          name: a1score-android-apks
+          path: a1score*.apk
+
+      - name: Create or Update GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.get_version.outputs.tag }}
+          name: "a1score Mobile v${{ env.VERSION }}"
+          body: |
+            ## 📱 a1score Mobile Standalone Release v${{ env.VERSION }}
+
+            ${{ github.event.inputs.release_notes || 'Automated mobile release for Android devices.' }}
+
+            ### 📦 Download & Install:
+            - **`a1score-v${{ env.VERSION }}.apk`**: Standalone signed APK for direct installation on Android devices and third-party app distribution.
+            - **`a1score-debug-v${{ env.VERSION }}.apk`**: Debug build for testing and sideloading.
+
+            ### ✨ Key Features:
+            - Full-screen native experience with FotMob-style bottom navigation.
+            - Real-time matches, live market valuation updates, TV schedules, and Transfer Centre.
+            - Over-the-air updates directly synced with Cloudflare Edge.
+          files: |
+            a1score-v*.apk
+            a1score-debug-v*.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
