@@ -1,6 +1,6 @@
-import { getTransfersHubData, TransferRecord } from "@/lib/data/transfers";
+import { getTransfersHubData } from "@/lib/data/transfers";
 import { constructMetadata } from "@/lib/metadata";
-import { Card, SectionHeader, PageHeader } from "@/components/ui";
+import { PageHeader } from "@/components/ui";
 import { TransfersHubClient } from "@/components/transfers/TransfersHubClient";
 import { ShieldCheck, Info } from "lucide-react";
 import type { Metadata } from "next";
@@ -9,42 +9,30 @@ export const revalidate = 3600;
 export const runtime = "edge";
 
 export const metadata: Metadata = constructMetadata({
-  title: "Commercial Transfer Hub — Latest Moves & Record Fees",
+  title: "Transfer Centre — Latest Moves & Record Fees",
   description:
     "Comprehensive football transfer tracker: documented commercial fees, record transfers, and market expenditure on a1score.app.",
   path: "/transfers",
 });
 
 export default async function TransfersPage() {
-  const { allTimeRecords, recentCommercial, contractEndsAndRetirements } =
+  const { allTimeRecords, recentCommercial, contractEndsAndRetirements, leagues } =
     await getTransfersHubData();
 
   return (
     <div className="space-y-6 max-w-[720px] mx-auto">
-      {/* Page Header */}
       <PageHeader
         variant="directory"
-        categoryLabel="Commercial Ledger Intelligence"
-        title="Transfers"
-        subtitle="Documented player transactions, historical record fees, and commercial market expenditure across global football."
+        title="Transfer Centre"
+        subtitle="Latest moves, record fees and contract ends."
       />
 
-      {/* 1. All-Time Record Transfers (Always SSR-rendered with Neymar €222M #1) */}
-      <section className="space-y-2">
-        <SectionHeader
-          title="All-Time Record Transfers"
-          action={
-            <span className="text-xs text-[var(--text-muted)] font-medium">
-              Top 20 Documented Fees
-            </span>
-          }
-        />
-        <TransfersHubClient
-          initialRecords={allTimeRecords}
-          initialCommercial={recentCommercial}
-          initialContractEnds={contractEndsAndRetirements}
-        />
-      </section>
+      <TransfersHubClient
+        initialRecords={allTimeRecords}
+        initialCommercial={recentCommercial}
+        initialContractEnds={contractEndsAndRetirements}
+        leagues={leagues}
+      />
 
       {/* Verification & Data Methodology Footnote */}
       <div className="pt-3 border-t border-[var(--divider)] space-y-1.5 text-[11px] text-[var(--text-muted)] leading-relaxed">
