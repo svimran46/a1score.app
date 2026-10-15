@@ -184,7 +184,7 @@ function TopNavContent() {
       <header
         className="sticky top-0 z-40 w-full bg-bg-page/90 backdrop-blur-xl border-b border-[var(--divider)] transition-colors"
         style={{
-          height: "var(--nav-height)",
+          height: "calc(var(--nav-height) + env(safe-area-inset-top))",
           paddingTop: "env(safe-area-inset-top, 0px)",
         }}
       >
@@ -295,7 +295,7 @@ export function TopNav() {
       fallback={
         <header
           className="sticky top-0 z-40 w-full bg-bg-page/90 backdrop-blur-xl border-b border-[var(--divider)]"
-          style={{ height: "var(--nav-height)" }}
+          style={{ height: "calc(var(--nav-height) + env(safe-area-inset-top))" }}
         />
       }
     >

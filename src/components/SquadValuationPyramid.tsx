@@ -319,9 +319,9 @@ export function SquadValuationPyramid({
       </div>
 
       {/* Main Valuation Pyramid & Positional Split */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+      <div className="grid grid-cols-1 @[640px]/main:grid-cols-12 gap-4">
         {/* Left Column: Financial Valuation Pyramid (7 cols) */}
-        <Card className="lg:col-span-7 p-4 sm:p-5 space-y-4">
+        <Card className="@[640px]/main:col-span-7 p-4 sm:p-5 space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-[var(--divider)]">
             <div className="flex items-center gap-2">
               <Layers className="w-4 h-4 text-[var(--value-text)]" />
@@ -453,7 +453,7 @@ export function SquadValuationPyramid({
         </Card>
 
         {/* Right Column: Positional Capital Split (5 cols) */}
-        <Card className="lg:col-span-5 p-4 sm:p-5 flex flex-col justify-between space-y-4">
+        <Card className="@[640px]/main:col-span-5 p-4 sm:p-5 flex flex-col justify-between space-y-4">
           <div className="space-y-3">
             <div className="flex items-center gap-2 pb-3 border-b border-[var(--divider)]">
               <PieChart className="w-4 h-4 text-[var(--accent)]" />

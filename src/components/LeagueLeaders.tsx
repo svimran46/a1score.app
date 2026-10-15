@@ -175,7 +175,7 @@ export function LeagueLeaders({
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
+          <div className="grid grid-cols-2 sm:grid-cols-3 @[640px]/main:grid-cols-6 gap-2.5">
             {otherLeagues.map((l) => (
               <Link
                 key={l.id}

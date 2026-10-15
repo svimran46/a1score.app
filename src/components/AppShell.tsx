@@ -45,7 +45,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
           <LeftRail leagues={leagues} />
 
           {/* Center Column: Primary Page Content */}
-          <main id="main-content" className="min-w-0 flex-1 w-full">
+          <main id="main-content" className="@container/main min-w-0 flex-1 w-full">
             {children}
           </main>
 

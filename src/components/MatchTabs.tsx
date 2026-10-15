@@ -107,7 +107,7 @@ export function MatchTabs({ match, isScorecardOutOfView = false }: MatchTabsProp
         Sticky Container: Compact bar (when scrolled past scorecard) + Tabs row.
         Remains pinned under the app header (top-14 sm:top-16) at all times.
       */}
-      <div className="sticky top-14 sm:top-16 z-30 bg-bg-page/95 backdrop-blur-md border-b border-[var(--divider)] -mx-3 sm:-mx-6 lg:-mx-8 px-3 sm:px-6 lg:px-8 transition-all">
+      <div className="sticky top-[var(--nav-height)] z-30 bg-bg-page/95 backdrop-blur-md border-b border-[var(--divider)] -mx-3 sm:-mx-6 lg:-mx-8 px-3 sm:px-6 lg:px-8 transition-all">
         {/* Compact bar reveals when scorecard scrolls out of view */}
         {isScorecardOutOfView && (
           <div className="border-b border-[var(--divider)] pb-1">

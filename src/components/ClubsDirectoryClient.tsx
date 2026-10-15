@@ -244,7 +244,7 @@ export function ClubsDirectoryClient({ initialClubs }: ClubsDirectoryClientProps
 
       {/* 4. Clubs List Card with Sticky Header */}
       {paginatedClubs.length > 0 ? (
-        <Card className="p-1 overflow-hidden">
+        <Card className="p-1 overflow-clip">
           {/* Sticky List Header on Desktop */}
           <div className="sticky top-[var(--nav-height)] z-20 bg-bg-card/95 backdrop-blur-md px-3 sm:px-4 py-2 flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)] border-b border-[var(--divider)]">
             <div className="flex items-center gap-3">

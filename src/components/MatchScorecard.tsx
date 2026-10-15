@@ -152,7 +152,7 @@ export function MatchScorecard({
         <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 sm:gap-6">
           {/* HOME TEAM */}
           <div className="flex flex-col items-center text-center space-y-2 min-w-0">
-            <div className="relative w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-2xl bg-[var(--bg-chip)] p-2 sm:p-3 shadow-xs flex items-center justify-center border border-[var(--border-subtle)] overflow-hidden shrink-0 group-hover:scale-105 transition-transform">
+            <div className="relative w-16 h-16 sm:w-20 sm:h-20 @[640px]/main:w-24 @[640px]/main:h-24 rounded-2xl bg-[var(--bg-chip)] p-2 sm:p-3 shadow-xs flex items-center justify-center border border-[var(--border-subtle)] overflow-hidden shrink-0 group-hover:scale-105 transition-transform">
               <EntityImage
                 src={homeTeam?.imageUrl}
                 alt={homeTeam.name || "Home Team"}
@@ -204,17 +204,17 @@ export function MatchScorecard({
                   aria-live="polite"
                 >
                   <span
-                    className={`text-4xl sm:text-6xl lg:text-7xl font-black figure tracking-tight ${
+                    className={`text-4xl sm:text-6xl @[640px]/main:text-7xl font-black figure tracking-tight ${
                       isLive ? "text-[var(--value-text)]" : "text-[var(--text-primary)]"
                     }`}
                   >
                     {homeTeam?.score ?? 0}
                   </span>
-                  <span className="text-2xl sm:text-4xl lg:text-5xl font-light text-[var(--text-muted)]">
+                  <span className="text-2xl sm:text-4xl @[640px]/main:text-5xl font-light text-[var(--text-muted)]">
                     -
                   </span>
                   <span
-                    className={`text-4xl sm:text-6xl lg:text-7xl font-black figure tracking-tight ${
+                    className={`text-4xl sm:text-6xl @[640px]/main:text-7xl font-black figure tracking-tight ${
                       isLive ? "text-[var(--value-text)]" : "text-[var(--text-primary)]"
                     }`}
                   >
@@ -267,7 +267,7 @@ export function MatchScorecard({
 
           {/* AWAY TEAM */}
           <div className="flex flex-col items-center text-center space-y-2 min-w-0">
-            <div className="relative w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-2xl bg-[var(--bg-chip)] p-2 sm:p-3 shadow-xs flex items-center justify-center border border-[var(--border-subtle)] overflow-hidden shrink-0 group-hover:scale-105 transition-transform">
+            <div className="relative w-16 h-16 sm:w-20 sm:h-20 @[640px]/main:w-24 @[640px]/main:h-24 rounded-2xl bg-[var(--bg-chip)] p-2 sm:p-3 shadow-xs flex items-center justify-center border border-[var(--border-subtle)] overflow-hidden shrink-0 group-hover:scale-105 transition-transform">
               <EntityImage
                 src={awayTeam?.imageUrl}
                 alt={awayTeam.name || "Away Team"}

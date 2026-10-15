@@ -77,7 +77,7 @@ export function MarketMovers({ risers, fallers }: MarketMoversProps) {
 
       {/* Grid of Movers */}
       {displayedList.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 @[640px]/main:grid-cols-3 gap-3 sm:gap-4">
           {displayedList.map((player, idx) => {
             const isGain = player.diff > 0;
             return (

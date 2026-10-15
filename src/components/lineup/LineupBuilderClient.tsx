@@ -224,7 +224,7 @@ export function LineupBuilderClient() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
       {/* Top Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-2xl bg-gradient-to-r from-emerald-950/40 via-surface-card to-surface-card border border-emerald-500/20">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-2xl bg-gradient-to-r from-emerald-950/40 via-bg-card to-bg-card border border-emerald-500/20">
         <div>
           <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-400 mb-2">
             <Sparkles className="w-3.5 h-3.5" /> Tactical XI • Squad Valuation
@@ -237,11 +237,11 @@ export function LineupBuilderClient() {
 
         {/* Squad Valuation Card */}
         <div className="flex items-center gap-3">
-          <div className="px-4 py-2.5 rounded-xl bg-surface-subtle border border-border-subtle text-center min-w-[120px]">
+          <div className="px-4 py-2.5 rounded-xl bg-bg-chip border border-border-subtle text-center min-w-[120px]">
             <div className="text-xl font-bold text-emerald-400">{compact(metrics.totalValueEur)}</div>
             <div className="text-[11px] font-medium text-text-muted">Total Squad Value</div>
           </div>
-          <div className="px-4 py-2.5 rounded-xl bg-surface-subtle border border-border-subtle text-center min-w-[85px]">
+          <div className="px-4 py-2.5 rounded-xl bg-bg-chip border border-border-subtle text-center min-w-[85px]">
             <div className="text-xl font-bold text-text-primary">{metrics.averageAge ? `${metrics.averageAge}y` : "—"}</div>
             <div className="text-[11px] font-medium text-text-muted">Avg Age</div>
           </div>
@@ -249,7 +249,7 @@ export function LineupBuilderClient() {
       </div>
 
       {/* Control Bar: Formations & Actions */}
-      <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl bg-surface-card border border-border-subtle">
+      <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl bg-bg-card border border-border-subtle">
         {/* Formation Pills */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
           {(Object.keys(FORMATIONS) as FormationKey[]).map((fKey) => (
@@ -259,7 +259,7 @@ export function LineupBuilderClient() {
               className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all ${
                 formationKey === fKey
                   ? "bg-emerald-500 text-black shadow-sm"
-                  : "bg-surface-subtle text-text-secondary hover:text-text-primary border border-border-subtle"
+                  : "bg-bg-chip text-text-secondary hover:text-text-primary border border-border-subtle"
               }`}
             >
               {fKey}
@@ -271,14 +271,14 @@ export function LineupBuilderClient() {
         <div className="flex items-center gap-2">
           <button
             onClick={handleClearAll}
-            className="p-2 text-text-muted hover:text-text-primary hover:bg-surface-subtle rounded-lg transition-colors text-xs flex items-center gap-1.5"
+            className="p-2 text-text-muted hover:text-text-primary hover:bg-bg-chip rounded-lg transition-colors text-xs flex items-center gap-1.5"
             title="Reset lineup"
           >
             <RefreshCw className="w-3.5 h-3.5" /> Reset
           </button>
           <button
             onClick={handleShare}
-            className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-surface-subtle border border-border-subtle text-text-primary hover:bg-surface-elevated flex items-center gap-1.5 transition-colors"
+            className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-bg-chip border border-border-subtle text-text-primary hover:bg-bg-hover flex items-center gap-1.5 transition-colors"
           >
             {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Share2 className="w-3.5 h-3.5" />}
             {copied ? "Copied!" : "Share Lineup"}
@@ -362,8 +362,8 @@ export function LineupBuilderClient() {
 
       {/* Player Picker Modal / Drawer */}
       {activeSlotId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fadeIn">
-          <div className="w-full max-w-lg bg-surface-card border border-border-subtle rounded-2xl p-5 shadow-2xl flex flex-col max-h-[85vh]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in">
+          <div className="w-full max-w-lg bg-bg-card border border-border-subtle rounded-2xl p-5 shadow-2xl flex flex-col max-h-[85vh]">
             {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-border-subtle pb-3">
               <div>
@@ -389,7 +389,7 @@ export function LineupBuilderClient() {
                 placeholder="Search player, club, position..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-3.5 py-2 text-sm rounded-xl bg-surface-subtle border border-border-subtle text-text-primary placeholder:text-text-muted focus:outline-none focus:border-emerald-500 pr-9"
+                className="w-full px-3.5 py-2 text-sm rounded-xl bg-bg-chip border border-border-subtle text-text-primary placeholder:text-text-muted focus:outline-none focus:border-emerald-500 pr-9"
                 autoFocus
               />
               {isSearching && (
@@ -410,7 +410,7 @@ export function LineupBuilderClient() {
                   <div
                     key={candidate.id}
                     onClick={() => handleSelectPlayer(candidate)}
-                    className="p-3 rounded-xl bg-surface-subtle border border-border-subtle hover:border-emerald-500/50 flex items-center justify-between cursor-pointer transition-colors"
+                    className="p-3 rounded-xl bg-bg-chip border border-border-subtle hover:border-emerald-500/50 flex items-center justify-between cursor-pointer transition-colors"
                   >
                     <div>
                       <div className="text-sm font-bold text-text-primary">{candidate.name}</div>
