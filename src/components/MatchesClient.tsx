@@ -14,6 +14,11 @@ import {
   Radio,
 } from "lucide-react";
 import type { FotmobLeagueGroup, FotmobMatch } from "@/lib/fotmob/client";
+import { MatchesOverflowMenu } from "./matches/MatchesOverflowMenu";
+import { sortMatchesByTime } from "@/lib/matches/byTime";
+
+const COLLAPSED_KEY = "a1_collapsed_leagues";
+const BY_TIME_KEY = "a1_matches_by_time";
 
 interface MatchesClientProps {
   activeDate: string;
@@ -108,21 +113,51 @@ export function MatchesClient({
   const [collapsedLeagues, setCollapsedLeagues] = useState<Record<string, boolean>>(() => {
     if (typeof window !== "undefined") {
       try {
-        const saved = localStorage.getItem("a1_collapsed_leagues");
+        const saved = localStorage.getItem(COLLAPSED_KEY);
         return saved ? JSON.parse(saved) : {};
       } catch {}
     }
     return {};
   });
 
+  const saveCollapsed = (next: Record<string, boolean>) => {
+    try {
+      localStorage.setItem(COLLAPSED_KEY, JSON.stringify(next));
+    } catch {}
+  };
+
   const toggleLeagueCollapse = (leagueId: string | number) => {
     const key = String(leagueId);
     setCollapsedLeagues((prev) => {
       const next = { ...prev, [key]: !prev[key] };
-      try {
-        localStorage.setItem("a1_collapsed_leagues", JSON.stringify(next));
-      } catch {}
+      saveCollapsed(next);
       return next;
+    });
+  };
+
+  const setAllCollapsed = (collapsed: boolean) => {
+    setCollapsedLeagues((prev) => {
+      const next = { ...prev };
+      for (const league of leagues) next[String(league.id)] = collapsed;
+      saveCollapsed(next);
+      return next;
+    });
+  };
+
+  // "By time" view: one list ordered by kick-off instead of league groups.
+  // Read after mount so the server render and first client render agree.
+  const [byTime, setByTime] = useState(false);
+  useEffect(() => {
+    try {
+      setByTime(localStorage.getItem(BY_TIME_KEY) === "1");
+    } catch {}
+  }, []);
+  const toggleByTime = () => {
+    setByTime((prev) => {
+      try {
+        localStorage.setItem(BY_TIME_KEY, prev ? "0" : "1");
+      } catch {}
+      return !prev;
     });
   };
 
@@ -185,6 +220,16 @@ export function MatchesClient({
       <PageHeader
         title="Matches"
         subtitle="Scores and fixtures"
+        actions={
+          <div className="-mr-2">
+            <MatchesOverflowMenu
+              byTime={byTime}
+              onToggleByTime={toggleByTime}
+              onCollapseAll={() => setAllCollapsed(true)}
+              onExpandAll={() => setAllCollapsed(false)}
+            />
+          </div>
+        }
       />
 
       {/* 
@@ -311,7 +356,18 @@ export function MatchesClient({
         MatchRow list inside ONE card per league with 1px dividers.
       */}
       <div className="space-y-3">
-        {leagues.length > 0 ? (
+        {byTime && leagues.length > 0 ? (
+          <div className="rounded-xl bg-[var(--color-surface)] border border-[var(--color-border)] overflow-hidden divide-y divide-[var(--color-border)]">
+            {sortMatchesByTime(leagues).map(({ match, leagueName }) => (
+              <div key={match.id}>
+                <p className="px-3 sm:px-4 pt-2 -mb-1 text-[11px] font-medium text-[var(--color-text-secondary)] truncate">
+                  {leagueName}
+                </p>
+                <MatchRow match={match} />
+              </div>
+            ))}
+          </div>
+        ) : leagues.length > 0 ? (
           leagues.map((league) => {
             const isCollapsed = Boolean(collapsedLeagues[String(league.id)]);
             const headerTitle = league.ccode
