@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { LineupBuilderClient } from "@/components/lineup/LineupBuilderClient";
 
@@ -9,5 +10,9 @@ export const metadata: Metadata = {
 };
 
 export default function LineupBuilderPage() {
-  return <LineupBuilderClient />;
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-bg-page animate-pulse" />}>
+      <LineupBuilderClient />
+    </Suspense>
+  );
 }

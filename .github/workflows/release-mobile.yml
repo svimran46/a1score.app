@@ -74,10 +74,17 @@ jobs:
           # Copy debug APK directly
           cp android/app/build/outputs/apk/debug/app-debug.apk "${DEBUG_APK}"
 
+          APKSIGNER=$(find $ANDROID_HOME/build-tools -name apksigner | sort -V | tail -n 1)
+          if [ -z "$APKSIGNER" ]; then
+            echo "Error: apksigner not found in $ANDROID_HOME/build-tools"
+            exit 1
+          fi
+          echo "Using apksigner at: $APKSIGNER"
+
           if [ -n "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" ]; then
             echo "Signing with repository secret keystore..."
             echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > release.keystore
-            $ANDROID_HOME/build-tools/35.0.0/apksigner sign --ks release.keystore \
+            "$APKSIGNER" sign --ks release.keystore \
               --ks-pass "pass:${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" \
               --key-pass "pass:${{ secrets.ANDROID_KEY_PASSWORD }}" \
               --ks-key-alias "${{ secrets.ANDROID_KEY_ALIAS }}" \
@@ -89,7 +96,7 @@ jobs:
               -storepass a1scorepass -keypass a1scorepass \
               -dname "CN=a1score, OU=Mobile, O=a1score, L=Global, S=Global, C=US"
 
-            $ANDROID_HOME/build-tools/35.0.0/apksigner sign --ks auto-release.keystore \
+            "$APKSIGNER" sign --ks auto-release.keystore \
               --ks-pass "pass:a1scorepass" \
               --key-pass "pass:a1scorepass" \
               --ks-key-alias a1score-key \

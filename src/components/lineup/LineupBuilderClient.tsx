@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { Share2, Users, X, RefreshCw, Plus, Sparkles, Check } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import { Share2, Users, X, RefreshCw, Plus, Sparkles, Check, Loader2 } from "lucide-react";
 import { FORMATIONS, FormationKey, LineupSlot, calculateLineupMetrics } from "@/lib/lineup/types";
 import { useMoney } from "@/lib/useMoney";
 
@@ -13,6 +14,34 @@ interface CandidatePlayer {
   role: "GK" | "DEF" | "MID" | "ATT";
   marketValueEur: number;
   age: number;
+}
+
+function inferRole(pos?: string): "GK" | "DEF" | "MID" | "ATT" {
+  if (!pos) return "MID";
+  const p = pos.toLowerCase();
+  if (p.includes("goal") || p === "gk") return "GK";
+  if (
+    p.includes("back") ||
+    p.includes("defen") ||
+    p === "cb" ||
+    p === "lb" ||
+    p === "rb" ||
+    p === "rwb" ||
+    p === "lwb"
+  ) {
+    return "DEF";
+  }
+  if (
+    p.includes("mid") ||
+    p === "cm" ||
+    p === "cdm" ||
+    p === "cam" ||
+    p === "dm" ||
+    p === "am"
+  ) {
+    return "MID";
+  }
+  return "ATT";
 }
 
 const CANDIDATE_PLAYERS: CandidatePlayer[] = [
@@ -50,14 +79,64 @@ const CANDIDATE_PLAYERS: CandidatePlayer[] = [
 ];
 
 export function LineupBuilderClient() {
+  const searchParams = useSearchParams();
+  const clubParam = searchParams.get("club");
+
   const [formationKey, setFormationKey] = useState<FormationKey>("4-3-3");
   const [slots, setSlots] = useState<LineupSlot[]>(FORMATIONS["4-3-3"].slots);
   const [activeSlotId, setActiveSlotId] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(clubParam || "");
+  const [searchResults, setSearchResults] = useState<CandidatePlayer[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
   const [copied, setCopied] = useState(false);
 
   const { compact } = useMoney();
   const metrics = calculateLineupMetrics(slots);
+
+  // Sync club param if present
+  useEffect(() => {
+    if (clubParam) {
+      setSearchQuery(clubParam);
+    }
+  }, [clubParam]);
+
+  // Live player search via API
+  useEffect(() => {
+    const q = searchQuery.trim();
+    if (q.length < 2) {
+      setSearchResults([]);
+      setIsSearching(false);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      setIsSearching(true);
+      try {
+        const res = await fetch(`/api/players/search?q=${encodeURIComponent(q)}&limit=15`);
+        if (res.ok) {
+          const json = await res.json();
+          if (json.success && Array.isArray(json.data)) {
+            const mapped: CandidatePlayer[] = json.data.map((p: any) => ({
+              id: String(p.id || p.transfermarktId),
+              name: p.commonName || p.fullName,
+              club: p.currentClub?.name || p.clubName || "Unknown Club",
+              position: p.position || "FW",
+              role: inferRole(p.position),
+              marketValueEur: Number(p.latestMarketValue || p.marketValueEur || 0),
+              age: Number(p.age || 25),
+            }));
+            setSearchResults(mapped);
+          }
+        }
+      } catch (err) {
+        console.warn("[LineupBuilder] Search failed:", err);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 250);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
   const handleFormationChange = (newKey: FormationKey) => {
     setFormationKey(newKey);
@@ -95,7 +174,6 @@ export function LineupBuilderClient() {
       )
     );
     setActiveSlotId(null);
-    setSearchQuery("");
   };
 
   const handleRemovePlayer = (slotId: string) => {
@@ -123,16 +201,22 @@ export function LineupBuilderClient() {
     const filledNames = slots.filter((s) => s.playerName).map((s) => `${s.position}: ${s.playerName}`);
     const text = `⚽ My a1score Dream XI (${formationKey})\n💰 Squad Value: ${compact(metrics.totalValueEur)}\n\n${filledNames.join("\n")}\n\nBuild yours at https://a1score.app/lineup-builder`;
 
-    if (navigator.clipboard) {
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
       navigator.clipboard.writeText(text);
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
     }
   };
 
-  const filteredCandidates = CANDIDATE_PLAYERS.filter((p) => {
+  const candidatePool = searchResults.length > 0 ? searchResults : CANDIDATE_PLAYERS;
+  const filteredCandidates = candidatePool.filter((p) => {
     const q = searchQuery.toLowerCase();
-    return p.name.toLowerCase().includes(q) || p.club.toLowerCase().includes(q) || p.position.toLowerCase().includes(q);
+    if (!q) return true;
+    return (
+      p.name.toLowerCase().includes(q) ||
+      p.club.toLowerCase().includes(q) ||
+      p.position.toLowerCase().includes(q)
+    );
   });
 
   const activeSlot = slots.find((s) => s.id === activeSlotId);
@@ -143,7 +227,7 @@ export function LineupBuilderClient() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-2xl bg-gradient-to-r from-emerald-950/40 via-surface-card to-surface-card border border-emerald-500/20">
         <div>
           <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-400 mb-2">
-            <Sparkles className="w-3.5 h-3.5" /> Phase 6c Lineup Builder
+            <Sparkles className="w-3.5 h-3.5" /> Tactical XI • Squad Valuation
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-text-primary">Lineup & Squad Builder</h1>
           <p className="text-sm text-text-secondary mt-1">
@@ -202,71 +286,73 @@ export function LineupBuilderClient() {
         </div>
       </div>
 
-      {/* The Pitch */}
-      <div className="relative w-full max-w-2xl mx-auto rounded-2xl overflow-hidden border border-emerald-900/40 shadow-2xl bg-[#0e1e17] aspect-[3/4] min-h-[560px] select-none"> {/* color-ignore: Pitch grass surface */}
-        {/* Pitch Lines (SVG overlay) */}
-        <svg className="absolute inset-0 w-full h-full pointer-events-none stroke-emerald-500/25" strokeWidth="2" fill="none">
-          {/* Outer Boundary */}
-          <rect x="16" y="16" width="calc(100% - 32px)" height="calc(100% - 32px)" />
-          {/* Halfway Line */}
-          <line x1="16" y1="50%" x2="calc(100% - 16px)" y2="50%" />
-          {/* Center Circle */}
-          <circle cx="50%" cy="50%" r="55" />
-          <circle cx="50%" cy="50%" r="3" fill="currentColor" />
-          {/* Top Penalty Box */}
-          <rect x="22%" y="16" width="56%" height="18%" />
-          <rect x="34%" y="16" width="32%" height="7%" />
-          {/* Bottom Penalty Box */}
-          <rect x="22%" y="calc(100% - 18% - 16px)" width="56%" height="18%" />
-          <rect x="34%" y="calc(100% - 7% - 16px)" width="32%" height="7%" />
-        </svg>
+      {/* Interactive Football Pitch */}
+      <div className="relative w-full aspect-[3/4] sm:aspect-[4/5] md:aspect-[16/11] bg-gradient-to-b from-[#0b3318] via-[#0f4420] to-[#0b3318] rounded-2xl border-2 border-emerald-600/30 shadow-2xl overflow-hidden">
+        {/* Pitch Turf Lines & Markings */}
+        <div className="absolute inset-3 border border-emerald-500/25 rounded-lg pointer-events-none" />
+        <div className="absolute left-3 right-3 top-1/2 -translate-y-1/2 border-t border-emerald-500/25 pointer-events-none" />
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-28 sm:w-36 sm:h-36 border border-emerald-500/25 rounded-full pointer-events-none" />
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-emerald-500/30 rounded-full pointer-events-none" />
 
-        {/* Pitch Nodes / Slots */}
+        {/* Penalty Areas */}
+        <div className="absolute left-1/2 top-3 -translate-x-1/2 w-48 sm:w-64 h-20 sm:h-24 border-b border-x border-emerald-500/25 pointer-events-none" />
+        <div className="absolute left-1/2 bottom-3 -translate-x-1/2 w-48 sm:w-64 h-20 sm:h-24 border-t border-x border-emerald-500/25 pointer-events-none" />
+
+        {/* 11 Tactical Player Slots */}
         {slots.map((slot) => {
-          const isFilled = !!slot.playerName;
           const isSelected = activeSlotId === slot.id;
+          const isFilled = Boolean(slot.playerName);
 
           return (
             <div
               key={slot.id}
-              onClick={() => setActiveSlotId(slot.id)}
               style={{
                 left: `${slot.x}%`,
                 top: `${slot.y}%`,
-                transform: "translate(-50%, -50%)",
               }}
-              className={`absolute cursor-pointer flex flex-col items-center group transition-transform active:scale-95 ${
-                isSelected ? "z-20 scale-105" : "z-10"
-              }`}
+              className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center group cursor-pointer select-none z-10"
+              onClick={() => setActiveSlotId(slot.id)}
             >
-              {/* Node Circle */}
+              {/* Jersey / Slot Node */}
               <div
-                className={`w-12 h-12 rounded-full flex items-center justify-center border-2 transition-all shadow-md ${
+                className={`relative w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all ${
                   isFilled
-                    ? "bg-surface-elevated border-emerald-400 text-emerald-400"
-                    : isSelected
-                    ? "bg-emerald-500/20 border-emerald-400 text-emerald-300"
-                    : "bg-surface-card/90 border-emerald-500/40 text-text-muted hover:border-emerald-400 hover:text-emerald-300"
-                }`}
+                    ? "bg-slate-900 border-2 border-emerald-400 text-white shadow-lg"
+                    : "bg-black/60 border border-white/20 text-white/70 hover:border-emerald-400 hover:text-white"
+                } ${isSelected ? "ring-4 ring-emerald-400/50 scale-110" : "group-hover:scale-105"}`}
               >
                 {isFilled ? (
-                  <span className="text-xs font-bold uppercase tracking-wider">
-                    {slot.playerName?.split(" ").slice(-1)[0].slice(0, 3)}
-                  </span>
+                  <span className="text-xs sm:text-sm font-black">{slot.position}</span>
                 ) : (
-                  <Plus className="w-4 h-4" />
+                  <Plus className="w-4 h-4 opacity-70 group-hover:opacity-100" />
+                )}
+
+                {/* Remove button if filled */}
+                {isFilled && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRemovePlayer(slot.id);
+                    }}
+                    className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 text-white rounded-full flex items-center justify-center text-[10px] hover:bg-rose-600 shadow"
+                    title="Remove player"
+                  >
+                    ×
+                  </button>
                 )}
               </div>
 
-              {/* Node Tag */}
-              <div className="mt-1 flex flex-col items-center max-w-[90px] text-center">
-                <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-black/75 text-text-primary backdrop-blur-sm truncate w-full">
-                  {slot.playerName ? slot.playerName.split(" ").slice(-1)[0] : slot.position}
+              {/* Player Name & Value Card */}
+              <div className="mt-1 flex flex-col items-center max-w-[90px] sm:max-w-[110px] text-center">
+                <span className="text-[11px] sm:text-xs font-bold text-white drop-shadow truncate w-full">
+                  {slot.playerName || slot.position}
                 </span>
-                {isFilled && slot.marketValueEur && (
-                  <span className="text-[9px] font-bold text-emerald-400 bg-black/75 px-1 rounded mt-0.5">
+                {slot.marketValueEur ? (
+                  <span className="text-[9px] sm:text-[10px] font-semibold text-emerald-300 drop-shadow">
                     {compact(slot.marketValueEur)}
                   </span>
+                ) : (
+                  <span className="text-[9px] text-white/50 drop-shadow">Tap to pick</span>
                 )}
               </div>
             </div>
@@ -297,38 +383,49 @@ export function LineupBuilderClient() {
             </div>
 
             {/* Search Input */}
-            <div className="py-3">
+            <div className="py-3 relative">
               <input
                 type="text"
                 placeholder="Search player, club, position..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-3.5 py-2 text-sm rounded-xl bg-surface-subtle border border-border-subtle text-text-primary placeholder:text-text-muted focus:outline-none focus:border-emerald-500"
+                className="w-full px-3.5 py-2 text-sm rounded-xl bg-surface-subtle border border-border-subtle text-text-primary placeholder:text-text-muted focus:outline-none focus:border-emerald-500 pr-9"
                 autoFocus
               />
+              {isSearching && (
+                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                  <Loader2 className="w-4 h-4 text-emerald-400 animate-spin" />
+                </div>
+              )}
             </div>
 
             {/* Player List */}
             <div className="flex-1 overflow-y-auto space-y-2 pr-1">
-              {filteredCandidates.map((candidate) => (
-                <div
-                  key={candidate.id}
-                  onClick={() => handleSelectPlayer(candidate)}
-                  className="p-3 rounded-xl bg-surface-subtle border border-border-subtle hover:border-emerald-500/50 flex items-center justify-between cursor-pointer transition-colors"
-                >
-                  <div>
-                    <div className="text-sm font-bold text-text-primary">{candidate.name}</div>
-                    <div className="text-xs text-text-muted mt-0.5">
-                      {candidate.club} • {candidate.position} • {candidate.age} yrs
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-sm font-bold text-emerald-400">
-                      {compact(candidate.marketValueEur)}
-                    </div>
-                  </div>
+              {filteredCandidates.length === 0 && !isSearching ? (
+                <div className="py-8 text-center text-xs text-text-muted">
+                  No players found matching &ldquo;{searchQuery}&rdquo;. Try another name.
                 </div>
-              ))}
+              ) : (
+                filteredCandidates.map((candidate) => (
+                  <div
+                    key={candidate.id}
+                    onClick={() => handleSelectPlayer(candidate)}
+                    className="p-3 rounded-xl bg-surface-subtle border border-border-subtle hover:border-emerald-500/50 flex items-center justify-between cursor-pointer transition-colors"
+                  >
+                    <div>
+                      <div className="text-sm font-bold text-text-primary">{candidate.name}</div>
+                      <div className="text-xs text-text-muted mt-0.5">
+                        {candidate.club} • {candidate.position} • {candidate.age} yrs
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-sm font-bold text-emerald-400">
+                        {compact(candidate.marketValueEur)}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
 
             {/* Modal Footer / Remove Action */}

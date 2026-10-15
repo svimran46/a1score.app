@@ -11,6 +11,7 @@ import {
   ArrowUpDown,
   AlertTriangle,
   Users,
+  Sparkles,
 } from "lucide-react";
 import { useMoney } from "@/lib/useMoney";
 
@@ -152,32 +153,43 @@ export function ClubSquadTable({
           </p>
         </div>
 
-        {/* Tier Tabs (First Team vs Academy) */}
-        <div className="flex items-center bg-[var(--bg-page)] p-1 rounded-xl text-xs font-bold shrink-0 self-start sm:self-auto">
-          <button
-            type="button"
-            onClick={() => setSelectedTier("first_team")}
-            className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
-              selectedTier === "first_team"
-                ? "bg-[var(--accent)] text-[var(--accent-contrast)] shadow-xs"
-                : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
-            }`}
+        {/* Actions & Tier Tabs */}
+        <div className="flex items-center gap-2 shrink-0 self-start sm:self-auto flex-wrap">
+          <Link
+            href={`/lineup-builder?club=${encodeURIComponent(clubName)}`}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-[var(--bg-chip)] hover:bg-[var(--bg-hover)] text-[var(--text-primary)] border border-[var(--border-subtle)] transition-colors"
           >
-            First Team ({firstTeamPlayers.length > 0 ? firstTeamPlayers.length : activeList.length})
-          </button>
-          {academyPlayers.length > 0 && (
+            <Sparkles className="w-3.5 h-3.5 text-[var(--accent)]" />
+            Build XI
+          </Link>
+
+          {/* Tier Tabs (First Team vs Academy) */}
+          <div className="flex items-center bg-[var(--bg-page)] p-1 rounded-xl text-xs font-bold">
             <button
               type="button"
-              onClick={() => setSelectedTier("academy")}
+              onClick={() => setSelectedTier("first_team")}
               className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
-                selectedTier === "academy"
+                selectedTier === "first_team"
                   ? "bg-[var(--accent)] text-[var(--accent-contrast)] shadow-xs"
                   : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
               }`}
             >
-              Academy ({academyPlayers.length})
+              First Team ({firstTeamPlayers.length > 0 ? firstTeamPlayers.length : activeList.length})
             </button>
-          )}
+            {academyPlayers.length > 0 && (
+              <button
+                type="button"
+                onClick={() => setSelectedTier("academy")}
+                className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+                  selectedTier === "academy"
+                    ? "bg-[var(--accent)] text-[var(--accent-contrast)] shadow-xs"
+                    : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+                }`}
+              >
+                Academy ({academyPlayers.length})
+              </button>
+            )}
+          </div>
         </div>
       </div>
 

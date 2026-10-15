@@ -16,6 +16,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { formatCompactEur } from "@/lib/utils";
+import { MatchPredictCard } from "@/components/predict/MatchPredictCard";
 
 interface OverviewTabProps {
   match: any;
@@ -148,7 +149,10 @@ export function OverviewTab({ match }: OverviewTabProps) {
         )}
       </div>
 
-      {/* 2. MATCH INFORMATION & VENUE CONTEXT */}
+      {/* 2. MATCH PREDICTOR CARD */}
+      <MatchPredictCard match={match} />
+
+      {/* 3. MATCH INFORMATION & VENUE CONTEXT */}
       <div className="rounded-[var(--card-radius)] border border-[var(--border-subtle)] bg-[var(--bg-card)] p-4 sm:p-6 shadow-xs space-y-4">
         <div className="flex items-center justify-between pb-3 border-b border-[var(--divider)]">
           <div className="flex items-center gap-2">
