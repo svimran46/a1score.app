@@ -5,6 +5,7 @@
 export type MeasurementSystem = "metric" | "imperial";
 
 export const UNITS_STORAGE_KEY = "a1score_units";
+export const UNITS_CHANGE_EVENT = "a1score:units-change";
 
 export const MEASUREMENT_OPTIONS: { value: MeasurementSystem; label: string }[] = [
   { value: "metric", label: "Metric (cm)" },

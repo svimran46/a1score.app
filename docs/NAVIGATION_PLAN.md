@@ -11,7 +11,7 @@ Out of scope by decision: **Follow us** and **Redeem code**.
 | FotMob | a1score | Route |
 |---|---|---|
 | Bottom bar: Matches · News · Leagues · Following · More | Same five tabs | `/matches` `/news` `/leagues` `/following` `/more` |
-| More: account card | "Saved on this device" note (no accounts yet) | `/more` |
+| More: account card / Sign in | Account card with sign-in, sync status and account link | `/more`, `/signin` |
 | More: FotMob+, Lineup Builder, Predict | Market Values, Compare Players (Predict / Lineup Builder are later phases) | `/values` `/compare` |
 | More: Transfer Centre (Filter ▾, Sort ▾) | Transfer Centre: Latest / Record fees / Contract ends, filter by type, league, fee and following, sort by date or fee | `/transfers` |
 | More: TV schedules (country) | TV schedules by country, day tabs, channels per match (unofficial source for now) | `/tv` |
@@ -70,5 +70,6 @@ new screens are checked at 390px in dark and light themes.
   - **Temporary unofficial source:** FotMob's public `/api/data/tvlistings` endpoint, behind a `TvProvider` interface (`src/lib/tv`). To move to an official provider, implement `TvProvider` and change one line in `src/lib/tv/index.ts`; the page credits the source and stays out of search results (`noindex`) until then.
 
 ### Phase 6 — Accounts and games
-- Sign in to sync follows and settings across devices (Supabase Auth); migrates the device's local follows on first sign-in.
-- Predict (score predictions, 2 pts outcome / 3 pts exact, leagues with friends) and Lineup Builder. Both need accounts and server-side storage.
+- **6a Sign-in and sync ✅** — optional accounts (Supabase Auth: email link or 6-digit code; Google behind `NEXT_PUBLIC_AUTH_GOOGLE`). Follows and settings sync across devices; More shows the FotMob-style account card; Settings → Account has sign out and delete account. Setup steps: `docs/ACCOUNTS_SETUP.md`.
+- **6b Predict** — score predictions (2 pts outcome / 3 pts exact), leagues with friends. Needs accounts and server-side scoring.
+- **6c Lineup Builder** — build and share a lineup.

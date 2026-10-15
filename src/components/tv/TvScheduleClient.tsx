@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { Globe, MonitorPlay, Shield, Tv } from "lucide-react";
 import type { TvListing } from "@/lib/tv/types";
 import { groupByLocalDay } from "@/lib/tv/days";
-import { TV_COUNTRIES, TV_COUNTRY_STORAGE_KEY, tvCountryName } from "@/lib/tv/countries";
+import { TV_COUNTRIES, saveTvCountry, tvCountryName } from "@/lib/tv/countries";
 import { formatKickoffTimeOnly } from "@/lib/utils";
 import { UnderlineTabs } from "@/components/ui/UnderlineTabs";
 import { MenuButton, MenuRadioItem } from "@/components/ui/MenuButton";
@@ -92,11 +92,7 @@ export function TvScheduleClient({
 
   // Remember the country so More and the next visit open it directly.
   useEffect(() => {
-    try {
-      window.localStorage.setItem(TV_COUNTRY_STORAGE_KEY, country);
-    } catch {
-      // Storage blocked: the URL still carries the country.
-    }
+    saveTvCountry(country);
   }, [country]);
 
   return (
