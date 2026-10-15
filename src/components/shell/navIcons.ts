@@ -2,6 +2,7 @@ import {
   ArrowLeftRight,
   Bell,
   BookOpen,
+  LayoutGrid,
   Menu,
   Newspaper,
   Radio,
@@ -32,4 +33,6 @@ export const NAV_ICONS: Record<NavIconKey, LucideIcon> = {
   settings: Settings,
   methodology: BookOpen,
   tv: Tv,
+  predict: Trophy,
+  lineup: LayoutGrid,
 };

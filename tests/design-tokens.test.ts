@@ -52,7 +52,10 @@ test("design tokens: no opacity modifiers on arbitrary var() colours", () => {
 test("design tokens: no raw Tailwind palette classes outside the pitch graphics", () => {
   // The pitch is a fixed dark-green surface in both themes, so its line
   // markings and on-pitch labels keep literal colours.
-  const PITCH_FILES = new Set(["src/components/PitchLineup.tsx"]);
+  const PITCH_FILES = new Set([
+    "src/components/PitchLineup.tsx",
+    "src/components/lineup/LineupBuilderClient.tsx",
+  ]);
   const PITCH_CLASSES = new Set([
     "border-emerald-600/30",
     "border-emerald-900/50",

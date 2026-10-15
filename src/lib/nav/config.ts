@@ -21,7 +21,9 @@ export type NavIconKey =
   | "notifications"
   | "settings"
   | "methodology"
-  | "tv";
+  | "tv"
+  | "predict"
+  | "lineup";
 
 export interface BottomTab {
   key: "matches" | "news" | "leagues" | "following" | "more";
@@ -47,6 +49,8 @@ const MORE_ROUTES = [
   "/transfers",
   "/tv",
   "/compare",
+  "/predict",
+  "/lineup-builder",
   "/players",
   "/clubs",
   "/methodology",
@@ -134,6 +138,20 @@ export const MORE_FEATURES: MoreItem[] = [
     description: "Put up to three players side by side",
     href: "/compare",
     icon: "compare",
+  },
+  {
+    key: "predict",
+    label: "Match Predictor",
+    description: "Predict match scores and compete on the leaderboard",
+    href: "/predict",
+    icon: "predict",
+  },
+  {
+    key: "lineup",
+    label: "Lineup Builder",
+    description: "Build your dream XI and calculate squad valuation",
+    href: "/lineup-builder",
+    icon: "lineup",
   },
   {
     key: "players",
