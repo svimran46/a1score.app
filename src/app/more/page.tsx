@@ -3,6 +3,7 @@ import { constructMetadata } from "@/lib/metadata";
 import { MORE_ACCOUNT, MORE_FEATURES } from "@/lib/nav/config";
 import { NAV_ICONS } from "@/components/shell/navIcons";
 import { MenuGroup, MenuRow } from "@/components/more/MenuRow";
+import { TvCountryLabel } from "@/components/tv/TvCountryLabel";
 
 export const runtime = "edge";
 
@@ -31,7 +32,7 @@ export default function MorePage() {
             key={item.key}
             icon={NAV_ICONS[item.icon]}
             label={item.label}
-            description={item.description}
+            description={item.key === "tv" ? <TvCountryLabel /> : item.description}
             href={item.href}
           />
         ))}
