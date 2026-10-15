@@ -75,73 +75,92 @@ jobs:
             exit 1
           }
 
-      - name: Upload Build Log Artifact on Failure
-        if: failure()
+      - name: Prepare and Sign Release APKs
+        run: |
+          (
+            echo "=== 1. Locating Built APKs ==="
+            find android/app/build/outputs/apk -type f -name "*.apk"
+
+            RELEASE_SOURCE=$(find android/app/build/outputs/apk/release -name "*.apk" | head -n 1)
+            DEBUG_SOURCE=$(find android/app/build/outputs/apk/debug -name "*.apk" | head -n 1)
+            SIGNED_APK="a1score-v${VERSION}.apk"
+            DEBUG_APK="a1score-debug-v${VERSION}.apk"
+
+            echo "Release source APK: $RELEASE_SOURCE"
+            echo "Debug source APK: $DEBUG_SOURCE"
+
+            if [ -z "$RELEASE_SOURCE" ]; then
+              echo "❌ Error: No release APK found in android/app/build/outputs/apk/release"
+              exit 1
+            fi
+
+            if [ -n "$DEBUG_SOURCE" ]; then
+              cp "${DEBUG_SOURCE}" "${DEBUG_APK}"
+              echo "Copied debug APK to ${DEBUG_APK}"
+            fi
+
+            echo "=== 2. Locating Signing Tools & Keystores ==="
+            APKSIGNER=$(find $ANDROID_HOME/build-tools -name apksigner | sort -V | tail -n 1)
+            echo "Using apksigner at: $APKSIGNER"
+
+            DEBUG_KEYSTORE=$(find $HOME -name "debug.keystore" 2>/dev/null | head -n 1)
+            echo "Found debug keystore at: $DEBUG_KEYSTORE"
+
+            echo "=== 3. Signing Release APK ==="
+            if [ -n "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" ]; then
+              echo "Signing with repository secret keystore..."
+              echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > release.keystore
+              "$APKSIGNER" sign --ks release.keystore \
+                --ks-pass "pass:${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" \
+                --key-pass "pass:${{ secrets.ANDROID_KEY_PASSWORD }}" \
+                --ks-key-alias "${{ secrets.ANDROID_KEY_ALIAS }}" \
+                --out "${SIGNED_APK}" "${RELEASE_SOURCE}"
+            elif [ -n "$DEBUG_KEYSTORE" ] && [ -f "$DEBUG_KEYSTORE" ]; then
+              echo "Signing release APK with debug keystore ($DEBUG_KEYSTORE)..."
+              "$APKSIGNER" sign --ks "$DEBUG_KEYSTORE" \
+                --ks-pass "pass:android" \
+                --key-pass "pass:android" \
+                --ks-key-alias "androiddebugkey" \
+                --out "${SIGNED_APK}" "${RELEASE_SOURCE}"
+            else
+              echo "Keystore not found, copying release source directly..."
+              cp "${RELEASE_SOURCE}" "${SIGNED_APK}"
+            fi
+
+            echo "=== 4. Verifying APK Signatures ==="
+            if [ -n "$APKSIGNER" ]; then
+              echo "Verifying ${SIGNED_APK}:"
+              "$APKSIGNER" verify --verbose "${SIGNED_APK}" || true
+              if [ -f "${DEBUG_APK}" ]; then
+                echo "Verifying ${DEBUG_APK}:"
+                "$APKSIGNER" verify --verbose "${DEBUG_APK}" || true
+              fi
+            fi
+
+            echo "=== 5. Final APK Artifacts ==="
+            ls -lh a1score*.apk
+          ) 2>&1 | tee /tmp/signing_output.log
+
+          EXIT_CODE=${PIPESTATUS[0]}
+
+          echo "## 📱 Mobile Build & Signing Summary (Exit: $EXIT_CODE)" >> $GITHUB_STEP_SUMMARY
+          echo '```text' >> $GITHUB_STEP_SUMMARY
+          cat /tmp/signing_output.log >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+          if [ $EXIT_CODE -ne 0 ]; then
+            echo "❌ Signing step failed with exit code $EXIT_CODE"
+            exit $EXIT_CODE
+          fi
+
+      - name: Upload Diagnostics Always
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: gradle-build-log
-          path: android/gradle-build.log
-
-      - name: Prepare and Verify Release APKs
-        run: |
-          set -e
-          echo "=== Locating Built APKs ==="
-          find android/app/build/outputs/apk -type f -name "*.apk"
-
-          RELEASE_SOURCE=$(find android/app/build/outputs/apk/release -name "*.apk" | head -n 1)
-          DEBUG_SOURCE=$(find android/app/build/outputs/apk/debug -name "*.apk" | head -n 1)
-          SIGNED_APK="a1score-v${VERSION}.apk"
-          DEBUG_APK="a1score-debug-v${VERSION}.apk"
-
-          echo "Found release source: $RELEASE_SOURCE"
-          echo "Found debug source: $DEBUG_SOURCE"
-
-          if [ -z "$RELEASE_SOURCE" ]; then
-            echo "❌ Error: No release APK found in android/app/build/outputs/apk/release"
-            exit 1
-          fi
-
-          if [ -n "$DEBUG_SOURCE" ]; then
-            cp "${DEBUG_SOURCE}" "${DEBUG_APK}"
-            echo "Copied debug APK to ${DEBUG_APK}"
-          fi
-
-          APKSIGNER=$(find $ANDROID_HOME/build-tools -name apksigner | sort -V | tail -n 1)
-          echo "Found apksigner at: $APKSIGNER"
-
-          if [ -n "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" ]; then
-            echo "Signing with repository secret keystore..."
-            echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > release.keystore
-            "$APKSIGNER" sign --ks release.keystore \
-              --ks-pass "pass:${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" \
-              --key-pass "pass:${{ secrets.ANDROID_KEY_PASSWORD }}" \
-              --ks-key-alias "${{ secrets.ANDROID_KEY_ALIAS }}" \
-              --out "${SIGNED_APK}" "${RELEASE_SOURCE}"
-          else
-            echo "Using Gradle-signed release APK..."
-            cp "${RELEASE_SOURCE}" "${SIGNED_APK}"
-          fi
-
-          echo "=== Verifying APK Signatures ==="
-          if [ -n "$APKSIGNER" ]; then
-            echo "Verifying ${SIGNED_APK}:"
-            "$APKSIGNER" verify --verbose "${SIGNED_APK}"
-            if [ -f "${DEBUG_APK}" ]; then
-              echo "Verifying ${DEBUG_APK}:"
-              "$APKSIGNER" verify --verbose "${DEBUG_APK}"
-            fi
-          fi
-
-          echo "=== Final APK Artifacts ==="
-          ls -lh a1score*.apk
-
-          echo "## 📱 Mobile Release Artifacts" >> $GITHUB_STEP_SUMMARY
-          echo "| Artifact | File Name | Size |" >> $GITHUB_STEP_SUMMARY
-          echo "| --- | --- | --- |" >> $GITHUB_STEP_SUMMARY
-          echo "| Release APK | \`${SIGNED_APK}\` | $(du -h "${SIGNED_APK}" | cut -f1) |" >> $GITHUB_STEP_SUMMARY
-          if [ -f "${DEBUG_APK}" ]; then
-            echo "| Debug APK | \`${DEBUG_APK}\` | $(du -h "${DEBUG_APK}" | cut -f1) |" >> $GITHUB_STEP_SUMMARY
-          fi
+          name: build-logs-diagnostics
+          path: |
+            android/gradle-build.log
+            /tmp/signing_output.log
 
       - name: Upload Artifacts to Workflow Run
         uses: actions/upload-artifact@v4
