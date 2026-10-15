@@ -84,13 +84,25 @@ jobs:
 
       - name: Sign Release APK
         run: |
+          echo "=== Locating Built APKs ==="
+          find android/app/build/outputs/apk -type f -name "*.apk"
+
           UNSIGNED_APK=$(find android/app/build/outputs/apk/release -name "*.apk" | head -n 1)
+          DEBUG_SOURCE=$(find android/app/build/outputs/apk/debug -name "*.apk" | head -n 1)
           SIGNED_APK="a1score-v${VERSION}.apk"
           DEBUG_APK="a1score-debug-v${VERSION}.apk"
 
-          # Copy debug APK directly
-          DEBUG_SOURCE=$(find android/app/build/outputs/apk/debug -name "*.apk" | head -n 1)
-          cp "${DEBUG_SOURCE}" "${DEBUG_APK}"
+          echo "Found release APK: $UNSIGNED_APK"
+          echo "Found debug APK: $DEBUG_SOURCE"
+
+          if [ -n "$DEBUG_SOURCE" ]; then
+            cp "${DEBUG_SOURCE}" "${DEBUG_APK}"
+          fi
+
+          if [ -z "$UNSIGNED_APK" ]; then
+            echo "Error: No release APK found in android/app/build/outputs/apk/release"
+            exit 1
+          fi
 
           APKSIGNER=$(find $ANDROID_HOME/build-tools -name apksigner | sort -V | tail -n 1)
           if [ -z "$APKSIGNER" ]; then
@@ -104,24 +116,26 @@ jobs:
             echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > release.keystore
             "$APKSIGNER" sign --ks release.keystore \
               --ks-pass "pass:${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" \
-              --key-pass "pass:${{ secrets.ANDROID_KEY_PASSWORD }}" \
               --ks-key-alias "${{ secrets.ANDROID_KEY_ALIAS }}" \
               --out "${SIGNED_APK}" "${UNSIGNED_APK}"
           else
             echo "Generating automated release signing key..."
-            keytool -genkey -v -keystore auto-release.keystore -alias a1score-key \
+            keytool -genkeypair -v -keystore auto-release.jks \
+              -alias a1score \
               -keyalg RSA -keysize 2048 -validity 10000 \
-              -storepass a1scorepass -keypass a1scorepass \
+              -storepass a1scorepass \
               -dname "CN=a1score, OU=Mobile, O=a1score, L=Global, S=Global, C=US"
 
-            "$APKSIGNER" sign --ks auto-release.keystore \
+            "$APKSIGNER" sign --ks auto-release.jks \
               --ks-pass "pass:a1scorepass" \
-              --key-pass "pass:a1scorepass" \
-              --ks-key-alias a1score-key \
+              --ks-key-alias a1score \
               --out "${SIGNED_APK}" "${UNSIGNED_APK}"
           fi
 
-          echo "APK build and signing completed:"
+          echo "Verifying signed APK..."
+          "$APKSIGNER" verify "${SIGNED_APK}"
+
+          echo "APK build and signing completed successfully:"
           ls -lh a1score*.apk
 
       - name: Upload Artifacts to Workflow Run
