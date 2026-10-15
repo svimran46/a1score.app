@@ -1,6 +1,8 @@
 import { getMatchesByDate, TOP_LEAGUE_IDS } from "@/lib/fotmob/client";
 import { MatchesClient } from "@/components/MatchesClient";
 import { getDefaultMatchDate } from "@/lib/date-utils";
+import { FOTMOB_TEAM_MAPPINGS } from "@/lib/league-mappings";
+import { matchPassesFilter, matchesWithMappedClubs } from "@/lib/matches/following";
 import type { Metadata } from "next";
 
 export const revalidate = 30; // Dynamic edge revalidation for live match updates
@@ -76,8 +78,15 @@ export default async function MatchesPage({ searchParams }: MatchesPageProps) {
       .filter((l) => l.matches.length > 0);
   }
 
+  // Every league (not just the current scope), so a followed team in a smaller
+  // competition still shows; trimmed to matches with a mapped club.
+  const followCandidates = matchesWithMappedClubs(data.leagues, FOTMOB_TEAM_MAPPINGS).filter((row) =>
+    matchPassesFilter(row.match, activeFilter)
+  );
+
   return (
     <MatchesClient
+      followCandidates={followCandidates}
       activeDate={activeDate}
       activeFilter={activeFilter}
       activeScope={activeScope}

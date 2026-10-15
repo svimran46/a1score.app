@@ -3,7 +3,6 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { EntityImage } from "./EntityImage";
-import { formatCompactEur } from "@/lib/utils";
 import { getPlayerSlug } from "@/lib/slugs";
 import { Card } from "@/components/ui";
 import {
@@ -13,6 +12,7 @@ import {
   AlertTriangle,
   Users,
 } from "lucide-react";
+import { useMoney } from "@/lib/useMoney";
 
 export interface SquadPlayerRow {
   id: string;
@@ -48,6 +48,7 @@ export function ClubSquadTable({
   academyPlayers = [],
   clubName,
 }: ClubSquadTableProps) {
+  const money = useMoney();
   const [selectedTier, setSelectedTier] = useState<"first_team" | "academy">("first_team");
   const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({
     GK: false,
@@ -215,7 +216,7 @@ export function ClubSquadTable({
 
                 <div className="flex items-center gap-3">
                   <span className="text-xs sm:text-sm font-bold text-[var(--value-text)] figure tabular-nums">
-                    {formatCompactEur(subtotalVal)}
+                    {money.compact(subtotalVal)}
                   </span>
                   {isCollapsed ? (
                     <ChevronDown className="w-4 h-4 text-[var(--text-muted)]" />
@@ -360,7 +361,7 @@ export function ClubSquadTable({
                             {/* Market Value */}
                             <td className="py-2.5 px-3 sm:px-4 text-right text-[var(--value-text)] figure font-bold whitespace-nowrap text-sm tabular-nums">
                               {player.latestMarketValue && player.latestMarketValue > 0
-                                ? formatCompactEur(player.latestMarketValue)
+                                ? money.compact(player.latestMarketValue)
                                 : "—"}
                             </td>
                           </tr>

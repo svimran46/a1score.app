@@ -4,9 +4,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { Star, ArrowRight, User, TrendingUp, TrendingDown } from "lucide-react";
 import { useWatchlist } from "@/lib/watchlist/useWatchlist";
-import { formatCompactEur } from "@/lib/utils";
+import { useMoney } from "@/lib/useMoney";
 
 export function WatchlistRightRailCard() {
+  const money = useMoney();
   const { isMounted, favorites, playerFavorites } = useWatchlist();
 
   if (!isMounted) {
@@ -96,7 +97,7 @@ export function WatchlistRightRailCard() {
 
                 <div className="text-right shrink-0">
                   <div className="text-xs font-bold text-[var(--value-text)] figure tabular-nums">
-                    {currentVal > 0 ? formatCompactEur(currentVal) : "—"}
+                    {currentVal > 0 ? money.compact(currentVal) : "—"}
                   </div>
                   {hasChange && (
                     <div

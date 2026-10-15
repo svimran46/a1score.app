@@ -10,9 +10,9 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
-import { formatCompactEur } from "@/lib/utils";
 import { mergeValuationTimelines } from "@/lib/compare";
 import { Table, Eye, EyeOff } from "lucide-react";
+import { useMoney } from "@/lib/useMoney";
 
 export interface ComparePlayerChartMeta {
   slug: string;
@@ -50,6 +50,7 @@ const LINE_CONFIGS = [
 ];
 
 export function CompareValuationChart({ players }: CompareValuationChartProps) {
+  const money = useMoney();
   const [showTable, setShowTable] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
 
@@ -129,7 +130,7 @@ export function CompareValuationChart({ players }: CompareValuationChartProps) {
                 ({config.dashName})
               </span>
               <span className="font-mono font-bold text-[var(--value-text)] figure tabular-nums ml-0.5">
-                {formatCompactEur(p.currentValue)}
+                {money.compact(p.currentValue)}
               </span>
             </div>
           );
@@ -154,7 +155,7 @@ export function CompareValuationChart({ players }: CompareValuationChartProps) {
               fontSize={11}
               tickLine={false}
               axisLine={{ stroke: "var(--border-subtle)" }}
-              tickFormatter={(v) => formatCompactEur(v)}
+              tickFormatter={(v) => money.compact(v)}
               width={55}
             />
             <Tooltip
@@ -176,7 +177,7 @@ export function CompareValuationChart({ players }: CompareValuationChartProps) {
                             <span className="text-[var(--text-secondary)]">{player?.name || entry.dataKey}</span>
                           </div>
                           <span className="font-mono font-bold text-[var(--value-text)] figure tabular-nums">
-                            {formatCompactEur(entry.value)}
+                            {money.compact(entry.value)}
                           </span>
                         </div>
                       );
@@ -227,7 +228,7 @@ export function CompareValuationChart({ players }: CompareValuationChartProps) {
                   <td className="p-2 font-medium text-[var(--text-primary)]">{row.dateStr}</td>
                   {players.map((p) => (
                     <td key={p.slug} className="p-2 font-mono tabular-nums text-[var(--text-secondary)]">
-                      {row[p.slug] ? formatCompactEur(row[p.slug]) : "—"}
+                      {row[p.slug] ? money.compact(row[p.slug]) : "—"}
                     </td>
                   ))}
                 </tr>

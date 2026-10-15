@@ -18,12 +18,14 @@ Out of scope by decision: **Follow us** and **Redeem code**.
 | More: Notifications | Notifications (push opt-in + what you follow) | `/settings/notifications` |
 | More: Settings | Settings | `/settings` |
 | Settings: Theme | Theme: System default / Light / Dark | `/settings` |
-| Settings: Language, Currency, Measurement, Temperature | Currency + Measurement in Phase 4; Language needs i18n; no weather data, so no Temperature | — |
+| Settings: Currency, Measurement | Currency (EUR / GBP / USD, converted at the ECB reference rate) and Measurement (cm / ft-in) | `/settings` |
+| Settings: Language, Temperature | Language needs i18n; no weather data, so no Temperature | — |
 | Settings → Others: Share, Tips and support, Privacy policy, Advertise, App version | Same, plus Methodology and Terms | `/settings` |
 | Following: Teams / Players cards, Edit, + | Same; player cards show value change since followed; Compare shortcut | `/following` (`/watchlist` 308-redirects here) |
 | Leagues: Find leagues, Following (Edit), All competitions | Same; star to follow a league from the list or its page | `/leagues` |
 | News: For you / Latest / Transfers / Leagues | Same; For you = stories about what you follow | `/news` |
 | Matches ⋮ menu: Edit alerts, By time, Collapse/Expand all | Same | `/matches` |
+| Matches: Following group | Matches of followed clubs from every league, matched by FotMob team id | `/matches` |
 | Desktop | Left sidebar mirrors the same groups (Browse / Tools / Account) | all |
 
 Single source of truth: `src/lib/nav/config.ts` drives the bottom bar, the
@@ -51,10 +53,12 @@ new screens are checked at 390px in dark and light themes.
 - Matches ⋮ menu: By time (remembered), Collapse all, Expand all, Edit alerts.
 - News tabs: For you (falls back to Latest with a nudge), Latest, Transfers, Leagues (with league chips).
 
-### Phase 4 — Preferences that change data display
-- Currency (EUR / GBP / USD) applied through `formatCompactEur` and friends, with a dated exchange-rate source.
-- Measurement system (cm / ft-in) for player height.
-- "Following" group at the top of Matches. Needs a reliable club ↔ FotMob team id mapping first; matching on names would show wrong teams.
+### Phase 4 — Preferences that change data display ✅
+- **Currency** (EUR / GBP / USD). All data stays in euros. Pages are still rendered and cached in euros (search engines, share images and push notifications keep €); in the browser every figure converts with the latest ECB reference rate from `/api/fx` (cached 12 h). With no rate available, figures stay in euros. Settings shows the rate and its date.
+  - Client components format with `useMoney()`; server components render `<Money eur={…} />`.
+  - Fixed euro bands (filter options like "€50M+", the "points per €10M" index) stay in euros because they define the bands.
+- **Measurement system** (cm / ft-in) for player height.
+- **Following group at the top of Matches**: uses the existing FotMob team id → a1score club id table (`FOTMOB_TEAM_MAPPINGS`, 132 clubs), so a followed club only matches its own fixtures. Clubs not in that table don't appear until they are mapped.
 
 ### Phase 5 — Transfer Centre and TV schedules
 - Transfer Centre filter (league, type: permanent / loan / free) and sort (date, fee), bell to follow transfer news.

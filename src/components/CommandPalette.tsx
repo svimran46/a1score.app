@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { EntityImage } from "./EntityImage";
-import { formatCompactEur } from "@/lib/utils";
 import { getClubDisplayName } from "@/lib/data/clubs";
 import { getPlayerSlug } from "@/lib/slugs";
 import { trackEvent } from "@/lib/analytics";
@@ -18,6 +17,7 @@ import {
   Radio,
   Newspaper,
 } from "lucide-react";
+import { useMoney } from "@/lib/useMoney";
 
 interface SearchResultPlayer {
   id: string;
@@ -51,6 +51,7 @@ interface CommandPaletteProps {
 }
 
 export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
+  const money = useMoney();
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState("");
@@ -298,7 +299,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                     <div className="text-right shrink-0 pl-3">
                       {p.latestMarketValue ? (
                         <span className="text-xs font-bold text-[var(--value-text)] figure tabular-nums">
-                          {formatCompactEur(p.latestMarketValue)}
+                          {money.compact(p.latestMarketValue)}
                         </span>
                       ) : (
                         <span className="text-[11px] text-[var(--text-muted)]">—</span>

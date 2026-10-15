@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { formatValueEur, spokenEur } from "@/lib/format-value";
+import { useMoney } from "@/lib/useMoney";
 
 export interface ProfileNavSection {
   id: string;
@@ -54,6 +54,7 @@ function openValuationsIfTargeted() {
  * once the hero has scrolled away. It never writes the URL on passive scroll.
  */
 export function ProfileSectionNav({ sections, valueEur }: ProfileSectionNavProps) {
+  const money = useMoney();
   const navRef = useRef<HTMLElement>(null);
   const scrollerRef = useRef<HTMLDivElement>(null);
   const pillRef = useRef<HTMLAnchorElement>(null);
@@ -67,7 +68,7 @@ export function ProfileSectionNav({ sections, valueEur }: ProfileSectionNavProps
   const [pillWidth, setPillWidth] = useState(0);
   const [fade, setFade] = useState({ start: false, end: false });
 
-  const value = formatValueEur(valueEur);
+  const value = money.value(valueEur);
   // Presence is decided on the server, so the bar never pops in and shifts the page.
   const enabled = sections.length >= 3;
 
@@ -265,7 +266,7 @@ export function ProfileSectionNav({ sections, valueEur }: ProfileSectionNavProps
             ref={pillRef}
             href="#top"
             onClick={onPillClick}
-            aria-label={`Back to top, market value ${spokenEur(valueEur)}`}
+            aria-label={`Back to top, market value ${money.spoken(valueEur)}`}
             aria-hidden={pillVisible ? undefined : true}
             tabIndex={pillVisible ? undefined : -1}
             className={`group absolute left-0 top-0 z-10 flex h-12 min-w-11 items-center rounded-full transition-[opacity,transform] duration-[160ms] ease-[var(--ease-out)] focus-visible:outline-none ${

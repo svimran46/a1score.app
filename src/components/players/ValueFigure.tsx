@@ -1,5 +1,7 @@
+"use client";
+
 import React from "react";
-import { spokenEur, valueEurParts } from "@/lib/format-value";
+import { useMoney } from "@/lib/useMoney";
 
 export interface ValueFigureProps {
   eur: number | null;
@@ -20,9 +22,11 @@ const SIZE_CLASS: Record<ValueFigureProps["size"], string> = {
  * A euro market value in the money voice: .figure, amber, never animated.
  * The visual string is aria-hidden and an expanded amount is read instead
  * ("180 million euros"), so "€180M" is never spelled out letter by letter.
+ * Shown in the visitor's display currency (see useMoney).
  */
 export function ValueFigure({ eur, size, className = "", srLabel }: ValueFigureProps) {
-  const parts = valueEurParts(eur);
+  const money = useMoney();
+  const parts = money.parts(eur);
   const Tag = size === "hero" ? "p" : "span";
   const prefix = srLabel ?? (size === "hero" ? "Market value" : null);
 
@@ -49,7 +53,7 @@ export function ValueFigure({ eur, size, className = "", srLabel }: ValueFigureP
         {parts.number}
         {parts.suffix && <span className={unit}>{parts.suffix}</span>}
       </span>
-      <span className="sr-only">{spokenEur(eur)}</span>
+      <span className="sr-only">{money.spoken(eur)}</span>
     </Tag>
   );
 }

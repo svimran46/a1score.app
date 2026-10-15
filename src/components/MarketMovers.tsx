@@ -3,10 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import { EntityImage } from "./EntityImage";
-import { formatCompactEur } from "@/lib/utils";
 import { getClubDisplayName } from "@/lib/data/clubs";
 import type { MarketMover } from "@/lib/data/players";
 import { TrendingUp, TrendingDown, ArrowUpRight, ArrowDownRight, User, Shield } from "lucide-react";
+import { useMoney } from "@/lib/useMoney";
 
 interface MarketMoversProps {
   risers: MarketMover[];
@@ -14,6 +14,7 @@ interface MarketMoversProps {
 }
 
 export function MarketMovers({ risers, fallers }: MarketMoversProps) {
+  const money = useMoney();
   const [activeTab, setActiveTab] = useState<"risers" | "fallers">("risers");
 
   const displayedList = activeTab === "risers" ? risers : fallers;
@@ -120,7 +121,7 @@ export function MarketMovers({ risers, fallers }: MarketMoversProps) {
                 {/* Valuations and Delta Badge */}
                 <div className="flex flex-col items-end shrink-0 text-right space-y-0.5">
                   <span className="text-xs sm:text-sm font-black text-value-text figure tabular-nums whitespace-nowrap">
-                    {formatCompactEur(player.latestValue)}
+                    {money.compact(player.latestValue)}
                   </span>
 
                   <span
@@ -137,12 +138,12 @@ export function MarketMovers({ risers, fallers }: MarketMoversProps) {
                     )}
                     <span>
                       {isGain ? "+" : ""}
-                      {formatCompactEur(player.diff)} ({Math.abs(player.percentage).toFixed(0)}%)
+                      {money.compact(player.diff)} ({Math.abs(player.percentage).toFixed(0)}%)
                     </span>
                   </span>
 
                   <span className="text-[10px] text-text-muted tabular-nums whitespace-nowrap">
-                    vs prev: {formatCompactEur(player.prevValue)}
+                    vs prev: {money.compact(player.prevValue)}
                   </span>
                 </div>
               </Link>

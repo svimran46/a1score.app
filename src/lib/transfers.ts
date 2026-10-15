@@ -1,5 +1,6 @@
 import { formatCompactEur } from "@/lib/utils";
 import { formatValueEur } from "@/lib/format-value";
+import { EUR_CONTEXT, type MoneyContext } from "@/lib/currency";
 import { parseEurValue } from "@/lib/transfermarkt/parse";
 import type { FeeStatus } from "@/lib/data/playerProfile.types";
 
@@ -26,10 +27,11 @@ export function isYouthMove(
  */
 export function formatTransferFee(
   feeEur?: number | null,
-  transferType?: string | null
+  transferType?: string | null,
+  ctx: MoneyContext = EUR_CONTEXT
 ): { label: string; isAmount: boolean } {
   if (typeof feeEur === "number" && feeEur > 0) {
-    return { label: formatCompactEur(feeEur), isAmount: true };
+    return { label: formatCompactEur(feeEur, ctx), isAmount: true };
   }
 
   const tType = transferType?.toLowerCase() || "";
@@ -89,9 +91,10 @@ export function feeStatusFromDb(feeEur: number | string | bigint | null | undefi
  */
 export function formatFeeLabel(
   feeStatus: FeeStatus,
-  feeEur: number | null
+  feeEur: number | null,
+  ctx: MoneyContext = EUR_CONTEXT
 ): { label: string; isAmount: boolean; srLabel?: string } {
-  const amount = formatValueEur(feeEur);
+  const amount = formatValueEur(feeEur, ctx);
   switch (feeStatus) {
     case "disclosed":
       return amount ? { label: amount, isAmount: true } : { label: "—", isAmount: false, srLabel: "No fee recorded" };

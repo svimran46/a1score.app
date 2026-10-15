@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 import { EntityImage } from "./EntityImage";
 import Link from "next/link";
-import { formatCompactEur } from "@/lib/utils";
 import { getPlayerSlug } from "@/lib/slugs";
 import { Card } from "@/components/ui";
 import {
@@ -13,6 +12,7 @@ import {
   TrendingUp,
   Calendar,
 } from "lucide-react";
+import { useMoney } from "@/lib/useMoney";
 
 export interface SquadPlayer {
   id: string;
@@ -53,6 +53,7 @@ export function SquadValuationPyramid({
   totalSquadValue,
   clubName,
 }: SquadValuationPyramidProps) {
+  const money = useMoney();
   const [selectedTier, setSelectedTier] = useState<string | null>(null);
 
   // 1. Calculate Demographic Metrics
@@ -259,7 +260,7 @@ export function SquadValuationPyramid({
   return (
     <div className="space-y-4">
       <p className="sr-only">
-        Squad financial pyramid and asset distribution analysis for {clubName}. Total squad valuation is {formatCompactEur(totalSquadValue)} across {players.length} squad members.
+        Squad financial pyramid and asset distribution analysis for {clubName}. Total squad valuation is {money.compact(totalSquadValue)} across {players.length} squad members.
       </p>
 
       {/* Squad Demographic & Concentration Barometer */}
@@ -293,7 +294,7 @@ export function SquadValuationPyramid({
             </div>
             <span className="text-[10px] text-[var(--text-muted)] truncate block">
               {demographics.topPlayer?.commonName || demographics.topPlayer?.fullName || "Top Star"} (
-              {formatCompactEur(demographics.topPlayer?.latestMarketValue || 0)})
+              {money.compact(demographics.topPlayer?.latestMarketValue || 0)})
             </span>
           </div>
         </Card>
@@ -329,7 +330,7 @@ export function SquadValuationPyramid({
               </h3>
             </div>
             <span className="text-xs font-bold text-[var(--value-text)] figure tabular-nums">
-              Total {formatCompactEur(totalSquadValue)}
+              Total {money.compact(totalSquadValue)}
             </span>
           </div>
 
@@ -371,7 +372,7 @@ export function SquadValuationPyramid({
 
                     <div className="text-right">
                       <div className="text-xs font-bold text-[var(--text-primary)] tabular-nums">
-                        {formatCompactEur(tier.totalValue)}
+                        {money.compact(tier.totalValue)}
                       </div>
                       <div className="text-[10px] font-medium text-[var(--text-muted)] tabular-nums">
                         {tier.pct}% of squad
@@ -440,7 +441,7 @@ export function SquadValuationPyramid({
                           </span>
                         </div>
                         <span className="text-[11px] font-bold text-[var(--value-text)] figure tabular-nums ml-2 shrink-0">
-                          {formatCompactEur(p.latestMarketValue || 0)}
+                          {money.compact(p.latestMarketValue || 0)}
                         </span>
                       </Link>
                     );
@@ -475,7 +476,7 @@ export function SquadValuationPyramid({
                     </span>
                     <div className="flex items-center gap-2 tabular-nums">
                       <span className="text-[var(--text-primary)]">
-                        {formatCompactEur(pos.totalVal)}
+                        {money.compact(pos.totalVal)}
                       </span>
                       <span className="text-[var(--text-muted)] font-normal text-[11px]">
                         {pos.pct}%

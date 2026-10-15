@@ -22,7 +22,7 @@ export interface PageHeaderProps {
   subtitle?: React.ReactNode;
 
   // Primary Valuation & Trends
-  value?: string | null;
+  value?: React.ReactNode;
   valueLabel?: string;
   valueTrend?: React.ReactNode;
   freshnessTimestamp?: string | Date | null;

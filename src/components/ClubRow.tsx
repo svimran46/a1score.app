@@ -1,9 +1,9 @@
 import React from "react";
 import Link from "next/link";
 import { EntityImage } from "./EntityImage";
-import { formatCompactEur } from "@/lib/utils";
 import { getClubSlug } from "@/lib/slugs";
 import { getClubShortName } from "@/lib/data/clubs";
+import { Money } from "@/components/ui/Money";
 
 export interface ClubRowProps {
   rank?: number | string;
@@ -106,7 +106,7 @@ export function ClubRow({
       {/* Right: Squad Value */}
       <div className="text-right shrink-0">
         <div className="text-sm sm:text-base font-bold text-[var(--value-text)] figure tabular-nums leading-tight">
-          {effectiveValue ? formatCompactEur(effectiveValue) : "—"}
+          {effectiveValue ? <Money eur={effectiveValue} /> : "—"}
         </div>
         <div className="text-[10px] text-[var(--text-muted)] uppercase font-semibold leading-tight mt-0.5">
           Squad Value

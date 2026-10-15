@@ -6,6 +6,8 @@ import { Search, X } from "lucide-react";
 import { EntityImage } from "./EntityImage";
 import { PageHeader } from "./PageHeader";
 import { formatCompactEur } from "@/lib/utils";
+import { EUR_CONTEXT, type MoneyContext } from "@/lib/currency";
+import { useMoney } from "@/lib/useMoney";
 import { getLeagueSlug } from "@/lib/slugs";
 import { Card, Chip } from "@/components/ui";
 import { FollowButton } from "@/components/watchlist/FollowButton";
@@ -38,17 +40,18 @@ const COUNTRY_FLAGS: Record<string, string> = {
   Netherlands: "🇳🇱",
 };
 
-export function formatDetailedLeagueValue(value: number): string {
-  if (!value || value === 0) return "N/A";
+export function formatDetailedLeagueValue(eur: number, ctx: MoneyContext = EUR_CONTEXT): string {
+  if (!eur || eur === 0) return "N/A";
+  const value = eur * ctx.rate;
   if (value >= 1_000_000_000) {
     const b = value / 1_000_000_000;
-    return `€${b.toFixed(2)}B`;
+    return `${ctx.symbol}${b.toFixed(2)}B`;
   }
   if (value >= 1_000_000) {
     const m = value / 1_000_000;
-    return `€${m.toFixed(1)}M`;
+    return `${ctx.symbol}${m.toFixed(1)}M`;
   }
-  return formatCompactEur(value);
+  return formatCompactEur(eur, ctx);
 }
 
 const SORT_OPTIONS = [
@@ -137,6 +140,7 @@ function FollowedLeagues({ leagues }: { leagues: LeagueListItem[] }) {
 }
 
 export function LeaguesDirectoryClient({ initialLeagues }: LeaguesDirectoryClientProps) {
+  const money = useMoney();
   const [sortOption, setSortOption] = useState<"val_desc" | "val_asc" | "avg_desc" | "name_asc">("val_desc");
   const [query, setQuery] = useState("");
 
@@ -253,10 +257,10 @@ export function LeaguesDirectoryClient({ initialLeagues }: LeaguesDirectoryClien
                 {/* Right: Valuations + follow */}
                 <div className="text-right shrink-0 relative z-10 pointer-events-none">
                   <span className="text-sm sm:text-base font-bold text-[var(--value-text)] figure tabular-nums block">
-                    {formatDetailedLeagueValue(league.totalMarketValue)}
+                    {formatDetailedLeagueValue(league.totalMarketValue, money.ctx)}
                   </span>
                   <span className="text-[11px] text-[var(--text-muted)] tabular-nums block font-medium">
-                    avg {formatCompactEur(league.avgSquadValue)}
+                    avg {money.compact(league.avgSquadValue)}
                   </span>
                 </div>
                 <FollowButton

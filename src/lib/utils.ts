@@ -1,11 +1,12 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { EUR_CONTEXT, type MoneyContext } from "./currency";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatEur(amount: number | bigint | null | undefined): string {
+export function formatEur(amount: number | bigint | null | undefined, ctx: MoneyContext = EUR_CONTEXT): string {
   if (amount == null) return "N/A";
   const num = typeof amount === "bigint" ? Number(amount) : amount;
   if (typeof num !== "number" || isNaN(num)) return "N/A";
@@ -13,23 +14,25 @@ export function formatEur(amount: number | bigint | null | undefined): string {
   try {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
-      currency: "EUR",
+      currency: ctx.code,
       maximumFractionDigits: 0,
-    }).format(num);
+    }).format(num * ctx.rate);
   } catch {
-    return `€${num}`;
+    return `${ctx.symbol}${Math.round(num * ctx.rate)}`;
   }
 }
 
-export function formatCompactEur(amount: number | bigint | null | undefined): string {
+/** "€180M", "-€5M", "Free" for 0. Pass a MoneyContext (see useMoney) to show another currency. */
+export function formatCompactEur(amount: number | bigint | null | undefined, ctx: MoneyContext = EUR_CONTEXT): string {
   if (amount == null) return "N/A";
-  const num = typeof amount === "bigint" ? Number(amount) : amount;
-  if (typeof num !== "number" || isNaN(num)) return "N/A";
-  if (num === 0) return "Free";
-  
+  const raw = typeof amount === "bigint" ? Number(amount) : amount;
+  if (typeof raw !== "number" || isNaN(raw)) return "N/A";
+  if (raw === 0) return "Free";
+  const num = raw * ctx.rate;
+
   const isNegative = num < 0;
   const abs = Math.abs(num);
-  const prefix = isNegative ? "-€" : "€";
+  const prefix = isNegative ? `-${ctx.symbol}` : ctx.symbol;
 
   if (abs >= 999_950_000) {
     const val = (abs / 1_000_000_000).toFixed(1);
@@ -42,7 +45,7 @@ export function formatCompactEur(amount: number | bigint | null | undefined): st
   if (abs >= 1_000) {
     return `${prefix}${(abs / 1_000).toFixed(0)}k`;
   }
-  return `${prefix}${abs}`;
+  return `${prefix}${Math.round(abs)}`;
 }
 
 export function formatDate(date: Date | string | null | undefined): string {

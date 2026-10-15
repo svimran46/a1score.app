@@ -3,8 +3,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Search, Plus, X, Loader2, User } from "lucide-react";
 import { EntityImage } from "@/components/EntityImage";
-import { formatCompactEur } from "@/lib/utils";
 import { getPlayerSlug } from "@/lib/slugs";
+import { useMoney } from "@/lib/useMoney";
 
 interface SearchPlayerResult {
   id: string;
@@ -31,6 +31,7 @@ export function ComparePlayerPicker({
   onAddPlayer,
   maxPlayers = 3,
 }: ComparePlayerPickerProps) {
+  const money = useMoney();
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchPlayerResult[]>([]);
@@ -175,7 +176,7 @@ export function ComparePlayerPicker({
                         </span>
                       ) : (
                         <span className="font-mono text-xs font-bold text-[var(--value-text)] figure tabular-nums">
-                          {player.latestMarketValue ? formatCompactEur(player.latestMarketValue) : "—"}
+                          {player.latestMarketValue ? money.compact(player.latestMarketValue) : "—"}
                         </span>
                       )}
                     </div>

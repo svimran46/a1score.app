@@ -1,7 +1,8 @@
 import React from "react";
 import type { PlayerProfileVM, ProfileTransfer } from "@/lib/data/playerProfile.types";
-import { formatFeeLabel } from "@/lib/transfers";
-import { formatDateGB, formatMonthYear, formatValueEur, spokenEur } from "@/lib/format-value";
+import { formatDateGB, formatMonthYear, formatValueEur } from "@/lib/format-value";
+import { Money } from "@/components/ui/Money";
+import { FeeLabel } from "@/components/players/FeeLabel";
 import { ValueFigure } from "@/components/players/ValueFigure";
 import { NotRecorded, ProfileDisclosure, ProfileSection } from "@/components/players/ProfileSection";
 
@@ -16,11 +17,7 @@ function Fee({ t }: { t: ProfileTransfer }) {
   if (t.feeStatus === "disclosed" && formatValueEur(t.feeEur)) {
     return <ValueFigure eur={t.feeEur} size="md" srLabel="Fee" />;
   }
-  const fee = formatFeeLabel(t.feeStatus, t.feeEur);
-  if (fee.srLabel) return <NotRecorded mark={fee.label} sr={fee.srLabel} />;
-  return (
-    <span className={t.feeStatus === "undisclosed" ? "text-text-muted" : "text-text-secondary"}>{fee.label}</span>
-  );
+  return <FeeLabel status={t.feeStatus} feeEur={t.feeEur} />;
 }
 
 /** Context money: the amount in .figure but secondary, never amber. */
@@ -29,8 +26,12 @@ function ValueThen({ v }: { v: NonNullable<ProfileTransfer["valueThen"]> }) {
     <span className="text-xs leading-4 text-text-secondary">
       {"Market value then "}
       <span className="figure font-semibold">
-        <span aria-hidden="true">{formatValueEur(v.valueEur)}</span>
-        <span className="sr-only">{spokenEur(v.valueEur)}</span>
+        <span aria-hidden="true">
+          <Money eur={v.valueEur} kind="value" />
+        </span>
+        <span className="sr-only">
+          <Money eur={v.valueEur} kind="spoken" />
+        </span>
       </span>
       {` (${formatMonthYear(v.date)})`}
     </span>
