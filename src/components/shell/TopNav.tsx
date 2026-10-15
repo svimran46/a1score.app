@@ -17,6 +17,8 @@ import {
 import { CommandPalette } from "@/components/CommandPalette";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useLiveMatchCount } from "@/hooks/useLiveMatchCount";
+import { OPEN_SEARCH_EVENT } from "@/lib/nav/search";
+import { isUnder } from "@/lib/nav/config";
 
 export interface NavItem {
   name: string;
@@ -119,10 +121,10 @@ export const DRAWER_ITEMS = [
     isActive: (p: string, f: string | null) => p === "/values" || (p === "/search" && f === "valuable"),
   },
   {
-    name: "Watchlist",
-    href: "/watchlist",
+    name: "Following",
+    href: "/following",
     icon: Star,
-    isActive: (p: string) => p === "/watchlist" || p.startsWith("/watchlist/"),
+    isActive: (p: string) => isUnder(p, "/following") || isUnder(p, "/watchlist"),
   },
   {
     name: "Transfers",
@@ -168,8 +170,13 @@ function TopNavContent() {
         setCommandPaletteOpen((prev) => !prev);
       }
     };
+    const handleOpenSearch = () => setCommandPaletteOpen(true);
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener(OPEN_SEARCH_EVENT, handleOpenSearch);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener(OPEN_SEARCH_EVENT, handleOpenSearch);
+    };
   }, []);
 
   return (

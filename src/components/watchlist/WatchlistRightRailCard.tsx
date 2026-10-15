@@ -7,7 +7,7 @@ import { useWatchlist } from "@/lib/watchlist/useWatchlist";
 import { formatCompactEur } from "@/lib/utils";
 
 export function WatchlistRightRailCard() {
-  const { isMounted, playerFavorites } = useWatchlist();
+  const { isMounted, favorites, playerFavorites } = useWatchlist();
 
   if (!isMounted) {
     return (
@@ -26,11 +26,11 @@ export function WatchlistRightRailCard() {
         <div className="flex items-center gap-2">
           <Star className="w-4 h-4 text-[var(--accent)] fill-[var(--accent)]" />
           <h2 className="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)]">
-            Your Watchlist
+            Following
           </h2>
         </div>
         <Link
-          href="/watchlist"
+          href="/following"
           className="text-[11px] font-semibold text-[var(--accent)] hover:underline flex items-center gap-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] rounded"
         >
           <span>All</span>
@@ -41,7 +41,9 @@ export function WatchlistRightRailCard() {
       {topPlayers.length === 0 ? (
         <div className="p-3 text-center rounded-xl bg-bg-elevated/50">
           <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-            You&apos;re not following anyone yet. Tap the star on a player or club to add them.
+            {favorites.length === 0
+              ? "You're not following anyone yet. Tap the star on a player or club to add them."
+              : "Follow players to see their market value changes here."}
           </p>
           <Link
             href="/values"

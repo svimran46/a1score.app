@@ -1,8 +1,8 @@
 // Resilient Service Worker for a1score PWA
 // Handles offline caching, Web Push notifications, and notification click navigation
 
-const CACHE_NAME = "a1score-v1";
-const OFFLINE_URLS = ["/", "/matches", "/players", "/clubs", "/leagues", "/values", "/watchlist"];
+const CACHE_NAME = "a1score-v2";
+const OFFLINE_URLS = ["/", "/matches", "/players", "/clubs", "/leagues", "/values", "/following"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -72,7 +72,7 @@ self.addEventListener("push", (event) => {
     body: "A player you follow had a market valuation update.",
     icon: "/icon-192.png",
     badge: "/icon-192.png",
-    data: { url: "/watchlist" },
+    data: { url: "/following" },
   };
 
   if (event.data) {
@@ -90,7 +90,7 @@ self.addEventListener("push", (event) => {
     icon: payload.icon || "/icon-192.png",
     badge: payload.badge || "/icon-192.png",
     tag: payload.tag || "value-update",
-    data: payload.data || { url: "/watchlist" },
+    data: payload.data || { url: "/following" },
     vibrate: [100, 50, 100],
     renotify: true,
   };
@@ -101,7 +101,7 @@ self.addEventListener("push", (event) => {
 // Notification Click Handler: Focuses or opens the player or watchlist page
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  const rawUrl = event.notification.data?.url || "/watchlist";
+  const rawUrl = event.notification.data?.url || "/following";
   const targetUrl = new URL(rawUrl, self.location.origin).href;
 
   event.waitUntil(

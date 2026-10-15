@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Archivo } from "next/font/google";
 import "./globals.css";
 import { SITE_URL } from "@/lib/metadata";
+import { THEME_BOOT_SCRIPT } from "@/lib/theme";
 
 // Variable font with both axes: weight for hierarchy, width for the condensed
 // heading/figure voice (see --stretch-heading / --stretch-figure in tokens.css).
@@ -93,23 +94,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${archivo.variable} dark`} data-theme="dark" suppressHydrationWarning>
       <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              try {
-                const t = localStorage.getItem('theme') || 'dark';
-                document.documentElement.setAttribute('data-theme', t);
-                if (t === 'light') {
-                  document.documentElement.classList.remove('dark');
-                  document.documentElement.classList.add('light');
-                } else {
-                  document.documentElement.classList.add('dark');
-                  document.documentElement.classList.remove('light');
-                }
-              } catch (_) {}
-            `,
-          }}
-        />
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />
       </head>
       <body className="min-h-screen flex flex-col font-sans antialiased transition-colors duration-200" style={{ backgroundColor: "var(--bg-page)", color: "var(--text-primary)", fontFamily: "var(--font-sans)" }}>
         <AnalyticsProvider />

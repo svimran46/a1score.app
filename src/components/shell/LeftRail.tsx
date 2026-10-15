@@ -3,19 +3,10 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import {
-  Trophy,
-  Radio,
-  TrendingUp,
-  ArrowLeftRight,
-  Shield,
-  Users,
-  BookOpen,
-  Star,
-  Newspaper,
-} from "lucide-react";
 import { getLeagueSlug } from "@/lib/slugs";
 import { useLiveMatchCount } from "@/hooks/useLiveMatchCount";
+import { BOTTOM_TABS, MORE_ACCOUNT, MORE_FEATURES, isUnder } from "@/lib/nav/config";
+import { NAV_ICONS } from "@/components/shell/navIcons";
 
 export interface LeagueItem {
   id: string;
@@ -36,15 +27,34 @@ export const DEFAULT_TOP_LEAGUES: LeagueItem[] = [
   { id: "cmuihnffm0006b23feq78bq1b", name: "Eredivisie", country: "Netherlands", slug: "eredivisie-cmuihnffm0006b23feq78bq1b" },
 ];
 
-const QUICK_LINKS = [
-  { name: "Live Matches", href: "/matches", icon: Radio, pulse: true },
-  { name: "Market Values", href: "/values", icon: TrendingUp },
-  { name: "Watchlist", href: "/watchlist", icon: Star },
-  { name: "Transfers", href: "/transfers", icon: ArrowLeftRight },
-  { name: "Clubs Directory", href: "/clubs", icon: Shield },
-  { name: "Players Directory", href: "/players", icon: Users },
-  { name: "News", href: "/news", icon: Newspaper },
-  { name: "Methodology", href: "/methodology", icon: BookOpen },
+// Desktop mirrors the mobile IA: the four primary tabs, then everything the
+// More hub holds, so both layouts reach the same places by the same names.
+const SIDEBAR_SECTIONS = [
+  {
+    title: "Browse",
+    links: BOTTOM_TABS.filter((t) => t.key !== "more").map((t) => ({
+      name: t.label,
+      href: t.href,
+      icon: t.icon,
+      pulse: t.showsLiveCount,
+      isActive: t.isActive,
+    })),
+  },
+  {
+    title: "Tools",
+    links: MORE_FEATURES.map((f) => ({ name: f.label, href: f.href, icon: f.icon, pulse: false, isActive: (p: string) => isUnder(p, f.href) })),
+  },
+  {
+    title: "Account",
+    links: MORE_ACCOUNT.map((f) => ({
+      name: f.label,
+      href: f.href,
+      icon: f.icon,
+      pulse: false,
+      // Settings stays highlighted on its sub-pages except Notifications, which has its own row.
+      isActive: (p: string) => (f.key === "settings" ? isUnder(p, f.href) && !isUnder(p, "/settings/notifications") : isUnder(p, f.href)),
+    })),
+  },
 ];
 
 export function LeftRail({ leagues }: { leagues?: LeagueItem[] }) {
@@ -114,42 +124,43 @@ export function LeftRail({ leagues }: { leagues?: LeagueItem[] }) {
         </nav>
       </div>
 
-      {/* Quick Links Card */}
-      <div className="bg-[var(--bg-card)] rounded-[var(--card-radius)] p-[var(--card-padding)] shadow-xs">
-        <div className="mb-3 px-1">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)]">
-            Quick Links
-          </h2>
+      {SIDEBAR_SECTIONS.map((section) => (
+        <div key={section.title} className="bg-[var(--bg-card)] rounded-[var(--card-radius)] p-[var(--card-padding)] shadow-xs">
+          <div className="mb-3 px-1">
+            <h2 className="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)]">
+              {section.title}
+            </h2>
+          </div>
+
+          <nav aria-label={section.title} className="flex flex-col space-y-1">
+            {section.links.map((link) => {
+              const Icon = NAV_ICONS[link.icon];
+              const isActive = link.isActive(pathname);
+
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  aria-current={isActive ? "page" : undefined}
+                  className={`flex items-center gap-3 px-2.5 py-2 rounded-xl text-xs font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
+                    isActive
+                      ? "bg-[var(--bg-chip)] text-[var(--accent)] font-bold"
+                      : "text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)]"
+                  }`}
+                >
+                  <span className="relative flex items-center justify-center shrink-0">
+                    <Icon className="w-4 h-4" />
+                    {link.pulse && liveCount !== null && liveCount > 0 && (
+                      <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-[var(--live)]" />
+                    )}
+                  </span>
+                  <span className="truncate">{link.name}</span>
+                </Link>
+              );
+            })}
+          </nav>
         </div>
-
-        <nav aria-label="Quick links" className="flex flex-col space-y-1">
-          {QUICK_LINKS.map((link) => {
-            const Icon = link.icon;
-            const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
-
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                aria-current={isActive ? "page" : undefined}
-                className={`flex items-center gap-3 px-2.5 py-2 rounded-xl text-xs font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
-                  isActive
-                    ? "bg-[var(--bg-chip)] text-[var(--accent)] font-bold"
-                    : "text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)]"
-                }`}
-              >
-                <span className="relative flex items-center justify-center shrink-0">
-                  <Icon className="w-4 h-4" />
-                  {link.pulse && liveCount !== null && liveCount > 0 && (
-                    <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-[var(--live)]" />
-                  )}
-                </span>
-                <span className="truncate">{link.name}</span>
-              </Link>
-            );
-          })}
-        </nav>
-      </div>
+      ))}
     </aside>
   );
 }

@@ -2,40 +2,45 @@
 
 import { useEffect, useState } from "react";
 import { Sun, Moon } from "lucide-react";
+import {
+  THEME_CHANGE_EVENT,
+  applyResolvedTheme,
+  currentResolvedTheme,
+  readThemePreference,
+  setThemePreference,
+  type ResolvedTheme,
+} from "@/lib/theme";
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [theme, setTheme] = useState<ResolvedTheme>("dark");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    const stored = localStorage.getItem("theme");
-    if (stored === "light") {
-      setTheme("light");
-      document.documentElement.setAttribute("data-theme", "light");
-      document.documentElement.classList.remove("dark");
-      document.documentElement.classList.add("light");
-    } else {
-      setTheme("dark");
-      document.documentElement.setAttribute("data-theme", "dark");
-      document.documentElement.classList.add("dark");
-      document.documentElement.classList.remove("light");
-    }
+    const sync = () => {
+      const resolved = currentResolvedTheme();
+      applyResolvedTheme(resolved);
+      setTheme(resolved);
+    };
+    sync();
+
+    // Stay in sync with the Settings page and, in "system" mode, the OS.
+    window.addEventListener(THEME_CHANGE_EVENT, sync);
+    const mq = typeof window.matchMedia === "function" ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+    const onSystemChange = () => {
+      if (readThemePreference() === "system") sync();
+    };
+    mq?.addEventListener?.("change", onSystemChange);
+    return () => {
+      window.removeEventListener(THEME_CHANGE_EVENT, sync);
+      mq?.removeEventListener?.("change", onSystemChange);
+    };
   }, []);
 
+  // The quick toggle always sets an explicit theme; "System default" is
+  // chosen from Settings.
   const toggleTheme = () => {
-    const nextTheme = theme === "dark" ? "light" : "dark";
-    setTheme(nextTheme);
-    localStorage.setItem("theme", nextTheme);
-    document.documentElement.setAttribute("data-theme", nextTheme);
-
-    if (nextTheme === "light") {
-      document.documentElement.classList.remove("dark");
-      document.documentElement.classList.add("light");
-    } else {
-      document.documentElement.classList.add("dark");
-      document.documentElement.classList.remove("light");
-    }
+    setTheme(setThemePreference(theme === "dark" ? "light" : "dark"));
   };
 
   if (!mounted) {

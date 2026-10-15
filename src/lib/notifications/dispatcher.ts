@@ -150,7 +150,7 @@ export async function dispatchValuationAlerts(
             badge: "/icon-192.png",
             tag: "value-update-grouped",
             data: {
-              url: "/watchlist",
+              url: "/following",
             },
           };
         }

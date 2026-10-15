@@ -3,10 +3,11 @@
 import React, { useState } from "react";
 import { Star, Loader2 } from "lucide-react";
 import { useWatchlist } from "@/lib/watchlist/useWatchlist";
+import type { WatchlistType } from "@/lib/watchlist/storage";
 
 export interface FollowButtonProps {
   id: string;
-  type: "player" | "club";
+  type: WatchlistType;
   name: string;
   slug?: string | null;
   avatarUrl?: string | null;

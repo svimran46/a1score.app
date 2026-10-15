@@ -1,51 +1,60 @@
 "use client";
 
-import React, { useState, useMemo, useTransition } from "react";
+import React, { useState, useMemo, useEffect } from "react";
+import Link from "next/link";
 import { NewsItem } from "@/types/news";
 import { NewsCardHero } from "./NewsCardHero";
 import { NewsCardRow } from "./NewsCardRow";
 import { Card, Chip, EmptyState, ErrorState, Skeleton, PageHeader } from "@/components/ui";
 import { AdSlot } from "@/components/ads/AdSlot";
-import { RefreshCw } from "lucide-react";
+import { UnderlineTabs } from "@/components/ui/UnderlineTabs";
+import { useWatchlist } from "@/lib/watchlist/useWatchlist";
+import {
+  NEWS_LEAGUES,
+  NEWS_TABS,
+  forYouFeed,
+  leagueFeed,
+  newestFirst,
+  transfersFeed,
+  type NewsTab,
+} from "@/lib/news/feeds";
 
 interface NewsDirectoryClientProps {
   initialNews: NewsItem[];
 }
 
-const CATEGORY_CHIPS = [
-  { label: "All", val: "All" },
-  { label: "Transfers", val: "Transfers" },
-  { label: "Premier League", val: "Premier League" },
-  { label: "LaLiga", val: "LaLiga" },
-  { label: "Serie A", val: "Serie A" },
-  { label: "Bundesliga", val: "Bundesliga" },
-  { label: "Ligue 1", val: "Ligue 1" },
-];
-
 export function NewsDirectoryClient({ initialNews }: NewsDirectoryClientProps) {
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [tab, setTab] = useState<NewsTab>("for-you");
+  const [league, setLeague] = useState<string | null>(null);
   const [news, setNews] = useState<NewsItem[]>(initialNews);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [hasError, setHasError] = useState<boolean>(false);
-  const [isPending, startTransition] = useTransition();
+  const { isMounted, favorites } = useWatchlist();
 
-  // Filter items client-side or refetch
+  const followedNames = useMemo(() => favorites.map((f) => f.name), [favorites]);
+  const personalised = useMemo(() => forYouFeed(news, followedNames), [news, followedNames]);
+
+  // Nothing followed (or nothing matching yet): For you falls back to Latest
+  // with a nudge, rather than an empty screen.
+  const forYouFallback = isMounted && personalised.length === 0;
+
   const filteredNews = useMemo(() => {
-    if (selectedCategory === "All") return news;
+    switch (tab) {
+      case "for-you":
+        return forYouFallback || !isMounted ? newestFirst(news) : personalised;
+      case "transfers":
+        return transfersFeed(news);
+      case "leagues":
+        return leagueFeed(news, league);
+      default:
+        return newestFirst(news);
+    }
+  }, [tab, news, personalised, forYouFallback, isMounted, league]);
 
-    const normTarget = selectedCategory.toLowerCase().replace(/[\s\-_]+/g, "");
-    return news.filter((item) => {
-      const matchTag = item.tags.some(
-        (t) => t.toLowerCase().replace(/[\s\-_]+/g, "").includes(normTarget)
-      );
-      const matchTitle = item.title.toLowerCase().replace(/[\s\-_]+/g, "").includes(normTarget);
-      return matchTag || matchTitle;
-    });
-  }, [news, selectedCategory]);
-
-  const handleSelectCategory = (cat: string) => {
-    setSelectedCategory(cat);
-  };
+  // Leaving the Leagues tab clears its sub-filter.
+  useEffect(() => {
+    if (tab !== "leagues") setLeague(null);
+  }, [tab]);
 
   const handleRetry = async () => {
     setIsLoading(true);
@@ -67,31 +76,45 @@ export function NewsDirectoryClient({ initialNews }: NewsDirectoryClientProps) {
 
   return (
     <div className="space-y-4 max-w-[720px] mx-auto">
-      {/* Header */}
-      <PageHeader
-        variant="directory"
-        categoryLabel="Syndicated Coverage"
-        title="Football News"
-        subtitle="Latest breaking reports, valuation analysis, and transfer intelligence across European football."
+      <PageHeader variant="directory" title="News" />
+
+      <UnderlineTabs
+        idPrefix="news"
+        ariaLabel="News feeds"
+        tabs={NEWS_TABS}
+        activeTab={tab}
+        onChange={(id) => setTab(id as NewsTab)}
       />
 
-      {/* Filter Chips Bar */}
-      <div
-        role="tablist"
-        aria-label="Filter news by competition or topic"
-        className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1"
-      >
-        {CATEGORY_CHIPS.map((chip) => (
-          <Chip
-            key={chip.val}
-            active={selectedCategory === chip.val}
-            onClick={() => handleSelectCategory(chip.val)}
-          >
-            {chip.label}
+      {tab === "leagues" && (
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1" aria-label="Filter by league">
+          <Chip active={league === null} onClick={() => setLeague(null)}>
+            All leagues
           </Chip>
-        ))}
-      </div>
+          {NEWS_LEAGUES.map((name) => (
+            <Chip key={name} active={league === name} onClick={() => setLeague(name)}>
+              {name}
+            </Chip>
+          ))}
+        </div>
+      )}
 
+      {tab === "for-you" && forYouFallback && (
+        <p className="text-sm text-[var(--text-muted)] px-1">
+          {favorites.length === 0 ? (
+            <>
+              <Link href="/following" className="font-semibold text-[var(--accent)] hover:underline">
+                Follow teams and players
+              </Link>{" "}
+              to personalise this feed. Showing the latest news for now.
+            </>
+          ) : (
+            "No stories about the teams and players you follow right now. Showing the latest news."
+          )}
+        </p>
+      )}
+
+      <div role="tabpanel" id={`news-panel-${tab}`} aria-labelledby={`news-tab-${tab}`} className="space-y-4">
       {/* Loading Skeletons */}
       {isLoading ? (
         <div className="space-y-4">
@@ -127,15 +150,15 @@ export function NewsDirectoryClient({ initialNews }: NewsDirectoryClientProps) {
         /* Empty State */
         <EmptyState
           title="No news yet. Check back soon."
-          message={`No articles currently found under "${selectedCategory}". Check back shortly for updates.`}
+          message="No articles in this feed right now. Check back shortly for updates."
           action={
-            selectedCategory !== "All" ? (
+            tab !== "latest" ? (
               <button
                 type="button"
-                onClick={() => setSelectedCategory("All")}
+                onClick={() => setTab("latest")}
                 className="px-4 py-2 rounded-[var(--chip-radius)] bg-[var(--accent)] text-[var(--accent-contrast)] text-xs font-semibold"
               >
-                View all news
+                View latest news
               </button>
             ) : undefined
           }
@@ -161,6 +184,7 @@ export function NewsDirectoryClient({ initialNews }: NewsDirectoryClientProps) {
           <AdSlot id="news-feed-footer" format="leaderboard" />
         </div>
       )}
+      </div>
     </div>
   );
 }

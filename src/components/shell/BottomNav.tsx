@@ -1,251 +1,76 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  Radio,
-  Users,
-  Shield,
-  TrendingUp,
-  MoreHorizontal,
-  X,
-  Newspaper,
-  Trophy,
-  ArrowLeftRight,
-  BookOpen,
-  Star,
-} from "lucide-react";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { useLiveMatchCount } from "@/hooks/useLiveMatchCount";
+import { BOTTOM_TABS, getActiveBottomTab } from "@/lib/nav/config";
+import { NAV_ICONS } from "@/components/shell/navIcons";
 
+// Icons that read as "selected" when filled, FotMob style. Line icons such as
+// Radio or Menu have no meaningful fill, so they rely on colour and weight.
+const FILLABLE = new Set(["following", "leagues"]);
+
+/**
+ * Mobile/tablet bottom bar: Matches · News · Leagues · Following · More.
+ * Every tab is a real link (More opens the /more hub page rather than a
+ * sheet), so back/forward, deep links and middle-click all behave.
+ */
 export function BottomNav() {
-  const pathname = usePathname();
+  const pathname = usePathname() ?? "/";
   const liveCount = useLiveMatchCount();
-  const [isMoreOpen, setIsMoreOpen] = useState(false);
-
-  // Close sheet on route navigation
-  useEffect(() => {
-    setIsMoreOpen(false);
-  }, [pathname]);
-
-  // Close sheet on Escape key
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setIsMoreOpen(false);
-      }
-    };
-    if (isMoreOpen) {
-      window.addEventListener("keydown", handleKeyDown);
-    }
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isMoreOpen]);
-
-  // Active route helpers
-  const isMatchesActive = pathname === "/matches" || pathname.startsWith("/matches/") || pathname.startsWith("/match/");
-  const isPlayersActive = pathname === "/players" || pathname.startsWith("/players/") || pathname.startsWith("/player/");
-  const isClubsActive = pathname === "/clubs" || pathname.startsWith("/clubs/") || pathname.startsWith("/club/");
-  const isValuesActive = pathname === "/values";
-  const isMoreActive =
-    isMoreOpen ||
-    pathname.startsWith("/watchlist") ||
-    pathname.startsWith("/leagues") ||
-    pathname.startsWith("/transfers") ||
-    pathname.startsWith("/news") ||
-    pathname.startsWith("/methodology");
+  const activeKey = getActiveBottomTab(pathname);
 
   return (
-    <>
-      <nav
-        aria-label="Mobile Bottom Navigation"
-        className="fixed bottom-0 left-0 right-0 z-40 lg:hidden bg-bg-card/95 border-t border-[var(--divider)] backdrop-blur-xl transition-transform duration-200"
-        style={{
-          paddingBottom: "env(safe-area-inset-bottom, 0px)",
-        }}
-      >
-        <div className="grid grid-cols-5 h-14 items-center max-w-xl mx-auto">
-          {/* 1. Matches */}
-          <Link
-            href="/matches"
-            className={`flex flex-col items-center justify-center min-h-[44px] h-full py-1 text-[11px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
-              isMatchesActive
-                ? "text-[var(--accent)] font-bold"
-                : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
-            }`}
-            aria-label="Matches"
-            aria-current={isMatchesActive ? "page" : undefined}
-          >
-            <div className="relative flex items-center justify-center">
-              <Radio className="w-5 h-5" />
-              {liveCount !== null && liveCount !== undefined && liveCount > 0 && (
-                <span className="absolute -top-1 -right-2 min-w-[14px] h-3.5 px-1 rounded-full text-[9px] font-bold text-[var(--accent-contrast)] bg-[var(--live)] flex items-center justify-center leading-none">
-                  {liveCount}
+    <nav
+      aria-label="Primary"
+      className="fixed bottom-0 left-0 right-0 z-40 lg:hidden bg-bg-card/95 border-t border-[var(--divider)] backdrop-blur-xl"
+      style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
+    >
+      <ul className="grid grid-cols-5 h-14 items-stretch max-w-xl mx-auto">
+        {BOTTOM_TABS.map((tab) => {
+          const Icon = NAV_ICONS[tab.icon];
+          const active = activeKey === tab.key;
+          const showLive = tab.showsLiveCount && liveCount != null && liveCount > 0;
+
+          return (
+            <li key={tab.key} className="flex">
+              <Link
+                href={tab.href}
+                aria-current={active ? "page" : undefined}
+                className={`relative flex-1 flex flex-col items-center justify-center gap-0.5 min-h-[44px] text-[11px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--focus-ring)] ${
+                  active
+                    ? "text-[var(--text-primary)] font-bold"
+                    : "text-[var(--text-muted)] font-medium hover:text-[var(--text-primary)]"
+                }`}
+              >
+                {/* Active indicator bar, so selection never relies on colour alone */}
+                <span
+                  aria-hidden="true"
+                  className={`absolute top-0 h-0.5 w-8 rounded-full transition-opacity ${
+                    active ? "bg-[var(--accent)] opacity-100" : "opacity-0"
+                  }`}
+                />
+                <span className="relative flex items-center justify-center">
+                  <Icon
+                    aria-hidden="true"
+                    className={`w-[22px] h-[22px] ${active ? "text-[var(--accent)]" : ""} ${
+                      active && FILLABLE.has(tab.key) ? "fill-current" : ""
+                    }`}
+                    strokeWidth={active ? 2.25 : 1.75}
+                  />
+                  {showLive && (
+                    <span className="absolute -top-1.5 -right-2.5 min-w-[16px] h-4 px-1 rounded-full text-[9px] font-bold text-[var(--accent-contrast)] bg-[var(--live)] flex items-center justify-center leading-none tabular-nums">
+                      {liveCount}
+                      <span className="sr-only"> live</span>
+                    </span>
+                  )}
                 </span>
-              )}
-            </div>
-            <span className="tracking-tight mt-0.5">Matches</span>
-          </Link>
-
-          {/* 2. Players */}
-          <Link
-            href="/players"
-            className={`flex flex-col items-center justify-center min-h-[44px] h-full py-1 text-[11px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
-              isPlayersActive
-                ? "text-[var(--accent)] font-bold"
-                : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
-            }`}
-            aria-label="Players"
-            aria-current={isPlayersActive ? "page" : undefined}
-          >
-            <Users className="w-5 h-5" />
-            <span className="tracking-tight mt-0.5">Players</span>
-          </Link>
-
-          {/* 3. Clubs */}
-          <Link
-            href="/clubs"
-            className={`flex flex-col items-center justify-center min-h-[44px] h-full py-1 text-[11px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
-              isClubsActive
-                ? "text-[var(--accent)] font-bold"
-                : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
-            }`}
-            aria-label="Clubs"
-            aria-current={isClubsActive ? "page" : undefined}
-          >
-            <Shield className="w-5 h-5" />
-            <span className="tracking-tight mt-0.5">Clubs</span>
-          </Link>
-
-          {/* 4. Values */}
-          <Link
-            href="/values"
-            className={`flex flex-col items-center justify-center min-h-[44px] h-full py-1 text-[11px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
-              isValuesActive
-                ? "text-[var(--accent)] font-bold"
-                : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
-            }`}
-            aria-label="Market Values"
-            aria-current={isValuesActive ? "page" : undefined}
-          >
-            <TrendingUp className="w-5 h-5" />
-            <span className="tracking-tight mt-0.5">Values</span>
-          </Link>
-
-          {/* 5. More */}
-          <button
-            type="button"
-            onClick={() => setIsMoreOpen((prev) => !prev)}
-            className={`flex flex-col items-center justify-center min-h-[44px] h-full py-1 text-[11px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] ${
-              isMoreActive
-                ? "text-[var(--accent)] font-bold"
-                : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
-            }`}
-            aria-label="More navigation options"
-            aria-expanded={isMoreOpen}
-          >
-            <MoreHorizontal className="w-5 h-5" />
-            <span className="tracking-tight mt-0.5">More</span>
-          </button>
-        </div>
-      </nav>
-
-      {/* "More" Bottom Sheet Modal */}
-      {isMoreOpen && (
-        <>
-          {/* Backdrop */}
-          <div
-            onClick={() => setIsMoreOpen(false)}
-            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs transition-opacity lg:hidden"
-            aria-hidden="true"
-          />
-
-          {/* Sheet */}
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-label="More Navigation"
-            className="fixed bottom-0 left-0 right-0 mx-auto max-w-lg z-50 rounded-t-[var(--card-radius)] bg-[var(--bg-card)] p-5 space-y-4 max-h-[85vh] overflow-y-auto animate-in slide-in-from-bottom duration-200 shadow-2xl lg:hidden"
-            style={{
-              paddingBottom: "max(1.5rem, env(safe-area-inset-bottom, 0px))",
-            }}
-          >
-            {/* Grab handle & header */}
-            <div className="flex flex-col items-center gap-2">
-              <div className="w-12 h-1 rounded-full bg-[var(--divider)]" />
-              <div className="w-full flex items-center justify-between pt-1">
-                <span className="text-sm font-bold text-[var(--text-primary)]">
-                  More
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setIsMoreOpen(false)}
-                  className="p-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
-                  aria-label="Close sheet"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-            </div>
-
-            {/* Navigation links */}
-            <nav className="flex flex-col space-y-1">
-              <Link
-                href="/watchlist"
-                onClick={() => setIsMoreOpen(false)}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
-              >
-                <Star className="w-5 h-5 text-[var(--accent)]" />
-                <span>Watchlist</span>
+                <span className="tracking-tight leading-none">{tab.label}</span>
               </Link>
-
-              <Link
-                href="/news"
-                onClick={() => setIsMoreOpen(false)}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
-              >
-                <Newspaper className="w-5 h-5 text-[var(--accent)]" />
-                <span>News</span>
-              </Link>
-
-              <Link
-                href="/leagues"
-                onClick={() => setIsMoreOpen(false)}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
-              >
-                <Trophy className="w-5 h-5 text-[var(--accent)]" />
-                <span>Leagues</span>
-              </Link>
-
-              <Link
-                href="/transfers"
-                onClick={() => setIsMoreOpen(false)}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
-              >
-                <ArrowLeftRight className="w-5 h-5 text-[var(--accent)]" />
-                <span>Transfers</span>
-              </Link>
-
-              <Link
-                href="/methodology"
-                onClick={() => setIsMoreOpen(false)}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
-              >
-                <BookOpen className="w-5 h-5 text-[var(--accent)]" />
-                <span>Methodology</span>
-              </Link>
-            </nav>
-
-            {/* Theme Toggle row */}
-            <div className="pt-2 border-t border-[var(--divider)] flex items-center justify-between">
-              <span className="text-xs font-semibold text-[var(--text-muted)]">
-                Appearance
-              </span>
-              <ThemeToggle />
-            </div>
-          </div>
-        </>
-      )}
-    </>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
   );
 }
