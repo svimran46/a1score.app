@@ -85,6 +85,7 @@ import { PostFollowNotificationPrompt } from "@/components/notifications/PostFol
 import { AnalyticsProvider } from "@/components/analytics/AnalyticsProvider";
 import { ConsentBanner } from "@/components/privacy/ConsentBanner";
 import { AppShell } from "@/components/AppShell";
+import { AccountSync } from "@/components/auth/AccountSync";
 
 export default function RootLayout({
   children,
@@ -102,6 +103,7 @@ export default function RootLayout({
         <ServiceWorkerRegister />
         <GridKeyNavigation />
         <PostFollowNotificationPrompt />
+        <AccountSync />
         <AppShell>
           {children}
         </AppShell>

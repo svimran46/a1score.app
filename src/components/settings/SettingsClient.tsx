@@ -18,6 +18,7 @@ import {
   SunMoon,
 } from "lucide-react";
 import { MenuGroup, MenuRow } from "@/components/more/MenuRow";
+import { AccountSettings } from "@/components/auth/AccountSettings";
 import {
   THEME_CHANGE_EVENT,
   THEME_OPTIONS,
@@ -212,6 +213,7 @@ function ShareRow() {
 export function SettingsClient({ appVersion }: { appVersion: string }) {
   return (
     <div className="space-y-6">
+      <AccountSettings />
       <MenuGroup>
         <ThemeSetting />
         <CurrencySetting />

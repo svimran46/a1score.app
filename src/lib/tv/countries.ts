@@ -37,6 +37,28 @@ export const TV_COUNTRIES: { code: string; name: string }[] = [
 
 export const DEFAULT_TV_COUNTRY = "GB";
 export const TV_COUNTRY_STORAGE_KEY = "a1score_tv_country";
+export const TV_COUNTRY_CHANGE_EVENT = "a1score:tv-country-change";
+
+/** Saved TV schedules country on this device, or null. */
+export function readTvCountry(): string | null {
+  try {
+    const code = window.localStorage.getItem(TV_COUNTRY_STORAGE_KEY);
+    return isTvCountry(code) ? code : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Saves the TV schedules country and tells listeners (account sync). */
+export function saveTvCountry(code: string): void {
+  if (!isTvCountry(code) || readTvCountry() === code) return;
+  try {
+    window.localStorage.setItem(TV_COUNTRY_STORAGE_KEY, code);
+  } catch {
+    // Storage blocked: the URL still carries the country.
+  }
+  window.dispatchEvent(new Event(TV_COUNTRY_CHANGE_EVENT));
+}
 
 export function isTvCountry(code: string | null | undefined): code is string {
   return !!code && TV_COUNTRIES.some((c) => c.code === code);

@@ -1,9 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { UNITS_STORAGE_KEY, parseMeasurementSystem, type MeasurementSystem } from "./units";
-
-const UNITS_CHANGE_EVENT = "a1score:units-change";
+import { UNITS_CHANGE_EVENT, UNITS_STORAGE_KEY, parseMeasurementSystem, type MeasurementSystem } from "./units";
 
 function subscribe(listener: () => void): () => void {
   const onStorage = (e: StorageEvent) => {

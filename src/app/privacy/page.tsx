@@ -36,7 +36,7 @@ export default function PrivacyPage() {
                 Privacy Policy & Data Transparency
               </h1>
               <p className="text-xs text-[var(--text-muted)] mt-0.5">
-                Last updated: {lastUpdated} • Zero-PII by Design
+                Last updated: {lastUpdated} • Accounts are optional
               </p>
             </div>
           </div>
@@ -47,19 +47,19 @@ export default function PrivacyPage() {
           {/* Section 1 */}
           <section className="space-y-3">
             <h2 className="text-base font-bold text-[var(--text-primary)] flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-[var(--accent)]" /> 1. Zero-PII Architectural Guarantee
+              <ShieldCheck className="w-4 h-4 text-[var(--accent)]" /> 1. What We Collect
             </h2>
             <p className="text-[var(--text-muted)]">
               a1score is an independent football market intelligence and match analytics platform. We believe that modern sports analytics should not come at the expense of user privacy.
             </p>
             <p className="text-[var(--text-muted)]">
-              We operate under a strict <strong>Zero Personally Identifiable Information (Zero-PII)</strong> architectural rule:
+              You can use every part of a1score without an account. If you choose to sign in, we keep only what syncing needs:
             </p>
             <ul className="list-disc pl-5 space-y-1.5 text-[var(--text-muted)]">
-              <li>We do not collect names, email addresses, phone numbers, or physical locations.</li>
-              <li>We do not require account registration or login credentials to access full valuation and match feeds.</li>
-              <li>We do not log user IP addresses or build cross-device tracking profiles.</li>
-              <li>We do not sell, rent, or monetize your personal information with data brokers.</li>
+              <li><strong>Without an account:</strong> we do not collect names, email addresses, phone numbers, or physical locations.</li>
+              <li><strong>With an optional account:</strong> we store your email address (to sign you in), the players, clubs and leagues you follow, and your settings (theme, currency, measurement units and TV schedules country), so they sync across your devices. Accounts are run on Supabase; sign-in emails are sent through it.</li>
+              <li><strong>Delete any time:</strong> Settings → Account → Delete account removes your account and everything synced to it from our servers.</li>
+              <li>We do not log user IP addresses or build tracking profiles, and we do not sell, rent, or monetize your personal information with data brokers.</li>
             </ul>
           </section>
 
@@ -104,8 +104,9 @@ export default function PrivacyPage() {
               We utilize browser <code>localStorage</code> strictly for device-local user preferences:
             </p>
             <ul className="list-disc pl-5 space-y-1.5 text-[var(--text-muted)]">
-              <li><strong>Theme Mode:</strong> Stores your visual selection of Dark or Light mode.</li>
-              <li><strong>Local Watchlist:</strong> Keeps your followed players and clubs locally on your device without transmitting a profile to external third parties.</li>
+              <li><strong>Settings:</strong> Stores your theme, currency, measurement units and TV schedules country.</li>
+              <li><strong>Following:</strong> Keeps the players, clubs and leagues you follow on your device. They leave the device only if you sign in, to sync with your account.</li>
+              <li><strong>Sign-in session:</strong> If you sign in, keeps you signed in on this device until you sign out.</li>
               <li><strong>Privacy Preferences:</strong> Remembers your consent banner acknowledgment.</li>
             </ul>
           </section>

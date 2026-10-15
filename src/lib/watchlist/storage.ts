@@ -27,6 +27,8 @@ export interface WatchlistAdapter {
   removeFavorite(id: string, type: WatchlistType): boolean;
   isFavorite(id: string, type: WatchlistType): boolean;
   clearFavorites(type?: WatchlistType): boolean;
+  /** Replace every follow at once (account sync); notifies subscribers once. */
+  replaceFavorites(items: WatchlistItem[]): boolean;
   isStorageAvailable(): boolean;
   subscribe(callback: () => void): () => void;
 }
@@ -163,6 +165,25 @@ class LocalStorageWatchlistAdapter implements WatchlistAdapter {
       return true;
     } catch (e) {
       console.warn("[Watchlist] Failed to clear localStorage:", e);
+      this.inMemoryFallback = next;
+      this.notify();
+      return false;
+    }
+  }
+
+  replaceFavorites(items: WatchlistItem[]): boolean {
+    const next = [...items];
+    if (!this.isStorageAvailable()) {
+      this.inMemoryFallback = next;
+      this.notify();
+      return false;
+    }
+    try {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      this.notify();
+      return true;
+    } catch (e) {
+      console.warn("[Watchlist] Failed to replace favourites:", e);
       this.inMemoryFallback = next;
       this.notify();
       return false;
